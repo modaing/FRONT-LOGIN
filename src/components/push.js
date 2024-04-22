@@ -1,3 +1,1 @@
-function Pust() {
-    PushManager.git();
-}
+
