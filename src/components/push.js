@@ -1,0 +1,3 @@
+function Pust() {
+    PushManager.git();
+}
