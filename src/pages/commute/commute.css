@@ -1,0 +1,9 @@
+.progress {
+    width: 100%;
+    align-self: center;
+    --bs-progress-bar-bg: #112D4E;
+    margin-top: 7px;
+    display: flex;
+};
+
+
