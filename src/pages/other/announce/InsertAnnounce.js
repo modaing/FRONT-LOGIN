@@ -81,6 +81,12 @@ function InsertAnnounce() {
                                         placeholder="제목을 입력해주세요" />
                                 </div>
                             </div>
+                            <div className="row mb-3">
+                                <label htmlFor="inputText" className="col-sm-1 col-form-label">파일</label>
+                                <div className="col-sm-10">
+                                    <input class="form-control" type="file" id="formFile" multiple></input>
+                                </div>
+                            </div>
                             <label htmlFor="inputText" className="col-sm-2 col-form-label">본문</label>
                             <div className="row mb-7">
                                 <div className="col-sm-1"></div>
