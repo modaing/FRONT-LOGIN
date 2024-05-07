@@ -52,7 +52,7 @@ const Modal = ({ isOpen, onClose, onSave }) => {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
-              <button type="button" className="btn btn-primary" onClick={handleSave}>추가</button>
+              <button type="button" className="btn btn-primary" onClick={handleSave}>등록</button>
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ import koLocale from '@fullcalendar/core/locales/ko';
 import './Calendar.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from './Modal';
+import { callInsertCalendarAPI } from '../../apis/CalendarAPICalls';
 
 
 
@@ -28,8 +29,14 @@ function Calendar() {
     };
 
     const handleSaveChanges = ({ title, start, end, color }) => {
-        console.log('일정 추가:', { title, start, end, color });
-        // 여기에 추가한 일정을 처리하는 로직을 추가할 수 있습니다.
+        const requestData = {
+            calendarStart : start,
+            calendarEnd : end,
+            calendarName : title,
+            registrantId : 200401023 // TODO: 나중에 관리자 사번 뽑아서 넣는 걸로 바꿔야 함
+        };
+        callInsertCalendarAPI(requestData)
+
     };
 
 
@@ -42,13 +49,14 @@ function Calendar() {
         return () => {
             // 컴포넌트가 언마운트될 때 이벤트 핸들러를 해제합니다.
         };
-    }, []); 
+    }, []);
 
     const events = [
         {
-            title: 'test', 
-            start: '2024-05-01T08:00:00', 
-            end: '2024-05-02T09:00:00'
+            title: 'test',
+            start: '2024-05-01T08:00:00',
+            end: '2024-05-02T09:00:00',
+            color: 'red'
         }
     ];
 
@@ -68,9 +76,9 @@ function Calendar() {
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                 initialView={'dayGridMonth'}
                 customButtons={{
-                    AddButton:{
-                        text:"일정 등록",
-                        onClick: handleOpenModal
+                    AddButton: {
+                        text: "일정 등록",
+                        click: handleOpenModal
                     }
                 }}
                 headerToolbar={{
@@ -80,7 +88,7 @@ function Calendar() {
                 }}
 
                 events={events}
-            
+
                 locale={koLocale}
             />
         </main>
