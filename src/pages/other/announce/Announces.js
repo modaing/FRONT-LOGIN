@@ -60,6 +60,10 @@ function Announces() {
         justifyContent: 'center',
     };
 
+    const contentStyle = {
+        marginLeft: '100px'
+    };
+
     return (
         <main id="main" className="main">
             <div className="pagetitle" style={{ marginBottom: '20px', marginTop: '20px' }}>

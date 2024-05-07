@@ -20,7 +20,6 @@ export const ancListAPI = async (page = 0, size = 10, sort = 'ancNo', direction=
 export const ancDetailAPI = async (ancNo) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/announces/${ancNo}`, { headers });
-    console.log('zzzzzzzzzzzzzzz', response.data)
     return response.data;
   } catch (error) {
     throw new Error('Error fetching announcement detail: ' + error.message);
