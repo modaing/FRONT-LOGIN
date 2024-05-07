@@ -4,6 +4,7 @@ import Main from './pages/Main';
 import Insite from './pages/Insite';
 import Layout from './layouts/layout';
 import InsertAnnounce from './pages/InsertAnnounce';
+import Calendar from './pages/calendar/Calendar';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Route element={<Layout />}>
         <Route index element={<Main />} />
         <Route path="main" element={<Main />} />
+        <Route path='calendar' element={<Calendar/>}/>
         <Route path="Announces" element={<Announces />} />
         <Route path="insite" element={<Insite />} />
         <Route path="insertAnnounce" element={<InsertAnnounce />} />

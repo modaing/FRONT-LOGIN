@@ -22,7 +22,7 @@ function Sidebar() {
                     </Link>
                 </li>
                 <li className="nav-item">
-                    <Link className="nav-link collapsed" to="/" data-bs-target="#components-nav" data-bs-toggle="collapse">
+                    <Link className="nav-link collapsed" to="calendar" data-bs-target="#components-nav" data-bs-toggle="collapse">
                         <i className="bi bi-calendar-check"></i><span>캘린더</span>
                     </Link>
                 </li>

@@ -1,0 +1,12 @@
+.fc-day-sun a {
+    color: red !important;
+}
+  
+.fc-day-sat a {
+    color: blue !important;
+}
+
+a {
+    color: #212529;
+    text-decoration: none;
+}
