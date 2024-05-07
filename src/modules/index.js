@@ -1,8 +1,10 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
+import commuteReducer from "./CommuteModule";
 import announcesModule from './AnnounceModule';
 
 const rootReducer = combineReducers({
-    announcesModule,
+    commuteReducer,
+    announcesModule
 });
 
 export default rootReducer;
