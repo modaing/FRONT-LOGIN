@@ -14,11 +14,11 @@ const actions = createActions({
     [DELETE_CALENDAR]: () => {}
 });
 
-const calendarModule = handleActions({
+const calendarReducer = handleActions({
     [GET_CALENDAR]: (state, {payload}) => {},
     [POST_CALENDAR]: (state, {payload}) => {},
     [PUT_CALENDAR]: (state, {payload}) => {},
     [DELETE_CALENDAR]: (state, {payload}) => {}
 }, initialState);
 
-export default calendarModule;
+export default calendarReducer;
