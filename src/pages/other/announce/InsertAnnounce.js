@@ -47,10 +47,10 @@ function InsertAnnounce() {
         const htmlContent = stateToHTML(editorState.getCurrentContent());
 
         const formData = new FormData();
-        formData.append('announceDTO', JSON.stringify({ ancTitle: title, ancWriter: 'user', ancContent: htmlContent }));
+        formData.append('announceDTO', new Blob([JSON.stringify({ ancTitle: title, ancWriter: 'user', ancContent: htmlContent })], { type: 'application/json' }));
         formData.append('files', file);
 
-        console.log(htmlContent);
+        console.log(formData);
 
         try {
             const data = await ancInsertAPI(formData);
@@ -93,7 +93,7 @@ function InsertAnnounce() {
                 <div className="card">
                     <h5 className="card-title">Notice</h5>
                     <div className="content">
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit} charset="UTF-8">
                             <div className="row mb-3">
                                 <label htmlFor="inputText" className="col-sm-1 col-form-label">제목</label>
                                 <div className="col-sm-10">
