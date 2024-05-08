@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchAnnouncementsAsync, setCurrentPage } from '../../../modules/AnnounceModule';
+import '../../../css/common.css';
 
 function Announces() {
     const { announcements, currentPage, totalPages } = useSelector(state => state.announcesModule);
@@ -24,7 +25,7 @@ function Announces() {
             <tr key={index}>
                 <td style={{ width: '10%', textAlign: 'center', padding: '10px' }}>{announce.ancNo}</td>
                 <td style={{ width: '40%', textAlign: 'center', padding: '10px' }}>
-                <Link to={`/announces/${announce.ancNo}`}>{announce.ancTitle}</Link>
+                <Link className="linkWithoutUnderline" to={`/announces/${announce.ancNo}`}>{announce.ancTitle}</Link>
                 </td>
                 <td style={{ width: '20%', textAlign: 'center', padding: '10px' }} >{announce.ancWriter}</td>
                 <td style={{ width: '20%', textAlign: 'center', padding: '10px' }}>{announce.ancDate}</td>

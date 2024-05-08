@@ -25,3 +25,16 @@ export const ancDetailAPI = async (ancNo) => {
     throw new Error('Error fetching announcement detail: ' + error.message);
   }
 };
+
+export const ancInsertAPI = async (formData) => {
+  try {
+      const response = await axios.post(`${API_BASE_URL}/announces`, formData, {
+          headers: {
+              'Content-Type': 'multipart/form-data'
+          }
+      });
+      return response.data;
+  } catch (error) {
+      throw new Error('Error inserting announcement: ' + error.message);
+  }
+};

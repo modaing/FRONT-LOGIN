@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { ancDetailAPI } from '../../../apis/other/announce/AncAPICalls';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { ancDetailAPI } from '../../../apis/other/announce/AncAPICalls';
 import '../../../css/other/announce/ancDetail.css';
 
 function AnnounceDetail() {
-
     const cardTitleStyle = {
         marginLeft: '30px',
     };
+
     const contentStyle = {
         marginLeft: '100px',
     };
@@ -19,15 +19,21 @@ function AnnounceDetail() {
     }
 
     const { ancNo } = useParams();
-    const [announceDetail, setAnnounceDetail] = useState(null);
-    const [announceDetailFiles, setAnnounceDetailFiles] = useState([]);
+    const [announceDetailFiles, setAnnounceDetailFiles] = useState(null);
+    const [announceDetails, setAnnounceDetails] = useState(null);
 
     useEffect(() => {
         const getAnnounceDetail = async () => {
             try {
                 const data = await ancDetailAPI(ancNo);
-                setAnnounceDetail(data.announce);
-                setAnnounceDetailFiles(data.files);
+                if (data.files && data.files.length > 0) {
+                    // 파일이 있는 경우
+                    setAnnounceDetails(data.announce);
+                    setAnnounceDetailFiles(data.files);
+                } else {
+                    // 파일이 없는 경우
+                    setAnnounceDetails(data);
+                }
             } catch (error) {
                 console.error(error);
             }
@@ -68,32 +74,32 @@ function AnnounceDetail() {
                 <div className="card">
                     <h5 className="card-title" style={cardTitleStyle}>Notice</h5>
                     <div className="content" style={contentStyle}>
-                        {announceDetail && (
+                        {announceDetails && (
                             <React.Fragment>
                                 <div className="row mb-3">
                                     <label htmlFor="inputText" className="col-sm-1 col-form-label">제목</label>
                                     <div className="col-sm-10">
-                                        <textarea className="textarea" readOnly value={announceDetail.ancTitle} />
+                                        <textarea className="textarea" readOnly value={announceDetails.ancTitle} />
                                     </div>
                                 </div>
                                 <div className="row mb-3">
                                     <label htmlFor="inputText" className="col-sm-1 col-form-label">작성일</label>
                                     <div className="col-sm-10">
-                                        <textarea className="textarea" readOnly value={announceDetail.ancDate} />
+                                        <textarea className="textarea" readOnly value={announceDetails.ancDate} />
                                     </div>
                                 </div>
                                 <div className="row mb-3">
                                     <label htmlFor="inputText" className="col-sm-1 col-form-label">작성자</label>
                                     <div className="col-sm-10">
-                                        <textarea className="textarea" readOnly value={announceDetail.ancWriter} />
+                                        <textarea className="textarea" readOnly value={announceDetails.ancWriter} />
                                     </div>
                                 </div>
-                                {announceDetailFiles && announceDetailFiles.map((file, index) => (
+                                {announceDetailFiles && announceDetailFiles.length > 0 && announceDetailFiles.map((file, index) => (
                                     <div className="row mb-3" key={file.fileNo}>
                                         <label htmlFor="inputText" className="col-sm-1 col-form-label">파일</label>
                                         <div className="col-sm-10">
                                             <div>
-                                                <textarea readOnly className="textarea-file">{file.fileName}</textarea>
+                                                <textarea readOnly className="textarea-file" key={file.fileNo} value={file.fileName} />
                                                 <button className="downloadButton" onClick={() => downloadFile(file.fileName, file.fileContent)}>다운로드</button>
                                             </div>
                                         </div>
@@ -102,9 +108,7 @@ function AnnounceDetail() {
                                 <label htmlFor="inputText" className="col-sm-2 col-form-label">본문</label>
                                 <div className="row mb-7" style={marginStyle}>
                                     <div className="col-sm-1"></div>
-                                    <div className="col-sm-10" >
-                                        <textarea className="textareaContent" readOnly value={announceDetail.ancContent}></textarea>
-                                    </div>
+                                    <div className="col-sm-10" dangerouslySetInnerHTML={{ __html: announceDetails.ancContent }}></div>
                                 </div>
                             </React.Fragment>
                         )}
