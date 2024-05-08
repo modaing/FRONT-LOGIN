@@ -1,0 +1,63 @@
+.cardTitle {
+    margin-left: 30px;
+}
+
+.content {
+    margin-left: 100px;
+}
+
+.textarea {
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    outline: none;
+    resize: none;
+    width: 100%;
+    height: 45px;
+    min-height: 47px;
+    text-align: left;
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+
+.textarea-file {
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    outline: none;
+    resize: none;
+    width: 89%;
+    height: 45px;
+    min-height: 47px;
+    text-align: left;
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+
+.textareaContent {
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    outline: none;
+    resize: none;
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    text-align: left;
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+
+.downloadButton {
+    background-color: #112D4E;
+    color: white;
+    border: none;
+    width: 10%;
+    height: 45px;
+    min-height: 47px;
+    border-radius: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+

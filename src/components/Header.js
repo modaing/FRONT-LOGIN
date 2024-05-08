@@ -7,23 +7,25 @@ function Header() {
             <div className="d-flex align-items-center justify-content-between">
                 {/* 홈으로 이동하는 링크 */}
                 <Link to="/" className="logo d-flex align-items-center">
-                    <img src="img/logo.png" alt=""/>
+                    <img src="img/logo.png" alt="" />
                 </Link>
-                <i className="bi bi-list toggle-sidebar-btn"></i>
-            </div>
-            <div className="search-bar">
-                <form className="search-form d-flex align-items-center" method="POST" action="#">
-                    <input type="text" name="query" placeholder="Search" title="Enter search keyword"/>
-                    <button type="submit" title="Search"><i className="bi bi-search"></i></button>
-                </form>
             </div>
             <nav className="header-nav ms-auto">
                 <ul className="d-flex align-items-center">
-                    <li className="nav-item d-block d-lg-none">
-                        {/* 검색 바를 토글하는 링크 */}
-                        <Link to="#" className="nav-link nav-icon search-bar-toggle ">
-                            <i className="bi bi-search"></i>
+                    <li className="nav-item dropdown">
+                        {/* 메시지 메뉴를 토글하는 링크 */}
+                        <Link to="#" className="nav-link nav-icon">
+                            <i className="bi bi-chat-right-dots"></i>
+                            <span className="badge bg-primary badge-number"></span>
                         </Link>
+                        {/* 알림 메뉴 */}
+                        <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+                            <li className="dropdown-header">
+                                You have 4 new notifications
+                                <Link to="#"><span className="badge rounded-pill bg-primary p-2 ms-2">View all</span></Link>
+                            </li>
+                            {/* 알림 목록 */}
+                        </ul>
                     </li>
                     <li className="nav-item dropdown">
                         {/* 알림 메뉴를 토글하는 링크 */}
@@ -43,8 +45,8 @@ function Header() {
                     <li className="nav-item dropdown">
                         {/* 쪽지 메뉴를 토글하는 링크 */}
                         <Link to="#" className="nav-link nav-icon" data-bs-toggle="dropdown">
-                            <i className="bi bi-chat-left-text"></i>
-                            <span className="badge bg-success badge-number">3</span>
+                            <i className="bi bi-envelope"></i>
+                            <span className="badge bg-success badge-number"></span>
                         </Link>
                         {/* 쪽지 메뉴 */}
                         <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
@@ -58,7 +60,7 @@ function Header() {
                     <li className="nav-item dropdown pe-3">
                         {/* 프로필 메뉴를 토글하는 링크 */}
                         <Link to="#" className="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown">
-                            <img src="img/profile-img.png" alt="Profile" className="rounded-circle"/>
+                            <img src="img/profile-img.png" alt="Profile" className="rounded-circle" />
                             <span className="d-none d-md-block dropdown-toggle ps-2">user01</span>
                         </Link>
                         {/* 프로필 메뉴 */}
@@ -68,7 +70,7 @@ function Header() {
                                 <span>Web Designer</span>
                             </li>
                             <li>
-                                <hr className="dropdown-divider"/>
+                                <hr className="dropdown-divider" />
                             </li>
                             {/* 프로필 메뉴 항목 */}
                             <li>
@@ -78,7 +80,7 @@ function Header() {
                                 </Link>
                             </li>
                             <li>
-                                <hr className="dropdown-divider"/>
+                                <hr className="dropdown-divider" />
                             </li>
                             {/* 프로필 메뉴 항목 */}
                             <li>
@@ -88,7 +90,7 @@ function Header() {
                                 </Link>
                             </li>
                             <li>
-                                <hr className="dropdown-divider"/>
+                                <hr className="dropdown-divider" />
                             </li>
                             {/* 프로필 메뉴 항목 */}
                             <li>
@@ -98,7 +100,7 @@ function Header() {
                                 </Link>
                             </li>
                             <li>
-                                <hr className="dropdown-divider"/>
+                                <hr className="dropdown-divider" />
                             </li>
                             {/* 프로필 메뉴 항목 */}
                             <li>
