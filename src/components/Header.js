@@ -1,7 +1,36 @@
-import { Link } from 'react-router-dom'; // react-router-dom에서 Link 가져오기
+import { Link, useNavigate } from 'react-router-dom'; // react-router-dom에서 Link 가져오기
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import { decodeJwt } from'../utils/tokenUtils';
+import { useDispatch } from 'react-redux';
+import { callLogoutAPI } from '../apis/MemberAPICalls';
 
 function Header() {
+    
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const isLogin = window.localStorage.getItem("accessToken");
+    let decoded = null;
+
+    if (isLogin !== undefined && isLogin !== null) {
+        const decodedTokenInfo = decodeJwt(window.localStorage.getItem("accessToken"));
+        console.log('decoded token info', decodedTokenInfo);
+        decoded = decodedTokenInfo.role;
+        console.log('구성원의 정보:',decoded);
+    }
+
+    const onClickLogoutHandler = () => {
+
+        dispatch(callLogoutAPI()).then(() => {
+            window.localStorage.removeItem("accessToken");
+            console.log('구성원 로그아웃');
+            alert('로그아웃합니다');
+            navigate("/login", { replace: true });
+        }).catch((error => {
+            console.log("Error during logout:", error);
+        }));
+    };
+
     return (
         <header id="header" className="header fixed-top d-flex align-items-center">
             <div className="d-flex align-items-center justify-content-between">
@@ -104,7 +133,7 @@ function Header() {
                             </li>
                             {/* 프로필 메뉴 항목 */}
                             <li>
-                                <Link to="#" className="dropdown-item d-flex align-items-center">
+                                <Link to="#" className="dropdown-item d-flex align-items-center" onClick={onClickLogoutHandler}>
                                     <i className="bi bi-box-arrow-right"></i>
                                     <span>Sign Out</span>
                                 </Link>
