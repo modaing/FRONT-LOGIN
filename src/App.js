@@ -5,6 +5,7 @@ import InsertAnnounce from './pages/other/announce/InsertAnnounce';
 import Insite from './pages/other/Insite';
 import Layout from './layouts/layout';
 import InsertAnnounce from './pages/InsertAnnounce';
+import Calendar from './pages/calendar/Calendar';
 import RecordCommute from './pages/commute/RecordCommute';
 import RecordCorrectionOfCommute from './pages/commute/RecordCorrectionOfCommute';
 import CommuteManage from './pages/commute/CommuteManage';
@@ -19,6 +20,7 @@ function App() {
       <Route element={<Layout />}>
         <Route index element={<Main />} />
         <Route path="main" element={<Main />} />
+        <Route path='calendar' element={<Calendar/>}/>
 
         {/* 출퇴근 */}
         <Route path='recordCommute' element={<RecordCommute />} />
