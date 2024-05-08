@@ -19,6 +19,7 @@ function App() {
       <Route element={<Layout />}>
         <Route index element={<Main />} />
         <Route path="main" element={<Main />} />
+        {/* 캘린더 */}
         <Route path='calendar' element={<Calendar/>}/>
 
         {/* 출퇴근 */}
