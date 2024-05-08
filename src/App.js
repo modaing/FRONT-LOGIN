@@ -14,47 +14,45 @@ import Login from './pages/member/Login';
 import Error from './pages/Error';
 
 function App() {
-  const isLoggedIn = !!window.localStorage.getItem('accessToken'); // Check if user is logged in
+  const isLoggedIn = !!window.localStorage.getItem("accessToken");
 
   return (
     <BrowserRouter>
       <Routes>
+        {/* Redirect to main page if logged in */}
         <Route
-        path=''
+          path="/"
           element={
             isLoggedIn ? (
-              <Layout>
-                <Route index element={<Main />} />
-                <Route path="main" element={<Main />} />
-                {/* 캘린더 */}
-                <Route path='calendar' element={<Calendar/>}/>
-
-                {/* 출퇴근 */}
-                <Route path="recordCommute" element={<RecordCommute />} />
-                <Route path="recordCorrectionOfCommute" element={<RecordCorrectionOfCommute />} />
-                <Route path="commuteManage" element={<CommuteManage />} />
-                <Route path="commuteCorrectionManage" element={<CommuteCorrectionManage />} />
-
-                {/* 기타 */}
-                <Route path="announces" element={<Announces />} />
-                <Route path="announces/:ancNo" element={<AnnounceDetail />} />
-                <Route path="insite" element={<Insite />} />
-                <Route path="insertAnnounce" element={<InsertAnnounce />} />
-              </Layout>
+              <Navigate to="/main" replace />
             ) : (
-              <Navigate to="/login" replace={true}/> // Redirect to login page if not logged in
+              <Navigate to="/login" replace />
             )
           }
         />
+        {/* Authenticated routes */}
+        {isLoggedIn && (
+          <Route element={<Layout />}>
+            <Route index element={<Main />} />
+            <Route path="main" element={<Main />} />
+            <Route path='calendar' element={<Calendar/>}/>
+            <Route path="recordCommute" element={<RecordCommute />} />
+            <Route path="recordCorrectionOfCommute" element={<RecordCorrectionOfCommute />} />
+            <Route path="commuteManage" element={<CommuteManage />} />
+            <Route path="commuteCorrectionManage" element={<CommuteCorrectionManage />} />
+            <Route path="announces" element={<Announces />} />
+            <Route path="announces/:ancNo" element={<AnnounceDetail />} />
+            <Route path="insite" element={<Insite />} />
+            <Route path="insertAnnounce" element={<InsertAnnounce />} />
+          </Route>
+        )}
+        {/* Login route */}
         <Route path="/login" element={<Login />} />
+        {/* Error route */}
         <Route path='*' element={<Error />} />
       </Routes>
     </BrowserRouter>
   );
 }
-
-
-
-
 
 export default App;
