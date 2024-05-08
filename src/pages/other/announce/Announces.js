@@ -76,7 +76,7 @@ function Announces() {
             <div className="col-lg-12">
                 <div className="card">
                     <h5 className="card-title" style={cardTitleStyle}>Notice</h5>
-                    <div className="content" style={contentStyle}>
+                    <div className="content">
                         <table className="table table-hover">
                             <thead>
                                 <tr style={{ backgroundColor: '#f9f9f9' }}>
