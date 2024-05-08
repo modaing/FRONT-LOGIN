@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { ancDetailAPI } from '../../../apis/other/announce/AncAPICalls';
 import '../../../css/other/announce/ancDetail.css';
+import '../../../css/common.css';
 
 function AnnounceDetail() {
     const cardTitleStyle = {

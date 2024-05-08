@@ -5,7 +5,7 @@ import { fetchAnnouncementsAsync, setCurrentPage } from '../../../modules/Announ
 import '../../../css/common.css';
 
 function Announces() {
-    const { announcements, currentPage, totalPages } = useSelector(state => state.announcesModule);
+    const { announcements, currentPage, totalPages } = useSelector(state => state.announceReducer);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -52,22 +52,15 @@ function Announces() {
 
 
 
-    const cardTitleStyle = {
-        marginLeft: '30px'
-    };
-
     const paginationStyle = {
         display: 'flex',
         justifyContent: 'center',
     };
 
-    const contentStyle = {
-        marginLeft: '100px'
-    };
 
     return (
         <main id="main" className="main">
-            <div className="pagetitle" style={{ marginBottom: '20px', marginTop: '20px' }}>
+            <div className="pagetitle">
                 <h1>공지사항 목록</h1>
                 <nav>
                     <ol className="breadcrumb">
@@ -80,8 +73,8 @@ function Announces() {
             </div>
             <div className="col-lg-12">
                 <div className="card">
-                    <h5 className="card-title" style={cardTitleStyle}>Notice</h5>
-                    <div className="content">
+                    <h5 className="card-title">Notice</h5>
+                    <div className="content" >
                         <table className="table table-hover">
                             <thead>
                                 <tr style={{ backgroundColor: '#f9f9f9' }}>
