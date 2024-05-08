@@ -1,12 +1,19 @@
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import Announces from './pages/Announces';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Main from './pages/Main';
-import Insite from './pages/Insite';
+import Announces from './pages/other/announce/Announces';
+import InsertAnnounce from './pages/other/announce/InsertAnnounce';
+import Insite from './pages/other/Insite';
 import Layout from './layouts/layout';
 import InsertAnnounce from './pages/InsertAnnounce';
 import Calendar from './pages/calendar/Calendar';
+import RecordCommute from './pages/commute/RecordCommute';
+import RecordCorrectionOfCommute from './pages/commute/RecordCorrectionOfCommute';
+import CommuteManage from './pages/commute/CommuteManage';
+import CommuteCorrectionManage from './pages/commute/CommuteCorrectionManage';
+import AnnounceDetail from './pages/other/announce/AnnounceDetail';
 
 function App() {
+  
   return (
     <BrowserRouter>
     <Routes>
@@ -14,13 +21,22 @@ function App() {
         <Route index element={<Main />} />
         <Route path="main" element={<Main />} />
         <Route path='calendar' element={<Calendar/>}/>
-        <Route path="Announces" element={<Announces />} />
-        <Route path="insite" element={<Insite />} />
-        <Route path="insertAnnounce" element={<InsertAnnounce />} />
+
+        {/* 출퇴근 */}
+        <Route path='recordCommute' element={<RecordCommute />} />
+        <Route path='recordCorrectionOfCommute' element={<RecordCorrectionOfCommute />} />
+        <Route path='commuteManage' element={<CommuteManage />} />
+        <Route path='commuteCorrectionManage' elemen={<CommuteCorrectionManage />} />
+
+        {/* 기타 */}
+        <Route path="announces" element={<Announces />} />
+         <Route path="announces/:ancNo" element={<AnnounceDetail />} />
+         <Route path="insite" element={<Insite />} />
+         <Route path="insertAnnounce" element={<InsertAnnounce />} />
       </Route>
     </Routes>
   </BrowserRouter>
-    
+
   );
 }
 

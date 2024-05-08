@@ -32,28 +32,23 @@ function Sidebar() {
                     </Link>
                     <ul id="forms-nav" className="nav-content collapse" data-bs-parent="#sidebar-nav">
                         <li>
-                            <Link to="/" style={underLineStyle}>
+                            <Link to="/recordCommute" style={underLineStyle}>
+                                <i className="bi bi-circle"></i><span>출퇴근 기록</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/recordCorrectionOfCommute" style={underLineStyle}>
+                                <i className="bi bi-circle"></i><span>출퇴근 정정 기록</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/commuteManage" style={underLineStyle}>
                                 <i className="bi bi-circle"></i><span>출퇴근 관리</span>
                             </Link>
                         </li>
                         <li>
-                            <Link to="/" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>월 별 근태 관리</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>일 별 근태 관리</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>근태 통계</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>추가</span>
+                            <Link to="/commuteCorrectionManage" style={underLineStyle}>
+                                <i className="bi bi-circle"></i><span>출퇴근 정정 관리</span>
                             </Link>
                         </li>
                     </ul>
