@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import '../style.css';
 import '../common/common.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -8,6 +8,8 @@ import 'remixicon/fonts/remixicon.css';
 
 function Sidebar() {
 
+    const location = useLocation();
+
     const underLineStyle = {
         textDecoration: 'none'
     }
@@ -16,13 +18,13 @@ function Sidebar() {
         <aside id="sidebar" className="sidebar">
             <ul className="sidebar-nav" id="sidebar-nav">
                 <li className="nav-item">
-                    <Link className="nav-link" to="/">
+                    <Link className={`nav-link ${location.pathname === '/' ? '' : 'nav-link-main-cal collapsed'}`} to="/">
                         <i className="bi bi-grid"></i>
                         <span>Main</span>
                     </Link>
                 </li>
-                <li className="nav-item">
-                    <Link className="nav-link collapsed" to="/calendar" data-bs-target="#components-nav">
+                <li className={`nav-item ${location.pathname === '/calendar' ? 'active' : ''}`}>
+                    <Link className={`nav-link ${location.pathname === '/calendar' ? '' : 'nav-link-main-cal collapsed'}`} to="/calendar">
                         <i className="bi bi-calendar-check"></i><span>캘린더</span>
                     </Link>
                 </li>
@@ -33,12 +35,12 @@ function Sidebar() {
                     <ul id="forms-nav" className="nav-content collapse" data-bs-parent="#sidebar-nav">
                         <li>
                             <Link to="/recordCommute" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>출퇴근 기록</span>
+                                <i className="bi bi-circle"></i><span>출퇴근 내역</span>
                             </Link>
                         </li>
                         <li>
                             <Link to="/recordCorrectionOfCommute" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>출퇴근 정정 기록</span>
+                                <i className="bi bi-circle"></i><span>출퇴근 정정 내역</span>
                             </Link>
                         </li>
                         <li>
