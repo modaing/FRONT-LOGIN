@@ -9,6 +9,7 @@ import CommuteCorrectionManage from './pages/commute/CommuteCorrectionManage';
 import AnnounceDetail from './pages/other/announce/AnnounceDetail';
 import Announces from './pages/other/announce/Announces';
 import InsertAnnounce from './pages/other/announce/InsertAnnounce';
+import Calendar from './pages/calendar/Calendar';
 
 function App() {
 
@@ -19,6 +20,8 @@ function App() {
         <Route element={<Layout />}>
           <Route index element={<Main />} />
           <Route path="main" element={<Main />} />
+          {/* 캘린더 */}
+          <Route path='calendar' element={<Calendar />} />
 
           {/* 출퇴근 */}
           <Route path='recordCommute' element={<RecordCommute />} />
