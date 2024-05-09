@@ -40,7 +40,7 @@ function Sidebar() {
                         </li>
                         <li>
                             <Link to="/recordCorrectionOfCommute" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>출퇴근 정정 기록</span>
+                                <i className="bi bi-circle"></i><span>출퇴근 정정 내역</span>
                             </Link>
                         </li>
                         <li>

@@ -33,8 +33,11 @@ function Calendar() {
             calendarStart : start,
             calendarEnd : end,
             calendarName : title,
+            color,
+            department : "개발팀", // TODO: 나중에 부서 선택해서 추가하는 기능넣어야 함
             registrantId : 200401023 // TODO: 나중에 관리자 사번 뽑아서 넣는 걸로 바꿔야 함
         };
+        console.log('[requestData]: ', requestData)
         callInsertCalendarAPI(requestData)
 
     };
@@ -53,10 +56,22 @@ function Calendar() {
 
     const events = [
         {
-            title: 'test',
+            title: 'test1',
             start: '2024-05-01T08:00:00',
             end: '2024-05-02T09:00:00',
             color: 'red'
+        },
+        {
+            title: 'test2',
+            start: '2024-05-01T08:00:00',
+            end: '2024-05-02T09:00:00',
+            color: 'blue'
+        },
+        {
+            title: 'test3',
+            start: '2024-05-03T07:30:00',
+            end: '2024-05-04T09:00:00',
+            color: 'green'
         }
     ];
 

@@ -20,6 +20,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+
         {/* Redirect to main page if logged in */}
         <Route
           path="/"
