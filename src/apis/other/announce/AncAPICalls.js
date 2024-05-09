@@ -3,10 +3,11 @@ import axios from 'axios';
 const API_BASE_URL = 'http://localhost:8080';
 
 const headers = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json',
-
+  'Content-Type': 'application/json; charset=UTF-8',
+  Accept: '*/*',
+  Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
 };
+
 
 export const ancListAPI = async (page = 0, size = 10, sort = 'ancNo', direction='DESC') => {
   try {
@@ -20,9 +21,24 @@ export const ancListAPI = async (page = 0, size = 10, sort = 'ancNo', direction=
 export const ancDetailAPI = async (ancNo) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/announces/${ancNo}`, { headers });
-    console.log('zzzzzzzzzzzzzzz', response.data)
+    console.log(response);
     return response.data;
   } catch (error) {
     throw new Error('Error fetching announcement detail: ' + error.message);
+  }
+};
+
+export const ancInsertAPI = async (formData) => {
+  try {
+      const response = await axios.post(`${API_BASE_URL}/announces`, formData, {
+          headers: {
+              'Content-Type': 'multipart/form-data; charset=UTF-8',
+              'Accept': 'application/json',
+              'Authorization': 'Bearer ' + window.localStorage.getItem('accessToken'),
+          }
+      });
+      return response.data;
+  } catch (error) {
+      throw new Error('Error inserting announcement: ' + error.message);
   }
 };
