@@ -1,0 +1,15 @@
+.pageTitle {
+    margin-bottom: 20px;
+    margin-top: 20px;
+    font-size: 15px;
+}
+
+.profilePic {
+    height: 250px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+
+.contentStyle1 {
+    margin-left: 20px;
+}
