@@ -1,8 +1,5 @@
 
-// 부트스트랩 CSS 파일을 import 합니다.
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-// 부트스트랩 JavaScript 파일을 import 합니다.
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import Tooltip from 'bootstrap/js/dist/tooltip';
@@ -52,14 +49,6 @@ import * as echarts from 'echarts';
     })
   }
 
-  /**
-   * Search bar toggle
-   */
-  if (select('.search-bar-toggle')) {
-    on('click', '.search-bar-toggle', function (e) {
-      select('.search-bar').classList.toggle('search-bar-show')
-    })
-  }
 
   /**
    * Navbar links active state on scroll

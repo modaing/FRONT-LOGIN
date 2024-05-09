@@ -1,24 +1,24 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { SHA256 } from 'crypto-js';
-import { ancInsertAPI } from '../../../apis/other/announce/AncAPICalls';
+import { ancUpdateAPI, ancDetailAPI } from '../../../apis/other/announce/AncAPICalls';
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 import ReactMarkdown from 'react-markdown';
 import { decodeJwt } from '../../../utils/tokenUtils';
 import '../../../css/common.css';
 
-function InsertAnnounce() {
+function UpdateAnnounce() {
     const navigate = useNavigate();
     const [content, setContent] = useState('');
     const [title, setTitle] = useState('');
-    const [files, setFiles] = useState([]); // 파일 목록을 배열로 유지
+    const [files, setFiles] = useState([]);
     const [previewContent, setPreviewContent] = useState('');
+    const { ancNo } = useParams();
     const quillRef = useRef();
 
-    let memberId = 0; // const는 재할당 불가능 하므로, let으로 만들어주었음
+    let memberId = 0;
     let name = '';
 
     const isLogin = window.localStorage.getItem("accessToken");
@@ -28,10 +28,9 @@ function InsertAnnounce() {
         const decodedTokenInfo = decodeJwt(window.localStorage.getItem("accessToken"));
         decoded = decodedTokenInfo.role;
 
-        memberId = decodedTokenInfo.memberId; // 함수 내부에서 memberId 할당
+        memberId = decodedTokenInfo.memberId;
         name = decodedTokenInfo.name;
     }
-
 
     const insertButton = {
         backgroundColor: '#112D4E',
@@ -59,45 +58,73 @@ function InsertAnnounce() {
         textAlign: 'right'
     };
 
-    const handleChangeColor = (color) => {
-        const quill = quillRef.current.getEditor();
-        quill.format('color', color);
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        const htmlContent = content;
-
-        const formData = new FormData();
-        formData.append('announceDTO', new Blob([JSON.stringify({ ancTitle: title, ancWriter: name , ancContent: htmlContent })], { type: 'application/json' }));
-        files.forEach(file => formData.append('files', file)); // 모든 파일을 FormData에 추가
+    
+        const safeContent = content || '';
+        const htmlContent = safeContent;
 
         try {
-            const data = await ancInsertAPI(formData);
+            const data = await ancUpdateAPI(ancNo, { ancTitle: title, ancWriter: name, ancContent: htmlContent });
             navigate('/announces');
         } catch (error) {
             console.error(error);
         }
     };
 
-    const handleChangeFiles = (e) => {
-        setFiles([...e.target.files]); // 모든 파일을 파일 목록에 추가
-    };
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await ancDetailAPI(ancNo);
+                setTitle(response.ancTitle);
+                setContent(response.ancContent);
+            } catch (error) {
+                console.error('Error fetching announcement detail: ', error);
+            }
+        };
+
+        fetchData();
+    }, [ancNo]);
 
     useEffect(() => {
+        if (!content) {
+            return;
+        }
+
         const plainTextContent = content.replace(/(<([^>]+)>)/gi, "");
         const markdownContent = `# \n${plainTextContent}`;
+        
         remark().use(remarkHtml).process(markdownContent, function (err, file) {
-            if (err) throw err;
+            if (err) {
+                console.error(err);
+                return;
+            }
             setPreviewContent(String(file));
         });
     }, [content, title]);
+    
+    // 세부 내용에서 이미지 데이터를 추출하고 이미지를 표시하는 함수
+    const renderImages = () => {
+        // content가 정의되지 않은 경우 빈 배열을 반환
+        if (!content) {
+            return [];
+        }
+    
+        const imageDataRegex = /<img[^>]+src=["'](?:(?!data:)[^"']+)["'][^>]*>/g;
+        const imageDataList = content.match(imageDataRegex) || [];
+        return (
+            <div>
+                {imageDataList.map((imageData, index) => (
+                    <img key={index} src={imageData} alt={`Image ${index}`} />
+                ))}
+            </div>
+        );
+    };
 
     return (
         <main id="main" className="main">
             <div className="pagetitle">
-                <h1>공지사항 등록</h1>
+                <h1>공지사항 수정</h1>
                 <nav>
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><a href="/">Home</a></li>
@@ -114,13 +141,7 @@ function InsertAnnounce() {
                             <div className="row mb-3">
                                 <label htmlFor="inputText" className="col-sm-1 col-form-label">제목</label>
                                 <div className="col-sm-10">
-                                    <input type="text" className="form-control" id="inputText" placeholder="제목을 입력해주세요" value={title} onChange={(e) => setTitle(e.target.value)} required />
-                                </div>
-                            </div>
-                            <div className="row mb-3">
-                                <label htmlFor="inputText" className="col-sm-1 col-form-label">파일</label>
-                                <div className="col-sm-10">
-                                    <input className="form-control" type="file" id="formFile" multiple onChange={handleChangeFiles} />
+                                    <input type="text" className="form-control" id="inputText" placeholder="제목을 입력해주세요" value={title} onChange={(e) => setTitle(e.target.value)} />
                                 </div>
                             </div>
                             <label htmlFor="inputText" className="col-sm-2 col-form-label">본문</label>
@@ -143,11 +164,12 @@ function InsertAnnounce() {
                                         }}
                                     />
                                     <ReactMarkdown>{previewContent}</ReactMarkdown>
+                                    {renderImages()} {/* 이미지 표시 */}
                                 </div>
                             </div>
                             <div style={buttonClass}>
-                                <button className="notice-cancel-button" type='button' style={cancelButton} onClick={() => navigate('/announces')}>취소하기</button>
-                                <button className="notice-insert-button" style={insertButton}>등록하기</button>
+                                <button className="notice-cancel-button" type='button' style={cancelButton} onClick={() => navigate('/announces')}>취소</button>
+                                <button className="notice-insert-button" style={insertButton}>수정</button>
                             </div>
                         </form>
                     </div>
@@ -157,4 +179,4 @@ function InsertAnnounce() {
     );
 }
 
-export default InsertAnnounce;
+export default UpdateAnnounce;
