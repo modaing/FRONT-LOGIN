@@ -31,13 +31,37 @@ export const ancInsertAPI = async (formData) => {
   try {
       const response = await axios.post(`${API_BASE_URL}/announces`, formData, {
           headers: {
-              'Content-Type': 'multipart/form-data; charset=UTF-8',
+              'Content-Type': 'multipart/form-data',
               'Accept': 'application/json',
               'Authorization': 'Bearer ' + window.localStorage.getItem('accessToken'),
           }
       });
       return response.data;
   } catch (error) {
-      throw new Error('Error inserting announcement: ' + error.message);
+      throw new Error('Error insert: ' + error.message);
+  }
+};
+
+export const ancDeleteAPI = async (ancNo) => {
+  try {
+    const response = await axios.delete(`${API_BASE_URL}/announces/${ancNo}`, {headers});
+    return response.data;
+  } catch (error) {
+    throw new Error('Error fetching delete: ' + error.message);
+  }
+};
+
+export const ancUpdateAPI = async (ancNo, data) => {
+  try {
+    const response = await axios.put(`${API_BASE_URL}/announces/${ancNo}`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': '*/*',
+        'Authorization': 'Bearer ' + window.localStorage.getItem('accessToken'),
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('Error update: ' + error.message);
   }
 };

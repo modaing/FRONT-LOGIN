@@ -61,3 +61,45 @@
     margin-left: 10px;
 }
 
+.deleteButton {
+    background-color: #112D4E;
+    color: white;
+    border: none;
+    width: 9%;
+    height: 6%;
+    min-height: 47px;
+    border-radius: 10px;
+    padding: 1px 5px;
+    cursor: pointer;
+    margin-right: 50px;
+}
+
+.listButton {
+    background-color: #3F72AF;
+    color: white;
+    border: none;
+    width: 9%;
+    height: 6%;
+    min-height: 47px;
+    border-radius: 10px;
+    padding: 1px 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.updateButton {
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    border: 1px solid #3F72AF; 
+    width: 9%;
+    height: 6%;
+    min-height: 47px;
+    border-radius: 10px;
+    padding: 1px 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+
+
+

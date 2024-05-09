@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { ancDetailAPI } from '../../../apis/other/announce/AncAPICalls';
+import { ancDeleteAPI } from '../../../apis/other/announce/AncAPICalls';
 import '../../../css/other/announce/ancDetail.css';
-import '../../../css/common.css';
 
 function AnnounceDetail() {
+    const navigate = useNavigate();
+    const { ancNo } = useParams();
+    const [announceDetailFiles, setAnnounceDetailFiles] = useState(null);
+    const [announceDetails, setAnnounceDetails] = useState(null);
+
     const cardTitleStyle = {
         marginLeft: '30px',
     };
@@ -19,9 +24,9 @@ function AnnounceDetail() {
         marginBottom: '20px'
     }
 
-    const { ancNo } = useParams();
-    const [announceDetailFiles, setAnnounceDetailFiles] = useState(null);
-    const [announceDetails, setAnnounceDetails] = useState(null);
+    const marginButtonGroup = {
+        marginLeft: '72%'
+    }
 
     useEffect(() => {
         const getAnnounceDetail = async () => {
@@ -58,6 +63,22 @@ function AnnounceDetail() {
         document.body.removeChild(a);
     };
 
+    const handleDelete = async (ancNo) => {
+        try {
+            // ancDeleteAPI 함수를 호출하여 해당 공지사항을 삭제
+            const response = await ancDeleteAPI(ancNo);
+            navigate('/announces');
+
+        } catch (error) {
+            // 삭제에 실패한 경우 오류를 콘솔에 출력합니다.
+            console.error('Error deleting announcement:', error.message);
+        }
+    };
+
+    const handleUpdate = () => {
+        navigate(`/updateAnnounces/${ancNo}`);
+    };
+
     return (
         <main id="main" className="main">
             <div className="pagetitle">
@@ -67,14 +88,18 @@ function AnnounceDetail() {
                         <li className="breadcrumb-item"><a href="/">Home</a></li>
                         <li className="breadcrumb-item">기타</li>
                         <li className="breadcrumb-item"><Link to="/announcements">공지사항</Link></li>
-                        <li className="breadcrumb-item active">상세보기</li>
+                        <div className="col-sm-10" style={marginButtonGroup}>
+                            <button className="deleteButton" onClick={() => handleDelete(ancNo)}>삭제</button>
+                            <button className="updateButton" onClick={handleUpdate}>수정</button>
+                            <button className="listButton" onClick={() => navigate('/announces')}>목록</button>
+                        </div>
                     </ol>
                 </nav>
             </div>
             <div className="col-lg-12">
                 <div className="card">
-                    <h5 className="card-title" style={cardTitleStyle}>Notice</h5>
-                    <div className="content" style={contentStyle}>
+                    <h5 className="card-title">Notice</h5>
+                    <div className="content">
                         {announceDetails && (
                             <React.Fragment>
                                 <div className="row mb-3">
@@ -107,7 +132,7 @@ function AnnounceDetail() {
                                     </div>
                                 ))}
                                 <label htmlFor="inputText" className="col-sm-2 col-form-label">본문</label>
-                                <div className="row mb-7" style={marginStyle}>
+                                <div className="row mb-7">
                                     <div className="col-sm-1"></div>
                                     <div className="col-sm-10" dangerouslySetInnerHTML={{ __html: announceDetails.ancContent }}></div>
                                 </div>
