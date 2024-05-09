@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -11,6 +11,7 @@ function AnnounceDetail() {
     const { ancNo } = useParams();
     const [announceDetailFiles, setAnnounceDetailFiles] = useState(null);
     const [announceDetails, setAnnounceDetails] = useState(null);
+    const contentRef = useRef(null);
 
     const cardTitleStyle = {
         marginLeft: '30px',
@@ -79,6 +80,13 @@ function AnnounceDetail() {
         navigate(`/updateAnnounces/${ancNo}`);
     };
 
+    useEffect(() => {
+        if (contentRef.current) {
+            const contentHeight = contentRef.current.scrollHeight;
+            contentRef.current.style.height = `${contentHeight}px`;
+        }
+    }, [announceDetails]);
+
     return (
         <main id="main" className="main">
             <div className="pagetitle">
@@ -131,10 +139,11 @@ function AnnounceDetail() {
                                         </div>
                                     </div>
                                 ))}
-                                <label htmlFor="inputText" className="col-sm-2 col-form-label">본문</label>
-                                <div className="row mb-7">
-                                    <div className="col-sm-1"></div>
-                                    <div className="col-sm-10" dangerouslySetInnerHTML={{ __html: announceDetails.ancContent }}></div>
+                                <div className="row mb-3">
+                                    <label htmlFor="inputText" className="col-sm-1 col-form-label">본문</label>
+                                    <div className="col-sm-10">
+                                        <div className="editorStyle" ref={contentRef} dangerouslySetInnerHTML={{ __html: announceDetails.ancContent }}></div>
+                                    </div>
                                 </div>
                             </React.Fragment>
                         )}

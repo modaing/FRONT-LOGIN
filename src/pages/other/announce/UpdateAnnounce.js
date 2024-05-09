@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { ancUpdateAPI } from '../../../apis/other/announce/AncAPICalls'; // 수정된 부분
+import { ancUpdateAPI, ancDetailAPI } from '../../../apis/other/announce/AncAPICalls'; // 수정된 부분
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 import ReactMarkdown from 'react-markdown';
@@ -80,6 +80,20 @@ function UpdateAnnounce() {
     const handleChangeFiles = (e) => {
         setFiles([...e.target.files]); // 모든 파일을 파일 목록에 추가
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await ancDetailAPI(ancNo);
+                setTitle(response.ancTitle);
+                setContent(response.ancContent);
+            } catch (error) {
+                console.error('Error fetching announcement detail: ', error);
+            }
+        };
+
+        fetchData();
+    }, [ancNo]);
 
     useEffect(() => {
         const plainTextContent = content.replace(/(<([^>]+)>)/gi, "");
