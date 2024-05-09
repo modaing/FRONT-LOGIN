@@ -1,32 +1,49 @@
-import {
-    GET_COMMUTE,
-    GET_COMMUTES,
-    POST_COMMUTE,
-    PUT_COMMUTE
-} from '../modules/CommuteModule.js';
+import { getCommutelist } from "../modules/CommuteModule";
+import { request, memberId } from "./CommonAPI";
 
-export const callCommuteListAPI = ({ currentPage, member, memberId, date }) => {
-    let requestURL;
 
-    if(currentPage !== undefined || currentPage !== null) {
-        requestURL = `http://${process.env.REACT_APP_RESETAPI_IP}:8080/commutes?target=${member}&targetValue=${memberId}&date=${date}&offset=${currentPage}`;
-    } else {
-        requestURL = `http://${process.env.REACT_APP_RESETAPI_IP}:8080/commutes?target=${member}&targetValue=${memberId}&date=${date}`;
-    }
+// export function callCommuteListAPI(target, targetValue, date) {
+//     console.log('[callCommuteListAPI] 들어옴 ');
 
-    console.log('[callCommuteListAPI] requestURL : ', requestURL);
+//     const url = `/commutes?target=${target}&targetValue=${targetValue}&date=${date}`;
 
-    return async (dispatch, getState) => {
-        const result = await fetch(requestURL, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: '*/*'
-            },
-        }).then((response) => response.json());
-        if (result.status === 200) {
-            console.log('[callCommuteListAPI] result : ', result);
-            dispatch({ type: GET_COMMUTES, payload: result.data});
+//     console.log('[callCommuteListAPI] url : ', url);
+
+//     return async (dispatch) => {
+//         try {
+
+//             const result = await request('GET', url);
+
+//             console.log('[callCommuteListAPI] result : ', result);
+
+//             dispatch(getCommutelist(result));
+
+//         } catch (error) {
+//             console.error('Error commuteListAPI : ', error);
+//         }
+//     };
+// }
+
+export const callCommuteListAPI = (target, targetValue, date) => {
+    /* redux-thunk(미들 웨어)를 이용한 비동기 처리 */
+    return async (dispatch) => {
+        try {
+
+            console.log('[target] : ', target);
+            console.log('[targetValue] : ', targetValue);
+            console.log('[date] : ', date);
+
+            const url = `/commutes?target=${target}&targetValue=${targetValue}&date=${date}`;
+            // const url = `/commutes?target=member&targetValue=240401835&date=2024-05-09`;
+            const response = await request('GET', url);
+
+            console.log('[callCommuteListAPI] response : ', response.response.data.results.result);
+
+            /* action 생성 함수에 결과 전달하며 dispatch 호출 */
+            dispatch(getCommutelist(response.response.data.results.result));
+
+        } catch (error) {
+            console.error('[callCommuteListAPI] Error : ', error);
         }
-    };
-};
+    }
+}

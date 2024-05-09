@@ -1,0 +1,55 @@
+.progress {
+    width: 100%;
+    align-self: center;
+    --bs-progress-bar-bg: #112D4E;
+    margin-top: 7px;
+    display: flex;
+};
+
+.pageTitle {
+    margin-bottom: 20px;
+    margin-top: 20px;
+};
+
+.content1 {
+    margin-left: 25px;
+    text-align: center;
+    margin: 20px
+};
+
+.content2 {
+    margin-left: 25px;
+};
+
+.tableStyle {
+    width: 97%;
+    border-collapse: collapse;
+    text-align: center;
+};
+
+/* .insertButton {
+    background-color: #112D4E;
+    color: white;
+    border-radius: 5px;
+    padding: 1% 1.5%;
+    cursor: pointer;
+    margin-left: 60%;
+    height: 45px;
+    text-decoration: none;
+};
+
+.red {
+    color: #AF3131;
+    font-weight: 900;
+};
+
+.blue {
+    color: #3F72AF;
+    font-weight: 900;
+
+};
+
+.black {
+    color: '#00000';
+    font-weight: 900;
+}; */

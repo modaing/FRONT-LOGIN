@@ -1,4 +1,4 @@
-import './commute.css';
+import '../../css/commute/commute.css';
 import styled from "styled-components";
 
 function RecordCorrectionOfCommute() {
