@@ -101,17 +101,17 @@ function Sidebar() {
                     <ul id="icons-nav" className="nav-content collapse" data-bs-parent="#sidebar-nav">
                         <li>
                             <Link to="/" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>인사이트</span>
+                                <i className="bi bi-circle"></i><span>조직도 조회</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/ManageMember" style={underLineStyle}>
+                                <i className="bi bi-circle"></i><span>구성원 관리</span>
                             </Link>
                         </li>
                         <li>
                             <Link to="/" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>공지사항</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>설문 조사</span>
+                                <i className="bi bi-circle"></i><span>부서 및 직급 관리</span>
                             </Link>
                         </li>
                         <li>

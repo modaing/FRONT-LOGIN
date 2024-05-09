@@ -9,27 +9,56 @@ function Header() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const isLogin = window.localStorage.getItem("accessToken");
-    let decoded = null;
+    let memberRole = null;
 
-    if (isLogin !== undefined && isLogin !== null) {
-        const decodedTokenInfo = decodeJwt(window.localStorage.getItem("accessToken"));
-        console.log('decoded token info', decodedTokenInfo);
-        decoded = decodedTokenInfo.role;
-        console.log('구성원의 정보:',decoded);
+    const token = window.localStorage.getItem("accessToken");
+    const memberInfo = decodeJwt(token);
+    const profilePic = memberInfo.imageUrl;
+    console.log('구성원 프로필 사진:',profilePic);
+    
+    if (token) {
+        try {
+            const decodedTokenInfo = decodeJwt(token);
+            console.log('Decoded token info:', decodedTokenInfo);
+            memberRole = decodedTokenInfo.role;
+            console.log('구성원의 role:',memberRole);
+        } catch (error) {
+            console.log('Error decoding JWT token:', error);
+        }
     }
 
     const onClickLogoutHandler = () => {
-
-        dispatch(callLogoutAPI()).then(() => {
-            window.localStorage.removeItem("accessToken");
-            console.log('구성원 로그아웃');
-            alert('로그아웃합니다');
-            navigate("/login", { replace: true });
-        }).catch((error => {
-            console.log("Error during logout:", error);
-        }));
+        dispatch(callLogoutAPI())
+            .then(() => {
+                window.localStorage.removeItem("accessToken");
+                console.log('구성원 로그아웃');
+                alert('로그아웃 합니다');
+                navigate("/login", { replace: true });
+            })
+            .catch(error => {
+                console.error("Error during logout:", error);
+            });
     };
+
+
+    // if (token !== undefined && token !== null) {
+    //     const decodedTokenInfo = decodeJwt(window.localStorage.getItem("accessToken"));
+    //     console.log('decoded token info', decodedTokenInfo);
+    //     decoded = decodedTokenInfo.role;
+    //     console.log('구성원의 정보:',decoded);
+    // }
+
+    // const onClickLogoutHandler = () => {
+
+    //     dispatch(callLogoutAPI()).then(() => {
+    //         window.localStorage.removeItem("accessToken");
+    //         console.log('구성원 로그아웃');
+    //         alert('로그아웃합니다');
+    //         navigate("/login", { replace: true });
+    //     }).catch((error => {
+    //         console.log("Error during logout:", error);
+    //     }));
+    // };
 
     return (
         <header id="header" className="header fixed-top d-flex align-items-center">
@@ -89,21 +118,21 @@ function Header() {
                     <li className="nav-item dropdown pe-3">
                         {/* 프로필 메뉴를 토글하는 링크 */}
                         <Link to="#" className="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown">
-                            <img src="img/profile-img.png" alt="Profile" className="rounded-circle" />
-                            <span className="d-none d-md-block dropdown-toggle ps-2">user01</span>
+                            <img src={profilePic} alt="Profile" className="rounded-circle" />
+                            <span className="d-none d-md-block dropdown-toggle ps-2">{memberInfo.name} </span>
                         </Link>
                         {/* 프로필 메뉴 */}
                         <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                             <li className="dropdown-header">
-                                <h6>Kevin Anderson</h6>
-                                <span>Web Designer</span>
+                                <h6>{memberInfo.name}</h6>
+                                <span>{memberInfo.positionName}</span>
                             </li>
                             <li>
                                 <hr className="dropdown-divider" />
                             </li>
                             {/* 프로필 메뉴 항목 */}
                             <li>
-                                <Link to="users-profile.html" className="dropdown-item d-flex align-items-center">
+                                <Link to="myProfile" className="dropdown-item d-flex align-items-center">
                                     <i className="bi bi-person"></i>
                                     <span>My Profile</span>
                                 </Link>

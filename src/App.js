@@ -12,6 +12,9 @@ import CommuteCorrectionManage from './pages/commute/CommuteCorrectionManage';
 import AnnounceDetail from './pages/other/announce/AnnounceDetail';
 import Login from './pages/member/Login';
 import Error from './pages/Error';
+import MyProfile from './pages/profile/MyProfile';
+import ManageMember from './pages/member/ManageMember';
+import RegisterMember from './pages/member/RegisterMember';
 import UpdateAnnounce from './pages/other/announce/UpdateAnnounce';
 
 function App() {
@@ -20,7 +23,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-
         {/* Redirect to main page if logged in */}
         <Route
           path="/"
@@ -37,7 +39,8 @@ function App() {
           <Route element={<Layout />}>
             <Route index element={<Main />} />
             <Route path="main" element={<Main />} />
-            <Route path='calendar' element={<Calendar/>}/>
+            <Route path='calendar' element={<Calendar />} />
+            <Route path='myProfile' element={<MyProfile />} />
             <Route path="recordCommute" element={<RecordCommute />} />
             <Route path="recordCorrectionOfCommute" element={<RecordCorrectionOfCommute />} />
             <Route path="commuteManage" element={<CommuteManage />} />
@@ -47,6 +50,8 @@ function App() {
             <Route path="updateAnnounces/:ancNo" element={<UpdateAnnounce />} />
             <Route path="insite" element={<Insite />} />
             <Route path="insertAnnounce" element={<InsertAnnounce />} />
+            <Route path='manageMember' element={<ManageMember />} />
+            <Route path='registerMember' element={<RegisterMember />} />
           </Route>
         )}
         {/* Login route */}

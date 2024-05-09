@@ -73,6 +73,12 @@
     text-indent: 10px;
 }
 
+.inputStyle1::-webkit-inner-spin-button,
+.inputStyle1::-webkit-outer-spin-button {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+}
 .inputStyle2 {
     margin-bottom: 10px;
 }
