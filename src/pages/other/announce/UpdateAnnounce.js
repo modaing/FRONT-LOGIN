@@ -3,18 +3,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { ancUpdateAPI, ancDetailAPI } from '../../../apis/other/announce/AncAPICalls';
-import { remark } from 'remark';
-import remarkHtml from 'remark-html';
-import ReactMarkdown from 'react-markdown';
 import { decodeJwt } from '../../../utils/tokenUtils';
 import '../../../css/common.css';
 
 function UpdateAnnounce() {
     const navigate = useNavigate();
+    const [announceDetailFiles, setAnnounceDetailFiles] = useState(null);
+    const [announceDetails, setAnnounceDetails] = useState(null);
     const [content, setContent] = useState('');
     const [title, setTitle] = useState('');
-    const [files, setFiles] = useState([]);
-    const [previewContent, setPreviewContent] = useState('');
     const { ancNo } = useParams();
     const quillRef = useRef();
 
@@ -61,8 +58,7 @@ function UpdateAnnounce() {
     const handleSubmit = async (e) => {
         e.preventDefault();
     
-        const safeContent = content || '';
-        const htmlContent = safeContent;
+        const htmlContent = content;
 
         try {
             const data = await ancUpdateAPI(ancNo, { ancTitle: title, ancWriter: name, ancContent: htmlContent });
@@ -72,54 +68,31 @@ function UpdateAnnounce() {
         }
     };
 
+
     useEffect(() => {
-        const fetchData = async () => {
+        const getAnnounceDetail = async () => {
             try {
-                const response = await ancDetailAPI(ancNo);
-                setTitle(response.ancTitle);
-                setContent(response.ancContent);
+                const data = await ancDetailAPI(ancNo);
+                if (data.files && data.files.length > 0) {
+                    // 파일이 있는 경우
+                    setAnnounceDetails(data.announce);
+                    setAnnounceDetailFiles(data.files);
+                    setTitle(data.announce.ancTitle); // 제목 채우기
+                    setContent(data.announce.ancContent); // 내용 채우기
+                } else {
+                    // 파일이 없는 경우
+                    setAnnounceDetails(data);
+                    setTitle(data.ancTitle); // 제목 채우기
+                    setContent(data.ancContent); // 내용 채우기
+                }
             } catch (error) {
-                console.error('Error fetching announcement detail: ', error);
+                console.error(error);
             }
         };
-
-        fetchData();
+        getAnnounceDetail();
     }, [ancNo]);
 
-    useEffect(() => {
-        if (!content) {
-            return;
-        }
-
-        const plainTextContent = content.replace(/(<([^>]+)>)/gi, "");
-        const markdownContent = `# \n${plainTextContent}`;
-        
-        remark().use(remarkHtml).process(markdownContent, function (err, file) {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            setPreviewContent(String(file));
-        });
-    }, [content, title]);
-    
-    // 세부 내용에서 이미지 데이터를 추출하고 이미지를 표시하는 함수
-    const renderImages = () => {
-        // content가 정의되지 않은 경우 빈 배열을 반환
-        if (!content) {
-            return [];
-        }
-    
-        const imageDataRegex = /<img[^>]+src=["'](?:(?!data:)[^"']+)["'][^>]*>/g;
-        const imageDataList = content.match(imageDataRegex) || [];
-        return (
-            <div>
-                {imageDataList.map((imageData, index) => (
-                    <img key={index} src={imageData} alt={`Image ${index}`} />
-                ))}
-            </div>
-        );
-    };
+    console.log('check',announceDetails);
 
     return (
         <main id="main" className="main">
@@ -137,6 +110,7 @@ function UpdateAnnounce() {
                 <div className="card">
                     <h5 className="card-title">Notice</h5>
                     <div className="content">
+                    {announceDetails && (
                         <form onSubmit={handleSubmit} charset="UTF-8">
                             <div className="row mb-3">
                                 <label htmlFor="inputText" className="col-sm-1 col-form-label">제목</label>
@@ -163,8 +137,6 @@ function UpdateAnnounce() {
                                             ],
                                         }}
                                     />
-                                    <ReactMarkdown>{previewContent}</ReactMarkdown>
-                                    {renderImages()} {/* 이미지 표시 */}
                                 </div>
                             </div>
                             <div style={buttonClass}>
@@ -172,6 +144,7 @@ function UpdateAnnounce() {
                                 <button className="notice-insert-button" style={insertButton}>수정</button>
                             </div>
                         </form>
+                    )}
                     </div>
                 </div>
             </div>
