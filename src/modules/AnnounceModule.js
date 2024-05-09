@@ -24,7 +24,7 @@ export const fetchAnnouncementsAsync = (page) => async (dispatch) => {
 };
 
 /* 리듀서 */
-const announcesModule = handleActions(
+const announceReducer = handleActions(
   {
     [fetchAnnouncements]: (state, { payload }) => ({
       ...state,
@@ -40,4 +40,4 @@ const announcesModule = handleActions(
   initialState
 );
 
-export default announcesModule;
+export default announceReducer;

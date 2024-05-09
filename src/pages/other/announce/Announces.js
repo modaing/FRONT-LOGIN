@@ -5,7 +5,7 @@ import { fetchAnnouncementsAsync, setCurrentPage } from '../../../modules/Announ
 import '../../../css/common.css';
 
 function Announces() {
-    const { announcements, currentPage, totalPages } = useSelector(state => state.announcesModule);
+    const { announcements, currentPage, totalPages } = useSelector(state => state.announceReducer);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -52,36 +52,29 @@ function Announces() {
 
 
 
-    const cardTitleStyle = {
-        marginLeft: '30px'
-    };
-
     const paginationStyle = {
         display: 'flex',
         justifyContent: 'center',
     };
 
-    const contentStyle = {
-        marginLeft: '100px'
-    };
 
     return (
         <main id="main" className="main">
-            <div className="pagetitle" style={{ marginBottom: '20px', marginTop: '20px' }}>
+            <div className="pagetitle">
                 <h1>공지사항 목록</h1>
                 <nav>
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><a href="/">Home</a></li>
                         <li className="breadcrumb-item">기타</li>
                         <li className="breadcrumb-item active">공지사항</li>
-                        <Link to="/insertAnnounce" className="notice-insert-button" style={{ backgroundColor: '#112D4E', color: 'white', borderRadius: '15px', padding: '1% 1.5%', cursor: 'pointer', marginLeft: '90%', textDecoration: 'none' }}>등록하기</Link>
+                        <Link to="/insertAnnounce" style={{ backgroundColor: '#112D4E', color: 'white', borderRadius: '10px', padding: '1% 2%', cursor: 'pointer', marginLeft: '93%', textDecoration: 'none' }}>등록</Link>
                     </ol>
                 </nav>
             </div>
             <div className="col-lg-12">
                 <div className="card">
-                    <h5 className="card-title" style={cardTitleStyle}>Notice</h5>
-                    <div className="content">
+                    <h5 className="card-title">Notice</h5>
+                    <div className="ancListContent" >
                         <table className="table table-hover">
                             <thead>
                                 <tr style={{ backgroundColor: '#f9f9f9' }}>

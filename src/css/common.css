@@ -7,3 +7,26 @@
     color: rgb(1, 29, 54);
   }
   
+
+/* 페이지 타이틀 / 카드 제목 / 본문 배치 css 공통으로 분리 */
+.card-title {
+    margin-left: 30px;
+}
+
+.content {
+    margin-left: 100px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+}
+
+.pagetitle {
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.ancListContent {
+  margin-left: 0px;
+}
