@@ -7,16 +7,18 @@ import koLocale from '@fullcalendar/core/locales/ko';
 import './Calendar.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from './Modal';
-import { callInsertCalendarAPI, callSelectCalendarAPI } from '../../apis/CalendarAPICalls';
+import { callInsertCalendarAPI, callSelectCalendarAPI, callUpdateCalendarAPI } from '../../apis/CalendarAPICalls';
 import { useSelector, useDispatch } from 'react-redux';
 import '../../css/common.css'
+import UpdateModal from './UpdateModal';
 
 
 function Calendar() {
 
-    const { calendarList, insertMessage } = useSelector(state => state.calendarReducer)
+    const { calendarList, insertMessage, updateMessage } = useSelector(state => state.calendarReducer)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [events, setEvents] = useState([]);
+    const [selectedEvent, setSelectedEvent] = useState();
     const dispatch = useDispatch();
 
 
@@ -26,6 +28,12 @@ function Calendar() {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
+        setSelectedEvent();
+    };
+
+    const handleEventClick = (info) => {
+        setSelectedEvent(info.event);
+        handleOpenModal();
     };
 
     const handleSaveChanges = ({ title, start, end, color }) => {
@@ -41,6 +49,18 @@ function Calendar() {
 
     };
 
+    const handleUpdateChanges = ({ id, title, start, end, color }) => {
+        const requestData = {
+            calendarNo: id,
+            calendarStart: start,
+            calendarEnd: end,
+            calendarName: title,
+            color,
+        };
+        dispatch(callUpdateCalendarAPI(requestData));
+
+    };
+
 
     useEffect(() => {
         const department = "개발팀"; // TODO: 나중에 부서 선택해서 추가하는 기능넣어야 함
@@ -52,7 +72,7 @@ function Calendar() {
         const department = "개발팀"; // TODO: 나중에 부서 선택해서 추가하는 기능넣어야 함
         dispatch(callSelectCalendarAPI(department));
 
-    }, [insertMessage]);
+    }, [insertMessage, updateMessage]);
 
     useEffect(() => {
         if (calendarList) {
@@ -68,7 +88,7 @@ function Calendar() {
                 }
 
                 return {
-                    calendarNo: calendar.calendarNo,
+                    id: calendar.calendarNo,
                     title: calendar.calendarName,
                     start: calendar.calendarStart,
                     end: calendar.calendarEnd,
@@ -108,11 +128,12 @@ function Calendar() {
                 }}
 
                 events={events}
-
+                eventClick={handleEventClick}
                 locale={koLocale}
             />
         </main>
         <Modal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveChanges} />
+        {selectedEvent && <UpdateModal isOpen={isModalOpen} onClose={handleCloseModal} onUpdate={handleUpdateChanges} event={selectedEvent} />}
     </>
 
 }
