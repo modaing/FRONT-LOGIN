@@ -15,8 +15,8 @@ const actions = createActions({
 });
 
 const calendarReducer = handleActions({
-    [GET_CALENDAR]: (state, {payload}) => {},
-    [POST_CALENDAR]: (state, {payload}) => {},
+    [GET_CALENDAR]: (state, {payload}) => ({calendarList: payload.calendarList}),
+    [POST_CALENDAR]: (state, {payload}) => ({insertMessage: payload}),
     [PUT_CALENDAR]: (state, {payload}) => {},
     [DELETE_CALENDAR]: (state, {payload}) => {}
 }, initialState);
