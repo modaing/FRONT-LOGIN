@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { SHA256 } from 'crypto-js';
-import { ancInsertAPI } from '../../../apis/other/announce/AncAPICalls';
+import { ancInsertAPI } from '../../apis/other/announce/AncAPICalls';
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 import ReactMarkdown from 'react-markdown';
-import { decodeJwt } from '../../../utils/tokenUtils';
-import '../../../css/common.css';
+import { decodeJwt } from '../../utils/tokenUtils';
+import '../../css/common.css';
 
 function InsertAnnounce() {
     const navigate = useNavigate();

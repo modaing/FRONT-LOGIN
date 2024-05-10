@@ -102,11 +102,9 @@
 
 
 .editorStyle {
-    /* 본문 테두리 스타일 */
     border: 1px solid #ccc;
     border-radius: 10px;
     padding: 10px;
-    /* 본문 크기 조절 */
     resize: vertical;
     max-height: 1500px; /* 최대 높이 설정 */
 }

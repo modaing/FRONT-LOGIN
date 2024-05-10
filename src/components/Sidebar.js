@@ -148,7 +148,7 @@ function Sidebar() {
                             </Link>
                         </li>
                         <li>
-                            <Link to="/" style={underLineStyle}>
+                            <Link to="/receiveNoteList" style={underLineStyle}>
                                 <i className="bi bi-circle"></i><span>쪽지함</span>
                             </Link>
                         </li>
