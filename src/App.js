@@ -1,21 +1,23 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Main from './pages/Main';
-import Announces from './pages/other/announce/Announces';
-import InsertAnnounce from './pages/other/announce/InsertAnnounce';
-import Insite from './pages/other/Insite';
+import Announces from './pages/announce/Announces';
+import InsertAnnounce from './pages/announce/InsertAnnounce';
+import Insite from './pages/insite/Insite';
 import Layout from './layouts/layout';
 import Calendar from './pages/calendar/Calendar';
 import RecordCommute from './pages/commute/RecordCommute';
 import RecordCorrectionOfCommute from './pages/commute/RecordCorrectionOfCommute';
 import CommuteManage from './pages/commute/CommuteManage';
 import CommuteCorrectionManage from './pages/commute/CommuteCorrectionManage';
-import AnnounceDetail from './pages/other/announce/AnnounceDetail';
+import AnnounceDetail from './pages/announce/AnnounceDetail';
 import Login from './pages/member/Login';
 import Error from './pages/Error';
 import MyProfile from './pages/profile/MyProfile';
 import ManageMember from './pages/member/ManageMember';
 import RegisterMember from './pages/member/RegisterMember';
-import UpdateAnnounce from './pages/other/announce/UpdateAnnounce';
+import UpdateAnnounce from './pages/announce/UpdateAnnounce';
+import ReceiveNoteList from './pages/note/ReceiveNoteList';
+import SendNoteList from './pages/note/SendNoteList';
 
 function App() {
   const isLoggedIn = !!window.localStorage.getItem("accessToken");
@@ -52,6 +54,9 @@ function App() {
             <Route path="insertAnnounce" element={<InsertAnnounce />} />
             <Route path='manageMember' element={<ManageMember />} />
             <Route path='registerMember' element={<RegisterMember />} />
+            <Route path='receiveNoteList' element={<ReceiveNoteList/>} />
+            <Route path='sendNoteList' element={<SendNoteList/>} />
+            
           </Route>
         )}
         {/* Login route */}

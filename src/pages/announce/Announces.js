@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchAnnouncementsAsync, setCurrentPage } from '../../../modules/AnnounceModule';
-import '../../../css/common.css';
+import { fetchAnnouncementsAsync, setCurrentPage } from '../../modules/AnnounceModule';
+import '../../css/common.css';
 
 function Announces() {
     const { announcements, currentPage, totalPages } = useSelector(state => state.announceReducer);

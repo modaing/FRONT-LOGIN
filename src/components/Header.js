@@ -1,11 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom'; // react-router-dom에서 Link 가져오기
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { decodeJwt } from'../utils/tokenUtils';
+import { decodeJwt } from '../utils/tokenUtils';
 import { useDispatch } from 'react-redux';
 import { callLogoutAPI } from '../apis/MemberAPICalls';
 
 function Header() {
-    
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -14,14 +14,14 @@ function Header() {
     const token = window.localStorage.getItem("accessToken");
     const memberInfo = decodeJwt(token);
     const profilePic = memberInfo.imageUrl;
-    console.log('구성원 프로필 사진:',profilePic);
-    
+    console.log('구성원 프로필 사진:', profilePic);
+
     if (token) {
         try {
             const decodedTokenInfo = decodeJwt(token);
             console.log('Decoded token info:', decodedTokenInfo);
             memberRole = decodedTokenInfo.role;
-            console.log('구성원의 role:',memberRole);
+            console.log('구성원의 role:', memberRole);
         } catch (error) {
             console.log('Error decoding JWT token:', error);
         }
@@ -100,21 +100,19 @@ function Header() {
                             {/* 알림 목록 */}
                         </ul>
                     </li>
-                    <li className="nav-item dropdown">
-                        {/* 쪽지 메뉴를 토글하는 링크 */}
-                        <Link to="#" className="nav-link nav-icon" data-bs-toggle="dropdown">
-                            <i className="bi bi-envelope"></i>
-                            <span className="badge bg-success badge-number"></span>
-                        </Link>
-                        {/* 쪽지 메뉴 */}
-                        <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
-                            <li className="dropdown-header">
-                                You have 3 new messages
-                                <Link to="#"><span className="badge rounded-pill bg-primary p-2 ms-2">View all</span></Link>
-                            </li>
-                            {/* 쪽지 목록 */}
-                        </ul>
-                    </li>
+                    {/* 쪽지 메뉴를 토글하는 링크 */}
+                    <Link to="/sendNoteList" className="nav-link nav-icon">
+                        <i className="bi bi-envelope"></i>
+                        <span className="badge bg-success badge-number"></span>
+                    </Link>
+                    {/* 쪽지 메뉴 */}
+                    <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
+                        <li className="dropdown-header">
+                            You have 3 new messages
+                            <Link to="#"><span className="badge rounded-pill bg-primary p-2 ms-2">View all</span></Link>
+                        </li>
+                        {/* 쪽지 목록 */}
+                    </ul>
                     <li className="nav-item dropdown pe-3">
                         {/* 프로필 메뉴를 토글하는 링크 */}
                         <Link to="#" className="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown">

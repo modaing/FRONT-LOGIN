@@ -2,9 +2,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { ancUpdateAPI, ancDetailAPI } from '../../../apis/other/announce/AncAPICalls';
-import { decodeJwt } from '../../../utils/tokenUtils';
-import '../../../css/common.css';
+import { ancUpdateAPI, ancDetailAPI } from '../../apis/other/announce/AncAPICalls';
+import { decodeJwt } from '../../utils/tokenUtils';
+import '../../css/common.css';
 
 function UpdateAnnounce() {
     const navigate = useNavigate();

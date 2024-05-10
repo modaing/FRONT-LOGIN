@@ -1,0 +1,104 @@
+.first-column {
+    width: 10%;
+    text-align: center;
+}
+
+.second-column {
+    width: 10%;
+    text-align: center;
+}
+
+.third-column {
+    width: 20%;
+    text-align: left;
+}
+
+.fourth-column {
+    width: 45%;
+    text-align: left;
+}
+
+.fifth-column {
+    width: 15%;
+    text-align: center;
+}
+
+
+
+.title-column {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-right: -70px;
+}
+
+                                
+.sidebar-fake {
+    margin-left: 10%;
+    margin-bottom: 8%;
+    color: rgb(94, 94, 94);
+    font-weight: bold;
+    display: block; /* 블록 요소로 설정하여 각각 새로운 줄에 표시 */
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    border: solid 1px, black;
+}
+
+.sendMailBtn {
+    margin-top: -10%;
+    margin-bottom: 8%;
+    margin-left: 8%;
+    color: rgb(94, 94, 94);
+    font-weight: bold;
+    width: 150px; /* Set your desired width */
+    height: 40px; /* Set your desired height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #112D4E;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.sendMailBtn:hover {
+    background-color: #0A1D38;
+    color: #ffffff;
+}
+
+/* 체크박스 스타일 */
+.checkbox-custom {
+    transform: scale(1.2); /* 크기를 키우기 위해 */
+    background: none
+}
+
+
+input[type=checkbox] {
+    accent-color:rgb(0, 75, 136);
+}
+
+.rounded-circle {
+    height: 30px;
+    width: 30px;
+    margin-bottom: -2px;
+}
+
+
+
+.arrow-icon {
+    font-size: 1.2rem;
+    background-color: none;
+    background: none;
+    color: #000; /* 원하는 색상으로 변경하세요 */
+    font-weight: bolder;
+}
+
+.hover-effect:hover {
+    color: #4c4c4c;
+    transform: scale(1.5);
+    transition: transform 0.3s, color 0.3s;
+}

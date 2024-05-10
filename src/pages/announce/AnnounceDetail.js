@@ -2,9 +2,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { ancDetailAPI } from '../../../apis/other/announce/AncAPICalls';
-import { ancDeleteAPI } from '../../../apis/other/announce/AncAPICalls';
-import '../../../css/other/announce/ancDetail.css';
+import { ancDetailAPI } from '../../apis/other/announce/AncAPICalls';
+import { ancDeleteAPI } from '../../apis/other/announce/AncAPICalls';
+import '../../css/announce/ancDetail.css';
 
 function AnnounceDetail() {
     const navigate = useNavigate();
