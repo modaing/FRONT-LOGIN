@@ -1,29 +1,38 @@
 import React, { useState, useEffect } from 'react';
 
-const Modal = ({ isOpen, onClose, onSave }) => {
+const UpdateModal = ({ isOpen, onClose, onUpdate, event }) => {
+    const [id, setId] = useState('');
     const [title, setTitle] = useState('');
     const [start, setStart] = useState('');
     const [end, setEnd] = useState('');
     const [color, setColor] = useState('red');
+    
 
-    const handleSave = () => {
-        onSave({ title, start, end, color });
+    const handleUpdate = () => {
+
+        onUpdate({ id, title, start, end, color });
         onClose();
     };
 
     const resetModal = () => {
-        setTitle('');
-        setStart('');
-        setEnd('');
-        setColor('red');
+        // 시작시간과 종료시간이 동일한 경우 종료시간이 event에 end가 들어가지 않아서 값이 있을 때만 toISOString 호출하게 함
+        if (event.end) {
+            setEnd(event.end.toISOString().slice(0, 16));
+        }
+
+        setId(event.id)
+        setTitle(event.title);
+        // toISOString() 메소드를 호출하면 "YYYY-MM-DDTHH:mm:ss.sssZ" 형식으로 반환되는데, YYYY-MM-DDTHH:mm  
+        setStart(event.start.toISOString().slice(0, 16));
+        setColor(event.color);
     };
 
-    // 모달이 열릴 때 초기화
     useEffect(() => {
-        if (isOpen) {
+        if (isOpen && event) {
             resetModal();
         }
-    }, [isOpen]);
+    }, [isOpen, event]);
+
 
     return (
         isOpen && (
@@ -31,8 +40,7 @@ const Modal = ({ isOpen, onClose, onSave }) => {
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">일정 추가하기</h5>
-                            <button type="button" className="btn-close" onClick={onClose}></button>
+                            <h5 className="modal-title">일정 수정하기</h5>
                         </div>
                         <div className="modal-body">
                             <div>일정이름 : <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} /></div>
@@ -52,7 +60,7 @@ const Modal = ({ isOpen, onClose, onSave }) => {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
-                            <button type="button" className="btn btn-primary" onClick={handleSave}>등록</button>
+                            <button type="button" className="btn btn-primary" onClick={handleUpdate}>수정</button>
                         </div>
                     </div>
                 </div>
@@ -61,4 +69,4 @@ const Modal = ({ isOpen, onClose, onSave }) => {
     );
 };
 
-export default Modal;
+export default UpdateModal;

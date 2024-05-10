@@ -1,4 +1,4 @@
-import { GET_CALENDAR, POST_CALENDAR } from "../modules/CalendarModule";
+import { GET_CALENDAR, POST_CALENDAR, PUT_CALENDAR } from "../modules/CalendarModule";
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8080';
@@ -31,8 +31,22 @@ export const callInsertCalendarAPI = (requestData) => {
             dispatch({ type: POST_CALENDAR, payload: response.data });
 
         } catch (error) {
-            console.error('일정 추가에 문제가 있습니다:', error);
+            console.error('일정 추가에 문제 발생:', error);
         }
-    }
+    };
+};
 
+export const callUpdateCalendarAPI = (requestData) => {
+    return async (dispatch) => {
+        try {
+            console.log('[callUpdateCalendarAPI] axios 전');
+            const response = await axios.put(`${API_BASE_URL}/calendars`, requestData, { headers })
+
+            console.log('[response]: ', response);
+            dispatch({ type: PUT_CALENDAR, payload: response.data });
+
+        } catch (error) {
+            console.error('일정 수정에 문제 발생:', error);
+        }
+    };
 };
