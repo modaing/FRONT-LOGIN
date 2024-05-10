@@ -7,7 +7,7 @@ import koLocale from '@fullcalendar/core/locales/ko';
 import './Calendar.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from './Modal';
-import { callInsertCalendarAPI, callSelectCalendarAPI, callUpdateCalendarAPI } from '../../apis/CalendarAPICalls';
+import { callDeleteCalendarAPI, callInsertCalendarAPI, callSelectCalendarAPI, callUpdateCalendarAPI } from '../../apis/CalendarAPICalls';
 import { useSelector, useDispatch } from 'react-redux';
 import '../../css/common.css'
 import UpdateModal from './UpdateModal';
@@ -16,7 +16,7 @@ import { Popover } from 'bootstrap';
 
 function Calendar() {
 
-    const { calendarList, insertMessage, updateMessage } = useSelector(state => state.calendarReducer)
+    const { calendarList, insertMessage, updateMessage, deleteMessage } = useSelector(state => state.calendarReducer)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [events, setEvents] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState();
@@ -64,6 +64,10 @@ function Calendar() {
 
     };
 
+    const handleDeleteChanges = (id) => {
+        dispatch(callDeleteCalendarAPI(id));
+    }
+
 
     useEffect(() => {
         const department = "개발팀"; // TODO: 나중에 부서 선택해서 추가하는 기능넣어야 함
@@ -75,7 +79,7 @@ function Calendar() {
         const department = "개발팀"; // TODO: 나중에 부서 선택해서 추가하는 기능넣어야 함
         dispatch(callSelectCalendarAPI(department));
 
-    }, [insertMessage, updateMessage]);
+    }, [insertMessage, updateMessage, deleteMessage]);
 
     useEffect(() => {
         if (calendarList) {
@@ -160,7 +164,7 @@ function Calendar() {
             />
         </main>
         <Modal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveChanges} />
-        {selectedEvent && <UpdateModal isOpen={isModalOpen} onClose={handleCloseModal} onUpdate={handleUpdateChanges} event={selectedEvent} />}
+        {selectedEvent && <UpdateModal isOpen={isModalOpen} onClose={handleCloseModal} onUpdate={handleUpdateChanges} onDelete={handleDeleteChanges} event={selectedEvent} />}
     </>
 
 }
