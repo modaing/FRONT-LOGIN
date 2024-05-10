@@ -5,9 +5,10 @@ const Modal = ({ isOpen, onClose, onSave }) => {
     const [start, setStart] = useState('');
     const [end, setEnd] = useState('');
     const [color, setColor] = useState('red');
+    const [detail, setDetail] = useState('');
 
     const handleSave = () => {
-        onSave({ title, start, end, color });
+        onSave({ title, start, end, color, detail });
         onClose();
     };
 
@@ -16,6 +17,7 @@ const Modal = ({ isOpen, onClose, onSave }) => {
         setStart('');
         setEnd('');
         setColor('red');
+        setDetail('');
     };
 
     // 모달이 열릴 때 초기화
@@ -49,6 +51,7 @@ const Modal = ({ isOpen, onClose, onSave }) => {
                                     <option value="purple">보라색</option>
                                 </select>
                             </div>
+                            <div>일정상세 : <input type="text" value={detail} onChange={(e) => setDetail(e.target.value)} /></div>
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>

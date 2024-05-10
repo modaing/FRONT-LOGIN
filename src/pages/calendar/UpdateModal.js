@@ -6,11 +6,12 @@ const UpdateModal = ({ isOpen, onClose, onUpdate, event }) => {
     const [start, setStart] = useState('');
     const [end, setEnd] = useState('');
     const [color, setColor] = useState('red');
-    
+    const [detail, setDetail] = useState('');
+
 
     const handleUpdate = () => {
 
-        onUpdate({ id, title, start, end, color });
+        onUpdate({ id, title, start, end, color, detail });
         onClose();
     };
 
@@ -19,12 +20,12 @@ const UpdateModal = ({ isOpen, onClose, onUpdate, event }) => {
         if (event.end) {
             setEnd(event.end.toISOString().slice(0, 16));
         }
-
         setId(event.id)
         setTitle(event.title);
         // toISOString() 메소드를 호출하면 "YYYY-MM-DDTHH:mm:ss.sssZ" 형식으로 반환되는데, YYYY-MM-DDTHH:mm  
         setStart(event.start.toISOString().slice(0, 16));
         setColor(event.color);
+        setDetail(event.extendedProps.detail)
     };
 
     useEffect(() => {
@@ -57,8 +58,10 @@ const UpdateModal = ({ isOpen, onClose, onUpdate, event }) => {
                                     <option value="purple">보라색</option>
                                 </select>
                             </div>
+                            <div>일정상세 : <input type="text" value={detail} onChange={(e) => setDetail(e.target.value)} /></div>
                         </div>
                         <div className="modal-footer">
+                            <button type="button" className="btn btn-danger" style={{ marginRight: 'auto'}}>삭제</button>
                             <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
                             <button type="button" className="btn btn-primary" onClick={handleUpdate}>수정</button>
                         </div>
