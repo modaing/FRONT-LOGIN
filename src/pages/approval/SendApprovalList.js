@@ -23,25 +23,35 @@ import { Link } from 'react-router-dom';
 function SendApprovalList() {
 
     const sendAppListButton = {
-        height: '45px',
+        height: '40px',
+        width: '120px',
         backgroundColor: '#112D4E',
         color: 'white',
         borderRadius: '5px',
         padding: '1% 1.5%',
         cursor: 'pointer',
         textDecoration: 'none',
-        marginRight: '20px'
+        marginRight: '20px',
+        verticalAlign: 'middle',
+        textAlign: 'center',
+       display: 'inline-block',
+       paddingTop : '10px'
     };
 
     const tempAppListButton = {
-        height: '45px',
+        height: '40px',
+        width: '120px',
         backgroundColor: 'white',
         color: '#112D4E',
         borderRadius: '5px',
         border: '1px solid #D5D5D5',
         padding: '1% 1.5%',
         cursor: 'pointer',
-        textDecoration: 'none'
+        textDecoration: 'none',
+        verticalAlign: 'middle',
+        textAlign: 'center',
+       display: 'inline-block',
+       paddingTop : '10px'
 
     }
 
@@ -81,12 +91,19 @@ function SendApprovalList() {
                     </ol>
                     <div className="approvalBar">
                         <div className="approvalBarLeft">
-                            <Link to="/" className="sendApprovalList" style={sendAppListButton}>내 결재함</Link>
-                            <Link to="/tempApprovalList" className="tempApprovalList" style={tempAppListButton}>임시 저장함</Link>
+                            <Link to="/sendApprovalList" className="ApprovalListBtn" style={sendAppListButton}>내 결재함</Link>
+                            <Link to="/tempApprovalList" className="ApprovalListBtn" style={tempAppListButton}>임시 저장함</Link>
                         </div>
                         <div className="approvalBarRight">
                             <div className="approvalSearch">
-                                
+                                <div className="approvalSearchLabel">제목</div>
+                                <div className="approvalSearchInput">
+                                    <input type="text"></input>
+                                </div>
+                                <div className="approvalSearchBtn">
+                                    <button type="submit">검색</button>
+                                    
+                                </div>
                             </div>
                         </div>
                     </div>
