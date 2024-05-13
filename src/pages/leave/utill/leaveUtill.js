@@ -1,5 +1,9 @@
 export function renderLeaveSubmit(content) {
-return content.map((leaveSubmit, index) => {
+    if (!content) {
+        return null; 
+    }
+
+    return content.map((leaveSubmit, index) => {
         const { formattedStartDate, formattedEndDate, leaveDaysCalc } = formattedLocalDate(leaveSubmit);
         const buttonClassName = leaveSubmit.leaveSubProcessDate ? 'cancelRequest' : 'requestDelete';
         return (
@@ -37,6 +41,3 @@ function formattedLocalDate(leaveSubmit) {
 
     return { formattedStartDate, formattedEndDate, leaveDaysCalc };
 }
-
-
-
