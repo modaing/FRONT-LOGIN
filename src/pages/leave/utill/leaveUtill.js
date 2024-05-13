@@ -1,13 +1,5 @@
 export function renderLeaveSubmit(content) {
-    if (!content || content.length === 0) {
-        return (
-            <tr>
-                <td colSpan="5">휴가 신청 내역을 불러오는 중입니다...</td>
-            </tr>
-        );
-    }
-
-    return content.map((leaveSubmit, index) => {
+return content.map((leaveSubmit, index) => {
         const { formattedStartDate, formattedEndDate, leaveDaysCalc } = formattedLocalDate(leaveSubmit);
         const buttonClassName = leaveSubmit.leaveSubProcessDate ? 'cancelRequest' : 'requestDelete';
         return (
