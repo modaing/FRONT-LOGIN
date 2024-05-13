@@ -11,7 +11,7 @@ const headers = {
 const API_BASE_URL = 'http://localhost:8080';
 
 const decodedTokenInfo = decodeJwt(window.localStorage.getItem("accessToken"));
-const memberId = decodedTokenInfo.memberId;
+const memberId = decodedTokenInfo?.memberId;
 
 export const callReceiveNotesAPI = (page = 0, size = 10, sort = 'noteNo', direction = 'DESC', receiverId=memberId, senderId=memberId) => {
     return async (dispatch) => {
