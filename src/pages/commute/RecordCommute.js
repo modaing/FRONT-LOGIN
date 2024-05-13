@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../../css/commute/commute.css';
 import CommuteListByMember from "../../components/commutes/CommuteListByMember";
 import { useDispatch, useSelector } from "react-redux";
-import { callCommuteListAPI } from "../../apis/CommuteAPICalls";
+import { callInsertCommuteAPI, callSelectCommuteListAPI } from "../../apis/CommuteAPICalls";
 import CommuteTime from "../../components/commutes/CommuteTime";
 import { decodeJwt } from '../../utils/tokenUtils';
 import { Link } from 'react-router-dom';
@@ -74,11 +74,17 @@ function RecordCommute() {
     const dispatch = useDispatch();
 
     const [date, setDate] = useState(new Date());
+    const [isClocked, setIsClocked] = useState(false);
 
+    /* 출퇴근 내역 액션 */
     const result = useSelector(state => state.commuteReducer);
     console.log('[RecordCommute] result : ', result);
     const commuteList = result.commutelist;
     console.log('[RecordCommute] commuteList : ', commuteList);
+
+    /* 출근 시간 액션 */
+    const postCommute = result.postcommute;
+    console.log('[RecordCommute] postCommute : ', postCommute);    
 
     // 출퇴근 정정 관리 때 필요함!!
     // useEffect(() => {
@@ -98,7 +104,11 @@ function RecordCommute() {
 
     let offset = date.getTimezoneOffset() * 60000;      // ms 단위이기 때문에 60000 곱해야함
     let dateOffset = new Date(date.getTime() - offset); // 한국 시간으로 파싱
+    let parsingDateOffset = dateOffset.toISOString().slice(0, 10);
 
+    console.log('[RecordCommute] date : ', date);
+    // console.log('[RecordCommute] offset : ', offset);
+    // console.log('[RecordCommute] dateOffset : ', dateOffset);
     // console.log('[RecordCommute] dateOffset.toISOString() : ', dateOffset.toISOString());
     // console.log('[RecordCommute] dateOffset.toISOString().slice(0, 10) : ', dateOffset.toISOString().slice(0, 10));
 
@@ -107,8 +117,8 @@ function RecordCommute() {
         console.log('[useEffect] target : ', target);
         console.log('[useEffect] targetValue : ', targetValue);
         console.log('[useEffect] date : ', date);
-        dispatch(callCommuteListAPI(target, targetValue, dateOffset.toISOString().slice(0, 10)));
-    }, [dispatch, target, targetValue, date]);
+        dispatch(callSelectCommuteListAPI(target, targetValue, dateOffset.toISOString().slice(0, 10)));
+    }, [dispatch, target, targetValue, date, postCommute]);
 
     /* 한 주 전으로 이동 */
     const handlePreviousClick = () => {
@@ -120,6 +130,53 @@ function RecordCommute() {
         setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7));
     };
 
+    /* 현재 시간 포맷 */
+    let today = new Date();
+    let hours = ('0' + today.getHours()).slice(-2);
+    let minutes = ('0' + today.getMinutes()).slice(-2);
+
+    let timeString = hours + ':' + minutes;
+
+    /* 총 근무 시간 계산 */
+    
+
+    /* 출근하기 API 호출 */
+    const handleClockIn = () => {
+        try {
+            let newCommute = {
+                memberId: memberId,
+                workingDate: parsingDateOffset,
+                startWork: timeString,
+                workingStatus: "근무중",
+                totalWorkingHours: 0
+            };
+            console.log('출근 api 호출 : ', newCommute);
+
+            dispatch(callInsertCommuteAPI(newCommute, target, targetValue, dateOffset.toISOString().slice(0, 10)));
+            setIsClocked(true);
+
+        } catch (error) {
+            console.error('Error inserting commute:', error);
+        }
+    };
+
+    /* 퇴근하기 API 호출 */
+    const handleClockOut = () => {
+        try {
+            let updateCommute = {
+                endWork: timeString,
+                workingStatus: "퇴근",
+                totalWorkingHours: 480
+            };
+            console.log('퇴근 api 호출 : ', updateCommute);
+            dispatch(callInsertCommuteAPI());
+            setIsClocked(false);
+
+        } catch (error) {
+            console.error('Error inserting commute:', error);
+        }
+    };
+
     return (
         <main id="main" className="main">
             <div className="pagetitle">
@@ -129,7 +186,16 @@ function RecordCommute() {
                         <li className="breadcrumb-item"><a href="/">Home</a></li>
                         <li className="breadcrumb-item">출퇴근</li>
                         <li className="breadcrumb-item active">출퇴근 내역</li>
-                        <Link to="/" className="notice-insert-button" style={insertButton}>출근하기</Link>
+                        {/* <Link to="/recordCommute" className="notice-insert-button" style={insertButton} >출근하기</Link> */}
+                        {!isClocked ? (
+                            <Link to="/recordCommute" className="notice-insert-button" style={insertButton} onClick={handleClockIn}>
+                                출근하기
+                            </Link>
+                        ) : (
+                            <Link to="/recordCommute" className="notice-insert-button" style={insertButton} onClick={handleClockOut}>
+                                퇴근하기
+                            </Link>
+                        )}
                         <SelectBox options={OPTIONS} defaultValue={date} onChange={handleAction}></SelectBox>
                     </ol>
                 </nav>

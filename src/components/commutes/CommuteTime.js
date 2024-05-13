@@ -145,7 +145,7 @@ function CommuteTime({ commute, date, handlePreviousClick, handleNextClick }) {
         handlePreviousClick(new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7));
     };
 
-    console.log('한 주 전으로 이동 : ', new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7));
+    // console.log('한 주 전으로 이동 : ', new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7));
 
     /* 한 주 후로 이동 */
     const handleNextWeekClick = () => {
@@ -153,7 +153,7 @@ function CommuteTime({ commute, date, handlePreviousClick, handleNextClick }) {
         handleNextClick(new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7));
     };
 
-    console.log('한 주 후로 이동 : ', new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7));
+    // console.log('한 주 후로 이동 : ', new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7));
 
     /* 주 단위 근로 시간 그래프 */
     // const ProgressBar = ({ progress, style }) => {

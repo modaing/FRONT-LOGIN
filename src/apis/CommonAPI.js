@@ -1,12 +1,11 @@
 import axios from "axios";
-// import { decodeJwt } from '../utils/tokenUtils';
 
 const DOMAIN = 'http://localhost:8080';
 
 export const request = async (method, url, data) => {
 
     try {
-
+        console.log('request data:', data);
         const response = await axios({
             method: method,
             url: `${DOMAIN}${url}`,
@@ -16,7 +15,8 @@ export const request = async (method, url, data) => {
             },
         });
 
-        console.log('[request] response.data : ', response.data.results.result);
+        console.log('[request] response.data.results.result : ', response.data.results.result);
+        console.log('[request] response.data : ', response.data);
         return {response};
 
     } catch (error) {
