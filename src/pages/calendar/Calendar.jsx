@@ -39,7 +39,6 @@ function Calendar() {
         };
         console.log('[requestData]: ', requestData)
         callInsertCalendarAPI(requestData)
-
     };
 
 
