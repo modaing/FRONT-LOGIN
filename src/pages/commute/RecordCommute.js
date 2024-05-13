@@ -63,6 +63,7 @@ function RecordCommute() {
         </option>
     };
 
+    /* 로그인한 유저의 토큰 복호화 */
     const decodedToken = decodeJwt(window.localStorage.getItem('accessToken'));
     console.log('[RecordCommute] decodedToken : ', decodedToken);
     const memberId = decodedToken.memberId;
@@ -72,14 +73,17 @@ function RecordCommute() {
     const [targetValue, setTargetValue] = useState(memberId);
     const dispatch = useDispatch();
 
-    const [date, setDate] = useState(() => {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const day = String(today.getDate()).padStart(2, '0');
+    // const [date, setDate] = useState(() => {
+    //     const today = new Date();
+    //     const year = today.getFullYear();
+    //     const month = String(today.getMonth() + 1).padStart(2, '0');
+    //     const day = String(today.getDate()).padStart(2, '0');
 
-        return `${year}-${month}-${day}`;
-    });
+    //     return `${year}-${month}-${day}`;
+    // });
+    
+
+    const [date, setDate] = useState(new Date());
 
     const result = useSelector(state => state.commuteReducer);
     console.log('[RecordCommute] result : ', result);
@@ -98,36 +102,55 @@ function RecordCommute() {
     // }, [role, memberId, departNo]
     // );
 
+    // useEffect(() => {
+    //     console.log('[useEffect] target : ', target);
+    //     console.log('[useEffect] targetValue : ', targetValue);
+    //     console.log('[useEffect] date : ', date);
+    //     dispatch(callCommuteListAPI(target, targetValue, date));
+    // }, [dispatch, target, targetValue, date]);
+
+    /* 출퇴근 내역 API 호출 */
     useEffect(() => {
         console.log('[useEffect] target : ', target);
         console.log('[useEffect] targetValue : ', targetValue);
         console.log('[useEffect] date : ', date);
-        dispatch(callCommuteListAPI(target, targetValue, date));
+        dispatch(callCommuteListAPI(target, targetValue, date.toISOString().slice(0, 10)));
     }, [dispatch, target, targetValue, date]);
+    
+    console.log('RecordCommute date 형식 파싱 : ',  date.toISOString().slice(0, 10));   // UTC 기준 날짜 반환으로 한국 표준시보다 9시간 빠른 날짜가 표시됨!
+
+    /* 한 주 전으로 이동 */
+    const handlePreviousClick = () => {
+        setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7 ));
+    };
+
+    /* 한 주 후로 이동 */
+    const handleNextClick = () => {
+        setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7 ));
+    };
 
     return (
         <main id="main" className="main">
             <div className="pagetitle">
                 <h1>출퇴근</h1>
-                <h5>나의 출퇴근 내역</h5>
                 <nav>
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><a href="/">Home</a></li>
                         <li className="breadcrumb-item">출퇴근</li>
-                        <li className="breadcrumb-item active">출퇴근 기록</li>
+                        <li className="breadcrumb-item active">출퇴근 내역</li>
                         <Link to="/" className="notice-insert-button" style={insertButton}>출근하기</Link>
                         <SelectBox options={OPTIONS} defaultValue={date} onChange={handleAction}></SelectBox>
                     </ol>
                 </nav>
             </div>
             <div>
-                <CommuteTime />
+                {commuteList && (
+                    <CommuteTime key={commuteList.commuteNo} commute={commuteList} date={date} handlePreviousClick={handlePreviousClick} handleNextClick={handleNextClick} />
+                )}
             </div>
             <div>
-                {commuteList && commuteList.length > 0 ? (
-                    commuteList.map(commute => <CommuteListByMember key={commute.commuteNo} commute={commute} />)
-                ) : (
-                    <div >출퇴근 내역이 없습니다.</div>
+                {commuteList && (
+                    <CommuteListByMember key={commuteList.commuteNo} commute={commuteList} date={date} />
                 )}
             </div>
         </main>

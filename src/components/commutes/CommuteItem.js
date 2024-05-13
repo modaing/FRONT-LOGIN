@@ -1,158 +1,163 @@
-// function CommuteItem({ commute }) {
+import { useEffect, useRef, useState } from "react";
 
-//     const content2 = {
-//         marginLeft: '25px'
+function CommuteItem({ commute, tableStyles, evenRow, date }) {
 
-//     };
+    // console.log('[CommuteItem] commute : ', commute);
+    console.log('[CommuteItem] commute.workingDate : ', commute.workingDate);
+    // console.log('[CommuteItem] date : ', date);
 
-//     const tableStyle = {
-//         width: '97%',
-//         borderCollapse: 'collapse',
-//         textAlign: 'center',
-//     };
+    const insertCorrection = {
+        backgroundColor: '#3F72AF',
+        cursor: 'pointer',
+        color: '#FFFFFF',
+        borderRadius: '4px',
+        border: '1px solid #3F72AF',
+        '&:hover': {
+            cursor: '#112D4E',
+        }
+    };
 
-//     const tableStyles = {
-//         tableHeaderCell: {
-//             cursor: 'pointer',
-//             fontWeight: 'bold',
-//             padding: '15px'
-//         },
-//         tableCell1: {
-//             width: '15%',
-//             textAlign: 'center',
-//             padding: '10px',
-//         },
-//         tableCell2: {
-//             width: '13%',
-//             textAlign: 'center',
-//             padding: '10px',
-//         },
-//         tableCell3: {
-//             width: '13%',
-//             textAlign: 'center',
-//             padding: '10px',
-//         },
-//         tableCell4: {
-//             width: '13%',
-//             textAlign: 'center',
-//             padding: '10px',
-//         },
-//         tableCell5: {
-//             width: '22%',
-//             textAlign: 'center',
-//             padding: '10px',
-//         },
-//         tableCell6: {
-//             width: '13%',
-//             textAlign: 'center',
-//             padding: '10px',
-//         },
-//         tableCell7: {
-//             width: '15%',
-//             textAlign: 'center',
-//             padding: '10px',
-//         },
-//         evenRow: {
-//             backgroundColor: '#f9f9f9'
-//         }
-//     };
+    /* 근무 일자 형식 변경 */
+    const formatWorkingDate = (workingDate) => {
+        const date = new Date(workingDate);
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    };
 
-//     const insertCorrection = {
-//         backgroundColor: '#3F72AF',
-//         cursor: 'pointer',
-//         color: '#FFFFFF',
-//         borderRadius: '4px',
-//         border: '1px solid #3F72AF',
-//         '&:hover': {
-//             cursor: '#112D4E',
-//         }
-//     };
+    /* 총 근무 시간 형식 변경 */
+    const formatTotalWorkingHours = (totalWorkingHours) => {
+        if (totalWorkingHours == 0) {
+            return '';
+        }
+        const hours = Math.floor(totalWorkingHours / 60);
+        const minutes = totalWorkingHours % 60;
+        return `${hours}시간 ${minutes}분`;
+    };
 
-//     const ProgressBar = ({ progress, style }) => {
-//         return (
-//             <div className="progress" style={style}>
-//                 <div
-//                     className="progress-bar"
-//                     role="progressbar"
-//                     style={{ width: `${progress}%` }}
-//                     aria-valuenow={progress}
-//                     aria-valuemin={0}
-//                     aria-valuemax={100}
-//                 />
-//             </div>
-//         );
-//     };
+    /* 출근시간, 퇴근시간 형식 변경 */
+    const formatWorkingTime = (workingTime) => {
+        if (Array.isArray(workingTime)) {
 
+            let result = '';
 
-//     return (
-//         <div className="col-lg-12">
-//             <div className="card">
-//                 <div className="content2" style={content2}>
-//                     <table className="table table-hover" style={tableStyle}>
-//                         <thead>
-//                             <tr>
-//                                 <th style={tableStyles.tableHeaderCell} scope="col">근무일자</th>
-//                                 <th style={tableStyles.tableHeaderCell} scope="col">총 근무 시간</th>
-//                                 <th style={tableStyles.tableHeaderCell} scope="col">출근 시간</th>
-//                                 <th style={tableStyles.tableHeaderCell} scope="col">퇴근 시간</th>
-//                                 <th style={tableStyles.tableHeaderCell} scope="col">근무 시간</th>
-//                                 <th style={tableStyles.tableHeaderCell} scope="col">근무 상태</th>
-//                                 <th style={tableStyles.tableHeaderCell} scope="col">정정 요청</th>
-//                             </tr>
-//                         </thead>
-//                         <tbody>
-//                             <tr style={tableStyles.evenRow}>
-//                                 <td style={tableStyles.tableCell1} scope="row">{commute.workingDate}</td>
-//                                 <td style={tableStyles.tableCell2}>{commute.totalWorkHours}</td>
-//                                 <td style={tableStyles.tableCell3}>{commute.startWork}</td>
-//                                 <td style={tableStyles.tableCell4}>{commute.endWork}</td>
-//                                 <td style={tableStyles.tableCell5}><ProgressBar progress={100} /></td>
-//                                 <td style={tableStyles.tableCell6}>{commute.workStatus}</td>
-//                                 <td style={tableStyles.tableCell7}><button to="/" style={insertCorrection}>정정</button></td>
-//                             </tr>
-//                             <tr style={tableStyles.evenRow}>
-//                                 <td style={tableStyles.tableCell1} scope="row">2024-04-02</td>
-//                                 <td style={tableStyles.tableCell2}>8시간</td>
-//                                 <td style={tableStyles.tableCell3}>09:00</td>
-//                                 <td style={tableStyles.tableCell4}>18:00</td>
-//                                 <td style={tableStyles.tableCell5}><ProgressBar progress={100} /></td>
-//                                 <td style={tableStyles.tableCell6}>퇴근</td>
-//                                 <td style={tableStyles.tableCell7}><button to="/" style={insertCorrection}>정정</button></td>
-//                             </tr>
-//                             <tr style={tableStyles.evenRow}>
-//                                 <td style={tableStyles.tableCell1} scope="row">2024-04-03</td>
-//                                 <td style={tableStyles.tableCell2}>8시간</td>
-//                                 <td style={tableStyles.tableCell3}>09:00</td>
-//                                 <td style={tableStyles.tableCell4}>18:00</td>
-//                                 <td style={tableStyles.tableCell5}><ProgressBar progress={100} /></td>
-//                                 <td style={tableStyles.tableCell6}>퇴근</td>
-//                                 <td style={tableStyles.tableCell7}><button to="/" style={insertCorrection}>정정</button></td>
-//                             </tr>
-//                             <tr style={tableStyles.evenRow}>
-//                                 <td style={tableStyles.tableCell1} scope="row">2024-04-04</td>
-//                                 <td style={tableStyles.tableCell2}>8시간</td>
-//                                 <td style={tableStyles.tableCell3}>09:00</td>
-//                                 <td style={tableStyles.tableCell4}>18:00</td>
-//                                 <td style={tableStyles.tableCell5}><ProgressBar progress={100} /></td>
-//                                 <td style={tableStyles.tableCell6}>퇴근</td>
-//                                 <td style={tableStyles.tableCell7}><button to="/" style={insertCorrection}>정정</button></td>
-//                             </tr>
-//                             <tr style={tableStyles.evenRow}>
-//                                 <td style={tableStyles.tableCell1} scope="row">2024-04-05</td>
-//                                 <td style={tableStyles.tableCell2}></td>
-//                                 <td style={tableStyles.tableCell3}>09:00</td>
-//                                 <td style={tableStyles.tableCell4}></td>
-//                                 <td style={tableStyles.tableCell5}><ProgressBar progress={60} /></td>
-//                                 <td style={tableStyles.tableCell6}>근무중</td>
-//                                 <td style={tableStyles.tableCell7}><button to="/" style={insertCorrection}>정정</button></td>
-//                             </tr>
-//                         </tbody>
-//                         {/* 페이징 처리 */}
-//                     </table>
-//                 </div>
-//             </div>
-//         </div>
-//     )
-// }
+            for (let i = 0; i < workingTime.length; i++) {
+                const minutes = workingTime[i] % 100;
+                result += `${String(minutes).padStart(2, '0')}`;
 
-// export default CommuteItem;
+                if (i < workingTime.length - 1) {
+                    result += ':';
+                }
+            }
+            return result;
+        }
+        return '';
+    };
+
+    /* 근무 시간 그래프 */
+    const ProgressBar = ({ startTime, endTime }) => {
+        const [progress, setProgress] = useState(0);
+        const intervalRef = useRef(null);
+        let startHour, startMinute, endHour, endMinute;
+
+        useEffect(() => {
+            /* 1. 출근 시간과 퇴근 시간 모두 존재하는 경우 */
+            if (Array.isArray(startTime) && Array.isArray(endTime)) {
+
+                let totalMinutes = 0;
+                let elapsedMinutes = 0;
+
+                for (let i = 0; i < startTime.length; i++) {
+                    startHour = Math.floor(startTime[i] / 100);
+                    startMinute = startTime[i] % 100;
+                    endHour = endTime[i] !== null ? Math.floor(endTime[i] / 100) : 18;
+                    endMinute = endTime[i] !== null ? endTime[i] % 100 : 0;
+
+                    const currentMinutes = startHour * 60 + startMinute;
+                    const totalMinutesForThisEntry = (endHour * 60 + endMinute) - currentMinutes;
+                    totalMinutes += totalMinutesForThisEntry;
+
+                    const currentTime = new Date();
+                    const currentMinutesFromStart = currentTime.getHours() * 60 + currentTime.getMinutes() - currentMinutes;
+                    elapsedMinutes += currentMinutesFromStart;
+                }
+
+                // 1초마다 진행률 업데이트
+                clearInterval(intervalRef.current);
+                intervalRef.current = setInterval(() => {
+                    const currentTime = new Date();
+                    const currentMinutes = currentTime.getHours() * 60 + currentTime.getMinutes();
+                    const updatedElapsedMinutes = currentMinutes - (startHour * 60 + startMinute);
+
+                    let updatedProgressPercentage;
+                    if (updatedElapsedMinutes >= totalMinutes) {
+                        updatedProgressPercentage = 100;
+                    } else {
+                        updatedProgressPercentage = (updatedElapsedMinutes / totalMinutes) * 100;
+                    }
+
+                    setProgress(Math.floor(updatedProgressPercentage / 10) * 10);
+                }, 1000);
+
+                /* 2. 출근 시간만 존재하는 경우 */
+            } else if (Array.isArray(startTime) && (endTime === null || typeof endTime === 'undefined')) {
+                let totalMinutes = 0;
+                let elapsedMinutes = 0;
+
+                for (let i = 0; i < startTime.length; i++) {
+                    startHour = Math.floor(startTime[i] / 100);
+                    startMinute = startTime[i] % 100;
+                    endHour = 18;
+                    endMinute = 0;
+
+                    const currentMinutes = startHour * 60 + startMinute;
+                    const totalMinutesForThisEntry = (endHour * 60 + endMinute) - currentMinutes;
+                    totalMinutes += totalMinutesForThisEntry;
+
+                    const currentTime = new Date();
+                    const currentMinutesFromStart = currentTime.getHours() * 60 + currentTime.getMinutes() - currentMinutes;
+                    elapsedMinutes += currentMinutesFromStart;
+                }
+
+                // 1초마다 진행률 업데이트
+                clearInterval(intervalRef.current);
+                intervalRef.current = setInterval(() => {
+                    const currentTime = new Date();
+                    const currentMinutes = currentTime.getHours() * 60 + currentTime.getMinutes();
+                    const updatedElapsedMinutes = currentMinutes - (startHour * 60 + startMinute);
+                    const updatedProgressPercentage = (updatedElapsedMinutes / totalMinutes) * 100;
+                    setProgress(Math.floor(updatedProgressPercentage / 10) * 10);
+                }, 1000);
+            }
+
+            return () => {
+                clearInterval(intervalRef.current);
+            };
+        }, [startTime, endTime]);
+
+        return (
+            <div className="progress">
+                <div
+                    className="progress-bar"
+                    role="progressbar"
+                    style={{ width: `${progress}%` }}
+                    aria-valuenow={progress}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                />
+            </div>
+        );
+    };
+
+    return (
+        <tr style={evenRow ? tableStyles.evenRow : {}}>
+            <td style={tableStyles.tableCell1}>{formatWorkingDate(commute.workingDate)}</td>
+            <td style={tableStyles.tableCell2}>{formatTotalWorkingHours(commute.totalWorkingHours)}</td>
+            <td style={tableStyles.tableCell3}>{formatWorkingTime(commute.startWork)}</td>
+            <td style={tableStyles.tableCell4}>{formatWorkingTime(commute.endWork)}</td>
+            <td style={tableStyles.tableCell5}><ProgressBar startTime={commute.startWork} endTime={commute.endWork} /></td>
+            <td style={tableStyles.tableCell6}>{commute.workingStatus}</td>
+            <td style={tableStyles.tableCell7}><button to="/" style={insertCorrection}>정정</button></td>
+        </tr>
+    );
+}
+
+export default CommuteItem;

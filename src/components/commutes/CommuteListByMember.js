@@ -1,11 +1,10 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { callCommuteListAPI } from "../../apis/CommuteAPICalls";
+import { useEffect, useRef, useState } from "react";
 import CommuteItem from "./CommuteItem";
 
-function CommuteListByMember({commute}) {
+function CommuteListByMember({ commute, date }) {
 
     console.log('[CommuteListByMember] commute : ', commute);
+    console.log('[CommuteListByMember] date : ', date);
 
     const content2 = {
         marginLeft: '25px'
@@ -64,32 +63,6 @@ function CommuteListByMember({commute}) {
         }
     };
 
-    const insertCorrection = {
-        backgroundColor: '#3F72AF',
-        cursor: 'pointer',
-        color: '#FFFFFF',
-        borderRadius: '4px',
-        border: '1px solid #3F72AF',
-        '&:hover': {
-            cursor: '#112D4E',
-        }
-    };
-
-    const ProgressBar = ({ progress, style }) => {
-        return (
-            <div className="progress" style={style}>
-                <div
-                    className="progress-bar"
-                    role="progressbar"
-                    style={{ width: `${progress}%` }}
-                    aria-valuenow={progress}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                />
-            </div>
-        );
-    };
-
     return (
         <div className="col-lg-12">
             <div className="card">
@@ -107,15 +80,15 @@ function CommuteListByMember({commute}) {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr style={tableStyles.evenRow}>
-                                <td style={tableStyles.tableCell1} scope="row">{commute.workingDate}</td>
-                                <td style={tableStyles.tableCell2}>{commute.totalWorkingHours}</td>
-                                <td style={tableStyles.tableCell3}>{commute.startWork}</td>
-                                <td style={tableStyles.tableCell4}>{commute.endWork}</td>
-                                <td style={tableStyles.tableCell5}><ProgressBar progress={100} /></td>
-                                <td style={tableStyles.tableCell6}>{commute.workingStatus}</td>
-                                <td style={tableStyles.tableCell7}><button to="/" style={insertCorrection}>정정</button></td>
-                            </tr>
+                            {commute && commute.length > 0 ? (
+                                commute.map((item, index) => (
+                                    <CommuteItem key={item.commuteNo} commute={item} tableStyles={tableStyles} evenRow={index % 2 === 0} date={date} />
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={7}>출퇴근 내역이 없습니다.</td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
