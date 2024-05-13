@@ -21,7 +21,7 @@ function Announces() {
             );
         }
 
-        return announcements.map((announce, index) => (
+        return announcements?.map((announce, index) => (
             <tr key={index}>
                 <td style={{ width: '10%', textAlign: 'center', padding: '10px' }}>{announce.ancNo}</td>
                 <td style={{ width: '40%', textAlign: 'center', padding: '10px' }}>

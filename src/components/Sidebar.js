@@ -164,7 +164,6 @@ function Sidebar() {
                         </li>
                     </ul>
                 </li>
-                {/* 필요한 만큼 계속해서 추가 */}
             </ul>
         </aside>
     );

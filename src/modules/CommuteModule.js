@@ -34,8 +34,8 @@ export const PUT_COMMUTE = 'commute/PUT_COMMUTE';
 export const { commute: { getCommute, getCommutelist, postCommute, putCommute } } = createActions({
     [GET_COMMUTE]: (res) => ({ commute: res }),
     [GET_COMMUTELIST]: (res) => ({ commutelist: res }),
-    [POST_COMMUTE]: (res) => ({ post: res }),
-    [PUT_COMMUTE]: (res) => ({ put: res })
+    [POST_COMMUTE]: (res) => ({ postcommute: res }),
+    [PUT_COMMUTE]: (res) => ({ putcommute: res })
 });
 
 /* 리듀서 */
@@ -48,7 +48,7 @@ const commuteReducer = handleActions(
             return payload;
         },
         [POST_COMMUTE]: (state, { payload }) => {
-            return payload;
+            return ({ ...state, postcommute: payload });
         },
         [PUT_COMMUTE]: (state, { payload }) => {
             return payload;
