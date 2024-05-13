@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 function CommuteItem({ commute, tableStyles, evenRow, date }) {
 
     // console.log('[CommuteItem] commute : ', commute);
-    console.log('[CommuteItem] commute.workingDate : ', commute.workingDate);
+    // console.log('[CommuteItem] commute.workingDate : ', commute.workingDate);
     // console.log('[CommuteItem] date : ', date);
 
     const insertCorrection = {
