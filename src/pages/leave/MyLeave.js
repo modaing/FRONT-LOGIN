@@ -123,12 +123,12 @@ function MyLeave() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {isLoading ? ( // 로딩 중이면 "로딩 중" 메시지 표시
+                                {isLoading ? ( // 로딩 중이면 로딩 메시지 표시
                                     <tr>
-                                        <td colSpan="8" className="loadingText">휴가 신청 내역을 불러오는 중입니다...</td>
+                                        <td colSpan="8" className="loadingText">내역을 불러오는 중입니다...</td>
                                     </tr>
                                 ) : (
-                                    renderLeaveSubmit(content) // 로딩이 아니면 실제 데이터 표시
+                                    renderLeaveSubmit(content) // 로딩 중이 아니면 실제 데이터 표시
                                 )}
                             </tbody>
                         </table>
