@@ -73,16 +73,6 @@ function RecordCommute() {
     const [targetValue, setTargetValue] = useState(memberId);
     const dispatch = useDispatch();
 
-    // const [date, setDate] = useState(() => {
-    //     const today = new Date();
-    //     const year = today.getFullYear();
-    //     const month = String(today.getMonth() + 1).padStart(2, '0');
-    //     const day = String(today.getDate()).padStart(2, '0');
-
-    //     return `${year}-${month}-${day}`;
-    // });
-    
-
     const [date, setDate] = useState(new Date());
 
     const result = useSelector(state => state.commuteReducer);
@@ -102,31 +92,32 @@ function RecordCommute() {
     // }, [role, memberId, departNo]
     // );
 
-    // useEffect(() => {
-    //     console.log('[useEffect] target : ', target);
-    //     console.log('[useEffect] targetValue : ', targetValue);
-    //     console.log('[useEffect] date : ', date);
-    //     dispatch(callCommuteListAPI(target, targetValue, date));
-    // }, [dispatch, target, targetValue, date]);
+    /* UTC 기준 날짜 반환으로 한국 표준시보다 9시간 빠른 날짜가 표시 되는 문제 해결 */
+    // console.log('[RecordCommute] date.toISOString().slice(0, 10) : ', date.toISOString().slice(0, 10));
+    // console.log('[RecordCommute] date.toISOString() : ', date.toISOString());
+
+    let offset = date.getTimezoneOffset() * 60000;      // ms 단위이기 때문에 60000 곱해야함
+    let dateOffset = new Date(date.getTime() - offset); // 한국 시간으로 파싱
+
+    // console.log('[RecordCommute] dateOffset.toISOString() : ', dateOffset.toISOString());
+    // console.log('[RecordCommute] dateOffset.toISOString().slice(0, 10) : ', dateOffset.toISOString().slice(0, 10));
 
     /* 출퇴근 내역 API 호출 */
     useEffect(() => {
         console.log('[useEffect] target : ', target);
         console.log('[useEffect] targetValue : ', targetValue);
         console.log('[useEffect] date : ', date);
-        dispatch(callCommuteListAPI(target, targetValue, date.toISOString().slice(0, 10)));
+        dispatch(callCommuteListAPI(target, targetValue, dateOffset.toISOString().slice(0, 10)));
     }, [dispatch, target, targetValue, date]);
-    
-    console.log('RecordCommute date 형식 파싱 : ',  date.toISOString().slice(0, 10));   // UTC 기준 날짜 반환으로 한국 표준시보다 9시간 빠른 날짜가 표시됨!
 
     /* 한 주 전으로 이동 */
     const handlePreviousClick = () => {
-        setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7 ));
+        setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7));
     };
 
     /* 한 주 후로 이동 */
     const handleNextClick = () => {
-        setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7 ));
+        setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7));
     };
 
     return (
