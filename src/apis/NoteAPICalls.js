@@ -82,4 +82,3 @@ export const callPutReceiceNotesAPI = (noteNo, receiveDeleteYn, sendDeleteYn) =>
         }
     };
 };
-
