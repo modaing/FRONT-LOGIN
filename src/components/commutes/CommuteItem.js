@@ -149,15 +149,15 @@ function CommuteItem({ commute, tableStyles, evenRow, date }) {
 
     return (
         <tr style={evenRow ? tableStyles.evenRow : {}}>
-            <td style={tableStyles.tableCell1}>{formatWorkingDate(commute.workingDate)}</td>
-            <td style={tableStyles.tableCell2}>{formatTotalWorkingHours(commute.totalWorkingHours)}</td>
-            <td style={tableStyles.tableCell3}>{formatWorkingTime(commute.startWork)}</td>
-            <td style={tableStyles.tableCell4}>{formatWorkingTime(commute.endWork)}</td>
-            <td style={tableStyles.tableCell5}><ProgressBar startTime={commute.startWork} endTime={commute.endWork} /></td>
-            <td style={tableStyles.tableCell6}>{commute.workingStatus}</td>
-            <td style={tableStyles.tableCell7}><button to="/" style={insertCorrection}>정정</button></td>
+          <td style={tableStyles.tableCell1}>{formatWorkingDate(commute.workingDate || '')}</td>
+          <td style={tableStyles.tableCell2}>{formatTotalWorkingHours(commute.totalWorkingHours || 0)}</td>
+          <td style={tableStyles.tableCell3}>{formatWorkingTime(commute.startWork || [])}</td>
+          <td style={tableStyles.tableCell4}>{formatWorkingTime(commute.endWork || [])}</td>
+          <td style={tableStyles.tableCell5}><ProgressBar startTime={commute.startWork || []} endTime={commute.endWork || []} /></td>
+          <td style={tableStyles.tableCell6}>{commute.workingStatus || '미출근'}</td>
+          <td style={tableStyles.tableCell7}><button to="/" style={insertCorrection}>정정</button></td>
         </tr>
-    );
+      );
 }
 
 export default CommuteItem;
