@@ -4,7 +4,7 @@ import '../../css/commute/commute.css';
 function CommuteTime({ commute, date, handlePreviousClick, handleNextClick }) {
 
     // console.log('[CommuteTime] commute : ', commute);
-    // console.log('[CommuteTime] date : ', date);
+    console.log('[CommuteTime] date : ', date);
 
     const content1 = {
         marginLeft: '25px',
