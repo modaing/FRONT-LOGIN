@@ -119,13 +119,13 @@ function MyLeave() {
                                         <span>승인 일자</span><i className="bx bxs-sort-alt"></i>
                                     </th>
 
-                                    <th><span>tls</span></th>
+                                    <th><span></span></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {isLoading ? ( // 로딩 중이면 로딩 메시지 표시
                                     <tr>
-                                        <td colSpan="8" className="loadingText">내역을 불러오는 중입니다...</td>
+                                        <td colSpan="8" className="loadingText"></td>
                                     </tr>
                                 ) : (
                                     renderLeaveSubmit(content) // 로딩 중이 아니면 실제 데이터 표시
