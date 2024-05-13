@@ -15,7 +15,7 @@ const actions = createActions({
     [PUT_RECEIVE_NOTES]: (receiveNoteList) => ({ receiveNoteList }),
 });
 
-리듀서
+// 리듀서
 const noteReducer = handleActions(
     {
         [GET_RECEIVE_NOTES]: (state, { payload }) => ({ receiveNoteList: payload }),

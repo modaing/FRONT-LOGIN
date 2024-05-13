@@ -8,7 +8,7 @@ export const callCommuteListAPI = (target, targetValue, date) => {
 
             console.log('[target] : ', target);
             console.log('[targetValue] : ', targetValue);
-            console.log('[date] : ', date);
+            console.log('[date]ㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗ : ', date);
 
             const url = `/commutes?target=${target}&targetValue=${targetValue}&date=${date}`;
             // const url = `/commutes?target=member&targetValue=240401835&date=2024-05-09`;
