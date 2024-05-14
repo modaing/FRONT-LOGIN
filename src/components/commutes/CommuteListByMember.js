@@ -101,7 +101,7 @@ function CommuteListByMember({ commute, date }) {
                                 <th style={tableStyles.tableHeaderCell} scope="col">정정 요청</th>
                             </tr>
                         </thead>
-                        {/* <tbody>
+                        <tbody>
                             {commute && commute.length > 0 ? (
                                 commute.map((item, index) => (
                                     <CommuteItem key={item.commuteNo} commute={item} tableStyles={tableStyles} evenRow={index % 2 === 0} date={date} />
@@ -111,7 +111,7 @@ function CommuteListByMember({ commute, date }) {
                                     <td colSpan={7}>출퇴근 내역이 없습니다.</td>
                                 </tr>
                             )}
-                        </tbody> */}
+                        </tbody>
                         <tbody>
                             {generateDates().map((dateItem, index) => {
                                 const matchingCommute = commute.find(
