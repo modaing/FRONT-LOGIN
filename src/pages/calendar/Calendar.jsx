@@ -12,10 +12,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import '../../css/common.css'
 import CalendarUpdateModal from './CalendarUpdateModal';
 import { Popover } from 'bootstrap';
+import { convertToUtc } from '../../utils/CalendarUtill';
 
 
 function Calendar() {
-
     const { calendarList, insertMessage, updateMessage, deleteMessage } = useSelector(state => state.calendarReducer)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [events, setEvents] = useState([]);
@@ -39,8 +39,8 @@ function Calendar() {
 
     const handleSaveChanges = ({ title, start, end, color, detail }) => {
         const requestData = {
-            calendarStart: start,
-            calendarEnd: end,
+            calendarStart: convertToUtc(start),
+            calendarEnd: convertToUtc(end),
             calendarName: title,
             color,
             department: "개발팀", // TODO: 나중에 부서 선택해서 추가하는 기능넣어야 함
@@ -54,8 +54,8 @@ function Calendar() {
     const handleUpdateChanges = ({ id, title, start, end, color, detail }) => {
         const requestData = {
             calendarNo: id,
-            calendarStart: start,
-            calendarEnd: end,
+            calendarStart: convertToUtc(start),
+            calendarEnd: convertToUtc(end),
             calendarName: title,
             color,
             detail
@@ -102,6 +102,7 @@ function Calendar() {
                     color: calendar.color,
                     textColor: textColor,
                     extendedProps: {
+                        color: calendar.color,
                         detail: calendar.detail
                     }
                 }

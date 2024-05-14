@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import '../../css/common.css'
 import './MyLeave.css'
 import { callInsertLeaveSubmitAPI, callSelectMyLeaveSubmitAPI } from '../../apis/LeaveAPICalls';
-import { renderLeaveSubmit } from './utill/leaveUtill';
+import { renderLeaveSubmit } from '../../utils//leaveUtill';
 import { SET_PAGENUMBER } from '../../modules/LeaveModule';
 import { decodeJwt } from '../../utils/tokenUtils';
 import LeaveInsertModal from './LeaveInsertModal';
