@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import '../../css/common.css'
 import './MyLeave.css'
-import { callSelectMyLeaveSubmitAPI } from '../../apis/LeaveAPICalls';
+import { callInsertLeaveSubmitAPI, callSelectMyLeaveSubmitAPI } from '../../apis/LeaveAPICalls';
 import { renderLeaveSubmit } from './utill/leaveUtill';
 import { SET_PAGENUMBER } from '../../modules/LeaveModule';
 import { decodeJwt } from '../../utils/tokenUtils';
+import LeaveInsertModal from './LeaveInsertModal';
 
 function MyLeave() {
     const { leaveInfo, submitPage } = useSelector(state => state.leaveReducer);
@@ -15,14 +16,16 @@ function MyLeave() {
     const [properties, setProperties] = useState('leaveSubNo')
     const [direction, setDirection] = useState('DESC')
     const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
     const dispatch = useDispatch();
 
-    let callSelectAPI = (number) => {
-        dispatch(callSelectMyLeaveSubmitAPI(number, properties, direction, memberId))
-    }
-
+    // 조회 관련 핸들러
     useEffect(() => {
-        callSelectAPI(number)
+        setIsLoading(true);
+        dispatch(callSelectMyLeaveSubmitAPI(number, properties, direction, memberId))
+            .finally(() => setIsLoading(false));
     }, [number, properties, direction]);
 
     const handlePageChange = page => dispatch({ type: SET_PAGENUMBER, payload: page });
@@ -44,8 +47,29 @@ function MyLeave() {
         setDirection(direction === 'DESC' ? 'ASC' : 'DESC');
     }
 
+    // 등록 관련 핸들러
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
 
-    return (
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleSaveChanges = ({ leaveSubStartDate, leaveSubEndDate, leaveType, leaveReason }) => {
+        const requestData = {
+            memberId,
+            leaveSubStartDate,
+            leaveSubEndDate,
+            leaveType,
+            leaveReason
+        };
+        dispatch(callInsertLeaveSubmitAPI(requestData));
+
+    };
+
+
+    return <>
         <main id="main" className="main">
             <div className="pagetitle">
                 <h1>휴가</h1>
@@ -61,7 +85,7 @@ function MyLeave() {
                             <span>소진 휴가 일수</span><span>{consumedDays}</span>
                             <span>잔여 휴가 일수</span><span>{remainingDays}</span>
                         </div>
-                        <Link to="/insertLeave" className="insertLeave" >휴가 신청</Link>
+                        <span className="insertLeave" onClick={handleOpenModal} >휴가 신청</span>
                     </div>
                 </nav>
             </div>
@@ -99,7 +123,13 @@ function MyLeave() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {renderLeaveSubmit(content)}
+                                {isLoading ? ( // 로딩 중이면 로딩 메시지 표시
+                                    <tr>
+                                        <td colSpan="8" className="loadingText"></td>
+                                    </tr>
+                                ) : (
+                                    renderLeaveSubmit(content) // 로딩 중이 아니면 실제 데이터 표시
+                                )}
                             </tbody>
                         </table>
 
@@ -130,7 +160,9 @@ function MyLeave() {
                 </div>
             </div>
         </main>
-    );
+        <LeaveInsertModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveChanges} />
+    </>
+
 }
 
 export default MyLeave;

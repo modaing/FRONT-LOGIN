@@ -1,10 +1,6 @@
 export function renderLeaveSubmit(content) {
-    if (!content || content.length === 0) {
-        return (
-            <tr>
-                <td colSpan="5">휴가 신청 내역을 불러오는 중입니다...</td>
-            </tr>
-        );
+    if (!content) {
+        return null; 
     }
 
     return content.map((leaveSubmit, index) => {
@@ -45,6 +41,3 @@ function formattedLocalDate(leaveSubmit) {
 
     return { formattedStartDate, formattedEndDate, leaveDaysCalc };
 }
-
-
-
