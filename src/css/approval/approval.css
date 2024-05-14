@@ -18,3 +18,31 @@
 .approvalSearch{
     display: flex;
 }
+.approvalSearchLabel{
+    background-color: white;
+    color : #112D4E;
+    padding-right: 10px;
+    align-content: center;
+    font-size: 14px;
+}
+
+.approvalSearchInput input{
+    border: none;
+    border-left: 1px solid #3F72AF;
+    padding-right : 10px;
+    text-align: right;
+    font-size: 14px;
+    height: 30px;
+}
+.approvalSearchInput input:focus{
+    background-color: #F4F4F4;
+    outline: none;
+}
+.approvalSearchBtn button{
+    border : none;
+    background-color: #3F72AF;
+    color : white;
+    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 5px;
+}

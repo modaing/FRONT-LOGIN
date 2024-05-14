@@ -1,8 +1,10 @@
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import { decodeJwt } from "../../utils/tokenUtils";
 import '../../css/approval/approval.css';
 import { Link } from 'react-router-dom';
+import { ApprovalAPICalls } from "../../apis/ApprovalAPICalls";
 
 
 /* function ApprovalList({ approvals }){
@@ -35,7 +37,7 @@ function SendApprovalList() {
         verticalAlign: 'middle',
         textAlign: 'center',
        display: 'inline-block',
-       paddingTop : '10px'
+       paddingTop : '7px'
     };
 
     const tempAppListButton = {
@@ -51,16 +53,36 @@ function SendApprovalList() {
         verticalAlign: 'middle',
         textAlign: 'center',
        display: 'inline-block',
-       paddingTop : '10px'
+       paddingTop : '7px'
 
     }
 
+    const decodedToken = decodeJwt(window.localStorage.getItem('accessToken'));
+    console.log('[SendApprovalList] decodedToken : ', decodedToken);
+    const memberId = decodedToken.memberId;
+    console.log('[SendApprovalList] memberId : ' + memberId);
 
-    const token = window.localStorage.getItem("accessToken");
-    const memberInfo = decodeJwt(token);
-    const memberId = memberInfo.memberId;
+    const { approvalDTOPage } = useSelector(state => state.approvalReducer);
+    
 
+    const [fg, setFg] = useState('given');
     const [approvals, setApprovals] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const [title, setTitle] = useState("");
+    const [direction, setDirection] = useState('DESC');
+
+    
+
+    const dispatch = useDispatch();
+
+    let callSelectAPI = (currentPage) => {
+        dispatch(ApprovalAPICalls(fg, title, direction, currentPage));
+    }
+
+    useEffect(() => {
+        callSelectAPI(currentPage)
+    }, [fg, title, direction, currentPage]);
 
     /* useEffect(() => {
         axios.get('http://localhost:8080/approvals',{
@@ -109,6 +131,9 @@ function SendApprovalList() {
                     </div>
                 </nav>
                 {/* <ApprovalList approvals={approvals} /> */}
+            </div>
+            <div className="approvalListBody">
+
             </div>
         </main>
     );
