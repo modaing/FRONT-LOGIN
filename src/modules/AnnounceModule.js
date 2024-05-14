@@ -1,5 +1,5 @@
 import { createAction, handleActions } from 'redux-actions';
-import { ancListAPI } from '../apis/other/announce/AncAPICalls';
+import { ancListAPI } from '../apis/AncAPICalls';
 
 /* 초기값 */
 const initialState = {

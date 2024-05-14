@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { SHA256 } from 'crypto-js';
-import { ancInsertAPI } from '../../apis/other/announce/AncAPICalls';
+import { ancInsertAPI } from '../../apis/AncAPICalls';
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 import ReactMarkdown from 'react-markdown';
@@ -21,16 +21,13 @@ function InsertAnnounce() {
     let memberId = 0; // const는 재할당 불가능 하므로, let으로 만들어주었음
     let name = '';
 
-    const isLogin = window.localStorage.getItem("accessToken");
-    let decoded = null;
 
-    if (isLogin !== undefined && isLogin !== null) {
-        const decodedTokenInfo = decodeJwt(window.localStorage.getItem("accessToken"));
-        decoded = decodedTokenInfo.role;
+    const decodedTokenInfo = decodeJwt(window.localStorage.getItem("accessToken"));
 
-        memberId = decodedTokenInfo.memberId; // 함수 내부에서 memberId 할당
-        name = decodedTokenInfo.name;
-    }
+
+    memberId = decodedTokenInfo.memberId; // 함수 내부에서 memberId 할당
+    name = decodedTokenInfo.name;
+
 
 
     const insertButton = {
@@ -70,7 +67,7 @@ function InsertAnnounce() {
         const htmlContent = content;
 
         const formData = new FormData();
-        formData.append('announceDTO', new Blob([JSON.stringify({ ancTitle: title, ancWriter: name , ancContent: htmlContent })], { type: 'application/json' }));
+        formData.append('announceDTO', new Blob([JSON.stringify({ ancTitle: title, ancWriter: name, ancContent: htmlContent })], { type: 'application/json' }));
         files.forEach(file => formData.append('files', file)); // 모든 파일을 FormData에 추가
 
         try {
