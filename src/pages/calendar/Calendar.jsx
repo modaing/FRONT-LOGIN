@@ -6,11 +6,11 @@ import interactionPlugin from "@fullcalendar/interaction";
 import koLocale from '@fullcalendar/core/locales/ko';
 import './Calendar.css';
 import "bootstrap/dist/css/bootstrap.min.css";
-import Modal from './Modal';
+import CalendarModal from './CalendarModal';
 import { callDeleteCalendarAPI, callInsertCalendarAPI, callSelectCalendarAPI, callUpdateCalendarAPI } from '../../apis/CalendarAPICalls';
 import { useSelector, useDispatch } from 'react-redux';
 import '../../css/common.css'
-import UpdateModal from './UpdateModal';
+import CalendarUpdateModal from './CalendarUpdateModal';
 import { Popover } from 'bootstrap';
 
 
@@ -163,8 +163,8 @@ function Calendar() {
                 locale={koLocale}
             />
         </main>
-        <Modal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveChanges} />
-        {selectedEvent && <UpdateModal isOpen={isModalOpen} onClose={handleCloseModal} onUpdate={handleUpdateChanges} onDelete={handleDeleteChanges} event={selectedEvent} />}
+        <CalendarModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveChanges} />
+        {selectedEvent && <CalendarUpdateModal isOpen={isModalOpen} onClose={handleCloseModal} onUpdate={handleUpdateChanges} onDelete={handleDeleteChanges} event={selectedEvent} />}
     </>
 
 }

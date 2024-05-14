@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import './CalendarModal.css'
 
 const UpdateModal = ({ isOpen, onClose, onUpdate, onDelete, event }) => {
     const [id, setId] = useState('');
     const [title, setTitle] = useState('');
     const [start, setStart] = useState('');
     const [end, setEnd] = useState('');
-    const [color, setColor] = useState('red');
+    const [color, setColor] = useState('');
     const [detail, setDetail] = useState('');
 
 
@@ -20,14 +23,10 @@ const UpdateModal = ({ isOpen, onClose, onUpdate, onDelete, event }) => {
     }
 
     const resetModal = () => {
-        // 시작시간과 종료시간이 동일한 경우 종료시간이 event에 end가 들어가지 않아서 값이 있을 때만 toISOString 호출하게 함
-        if (event.end) {
-            setEnd(event.end.toISOString().slice(0, 16));
-        }
         setId(event.id)
         setTitle(event.title);
-        // toISOString() 메소드를 호출하면 "YYYY-MM-DDTHH:mm:ss.sssZ" 형식으로 반환되는데, YYYY-MM-DDTHH:mm  
-        setStart(event.start.toISOString().slice(0, 16));
+        setStart(new Date(event.start));
+        setEnd(new Date(event.end));
         setColor(event.color);
         setDetail(event.extendedProps.detail)
     };
@@ -48,11 +47,11 @@ const UpdateModal = ({ isOpen, onClose, onUpdate, onDelete, event }) => {
                             <h5 className="modal-title">일정 수정하기</h5>
                         </div>
                         <div className="modal-body">
-                            <div>일정이름 : <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} /></div>
-                            <div>시작시간 : <input type="datetime-local" value={start} onChange={(e) => setStart(e.target.value)} /></div>
-                            <div>종료시간 : <input type="datetime-local" value={end} onChange={(e) => setEnd(e.target.value)} /></div>
-                            <div>배경색상 :
-                                <select value={color} onChange={(e) => setColor(e.target.value)}>
+                            <div className="onlyFelx"><label>일정이름</label><input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="form-control" /></div>
+                            <div className="form-group"><label>시작시간</label> <DatePicker selected={start} onChange={date => setStart(date)} showTimeSelect dateFormat="yyyy-MM-dd h:mm aa" className="form-control" /></div>
+                            <div className="form-group"><label>종료시간</label> <DatePicker selected={end} onChange={date => setEnd(date)} showTimeSelect timeInputLabel="종료시간" dateFormat="yyyy-MM-dd h:mm aa" className="form-control" /></div>
+                            <div className="onlyFelx"><label>배경색상</label>
+                                <select value={color} onChange={(e) => setColor(e.target.value)} className="form-select" >
                                     <option value="red">빨강색</option>
                                     <option value="orange">주황색</option>
                                     <option value="yellow">노랑색</option>
@@ -62,7 +61,8 @@ const UpdateModal = ({ isOpen, onClose, onUpdate, onDelete, event }) => {
                                     <option value="purple">보라색</option>
                                 </select>
                             </div>
-                            <div>일정상세 : <input type="text" value={detail} onChange={(e) => setDetail(e.target.value)} /></div>
+                            <label>일정상세</label>
+                            <textarea type="text" value={detail} onChange={(e) => setDetail(e.target.value)} className="form-control" rows="3" />
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-danger" onClick={handleDelete} style={{ marginRight: 'auto'}}>삭제</button>
