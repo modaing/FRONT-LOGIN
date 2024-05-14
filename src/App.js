@@ -19,6 +19,7 @@ import UpdateAnnounce from './pages/announce/UpdateAnnounce';
 import ReceiveNoteList from './pages/note/ReceiveNoteList';
 import SendNoteList from './pages/note/SendNoteList';
 import MyLeave from './pages/leave/MyLeave';
+import SendApprovalList from './pages/approval/SendApprovalList';
 
 function App() {
   const isLoggedIn = !!window.localStorage.getItem("accessToken");
@@ -58,7 +59,7 @@ function App() {
             <Route path='registerMember' element={<RegisterMember />} />
             <Route path='receiveNoteList' element={<ReceiveNoteList/>} />
             <Route path='sendNoteList' element={<SendNoteList/>} />
-            
+            <Route Path='approvalSendList' elemnet={<SendApprovalList/>}/>
           </Route>
         )}
         {/* Login route */}
