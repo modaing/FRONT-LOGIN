@@ -59,7 +59,7 @@ function App() {
             <Route path='registerMember' element={<RegisterMember />} />
             <Route path='receiveNoteList' element={<ReceiveNoteList/>} />
             <Route path='sendNoteList' element={<SendNoteList/>} />
-            <Route Path='approvalSendList' elemnet={<SendApprovalList/>}/>
+            <Route path='approvalSendList' element={<SendApprovalList />} />
           </Route>
         )}
         {/* Login route */}
