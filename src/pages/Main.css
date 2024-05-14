@@ -1,0 +1,4 @@
+/* Main.css */
+.fc-timegrid-slots tr { 
+    height: auto !important; /* 일정이 한 줄에 표시되도록 높이를 자동으로 조절합니다. */
+}
