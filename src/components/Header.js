@@ -2,19 +2,19 @@ import { Link, useNavigate } from 'react-router-dom'; // react-router-dom에서 
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { decodeJwt } from '../utils/tokenUtils';
 import { useDispatch } from 'react-redux';
-import { callLogoutAPI } from '../apis/MemberAPICalls';
+import { callLogoutAPI, callGetProfilePictureAPI } from '../apis/MemberAPICalls';
+import { useEffect, useState } from 'react';
 
 function Header() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [imageUrl, setImageUrl] = useState(null);
 
     let memberRole = null;
 
     const token = window.localStorage.getItem("accessToken");
     const memberInfo = decodeJwt(token);
-    const profilePic = memberInfo.imageUrl;
-    console.log('구성원 프로필 사진:', profilePic);
 
     if (token) {
         try {
@@ -26,7 +26,19 @@ function Header() {
             console.log('Error decoding JWT token:', error);
         }
     }
+    
+    // const getProfilePic = () => {
+    //     setImageData(memberInfo.imageUrl);
+    //     console.log('imageData:', imageData);
+    // }
 
+    useEffect(() => {
+        if (token && memberInfo && memberInfo.imageUrl) {
+            // Set the profile picture URL in state
+            setImageUrl(memberInfo.imageUrl);
+        }
+    }, [token, memberInfo]);
+    
     const onClickLogoutHandler = () => {
         dispatch(callLogoutAPI())
             .then(() => {
@@ -39,26 +51,6 @@ function Header() {
                 console.error("Error during logout:", error);
             });
     };
-
-
-    // if (token !== undefined && token !== null) {
-    //     const decodedTokenInfo = decodeJwt(window.localStorage.getItem("accessToken"));
-    //     console.log('decoded token info', decodedTokenInfo);
-    //     decoded = decodedTokenInfo.role;
-    //     console.log('구성원의 정보:',decoded);
-    // }
-
-    // const onClickLogoutHandler = () => {
-
-    //     dispatch(callLogoutAPI()).then(() => {
-    //         window.localStorage.removeItem("accessToken");
-    //         console.log('구성원 로그아웃');
-    //         alert('로그아웃합니다');
-    //         navigate("/login", { replace: true });
-    //     }).catch((error => {
-    //         console.log("Error during logout:", error);
-    //     }));
-    // };
 
     return (
         <header id="header" className="header fixed-top d-flex align-items-center">
@@ -101,7 +93,7 @@ function Header() {
                         </ul>
                     </li>
                     {/* 쪽지 메뉴를 토글하는 링크 */}
-                    <Link to="/sendNoteList" className="nav-link nav-icon">
+                    <Link to="/receiveNoteList" className="nav-link nav-icon">
                         <i className="bi bi-envelope"></i>
                         <span className="badge bg-success badge-number"></span>
                     </Link>
@@ -116,7 +108,8 @@ function Header() {
                     <li className="nav-item dropdown pe-3">
                         {/* 프로필 메뉴를 토글하는 링크 */}
                         <Link to="#" className="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown">
-                            <img src={profilePic} alt="Profile" className="rounded-circle" />
+                            <img src={imageUrl} alt="Profile" className="rounded-circle" />
+
                             <span className="d-none d-md-block dropdown-toggle ps-2">{memberInfo.name} </span>
                         </Link>
                         {/* 프로필 메뉴 */}
