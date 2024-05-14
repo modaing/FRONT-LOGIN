@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import '../../css/commute/commute.css';
 import CommuteListByMember from "../../components/commutes/CommuteListByMember";
 import { useDispatch, useSelector } from "react-redux";
-import { callInsertCommuteAPI, callSelectCommuteListAPI } from "../../apis/CommuteAPICalls";
+import { callInsertCommuteAPI, callSelectCommuteListAPI, callUpdateCommuteAPI } from "../../apis/CommuteAPICalls";
 import CommuteTime from "../../components/commutes/CommuteTime";
 import { decodeJwt } from '../../utils/tokenUtils';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import styled from "styled-components";
 import { handleAction } from 'redux-actions';
 
@@ -14,6 +14,18 @@ function RecordCommute() {
     const insertButton = {
         backgroundColor: '#112D4E',
         color: 'white',
+        borderRadius: '5px',
+        padding: '1% 1.5%', // 패딩을 %로 조정
+        cursor: 'pointer',
+        marginLeft: '60%', // 왼쪽 여백을 %로 조정
+        height: '45px',
+        textDecoration: 'none'
+    };
+
+    const updateButton = {
+        backgroundColor: '#ffffff',
+        color: '#112D4E',
+        border: '#112D4E 1px solid',
         borderRadius: '5px',
         padding: '1% 1.5%', // 패딩을 %로 조정
         cursor: 'pointer',
@@ -71,10 +83,23 @@ function RecordCommute() {
 
     const [target, setTarget] = useState('member');
     const [targetValue, setTargetValue] = useState(memberId);
-    const dispatch = useDispatch();
 
     const [date, setDate] = useState(new Date());
     const [isClocked, setIsClocked] = useState(false);
+    const [updateCommute, setUpdateCommute] = useState(
+        // {
+        //     commuteNo: null,
+        //     endWork: '',
+        //     workingStatus: "퇴근",
+        //     totalWorkingHours: 0
+        // }
+        null
+    );
+
+    const dispatch = useDispatch();
+    const { commuteNo } = useParams();
+
+    console.log('출퇴근번호 : ', commuteNo);
 
     /* 출퇴근 내역 액션 */
     const result = useSelector(state => state.commuteReducer);
@@ -84,7 +109,11 @@ function RecordCommute() {
 
     /* 출근 시간 액션 */
     const postCommute = result.postcommute;
-    console.log('[RecordCommute] postCommute : ', postCommute);    
+    console.log('[RecordCommute] postCommute : ', postCommute);
+
+    /* 퇴근 시간 액션 */
+    const putCommute = result.putcommute;
+    console.log('[RecordCommute] putCommute : ', putCommute);
 
     // 출퇴근 정정 관리 때 필요함!!
     // useEffect(() => {
@@ -99,14 +128,13 @@ function RecordCommute() {
     // );
 
     /* UTC 기준 날짜 반환으로 한국 표준시보다 9시간 빠른 날짜가 표시 되는 문제 해결 */
-    // console.log('[RecordCommute] date.toISOString().slice(0, 10) : ', date.toISOString().slice(0, 10));
-    // console.log('[RecordCommute] date.toISOString() : ', date.toISOString());
-
     let offset = date.getTimezoneOffset() * 60000;      // ms 단위이기 때문에 60000 곱해야함
     let dateOffset = new Date(date.getTime() - offset); // 한국 시간으로 파싱
     let parsingDateOffset = dateOffset.toISOString().slice(0, 10);
 
     console.log('[RecordCommute] date : ', date);
+    // console.log('[RecordCommute] date.toISOString().slice(0, 10) : ', date.toISOString().slice(0, 10));
+    // console.log('[RecordCommute] date.toISOString() : ', date.toISOString());
     // console.log('[RecordCommute] offset : ', offset);
     // console.log('[RecordCommute] dateOffset : ', dateOffset);
     // console.log('[RecordCommute] dateOffset.toISOString() : ', dateOffset.toISOString());
@@ -119,6 +147,8 @@ function RecordCommute() {
         console.log('[useEffect] date : ', date);
         dispatch(callSelectCommuteListAPI(target, targetValue, dateOffset.toISOString().slice(0, 10)));
     }, [dispatch, target, targetValue, date, postCommute]);
+
+    /* 가장 최근 출퇴근 번호 가져오는 로직 */
 
     /* 한 주 전으로 이동 */
     const handlePreviousClick = () => {
@@ -138,7 +168,7 @@ function RecordCommute() {
     let timeString = hours + ':' + minutes;
 
     /* 총 근무 시간 계산 */
-    
+
 
     /* 출근하기 API 호출 */
     const handleClockIn = () => {
@@ -161,20 +191,34 @@ function RecordCommute() {
     };
 
     /* 퇴근하기 API 호출 */
-    const handleClockOut = () => {
-        try {
-            let updateCommute = {
-                endWork: timeString,
-                workingStatus: "퇴근",
-                totalWorkingHours: 480
-            };
-            console.log('퇴근 api 호출 : ', updateCommute);
-            dispatch(callInsertCommuteAPI(updateCommute, target, targetValue, parsingDateOffset));
-            setIsClocked(false);
+    const handleClockOut = async () => {
+        // try {
+        //     const { allOfCommutList, latestCommuteNo } = await dispatch(callSelectCommuteListAPI(target, targetValue, date));
 
-        } catch (error) {
-            console.error('Error inserting commute:', error);
-        }
+        //     let updateCommuteData = {
+        //         commuteNo: updateCommute.commuteNo,
+        //         endWork: timeString,
+        //         workingStatus: "퇴근",
+        //         totalWorkingHours: 480
+        //     };
+
+        //     // setUpdateCommute(
+        //     //     {
+        //     //         // commuteNo: commuteNo,
+        //     //         endWork: timeString,
+        //     //         workingStatus: "퇴근",
+        //     //         totalWorkingHours: 480
+        //     //     }
+        //     // );
+        //     console.log('퇴근 api 호출 : ', updateCommuteData);
+
+        //     dispatch(callUpdateCommuteAPI(updateCommuteData));
+        //     setIsClocked(false);
+
+
+        // } catch (error) {
+        //     console.error('Error inserting commute:', error);
+        // }
     };
 
     return (
@@ -192,7 +236,7 @@ function RecordCommute() {
                                 출근하기
                             </Link>
                         ) : (
-                            <Link to="/recordCommute" className="notice-insert-button" style={insertButton} onClick={handleClockOut}>
+                            <Link to="/recordCommute" className="notice-insert-button" style={updateButton} onClick={handleClockOut}>
                                 퇴근하기
                             </Link>
                         )}

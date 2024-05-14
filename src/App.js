@@ -22,6 +22,7 @@ import SendNoteList from './pages/note/SendNoteList';
 import MyLeave from './pages/leave/MyLeave';
 import RoomList from './pages/chatting/RoomList';
 import Room from './pages/chatting/Room';
+import SendApprovalList from './pages/approval/SendApprovalList';
 
 function App() {
   const isLoggedIn = !!window.localStorage.getItem("accessToken");
@@ -63,6 +64,8 @@ function App() {
             <Route path='sendNoteList' element={<SendNoteList />} />
             <Route path="chatRoomList" element={<RoomList />} />
             <Route path="/room/:roomId" element={<Room />} /> {/* ChatRoom 컴포넌트에 대한 라우트 추가 */}
+            <Route path='sendNoteList' element={<SendNoteList/>} />
+            <Route path='approvalSendList' element={<SendApprovalList />} />
           </Route>
         ) : (
           // Redirect to login page if not logged in
