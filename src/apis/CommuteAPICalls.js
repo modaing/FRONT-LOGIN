@@ -12,6 +12,7 @@ export const callSelectCommuteListAPI = (target, targetValue, date) => {
             console.log('[date] : ', date);
 
             const url = `/commutes?target=${target}&targetValue=${targetValue}&date=${date}`;
+            console.log('url : ', url);
             // const url = `/commutes?target=member&targetValue=240401835&date=2024-05-09`;
             const response = await request('GET', url);
 
@@ -45,14 +46,14 @@ export const callInsertCommuteAPI = (newCommute) => {
 };
 
 /* 퇴근 시간 등록 api */
-export const callUpdateCommuteAPI = (updateCommute, target, targetValue, date) => {
+export const callUpdateCommuteAPI = (updateCommute) => {
     return async (dispatch) => {
         try {
-            const todayCommuteUrl = `/commutes?target=${target}&targetValue=${targetValue}&date=${date}`;
-            const commuteNo = await request('GET', todayCommuteUrl);
-            console.log('[callUpdateCommuteAPI] commuteNo : ', commuteNo);
+            // const todayCommuteUrl = `/commutes?target=${target}&targetValue=${targetValue}&date=${date}`;
+            // const commuteNo = await request('GET', todayCommuteUrl);
+            console.log('[callUpdateCommuteAPI] updateCommute.commuteNo : ', updateCommute.commuteNo);
 
-            const url = `/commutes/${commuteNo}`;
+            const url = `/commutes/${updateCommute.commuteNo}`;
             const response = await request('PUT', url, updateCommute);
 
             console.log('[callUpdateCommuteAPI] response : ', response);
@@ -63,4 +64,4 @@ export const callUpdateCommuteAPI = (updateCommute, target, targetValue, date) =
             console.log('[callUpdateCommuteAPI] error : ', error);
         }
     }
-}
+};

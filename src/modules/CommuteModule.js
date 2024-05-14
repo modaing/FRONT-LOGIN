@@ -51,7 +51,7 @@ const commuteReducer = handleActions(
             return ({ ...state, postcommute: payload });
         },
         [PUT_COMMUTE]: (state, { payload }) => {
-            return payload;
+            return ({ ...state, putcommute: payload });
         }
     },
     initialState
