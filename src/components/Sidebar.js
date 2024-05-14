@@ -61,13 +61,23 @@ function Sidebar() {
                     </Link>
                     <ul id="tables-nav" className="nav-content collapse" data-bs-parent="#sidebar-nav">
                         <li>
-                            <Link to="/" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>휴가 신청 내역 조회</span>
+                            <Link to="/myLeave" style={underLineStyle}>
+                                <i className="bi bi-circle"></i><span>나의 휴가 관리</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/leaveAccrual" style={underLineStyle}>
+                                <i className="bi bi-circle"></i><span>휴가 발생 관리</span>
                             </Link>
                         </li>
                         <li>
                             <Link to="/" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>휴가 등록</span>
+                                <i className="bi bi-circle"></i><span>휴가 신청 처리</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/" style={underLineStyle}>
+                                <i className="bi bi-circle"></i><span>휴가 보유 내역 조회</span>
                             </Link>
                         </li>
                     </ul>
@@ -139,7 +149,7 @@ function Sidebar() {
                         </li>
                         <li>
                             <Link to="/" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>설문 조사</span>
+                                <i className="bi bi-circle"></i><span>수요 조사</span>
                             </Link>
                         </li>
                         <li>

@@ -81,6 +81,7 @@ export const callPutReceiceNotesAPI = (noteNo, receiveDeleteYn, sendDeleteYn) =>
             console.log("error", error);
         }
     };
+
 };
 
 export const callPostNoteAPI = (noteDTO) => {
@@ -94,3 +95,4 @@ export const callPostNoteAPI = (noteDTO) => {
         }
     };
 };
+
