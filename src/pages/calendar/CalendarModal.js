@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import './CalendarModal.css'
+import '../../css/calendar/CalendarModal.css'
 
 const CalendarModal = ({ isOpen, onClose, onSave }) => {
     const [title, setTitle] = useState('');

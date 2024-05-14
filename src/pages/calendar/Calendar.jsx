@@ -4,7 +4,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import koLocale from '@fullcalendar/core/locales/ko';
-import './Calendar.css';
+import '../../css/calendar/Calendar.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import CalendarModal from './CalendarModal';
 import { callDeleteCalendarAPI, callInsertCalendarAPI, callSelectCalendarAPI, callUpdateCalendarAPI } from '../../apis/CalendarAPICalls';
