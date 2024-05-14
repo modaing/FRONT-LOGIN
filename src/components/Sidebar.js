@@ -23,11 +23,6 @@ function Sidebar() {
                         <span>Main</span>
                     </Link>
                 </li>
-                <li className={`nav-item ${location.pathname === '/calendar' ? 'active' : ''}`}>
-                    <Link className={`nav-link ${location.pathname === '/calendar' ? '' : 'nav-link-main-cal collapsed'}`} to="/calendar">
-                        <i className="bi bi-calendar-check"></i><span>캘린더</span>
-                    </Link>
-                </li>
                 <li className="nav-item">
                     <Link className="nav-link collapsed" to="/" data-bs-target="#forms-nav" data-bs-toggle="collapse">
                         <i className="bi bi-clock"></i><span>출퇴근</span><i className="bi bi-chevron-down ms-auto"></i>
@@ -81,6 +76,11 @@ function Sidebar() {
                             </Link>
                         </li>
                     </ul>
+                </li>
+                <li className={`nav-item ${location.pathname === '/calendar' ? 'active' : ''}`}>
+                    <Link className={`nav-link ${location.pathname === '/calendar' ? '' : 'nav-link-main-cal collapsed'}`} to="/calendar">
+                        <i className="bi bi-calendar-check"></i><span>캘린더</span>
+                    </Link>
                 </li>
                 <li className="nav-item">
                     <Link className="nav-link collapsed" to="/" data-bs-target="#charts-nav" data-bs-toggle="collapse">

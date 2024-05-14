@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Main from './pages/Main';
 import Announces from './pages/announce/Announces';
 import InsertAnnounce from './pages/announce/InsertAnnounce';
@@ -19,6 +20,8 @@ import UpdateAnnounce from './pages/announce/UpdateAnnounce';
 import ReceiveNoteList from './pages/note/ReceiveNoteList';
 import SendNoteList from './pages/note/SendNoteList';
 import MyLeave from './pages/leave/MyLeave';
+import RoomList from './pages/chatting/RoomList';
+import Room from './pages/chatting/Room';
 import SendApprovalList from './pages/approval/SendApprovalList';
 
 function App() {
@@ -39,7 +42,7 @@ function App() {
           }
         />
         {/* Authenticated routes */}
-        {isLoggedIn && (
+        {isLoggedIn ? (
           <Route element={<Layout />}>
             <Route index element={<Main />} />
             <Route path="main" element={<Main />} />
@@ -57,13 +60,16 @@ function App() {
             <Route path="insertAnnounce" element={<InsertAnnounce />} />
             <Route path='manageMember' element={<ManageMember />} />
             <Route path='registerMember' element={<RegisterMember />} />
-            <Route path='receiveNoteList' element={<ReceiveNoteList/>} />
-            <Route path='sendNoteList' element={<SendNoteList/>} />
+            <Route path='receiveNoteList' element={<ReceiveNoteList />} />
+            <Route path='sendNoteList' element={<SendNoteList />} />
+            <Route path="chatRoomList" element={<RoomList />} />
+            <Route path="/room/:roomId" element={<Room />} />
             <Route path='approvalSendList' element={<SendApprovalList />} />
           </Route>
+        ) : (
+          // Redirect to login page if not logged in
+          <Route path="/login" element={<Login />} />
         )}
-        {/* Login route */}
-        <Route path="/login" element={<Login />} />
         {/* Error route */}
         <Route path='*' element={<Error />} />
       </Routes>

@@ -22,4 +22,31 @@ export const callMemberListAPI = () => {
 };
 
 
+export const fetchRooms = async (memberId) => {
+  try {
+    let url = `${API_BASE_URL}/api/rooms/?memberId=${memberId}&receiverMemberId=${memberId}`;
 
+    const response = await axios.get(url, {headers});
+    return response.data;
+  } catch (error) {
+    throw new Error('Error fetching rooms: ' + error.message);
+  }
+};
+
+export const createRoom = async (memberId, roomName, receiverId) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/api/rooms/enteredRooms`,  {headers} , {
+      memberId: memberId,
+      roomName: roomName, 
+      receiverId: receiverId
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('Error creating room: ' + error.message);
+  }
+};
+
+
+export const leaveRoom = (memberId, roomId) => {
+  return axios.post(`${API_BASE_URL}/room/${roomId}/leave`, { memberId });
+};
