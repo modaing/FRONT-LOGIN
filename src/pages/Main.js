@@ -6,7 +6,6 @@ import koLocale from '@fullcalendar/core/locales/ko';
 import { useSelector, useDispatch } from 'react-redux';
 import "bootstrap/dist/css/bootstrap.min.css";
 import '../css/common.css'
-import './Main.css';
 import { calendarPopover, updateEvents } from '../utils/CalendarUtill';
 import { callSelectCalendarAPI } from '../apis/CalendarAPICalls';
 
