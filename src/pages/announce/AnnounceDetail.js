@@ -2,8 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { ancDetailAPI } from '../../apis/other/announce/AncAPICalls';
-import { ancDeleteAPI } from '../../apis/other/announce/AncAPICalls';
+import { ancDetailAPI } from '../../apis/AncAPICalls';
+import { ancDeleteAPI } from '../../apis/AncAPICalls';
 import '../../css/announce/ancDetail.css';
 
 function AnnounceDetail() {
