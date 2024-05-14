@@ -62,7 +62,7 @@ function SendApprovalList() {
     const memberId = decodedToken.memberId;
     console.log('[SendApprovalList] memberId : ' + memberId);
 
-    const { approvalDTOPage } = useSelector(state => state.approvalReducer);
+    // const { approvalDTOPage } = useSelector(state => state.approvalReducer);
     
 
     const [fg, setFg] = useState('given');
@@ -72,15 +72,16 @@ function SendApprovalList() {
     const [title, setTitle] = useState("");
     const [direction, setDirection] = useState('DESC');
 
-    const dispatch = useDispatch();
 
+    const dispatch = useDispatch();
+/* 
     let callSelectAPI = (currentPage) => {
         dispatch(ApprovalAPICalls(fg, title, direction, currentPage));
     }
 
     useEffect(() => {
         callSelectAPI(currentPage)
-    }, [fg, title, direction, currentPage]);
+    }, [fg, title, direction, currentPage]); */
 
     /* useEffect(() => {
         axios.get('http://localhost:8080/approvals',{
