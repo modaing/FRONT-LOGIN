@@ -1,4 +1,4 @@
-import './commute.css';
+import '../../css/commute/commute.css';
 import styled from "styled-components";
 
 function RecordCorrectionOfCommute() {
@@ -98,12 +98,11 @@ function RecordCorrectionOfCommute() {
         <main id="main" className="main">
             <div className="pagetitle" style={pageTitleStyle}>
                 <h1>출퇴근</h1>
-                <h5>출퇴근 정정 내역</h5>
                 <nav>
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><a href="/">Home</a></li>
                         <li className="breadcrumb-item">출퇴근</li>
-                        <li className="breadcrumb-item active">출퇴근 정정 기록</li>
+                        <li className="breadcrumb-item active">출퇴근 정정 내역</li>
                         <SelectBox options={OPTIONS} defaultValue="2024-05"></SelectBox>
                     </ol>
                 </nav>

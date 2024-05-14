@@ -30,3 +30,31 @@
 .ancListContent {
   margin-left: 0px;
 }
+
+.noteListContent {
+  margin-left: 0px;
+}
+
+
+@keyframes loading {
+  0% {
+      content: "내역을 불러오는 중입니다.";
+  }
+  25% {
+      content: "내역을 불러오는 중입니다..";
+  }
+  50% {
+      content: "내역을 불러오는 중입니다...";
+  }
+  75% {
+      content: "내역을 불러오는 중입니다..";
+  }
+  100% {
+      content: "내역을 불러오는 중입니다.";
+  }
+}
+
+.loadingText::after {
+  content: "내역을 불러오는 중입니다.";
+  animation: loading 2s infinite;
+}

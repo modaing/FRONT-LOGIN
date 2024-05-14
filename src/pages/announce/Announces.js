@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchAnnouncementsAsync, setCurrentPage } from '../../../modules/AnnounceModule';
-import '../../../css/common.css';
+import { fetchAnnouncementsAsync, setCurrentPage } from '../../modules/AnnounceModule';
+import '../../css/common.css';
 
 function Announces() {
     const { announcements, currentPage, totalPages } = useSelector(state => state.announceReducer);
@@ -21,7 +21,7 @@ function Announces() {
             );
         }
 
-        return announcements.map((announce, index) => (
+        return announcements?.map((announce, index) => (
             <tr key={index}>
                 <td style={{ width: '10%', textAlign: 'center', padding: '10px' }}>{announce.ancNo}</td>
                 <td style={{ width: '40%', textAlign: 'center', padding: '10px' }}>

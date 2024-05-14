@@ -1,32 +1,66 @@
-import {
-    GET_COMMUTE,
-    GET_COMMUTES,
-    POST_COMMUTE,
-    PUT_COMMUTE
-} from '../modules/CommuteModule.js';
+import { getCommutelist, postCommute, putCommute } from "../modules/CommuteModule";
+import { decodeJwt } from "../utils/tokenUtils";
+import { request } from "./CommonAPI";
 
-export const callCommuteListAPI = ({ currentPage, member, memberId, date }) => {
-    let requestURL;
+/* 출퇴근 내역 조회 api  */
+export const callSelectCommuteListAPI = (target, targetValue, date) => {
+    /* redux-thunk(미들 웨어)를 이용한 비동기 처리 */
+    return async (dispatch) => {
+        try {
+            console.log('[target] : ', target);
+            console.log('[targetValue] : ', targetValue);
+            console.log('[date] : ', date);
 
-    if(currentPage !== undefined || currentPage !== null) {
-        requestURL = `http://${process.env.REACT_APP_RESETAPI_IP}:8080/commutes?target=${member}&targetValue=${memberId}&date=${date}&offset=${currentPage}`;
-    } else {
-        requestURL = `http://${process.env.REACT_APP_RESETAPI_IP}:8080/commutes?target=${member}&targetValue=${memberId}&date=${date}`;
-    }
+            const url = `/commutes?target=${target}&targetValue=${targetValue}&date=${date}`;
+            // const url = `/commutes?target=member&targetValue=240401835&date=2024-05-09`;
+            const response = await request('GET', url);
 
-    console.log('[callCommuteListAPI] requestURL : ', requestURL);
+            console.log('[callSelectCommuteListAPI] response : ', response.response.data.results.result);
 
-    return async (dispatch, getState) => {
-        const result = await fetch(requestURL, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: '*/*'
-            },
-        }).then((response) => response.json());
-        if (result.status === 200) {
-            console.log('[callCommuteListAPI] result : ', result);
-            dispatch({ type: GET_COMMUTES, payload: result.data});
+            /* action 생성 함수에 결과 전달하며 dispatch 호출 */
+            dispatch(getCommutelist(response.response.data.results.result));
+
+        } catch (error) {
+            console.error('[callSelectCommuteListAPI] Error : ', error);
         }
-    };
+    }
 };
+
+/* 출근 시간 등록 api */
+export const callInsertCommuteAPI = (newCommute) => {
+    return async (dispatch) => {
+        try {
+
+            const url = `/commutes`;
+            const response = await request('POST', url, newCommute);
+
+            console.log('[callInsertCommuteAPI] response : ', response);
+
+            dispatch(postCommute(response));
+
+        } catch (error) {
+            console.log('[callInsertCommuteAPI] error : ', error);
+        }
+    }
+};
+
+/* 퇴근 시간 등록 api */
+export const callUpdateCommuteAPI = (updateCommute, target, targetValue, date) => {
+    return async (dispatch) => {
+        try {
+            const todayCommuteUrl = `/commutes?target=${target}&targetValue=${targetValue}&date=${date}`;
+            const commuteNo = await request('GET', todayCommuteUrl);
+            console.log('[callUpdateCommuteAPI] commuteNo : ', commuteNo);
+
+            const url = `/commutes/${commuteNo}`;
+            const response = await request('PUT', url, updateCommute);
+
+            console.log('[callUpdateCommuteAPI] response : ', response);
+
+            dispatch(putCommute(response));
+
+        } catch (error) {
+            console.log('[callUpdateCommuteAPI] error : ', error);
+        }
+    }
+}

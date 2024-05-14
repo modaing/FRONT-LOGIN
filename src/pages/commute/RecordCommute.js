@@ -1,14 +1,15 @@
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import '../../css/commute/commute.css';
+import CommuteListByMember from "../../components/commutes/CommuteListByMember";
+import { useDispatch, useSelector } from "react-redux";
+import { callInsertCommuteAPI, callSelectCommuteListAPI } from "../../apis/CommuteAPICalls";
+import CommuteTime from "../../components/commutes/CommuteTime";
+import { decodeJwt } from '../../utils/tokenUtils';
+import { Link } from 'react-router-dom';
 import styled from "styled-components";
-import React, { Children } from 'react';
-import './commute.css';
+import { handleAction } from 'redux-actions';
 
 function RecordCommute() {
-
-    const pageTitleStyle = {
-        marginBottom: '20px',
-        marginTop: '20px'
-    };
 
     const insertButton = {
         backgroundColor: '#112D4E',
@@ -20,6 +21,12 @@ function RecordCommute() {
         height: '45px',
         textDecoration: 'none'
     };
+
+    const OPTIONS = [
+        { value: "2024-03", name: "2024-03" },
+        { value: "2024-04", name: "2024-04" },
+        { value: "2024-05", name: "2024-05" }
+    ];
 
     const Select = styled.select`
         margin-left: 20px;
@@ -33,147 +40,6 @@ function RecordCommute() {
         border-radius: 5px;
         border-color: #D5D5D5;
     `;
-
-    const contentStyle1 = {
-        marginLeft: '25px',
-        textAlign: 'center',
-        margin: '20px'
-
-    };
-
-    const contentStyle2 = {
-        marginLeft: '25px'
-
-    };
-
-    const tableStyle = {
-        width: '97%',
-        borderCollapse: 'collapse',
-        textAlign: 'center',
-    };
-
-    const tableStyles = {
-        tableHeaderCell: {
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            padding: '15px'
-        },
-        tableCell1: {
-            width: '15%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell2: {
-            width: '13%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell3: {
-            width: '13%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell4: {
-            width: '13%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell5: {
-            width: '22%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell6: {
-            width: '13%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell7: {
-            width: '15%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        evenRow: {
-            backgroundColor: '#f9f9f9'
-        }
-    };
-
-    const red = {
-        color: '#AF3131',
-        fontWeight: 900
-    };
-
-    const blue = {
-        color: '#3F72AF',
-        fontWeight: 900
-
-    };
-
-    const black = {
-        color: '#00000',
-        fontWeight: 900
-    };
-
-    const date = {
-        color: '#00000',
-        fontWeight: 800,
-        fontSize: '20px',
-        margin: '20px'
-    };
-
-    const Button = ({ children, onClick }) => {
-        return (
-            <button onClick={onClick} style={{
-                backgroundColor: 'transparent',
-                border: 'none',
-                fontSize: '24px',
-                cursor: 'pointer',
-                fontWeight: 900
-            }}>
-                {children}
-            </button>
-        );
-    };
-
-    const insertCorrection = {
-        backgroundColor: '#3F72AF',
-        cursor: 'pointer',
-        color: '#FFFFFF',
-        borderRadius: '4px',
-        border: '1px solid #3F72AF',
-        '&:hover': {
-            cursor: '#112D4E',
-        }
-    };
-
-    const ProgressBar = ({ progress, style }) => {
-        return (
-            <div className="progress" style={style}>
-                <div
-                    className="progress-bar"
-                    role="progressbar"
-                    style={{ width: `${progress}%` }}
-                    aria-valuenow={progress}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                />
-            </div>
-        );
-    };
-
-    const handlePreviousClick = () => {
-        // 한주 전으로 이동하는 로직
-    };
-
-    const handleNextClick = () => {
-        // 한주 후로 이동하는 로직
-    };
-
-    const OPTIONS = [
-        { value: "2024-03", name: "2024-03" },
-        { value: "2024-04", name: "2024-04" },
-        { value: "2024-05", name: "2024-05" }
-    ];
 
     const SelectBox = (props) => {
         return (
@@ -191,101 +57,158 @@ function RecordCommute() {
         );
     };
 
+    const handleAction = () => {
+        // 날짜 선택 시 value 적용하는 로직
+        <option>
+        </option>
+    };
+
+    /* 로그인한 유저의 토큰 복호화 */
+    const decodedToken = decodeJwt(window.localStorage.getItem('accessToken'));
+    console.log('[RecordCommute] decodedToken : ', decodedToken);
+    const memberId = decodedToken.memberId;
+    console.log('[RecordCommute] memberId : ', memberId);
+
+    const [target, setTarget] = useState('member');
+    const [targetValue, setTargetValue] = useState(memberId);
+    const dispatch = useDispatch();
+
+    const [date, setDate] = useState(new Date());
+    const [isClocked, setIsClocked] = useState(false);
+
+    /* 출퇴근 내역 액션 */
+    const result = useSelector(state => state.commuteReducer);
+    console.log('[RecordCommute] result : ', result);
+    const commuteList = result.commutelist;
+    console.log('[RecordCommute] commuteList : ', commuteList);
+
+    /* 출근 시간 액션 */
+    const postCommute = result.postcommute;
+    console.log('[RecordCommute] postCommute : ', postCommute);    
+
+    // 출퇴근 정정 관리 때 필요함!!
+    // useEffect(() => {
+    //     if (role === 'ADMIN') {
+    //         setTarget('depart');
+    //         setTargetValue(departNo);
+    //     } else {
+    //         setTarget('member');
+    //         setTargetValue(1);
+    //     }
+    // }, [role, memberId, departNo]
+    // );
+
+    /* UTC 기준 날짜 반환으로 한국 표준시보다 9시간 빠른 날짜가 표시 되는 문제 해결 */
+    // console.log('[RecordCommute] date.toISOString().slice(0, 10) : ', date.toISOString().slice(0, 10));
+    // console.log('[RecordCommute] date.toISOString() : ', date.toISOString());
+
+    let offset = date.getTimezoneOffset() * 60000;      // ms 단위이기 때문에 60000 곱해야함
+    let dateOffset = new Date(date.getTime() - offset); // 한국 시간으로 파싱
+    let parsingDateOffset = dateOffset.toISOString().slice(0, 10);
+
+    console.log('[RecordCommute] date : ', date);
+    // console.log('[RecordCommute] offset : ', offset);
+    // console.log('[RecordCommute] dateOffset : ', dateOffset);
+    // console.log('[RecordCommute] dateOffset.toISOString() : ', dateOffset.toISOString());
+    // console.log('[RecordCommute] dateOffset.toISOString().slice(0, 10) : ', dateOffset.toISOString().slice(0, 10));
+
+    /* 출퇴근 내역 API 호출 */
+    useEffect(() => {
+        console.log('[useEffect] target : ', target);
+        console.log('[useEffect] targetValue : ', targetValue);
+        console.log('[useEffect] date : ', date);
+        dispatch(callSelectCommuteListAPI(target, targetValue, dateOffset.toISOString().slice(0, 10)));
+    }, [dispatch, target, targetValue, date, postCommute]);
+
+    /* 한 주 전으로 이동 */
+    const handlePreviousClick = () => {
+        setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7));
+    };
+
+    /* 한 주 후로 이동 */
+    const handleNextClick = () => {
+        setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7));
+    };
+
+    /* 현재 시간 포맷 */
+    let today = new Date();
+    let hours = ('0' + today.getHours()).slice(-2);
+    let minutes = ('0' + today.getMinutes()).slice(-2);
+
+    let timeString = hours + ':' + minutes;
+
+    /* 총 근무 시간 계산 */
+    
+
+    /* 출근하기 API 호출 */
+    const handleClockIn = () => {
+        try {
+            let newCommute = {
+                memberId: memberId,
+                workingDate: new Date().toISOString().slice(0, 10),
+                startWork: timeString,
+                workingStatus: "근무중",
+                totalWorkingHours: 0
+            };
+            console.log('출근 api 호출 : ', newCommute);
+
+            dispatch(callInsertCommuteAPI(newCommute));
+            setIsClocked(true);
+
+        } catch (error) {
+            console.error('Error inserting commute:', error);
+        }
+    };
+
+    /* 퇴근하기 API 호출 */
+    const handleClockOut = () => {
+        try {
+            let updateCommute = {
+                endWork: timeString,
+                workingStatus: "퇴근",
+                totalWorkingHours: 480
+            };
+            console.log('퇴근 api 호출 : ', updateCommute);
+            dispatch(callInsertCommuteAPI(updateCommute, target, targetValue, parsingDateOffset));
+            setIsClocked(false);
+
+        } catch (error) {
+            console.error('Error inserting commute:', error);
+        }
+    };
+
     return (
         <main id="main" className="main">
-            <div className="pagetitle" style={pageTitleStyle}>
+            <div className="pagetitle">
                 <h1>출퇴근</h1>
-                <h5>나의 출퇴근 내역</h5>
                 <nav>
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><a href="/">Home</a></li>
                         <li className="breadcrumb-item">출퇴근</li>
-                        <li className="breadcrumb-item active">출퇴근 기록</li>
-                        <Link to="/" className="notice-insert-button" style={insertButton}>출근하기</Link>
-                        <SelectBox options={OPTIONS} defaultValue="2024-05"></SelectBox>
+                        <li className="breadcrumb-item active">출퇴근 내역</li>
+                        {/* <Link to="/recordCommute" className="notice-insert-button" style={insertButton} >출근하기</Link> */}
+                        {!isClocked ? (
+                            <Link to="/recordCommute" className="notice-insert-button" style={insertButton} onClick={handleClockIn}>
+                                출근하기
+                            </Link>
+                        ) : (
+                            <Link to="/recordCommute" className="notice-insert-button" style={insertButton} onClick={handleClockOut}>
+                                퇴근하기
+                            </Link>
+                        )}
+                        <SelectBox options={OPTIONS} defaultValue={date} onChange={handleAction}></SelectBox>
                     </ol>
                 </nav>
             </div>
-            <div className="col=lg-12">
-                <div className="card">
-                    <div className="content1" style={contentStyle1}>
-                        <Button onClick={handlePreviousClick}>&lt;</Button>
-                        <span style={date}>4월 1째주</span>
-                        <Button onClick={handleNextClick}>&gt;</Button>
-                        <h6>4월 1일 ~ 4월 7일</h6>
-                        <ProgressBar progress={70} style={{ width: '40%', margin: '20px auto' }} />
-                        <h6>최대 근로시간 <span style={black}>52시간</span></h6>
-                        <h6>실제 근로시간 <span style={blue}>36시간</span></h6>
-                        <h6>잔여 근로시간 <span style={red}>16시간</span></h6>
-                    </div>
-                </div>
+            <div>
+                {commuteList && (
+                    <CommuteTime key={commuteList.commuteNo} commute={commuteList} date={date} handlePreviousClick={handlePreviousClick} handleNextClick={handleNextClick} />
+                )}
             </div>
-            <div className="col-lg-12">
-                <div className="card">
-                    <div className="content2" style={contentStyle2}>
-                        <table className="table table-hover" style={tableStyle}>
-                            <thead>
-                                <tr>
-                                    <th style={tableStyles.tableHeaderCell} scope="col">근무일자</th>
-                                    <th style={tableStyles.tableHeaderCell} scope="col">총 근무 시간</th>
-                                    <th style={tableStyles.tableHeaderCell} scope="col">출근 시간</th>
-                                    <th style={tableStyles.tableHeaderCell} scope="col">퇴근 시간</th>
-                                    <th style={tableStyles.tableHeaderCell} scope="col">근무 시간</th>
-                                    <th style={tableStyles.tableHeaderCell} scope="col">근무 상태</th>
-                                    <th style={tableStyles.tableHeaderCell} scope="col">정정 요청</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style={tableStyles.evenRow}>
-                                    <td style={tableStyles.tableCell1} scope="row">2024-04-01</td>
-                                    <td style={tableStyles.tableCell2}>8시간</td>
-                                    <td style={tableStyles.tableCell3}>09:00</td>
-                                    <td style={tableStyles.tableCell4}>18:00</td>
-                                    <td style={tableStyles.tableCell5}><ProgressBar progress={100} /></td>
-                                    <td style={tableStyles.tableCell6}>퇴근</td>
-                                    <td style={tableStyles.tableCell7}><button to="/" style={insertCorrection}>정정</button></td>
-                                </tr>
-                                <tr style={tableStyles.evenRow}>
-                                    <td style={tableStyles.tableCell1} scope="row">2024-04-02</td>
-                                    <td style={tableStyles.tableCell2}>8시간</td>
-                                    <td style={tableStyles.tableCell3}>09:00</td>
-                                    <td style={tableStyles.tableCell4}>18:00</td>
-                                    <td style={tableStyles.tableCell5}><ProgressBar progress={100} /></td>
-                                    <td style={tableStyles.tableCell6}>퇴근</td>
-                                    <td style={tableStyles.tableCell7}><button to="/" style={insertCorrection}>정정</button></td>
-                                </tr>
-                                <tr style={tableStyles.evenRow}>
-                                    <td style={tableStyles.tableCell1} scope="row">2024-04-03</td>
-                                    <td style={tableStyles.tableCell2}>8시간</td>
-                                    <td style={tableStyles.tableCell3}>09:00</td>
-                                    <td style={tableStyles.tableCell4}>18:00</td>
-                                    <td style={tableStyles.tableCell5}><ProgressBar progress={100} /></td>
-                                    <td style={tableStyles.tableCell6}>퇴근</td>
-                                    <td style={tableStyles.tableCell7}><button to="/" style={insertCorrection}>정정</button></td>
-                                </tr>
-                                <tr style={tableStyles.evenRow}>
-                                    <td style={tableStyles.tableCell1} scope="row">2024-04-04</td>
-                                    <td style={tableStyles.tableCell2}>8시간</td>
-                                    <td style={tableStyles.tableCell3}>09:00</td>
-                                    <td style={tableStyles.tableCell4}>18:00</td>
-                                    <td style={tableStyles.tableCell5}><ProgressBar progress={100} /></td>
-                                    <td style={tableStyles.tableCell6}>퇴근</td>
-                                    <td style={tableStyles.tableCell7}><button to="/" style={insertCorrection}>정정</button></td>
-                                </tr>
-                                <tr style={tableStyles.evenRow}>
-                                    <td style={tableStyles.tableCell1} scope="row">2024-04-05</td>
-                                    <td style={tableStyles.tableCell2}></td>
-                                    <td style={tableStyles.tableCell3}>09:00</td>
-                                    <td style={tableStyles.tableCell4}></td>
-                                    <td style={tableStyles.tableCell5}><ProgressBar progress={60} /></td>
-                                    <td style={tableStyles.tableCell6}>근무중</td>
-                                    <td style={tableStyles.tableCell7}><button to="/" style={insertCorrection}>정정</button></td>
-                                </tr>
-                            </tbody>
-                            {/* 페이징 처리 */}
-                        </table>
-                    </div>
-                </div>
+            <div>
+                {commuteList && (
+                    <CommuteListByMember key={commuteList.commuteNo} commute={commuteList} date={date} />
+                )}
             </div>
         </main>
     );

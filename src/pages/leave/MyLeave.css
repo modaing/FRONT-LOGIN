@@ -1,0 +1,67 @@
+.leaveHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.leaveInfo {
+    font-weight: bold;
+    background-color:#ffffff;
+    border-width: var(--bs-border-width);
+    border-style: solid;
+    border-color:  var(--bs-border-color-translucent);
+    border-radius: var(--bs-border-radius);;
+    padding: 1% 1%;
+}
+.leaveInfo span {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.insertLeave {
+    background-color: #112D4E;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 1% 2%;
+    cursor: pointer;
+    text-decoration: none;
+    width: auto;
+}
+
+.myLeaveListContent th {
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    width: 12.5%;
+}
+
+.myLeaveListContent th span,
+.myLeaveListContent th i {
+    cursor: pointer;
+}
+
+.myLeaveListContent td {
+    text-align: center;
+    padding: 10px;
+
+}
+
+.cancelRequest {
+    background-color: #112D4E;
+    color: #ffffff;
+    border: solid #112D4E;
+    border-radius: 10px;
+    padding: 2% 5%;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.requestDelete {
+    background-color: #3F72AF;
+    color: #ffffff;
+    border: solid #3F72AF;
+    border-radius: 10px;
+    padding: 2% 5%;
+    cursor: pointer;
+    text-decoration: none;
+}
