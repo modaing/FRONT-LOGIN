@@ -63,8 +63,7 @@ function App() {
             <Route path='receiveNoteList' element={<ReceiveNoteList />} />
             <Route path='sendNoteList' element={<SendNoteList />} />
             <Route path="chatRoomList" element={<RoomList />} />
-            <Route path="/room/:roomId" element={<Room />} /> {/* ChatRoom 컴포넌트에 대한 라우트 추가 */}
-            <Route path='sendNoteList' element={<SendNoteList/>} />
+            <Route path="/room/:roomId" element={<Room />} />
             <Route path='approvalSendList' element={<SendApprovalList />} />
           </Route>
         ) : (

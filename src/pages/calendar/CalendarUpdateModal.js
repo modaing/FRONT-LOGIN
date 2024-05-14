@@ -48,8 +48,8 @@ const UpdateModal = ({ isOpen, onClose, onUpdate, onDelete, event }) => {
                         </div>
                         <div className="modal-body">
                             <div className="onlyFelx"><label>일정이름</label><input type="text" value={title} onChange={e => setTitle(e.target.value)} className="form-control" /></div>
-                            <div className="form-group"><label>시작시간</label> <DatePicker selected={start} onChange={e => setStart(e)} showTimeSelect dateFormat="yyyy-MM-dd h:mm aa" className="form-control" /></div>
-                            <div className="form-group"><label>종료시간</label> <DatePicker selected={end} onChange={e => setEnd(e)} showTimeSelect timeInputLabel="종료시간" dateFormat="yyyy-MM-dd h:mm aa" className="form-control" /></div>
+                            <div className="form-group"><label>시작일시</label> <DatePicker selected={start} onChange={e => setStart(e)} showTimeSelect dateFormat="yyyy-MM-dd h:mm aa" className="form-control" /></div>
+                            <div className="form-group"><label>종료일시</label> <DatePicker selected={end} onChange={e => setEnd(e)} showTimeSelect timeInputLabel="종료시간" dateFormat="yyyy-MM-dd h:mm aa" className="form-control" /></div>
                             <div className="onlyFelx"><label>배경색상</label>
                                 <select value={color} onChange={(e) => setColor(e.target.value)} className="form-select" >
                                     <option value="red">빨강색</option>

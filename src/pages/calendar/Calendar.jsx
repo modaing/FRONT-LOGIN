@@ -13,6 +13,7 @@ import '../../css/common.css'
 import CalendarUpdateModal from './CalendarUpdateModal';
 import { Popover } from 'bootstrap';
 import { convertToUtc } from '../../utils/CalendarUtill';
+import { Link } from 'react-router-dom';
 
 
 function Calendar() {
@@ -61,7 +62,7 @@ function Calendar() {
             detail
         };
         dispatch(callUpdateCalendarAPI(requestData));
-      
+
     };
 
     const handleDeleteChanges = (id) => {
@@ -91,7 +92,7 @@ function Calendar() {
                 // 배경이 노랑이면 흰색글씨가 안보여서 노랑일 때 글씨색 변경
                 let textColor = 'white';
                 if (calendar.color === 'yellow') {
-                    textColor = 'black';  
+                    textColor = 'black';
                 }
 
                 return {
@@ -118,7 +119,7 @@ function Calendar() {
                 <h1>캘린더</h1>
                 <nav>
                     <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><a href="/">Home</a></li>
+                        <li className="breadcrumb-item"><Link to="/">Home</Link></li>
                         <li className="breadcrumb-item">캘린더</li>
                     </ol>
                 </nav>
