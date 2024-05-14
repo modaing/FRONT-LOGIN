@@ -19,6 +19,7 @@ import UpdateAnnounce from './pages/announce/UpdateAnnounce';
 import ReceiveNoteList from './pages/note/ReceiveNoteList';
 import SendNoteList from './pages/note/SendNoteList';
 import SendApprovalList from './pages/approval/SendApprovalList';
+import MyLeave from './pages/leave/MyLeave';
 
 function App() {
   
@@ -49,6 +50,7 @@ function App() {
             <Route path="recordCorrectionOfCommute" element={<RecordCorrectionOfCommute />} />
             <Route path="commuteManage" element={<CommuteManage />} />
             <Route path="commuteCorrectionManage" element={<CommuteCorrectionManage />} />
+            <Route path="myLeave" element={<MyLeave />} />
             <Route path="announces" element={<Announces />} />
             <Route path="announces/:ancNo" element={<AnnounceDetail />} />
             <Route path="updateAnnounces/:ancNo" element={<UpdateAnnounce />} />

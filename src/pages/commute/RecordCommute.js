@@ -145,14 +145,14 @@ function RecordCommute() {
         try {
             let newCommute = {
                 memberId: memberId,
-                workingDate: parsingDateOffset,
+                workingDate: new Date().toISOString().slice(0, 10),
                 startWork: timeString,
                 workingStatus: "근무중",
                 totalWorkingHours: 0
             };
             console.log('출근 api 호출 : ', newCommute);
 
-            dispatch(callInsertCommuteAPI(newCommute, target, targetValue, dateOffset.toISOString().slice(0, 10)));
+            dispatch(callInsertCommuteAPI(newCommute));
             setIsClocked(true);
 
         } catch (error) {
@@ -169,7 +169,7 @@ function RecordCommute() {
                 totalWorkingHours: 480
             };
             console.log('퇴근 api 호출 : ', updateCommute);
-            dispatch(callInsertCommuteAPI());
+            dispatch(callInsertCommuteAPI(updateCommute, target, targetValue, parsingDateOffset));
             setIsClocked(false);
 
         } catch (error) {
