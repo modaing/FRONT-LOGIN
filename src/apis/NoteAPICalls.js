@@ -1,4 +1,4 @@
-import { GET_RECEIVE_NOTES, GET_SEND_NOTES, PUT_SEND_NOTES, PUT_RECEIVE_NOTES } from '../modules/NoteMudule';
+import { GET_RECEIVE_NOTES, GET_SEND_NOTES, PUT_SEND_NOTES, PUT_RECEIVE_NOTES, POST_NOTES } from '../modules/NoteMudule';
 import axios from 'axios';
 import { decodeJwt } from './../utils/tokenUtils';
 
@@ -17,10 +17,10 @@ const headers = {
 const decodedTokenInfo = decodeJwt(getAccessToken());
 const memberId = decodedTokenInfo ? decodedTokenInfo.memberId : null;
 
-export const callReceiveNotesAPI = (page = 0, size = 10, sort = 'noteNo', direction = 'DESC', receiverId = memberId, senderId = memberId) => {
+export const callReceiveNotesAPI = (page = 0, size = 10, noteNo, direction = 'DESC', receiverId = memberId, senderId = memberId) => {
     return async (dispatch) => {
         try {
-            const receiveNotesResponse = await axios.get(`${API_BASE_URL}/members/${memberId}/notes?receiverId=${receiverId}&size=${size}&page=${page}&sort=${sort}&direction=${direction}&sendDeleteYn=N&receiveDeleteYn=N`, { headers });
+            const receiveNotesResponse = await axios.get(`${API_BASE_URL}/members/${memberId}/notes?receiverId=${receiverId}&size=${size}&page=${page}&sort=${noteNo}&direction=${direction}&sendDeleteYn=N&receiveDeleteYn=N`, { headers });
             dispatch({ type: GET_RECEIVE_NOTES, payload: receiveNotesResponse.data.results });
             console.log('receiveNotesResponse', receiveNotesResponse);
 
@@ -29,10 +29,10 @@ export const callReceiveNotesAPI = (page = 0, size = 10, sort = 'noteNo', direct
     };
 };
 
-export const callSendNotesAPI = (page = 0, size = 10, sort = 'noteNo', direction = 'DESC', receiverId = memberId, senderId = memberId) => {
+export const callSendNotesAPI = (page = 0, size = 10, noteNo, direction = 'DESC', receiverId = memberId, senderId = memberId) => {
     return async (dispatch) => {
         try {
-            const sendNotesResponse = await axios.get(`${API_BASE_URL}/members/${memberId}/notes?senderId=${senderId}&size=${size}&page=${page}&sort=${sort}&direction=${direction}&sendDeleteYn=N&receiveDeleteYn=N`, { headers });
+            const sendNotesResponse = await axios.get(`${API_BASE_URL}/members/${memberId}/notes?senderId=${senderId}&size=${size}&page=${page}&sort=${noteNo}&direction=${direction}&sendDeleteYn=N&receiveDeleteYn=N`, { headers });
 
             dispatch({ type: GET_SEND_NOTES, payload: sendNotesResponse.data.results });
             console.log('sendNotesResponse', sendNotesResponse);
@@ -83,3 +83,14 @@ export const callPutReceiceNotesAPI = (noteNo, receiveDeleteYn, sendDeleteYn) =>
     };
 };
 
+export const callPostNoteAPI = (noteDTO) => {
+    return async (dispatch) => {
+        try {
+            const postNoteResponse = await axios.post(`${API_BASE_URL}/notes`, noteDTO, {headers} );
+            dispatch({ type: POST_NOTES, payload: postNoteResponse.data });
+            console.log(postNoteResponse.data)
+        } catch (error){
+            console.log("error", error);
+        }
+    };
+};
