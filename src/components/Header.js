@@ -93,7 +93,7 @@ function Header() {
                         </ul>
                     </li>
                     {/* 쪽지 메뉴를 토글하는 링크 */}
-                    <Link to="/sendNoteList" className="nav-link nav-icon">
+                    <Link to="/receiveNoteList" className="nav-link nav-icon">
                         <i className="bi bi-envelope"></i>
                         <span className="badge bg-success badge-number"></span>
                     </Link>
