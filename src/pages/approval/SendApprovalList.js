@@ -72,8 +72,6 @@ function SendApprovalList() {
     const [title, setTitle] = useState("");
     const [direction, setDirection] = useState('DESC');
 
-    //머지용
-
     const dispatch = useDispatch();
 
     let callSelectAPI = (currentPage) => {
