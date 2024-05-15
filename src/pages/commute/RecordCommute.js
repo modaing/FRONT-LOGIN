@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../../css/commute/commute.css';
 import CommuteListByMember from "../../components/commutes/CommuteListByMember";
 import { useDispatch, useSelector } from "react-redux";
-import { callInsertCommuteAPI, callSelectCommuteListAPI, callUpdateCommuteAPI } from "../../apis/CommuteAPICalls";
+import { callInsertCommuteAPI, callSelectCommuteListAPI, callSelectLastCommuteNoAPI, callUpdateCommuteAPI } from "../../apis/CommuteAPICalls";
 import CommuteTime from "../../components/commutes/CommuteTime";
 import { decodeJwt } from '../../utils/tokenUtils';
 import { Link, useParams } from 'react-router-dom';
@@ -15,9 +15,9 @@ function RecordCommute() {
         backgroundColor: '#112D4E',
         color: 'white',
         borderRadius: '5px',
-        padding: '1% 1.5%', // 패딩을 %로 조정
+        padding: '1% 1.5%',
         cursor: 'pointer',
-        marginLeft: '60%', // 왼쪽 여백을 %로 조정
+        marginLeft: '60%',
         height: '45px',
         textDecoration: 'none'
     };
@@ -27,9 +27,9 @@ function RecordCommute() {
         color: '#112D4E',
         border: '#112D4E 1px solid',
         borderRadius: '5px',
-        padding: '1% 1.5%', // 패딩을 %로 조정
+        padding: '1% 1.5%',
         cursor: 'pointer',
-        marginLeft: '60%', // 왼쪽 여백을 %로 조정
+        marginLeft: '60%',
         height: '45px',
         textDecoration: 'none'
     };
@@ -86,20 +86,9 @@ function RecordCommute() {
 
     const [date, setDate] = useState(new Date());
     const [isClocked, setIsClocked] = useState(false);
-    const [updateCommute, setUpdateCommute] = useState(
-        // {
-        //     commuteNo: null,
-        //     endWork: '',
-        //     workingStatus: "퇴근",
-        //     totalWorkingHours: 0
-        // }
-        null
-    );
+    const [lastCommuteNo, setLastCommuteNo] = useState(null);
 
     const dispatch = useDispatch();
-    const { commuteNo } = useParams();
-
-    console.log('출퇴근번호 : ', commuteNo);
 
     /* 출퇴근 내역 액션 */
     const result = useSelector(state => state.commuteReducer);
@@ -142,13 +131,12 @@ function RecordCommute() {
 
     /* 출퇴근 내역 API 호출 */
     useEffect(() => {
-        console.log('[useEffect] target : ', target);
-        console.log('[useEffect] targetValue : ', targetValue);
-        console.log('[useEffect] date : ', date);
+        // console.log('[useEffect] target : ', target);
+        // console.log('[useEffect] targetValue : ', targetValue);
+        // console.log('[useEffect] date : ', date);
         dispatch(callSelectCommuteListAPI(target, targetValue, dateOffset.toISOString().slice(0, 10)));
-    }, [dispatch, target, targetValue, date, postCommute]);
 
-    /* 가장 최근 출퇴근 번호 가져오는 로직 */
+    }, [dispatch, target, targetValue, date, postCommute, putCommute]);
 
     /* 한 주 전으로 이동 */
     const handlePreviousClick = () => {
@@ -185,6 +173,10 @@ function RecordCommute() {
             dispatch(callInsertCommuteAPI(newCommute));
             setIsClocked(true);
 
+            if (result.commutelist.length > 0) {
+                setLastCommuteNo(result.commutelist[result.commutelist.length - 1].commuteNo);
+            };
+
         } catch (error) {
             console.error('Error inserting commute:', error);
         }
@@ -192,33 +184,23 @@ function RecordCommute() {
 
     /* 퇴근하기 API 호출 */
     const handleClockOut = async () => {
-        // try {
-        //     const { allOfCommutList, latestCommuteNo } = await dispatch(callSelectCommuteListAPI(target, targetValue, date));
+        try {
 
-        //     let updateCommuteData = {
-        //         commuteNo: updateCommute.commuteNo,
-        //         endWork: timeString,
-        //         workingStatus: "퇴근",
-        //         totalWorkingHours: 480
-        //     };
+            console.log('[퇴근하기 api] lastCommuteNo + 1 : ', lastCommuteNo + 1);
 
-        //     // setUpdateCommute(
-        //     //     {
-        //     //         // commuteNo: commuteNo,
-        //     //         endWork: timeString,
-        //     //         workingStatus: "퇴근",
-        //     //         totalWorkingHours: 480
-        //     //     }
-        //     // );
-        //     console.log('퇴근 api 호출 : ', updateCommuteData);
+            let updateCommute = {
+                commuteNo: lastCommuteNo + 1,
+                endWork: timeString,
+                workingStatus: "퇴근",
+                totalWorkingHours: 480
+            };
 
-        //     dispatch(callUpdateCommuteAPI(updateCommuteData));
-        //     setIsClocked(false);
+            dispatch(callUpdateCommuteAPI(updateCommute));
+            setIsClocked(false);
 
-
-        // } catch (error) {
-        //     console.error('Error inserting commute:', error);
-        // }
+        } catch (error) {
+            console.error('Error inserting commute:', error);
+        }
     };
 
     return (
@@ -230,7 +212,6 @@ function RecordCommute() {
                         <li className="breadcrumb-item"><a href="/">Home</a></li>
                         <li className="breadcrumb-item">출퇴근</li>
                         <li className="breadcrumb-item active">출퇴근 내역</li>
-                        {/* <Link to="/recordCommute" className="notice-insert-button" style={insertButton} >출근하기</Link> */}
                         {!isClocked ? (
                             <Link to="/recordCommute" className="notice-insert-button" style={insertButton} onClick={handleClockIn}>
                                 출근하기
