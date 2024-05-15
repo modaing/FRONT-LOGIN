@@ -93,7 +93,7 @@ function Sidebar() {
                             </Link>
                         </li>
                         <li>
-                            <Link to="/approvalSendList" style={underLineStyle}>
+                            <Link to="/ApprovalList" style={underLineStyle}>
                                 <i className="bi bi-circle"></i><span>결재 상신함</span>
                             </Link>
                         </li>
