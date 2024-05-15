@@ -12,4 +12,6 @@ export function decodeJwt(token) {
         console.error("Error decoding token:", error);
         return null;
     }
+
 }
+

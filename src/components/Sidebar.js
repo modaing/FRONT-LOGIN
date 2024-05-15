@@ -23,11 +23,6 @@ function Sidebar() {
                         <span>Main</span>
                     </Link>
                 </li>
-                <li className={`nav-item ${location.pathname === '/calendar' ? 'active' : ''}`}>
-                    <Link className={`nav-link ${location.pathname === '/calendar' ? '' : 'nav-link-main-cal collapsed'}`} to="/calendar">
-                        <i className="bi bi-calendar-check"></i><span>캘린더</span>
-                    </Link>
-                </li>
                 <li className="nav-item">
                     <Link className="nav-link collapsed" to="/" data-bs-target="#forms-nav" data-bs-toggle="collapse">
                         <i className="bi bi-clock"></i><span>출퇴근</span><i className="bi bi-chevron-down ms-auto"></i>
@@ -82,6 +77,11 @@ function Sidebar() {
                         </li>
                     </ul>
                 </li>
+                <li className={`nav-item ${location.pathname === '/calendar' ? 'active' : ''}`}>
+                    <Link className={`nav-link ${location.pathname === '/calendar' ? '' : 'nav-link-main-cal collapsed'}`} to="/calendar">
+                        <i className="bi bi-calendar-check"></i><span>캘린더</span>
+                    </Link>
+                </li>
                 <li className="nav-item">
                     <Link className="nav-link collapsed" to="/" data-bs-target="#charts-nav" data-bs-toggle="collapse">
                         <i className="bi bi-journal-check"></i><span>전자결재</span><i className="bi bi-chevron-down ms-auto"></i>
@@ -93,7 +93,7 @@ function Sidebar() {
                             </Link>
                         </li>
                         <li>
-                            <Link to="/" style={underLineStyle}>
+                            <Link to="/approvalSendList" style={underLineStyle}>
                                 <i className="bi bi-circle"></i><span>결재 상신함</span>
                             </Link>
                         </li>

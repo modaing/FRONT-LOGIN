@@ -4,7 +4,9 @@ import axios from 'axios';
 import { decodeJwt } from "../../utils/tokenUtils";
 import '../../css/approval/approval.css';
 import { Link } from 'react-router-dom';
+import { callAppListAPI } from "../../apis/ApprovalAPICalls";
 import { ApprovalAPICalls } from "../../apis/ApprovalAPICalls";
+import AppList from "../../components/approvals/AppList";
 
 
 /* function ApprovalList({ approvals }){
@@ -24,7 +26,7 @@ import { ApprovalAPICalls } from "../../apis/ApprovalAPICalls";
 
 function SendApprovalList() {
 
-    const sendAppListButton = {
+ /*    const sendAppListButton = {
         height: '40px',
         width: '120px',
         backgroundColor: '#112D4E',
@@ -62,25 +64,55 @@ function SendApprovalList() {
     const memberId = decodedToken.memberId;
     console.log('[SendApprovalList] memberId : ' + memberId);
 
-    const { approvalDTOPage } = useSelector(state => state.approvalReducer);
+    // const { approvalDTOPage } = useSelector(state => state.approvalReducer);
     
 
-    const [fg, setFg] = useState('given');
-    const [approvals, setApprovals] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0);
-    const [title, setTitle] = useState("");
-    const [direction, setDirection] = useState('DESC');
+    const [fg, setFg] = useState('given');                  //fg를 state로 관리 초기값 given
+    
+    const [title, setTitle] = useState("");                 //title 관리 초기값 ""
+    const [direction, setDirection] = useState('DESC');     //정렬 초기값 DESC
+
+    const [currentPage, setCurrentPage] = useState(1);      //현재 페이지 초기값 1
 
     const dispatch = useDispatch();
 
+    const apps = useSelector(state => state);
+    const appList = apps.data?.content; //Page<ApprovalDTO>에서 실제 데이터 리스트 추출
+
+    console.log(appList);
+
+    if(!appList){
+        console.log('appList 없음');
+    }
+
+    console.log('apps', apps);
+
+    let statusList = [];
+
+    useEffect(() => {
+        dispatch(
+            callAppListAPI({
+                fg: fg,
+                title: title,
+                direction: direction,
+                pageNo: currentPage
+            })
+        )
+    }, [currentPage, fg, direction])
+
+    const onChangeHandler = (e) =>{
+        setTitle(e.target.value);
+    }   //검색어 */
+
+    
+/* 
     let callSelectAPI = (currentPage) => {
         dispatch(ApprovalAPICalls(fg, title, direction, currentPage));
     }
 
     useEffect(() => {
         callSelectAPI(currentPage)
-    }, [fg, title, direction, currentPage]);
+    }, [fg, title, direction, currentPage]); */
 
     /* useEffect(() => {
         axios.get('http://localhost:8080/approvals',{
@@ -111,8 +143,8 @@ function SendApprovalList() {
                     </ol>
                     <div className="approvalBar">
                         <div className="approvalBarLeft">
-                            <Link to="/sendApprovalList" className="ApprovalListBtn" style={sendAppListButton}>내 결재함</Link>
-                            <Link to="/tempApprovalList" className="ApprovalListBtn" style={tempAppListButton}>임시 저장함</Link>
+                           {/*  <Link to="/sendApprovalList" className="ApprovalListBtn" style={sendAppListButton}>내 결재함</Link>
+                            <Link to="/tempApprovalList" className="ApprovalListBtn" style={tempAppListButton}>임시 저장함</Link> */}
                         </div>
                         <div className="approvalBarRight">
                             <div className="approvalSearch">
@@ -128,11 +160,10 @@ function SendApprovalList() {
                         </div>
                     </div>
                 </nav>
-                {/* <ApprovalList approvals={approvals} /> */}
             </div>
-            <div className="approvalListBody">
-
-            </div>
+           {/*  <div className="approvalListBody">
+                <AppList data={appList}/>
+            </div> */}
         </main>
     );
 }
