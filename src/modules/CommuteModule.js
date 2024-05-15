@@ -25,14 +25,14 @@ const initialState = [];
 // }];
 
 /* 액션 타입 */
-export const GET_COMMUTE = 'commute/GET_COMMUTE';
+export const GET_COMMUTENO = 'commute/GET_COMMUTENO';
 export const GET_COMMUTELIST = 'commute/GET_COMMUTELIST';
 export const POST_COMMUTE = 'commute/POST_COMMUTE';
 export const PUT_COMMUTE = 'commute/PUT_COMMUTE';
 
 /* 액션 함수 */
-export const { commute: { getCommute, getCommutelist, postCommute, putCommute } } = createActions({
-    [GET_COMMUTE]: (res) => ({ commute: res }),
+export const { commute: { getCommuteNo, getCommutelist, postCommute, putCommute } } = createActions({
+    [GET_COMMUTENO]: (res) => ({ commuteno: res }),
     [GET_COMMUTELIST]: (res) => ({ commutelist: res }),
     [POST_COMMUTE]: (res) => ({ postcommute: res }),
     [PUT_COMMUTE]: (res) => ({ putcommute: res })
@@ -41,8 +41,8 @@ export const { commute: { getCommute, getCommutelist, postCommute, putCommute } 
 /* 리듀서 */
 const commuteReducer = handleActions(
     {
-        [GET_COMMUTE]: (state, { payload }) => {
-            return payload;
+        [GET_COMMUTENO]: (state, { payload }) => {
+            return ({ ...state, commuteno: payload });
         },
         [GET_COMMUTELIST]: (state, { payload }) => {
             return payload;

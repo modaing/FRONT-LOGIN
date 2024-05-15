@@ -1,4 +1,4 @@
-import { getCommutelist, postCommute, putCommute } from "../modules/CommuteModule";
+import { GET_COMMUTENO, getCommuteNo, getCommutelist, postCommute, putCommute } from "../modules/CommuteModule";
 import { decodeJwt } from "../utils/tokenUtils";
 import { request } from "./CommonAPI";
 
@@ -31,7 +31,6 @@ export const callSelectCommuteListAPI = (target, targetValue, date) => {
 export const callInsertCommuteAPI = (newCommute) => {
     return async (dispatch) => {
         try {
-
             const url = `/commutes`;
             const response = await request('POST', url, newCommute);
 
@@ -45,12 +44,27 @@ export const callInsertCommuteAPI = (newCommute) => {
     }
 };
 
+// /* 멤버별 마지막 출퇴근 번호 가져오는 api */
+// export const callSelectLastCommuteNoAPI = (memberId) => {
+//     return async (dispatch) => {
+//         try {
+//             const url = `/commutes/${memberId}`;
+//             const response = await request('GET', url);
+
+//             console.log('[callSelectLastCommuteNoAPI] response : ', response.response.data);
+
+//             dispatch({ type: GET_COMMUTENO, payload: response.response.data });
+
+//         } catch (error) {
+//             console.log('[callSelectLastCommuteNoAPI] error : ', error);
+//         }
+//     }
+// };
+
 /* 퇴근 시간 등록 api */
 export const callUpdateCommuteAPI = (updateCommute) => {
     return async (dispatch) => {
         try {
-            // const todayCommuteUrl = `/commutes?target=${target}&targetValue=${targetValue}&date=${date}`;
-            // const commuteNo = await request('GET', todayCommuteUrl);
             console.log('[callUpdateCommuteAPI] updateCommute.commuteNo : ', updateCommute.commuteNo);
 
             const url = `/commutes/${updateCommute.commuteNo}`;
