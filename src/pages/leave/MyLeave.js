@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { callInsertLeaveSubmitAPI, callSelectMyLeaveSubmitAPI } from '../../apis/LeaveAPICalls';
+import { callDeleteLeaveSubmitAPI, callInsertLeaveSubmitAPI, callSelectMyLeaveSubmitAPI } from '../../apis/LeaveAPICalls';
 import { SET_PAGENUMBER } from '../../modules/LeaveModule';
 import LeaveInsertModal from './LeaveInsertModal';
 import { decodeJwt } from '../../utils/tokenUtils';
@@ -48,7 +48,7 @@ function MyLeave() {
         setDirection(direction === 'DESC' ? 'ASC' : 'DESC');
     }
 
-    // 등록 관련 핸들러
+    // CUD 관련 핸들러
     const handleOpenModal = () => {
         setIsModalOpen(true);
     };
@@ -57,7 +57,7 @@ function MyLeave() {
         setIsModalOpen(false);
     };
 
-    const handleSaveChanges = ({  start, end, type, reason  }) => {
+    const handleInsert = ({ start, end, type, reason }) => {
         const requestData = {
             leaveSubApplicant: memberId,
             leaveSubStartDate : convertToUtc(start),
@@ -69,7 +69,17 @@ function MyLeave() {
 
     };
 
+    const handleDelete = id => {
+        console.log('delete 실행됨', id);
+        dispatch(callDeleteLeaveSubmitAPI(id))
+    };
 
+    const handleCancleInsert = id => {
+        console.log('cancle 실행됨', id);
+    };
+
+    
+    
     return <>
         <main id="main" className="main">
             <div className="pagetitle">
@@ -129,7 +139,7 @@ function MyLeave() {
                                         <td colSpan="8" className="loadingText"></td>
                                     </tr>
                                 ) : (
-                                    renderLeaveSubmit(content) // 로딩 중이 아니면 실제 데이터 표시
+                                    renderLeaveSubmit(content, handleDelete, handleCancleInsert) // 로딩 중이 아니면 실제 데이터 표시
                                 )}
                             </tbody>
                         </table>
@@ -161,7 +171,7 @@ function MyLeave() {
                 </div>
             </div>
         </main>
-        <LeaveInsertModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveChanges} />
+        <LeaveInsertModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} />
     </>
 
 }

@@ -1,4 +1,4 @@
-import { GET_LEAVESUBMIT, POST_LEAVESUBMIT } from "../modules/LeaveModule";
+import { DELETE_LEAVESUBMIT, GET_LEAVESUBMIT, POST_LEAVESUBMIT } from "../modules/LeaveModule";
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8080';
@@ -36,6 +36,19 @@ export const callInsertLeaveSubmitAPI = requestData => {
 
         } catch (error) {
             console.log('휴가 신청에 문제 발생', error)
+        }
+    }
+};
+
+export const callDeleteLeaveSubmitAPI = id => {
+    return async dispatch => {
+        try {
+            const response = await axios.delete(`${API_BASE_URL}/leaveSubmits/${id}`, { headers });
+
+            dispatch({ type: DELETE_LEAVESUBMIT, payload: response.data.results });
+
+        } catch (error) {
+            console.log('휴가 신청 삭제에 문제 발생', error)
         }
     }
 };
