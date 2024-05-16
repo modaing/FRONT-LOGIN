@@ -48,7 +48,7 @@ function MyLeave() {
         setDirection(direction === 'DESC' ? 'ASC' : 'DESC');
     }
 
-    // 등록 관련 핸들러
+    // CUD 관련 핸들러
     const handleOpenModal = () => {
         setIsModalOpen(true);
     };
