@@ -1,0 +1,79 @@
+.mainPage {
+    font-size: 20px;
+}
+
+/* Page-specific styles */
+.bothPages {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.firstPage, .secondPage {
+    width: 49%;
+}
+
+.firstBox {
+    padding: 0px 20px;
+    width: 100%;
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.innerBox {
+    display: flex;
+    align-items: center;
+}
+
+.searchDepart {
+    margin-right: 20px;
+    margin-left: 10px;
+}
+
+.inputBox {
+    height: 40px;
+    width: 40%;
+    margin: 0 10px;
+}
+
+.buttonClass {
+    margin: 20px 0;
+}
+
+.registerButton, .deleteButton {
+    border-radius: 15px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-left: 10px;
+    border: 1px solid #D5D5D5;
+}
+
+.registerButton {
+    background-color: #3F72AF;
+    color: white;
+}
+
+.deleteButton {
+    background-color: #112D4E;
+    color: white;
+}
+
+.firstPage th, .secondPage th {
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    width: 12.5%;
+}
+
+.firstPage th span, .secondPage th span,
+.firstPage th i, .secondPage th i {
+    cursor: pointer;
+}
+
+.firstPage td, .secondPage td {
+    text-align: center;
+    padding: 10px;
+
+}

@@ -120,7 +120,7 @@ function Sidebar() {
                             </Link>
                         </li>
                         <li>
-                            <Link to="/" style={underLineStyle}>
+                            <Link to="/departmentAndPosition" style={underLineStyle}>
                                 <i className="bi bi-circle"></i><span>부서 및 직급 관리</span>
                             </Link>
                         </li>

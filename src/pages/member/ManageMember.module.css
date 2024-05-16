@@ -1,3 +1,198 @@
 .profilePic {
     height: 100px;
 }
+
+.contentStyle1 {
+    /* text-align: center; */
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.firstBox {
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.selectBox {
+    height: 40px;
+    width: 80px;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.inputBox {
+    height: 40px;
+    width: 40%;
+    margin: 0 10px;
+}
+
+.searchButton {
+    background-color: #3F72AF;
+    color: white;
+    border: 1px solid #D5D5D5;
+    border-radius: 15px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.flexedBox {
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.cardStyle {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.innerStyle {
+    width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.buttonClass {
+    font-size: 20px;
+    justify-content: flex-end;
+    margin: 20px 0;
+}
+
+.cancelButton, .insertButton {
+    border-radius: 15px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.cancelButton {
+    background-color: #ffffff;
+    color: black;
+}
+
+.insertButton {
+    background-color: #112D4E;
+    color: white;
+}
+
+.contentStyle2 {
+    margin: 20px 0 0 40px;
+}
+
+.horizontalLine {
+    margin: 0 40px;
+}
+
+.downloadButton {
+    /* background-color: #112D4E; */
+    /* color: white; */
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 15px;
+    display: inline-block;
+    outline: none;
+    text-decoration: none;
+}
+
+.downloadButton:hover {
+    background-color: #0A1A3B;
+    color: #FFD700;
+}
+
+.memberTable {
+    width: 95%;
+    border-collapse: collapse;
+    margin: auto;
+    table-layout: fixed;
+    margin-bottom: 40px;
+}
+
+.memberTable th,
+.memberTable td {
+    border: 1px solid #dddddd;
+    padding: 8px;
+    text-align: center;
+    width: calc(100% / 7);
+}
+
+.memberTable th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.lineStyle {
+    margin: 0 20px;
+}
+
+.checkboxStyle {
+    height: 20px;
+    width: 20px;
+}
+
+.memberContents {
+    margin: 0 60px;
+    display: flex;
+    flex-direction: column;
+    font-size: 20px;
+}
+
+.memberContentItem {
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.paginationStyle {
+    display: flex;
+    justify-content: center;
+}
+
+th {
+    align-items: center;
+    justify-content: space-between;
+    pad: 0 10px;
+}
+
+.memberProfile {
+    cursor: pointer;
+}
+
+.noResult {
+    align-self: center;
+    border: none;
+    font-size: 50px;
+    margin: 15%;
+    outline: none;
+}
+
+.tableDecoration th {
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    width: 12.5%;
+}
+
+.tableDecoration th span,
+.tableDecoration th i,{
+    cursor: pointer;
+}
+
+.tableDecoration td{
+    text-align: center;
+    padding: 10px;
+
+}

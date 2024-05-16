@@ -23,6 +23,7 @@ import MyLeave from './pages/leave/MyLeave';
 import RoomList from './pages/chatting/RoomList';
 import Room from './pages/chatting/Room';
 import SendApprovalList from './pages/approval/SendApprovalList';
+import DepartmentAndPosition from './pages/department&position/departmentAndPosition';
 
 function App() {
   const isLoggedIn = !!window.localStorage.getItem("accessToken");
@@ -64,6 +65,7 @@ function App() {
             <Route path='sendNoteList' element={<SendNoteList />} />
             <Route path="chatRoomList" element={<RoomList />} />
             <Route path="/room/:roomId" element={<Room />} />
+            <Route path='/departmentAndPosition' element={<DepartmentAndPosition />} />
             <Route path='approvalSendList' element={<SendApprovalList />} />
           </Route>
         ) : (
