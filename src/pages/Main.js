@@ -6,7 +6,7 @@ import koLocale from '@fullcalendar/core/locales/ko';
 import { useSelector, useDispatch } from 'react-redux';
 import "bootstrap/dist/css/bootstrap.min.css";
 import '../css/common.css'
-import { calendarPopover, updateEvents } from '../utils/CalendarUtill';
+import { calendarPopover, updateEvents } from '../utils/CalendarUtil';
 import { callSelectCalendarAPI } from '../apis/CalendarAPICalls';
  // TODO: 임시 로그아웃, 삭제예정
 import { callLogoutAPI, callGetProfilePictureAPI } from '../apis/MemberAPICalls';
