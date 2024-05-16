@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchAnnouncementsAsync, setCurrentPage } from '../../modules/AnnounceModule';
 
-function AnnouncementsList({ maxVisibleAnnouncements, hidePagination }) {
+function AnnouncementsList({ maxVisibleAnnouncements, hidePagination, hidePlus }) {
     const { announcements, currentPage, totalPages } = useSelector(state => state.announceReducer);
     const dispatch = useDispatch();
 
@@ -36,10 +36,23 @@ function AnnouncementsList({ maxVisibleAnnouncements, hidePagination }) {
         justifyContent: 'center',
     };
 
+    const btnStyle = {
+        width: '7%',
+        marginTop: '10px',
+        marginBottom: '10px',
+        marginLeft: '90%'
+    }
+
+
     return (
         <div className="col-lg-12">
             <div className="card">
-                <h5 className="card-title"></h5>
+                {hidePlus ? (
+                    <Link to="/Announces" style={{padding: '10px 20px%', cursor: 'pointer', marginLeft: '93%', textDecoration: 'none', textAlign:'center', marginTop: '10px', marginBottom: '10px', marginRight: '10px', fontSize: '12px' }}>+더보기</Link>
+                ) : (
+                    <div className='card-title'></div>
+                )}
+
                 <div className="ancListContent" >
                     <table className="table table-hover">
                         <thead>
@@ -66,23 +79,23 @@ function AnnouncementsList({ maxVisibleAnnouncements, hidePagination }) {
                         </tbody>
                     </table>
                     {!hidePagination && ( // hidePagination이 false일 때만 페이징을 보여줍니다.
-                    <nav style={paginationStyle}>
-                        <ul className="pagination">
-                            <li className={`page-item ${currentPage === 0 ? 'disabled' : ''}`}>
-                                <button className="page-link" onClick={handlePrevPage}>◀</button>
-                            </li>
-                            {Array.from(Array(totalPages).keys()).map((page, index) => (
-                                <li key={index} className={`page-item ${currentPage === page ? 'active' : ''}`}>
-                                    <button className="page-link" onClick={() => handlePageChange(page)}>
-                                        {page + 1}
-                                    </button>
+                        <nav style={paginationStyle}>
+                            <ul className="pagination">
+                                <li className={`page-item ${currentPage === 0 ? 'disabled' : ''}`}>
+                                    <button className="page-link" onClick={handlePrevPage}>◀</button>
                                 </li>
-                            ))}
-                            <li className={`page-item ${currentPage === totalPages - 1 ? 'disabled' : ''}`}>
-                                <button className="page-link" onClick={handleNextPage}>▶</button>
-                            </li>
-                        </ul>
-                    </nav>
+                                {Array.from(Array(totalPages).keys()).map((page, index) => (
+                                    <li key={index} className={`page-item ${currentPage === page ? 'active' : ''}`}>
+                                        <button className="page-link" onClick={() => handlePageChange(page)}>
+                                            {page + 1}
+                                        </button>
+                                    </li>
+                                ))}
+                                <li className={`page-item ${currentPage === totalPages - 1 ? 'disabled' : ''}`}>
+                                    <button className="page-link" onClick={handleNextPage}>▶</button>
+                                </li>
+                            </ul>
+                        </nav>
                     )}
                 </div>
             </div>
