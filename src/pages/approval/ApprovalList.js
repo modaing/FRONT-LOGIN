@@ -6,46 +6,43 @@ import { useState } from 'react';
 
 function ApprovalList() {
 
-    const sendAppListButton = {
-        height: '40px',
-        width: '120px',
-        backgroundColor: '#112D4E',
-        color: 'white',
-        borderRadius: '5px',
-        padding: '1% 1.5%',
-        cursor: 'pointer',
-        textDecoration: 'none',
-        marginRight: '20px',
-        verticalAlign: 'middle',
-        textAlign: 'center',
-        display: 'inline-block',
-        paddingTop: '7px'
-    };
-
-    const tempAppListButton = {
-        height: '40px',
-        width: '120px',
-        backgroundColor: 'white',
-        color: '#112D4E',
-        borderRadius: '5px',
-        border: '1px solid #D5D5D5',
-        padding: '1% 1.5%',
-        cursor: 'pointer',
-        textDecoration: 'none',
-        verticalAlign: 'middle',
-        textAlign: 'center',
-        display: 'inline-block',
-        paddingTop: '7px'
-
-    }
-
+    const [fg, setFg] = useState('given');
+    const [title, setTitle] = useState('');
     const [pageInfo, setPageInfo] = useState({ totalPages: 0, currentPage : 0 });
-    
+
     const handlePageChange = (newPage) =>{
         setPageInfo({ ...pageInfo, currentPage: newPage });
     };
 
+    const handleFgChange = (newFg) => { 
+        setFg(newFg);
+        setPageInfo({ totalPages: 0, currentPage : 0 });    //페이지 정보를 초기화 
+    }
 
+    const handleSearchChange = (e) => {
+        setTitle(e.target.value);           //입력된 검색어로 title 상태 업데이트
+    };
+
+    const handleSearchSubmit = (e) =>{
+        e.preventDefault();
+        setPageInfo({ totalPages: 0, currentPage : 0 });        //페이지 정보 초기화
+    }
+
+    const sendAppListButton = {
+        backgroundColor: fg === 'given' ? '#112D4E' : 'white',
+        color: fg === 'given' ? 'white' : '#112D4E',
+        border: fg === 'given' ? 'none' : '1px solid #D5D5D5'
+    };
+
+    const tempAppListButton = {
+        backgroundColor: fg === 'tempGiven' ? '#112D4E' : 'white',
+        color: fg === 'tempGiven' ? 'white' : '#112D4E',
+        border: fg === 'tempGiven' ? 'none' : '1px solid #D5D5D5'
+    }
+
+   
+    
+   
     return (
         <>
             <main id="main" className="main">
@@ -59,24 +56,24 @@ function ApprovalList() {
                         </ol>
                         <div className="approvalBar">
                             <div className="approvalBarLeft">
-                                <Link to="/ApprovalList" className="ApprovalListBtn" style={sendAppListButton}>내 결재함</Link>
-                                <Link to="/tempApprovalList" className="ApprovalListBtn" style={tempAppListButton}>임시 저장함</Link>
+                                <Link to="/approvals" className="ApprovalListBtn" style={sendAppListButton} onClick={() => handleFgChange('given')}>내 결재함</Link>
+                                <Link to="/approvals" className="ApprovalListBtn" style={tempAppListButton} onClick={() => handleFgChange('tempGiven')}>임시 저장함</Link>
                             </div>
                             <div className="approvalBarRight">
                                 <div className="approvalSearch">
                                     <div className="approvalSearchLabel">제목</div>
                                     <div className="approvalSearchInput">
-                                        <input type="text"></input>
+                                        <input type="text" value={title} onChange={handleSearchChange}></input>
                                     </div>
                                     <div className="approvalSearchBtn">
-                                        <button type="submit">검색</button>
+                                        <button type="submit" onClick={handleSearchSubmit}>검색</button>
 
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </nav>
-                    <ApprovalListComponent pageInfo={pageInfo} setPageInfo={setPageInfo}/>
+                    <ApprovalListComponent pageInfo={pageInfo} setPageInfo={setPageInfo} fg={fg} title={title} />
                     {/* <Pagination 
                         totalPages={pageInfo.totalPages}
                         currentPage={pageInfo.currentPage}
