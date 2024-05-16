@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../css/note/noteLists.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { useSelector, useDispatch } from 'react-redux';
 import { callSendNotesAPI, callPutSendNotesAPI } from '../../apis/NoteAPICalls';
@@ -9,6 +9,7 @@ import SendNoteForm from './SendNoteForm';
 const SendNoteList = () => {
     const { sendNoteList } = useSelector(state => state.noteReducer);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [selectAll, setSelectAll] = useState(false);
     const [checkboxes, setCheckboxes] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
@@ -55,17 +56,20 @@ const SendNoteList = () => {
         }
     };
 
-    const handleDeleteSelectedItems = () => {
+    const handleDeleteSelectedItems = async () => {
         if (notes && Array.isArray(notes)) {
-            selectedItems.forEach(index => {
+            await Promise.all(selectedItems.map(async index => {
                 if (index >= 0 && index < notes.length) {
                     const noteNo = notes[index].noteNo;
-                    dispatch(callPutSendNotesAPI(noteNo, 'Y', 'N'));
+                    await dispatch(callPutSendNotesAPI(noteNo, 'Y', 'N'));
                 }
-            });
-            window.location.reload();
+            }));
+            // 비동기로 삭제된 후에 새로운 노트를 받아오도록 상태를 업데이트합니다.
+            await dispatch(callSendNotesAPI(currentPage, 10, 'noteNo'));
             setCheckboxes(Array(notes.length).fill(false));
             setSelectedItems([]);
+
+            navigate('/sendNoteList');
         }
     };
 
@@ -73,7 +77,7 @@ const SendNoteList = () => {
         setIsModalOpen(true);
         document.body.classList.add('modal-open');
     };
-    
+
     const closeModal = () => {
         setIsModalOpen(false);
         document.body.classList.remove('modal-open');
@@ -143,7 +147,7 @@ const SendNoteList = () => {
                                 </div>
                             </div>
 
-                            <div className={`col-lg-10 ${isModalOpen ? 'modal-open' : ''}`} style={{ height: isModalOpen ? '60vh' : 'auto'}}>
+                            <div className={`col-lg-10 ${isModalOpen ? 'modal-open' : ''}`} style={{ height: isModalOpen ? '60vh' : 'auto' }}>
                                 {isModalOpen ? (
                                     <SendNoteForm closeModal={closeModal} isModalOpen={isModalOpen} />
                                 ) : (
@@ -167,7 +171,7 @@ const SendNoteList = () => {
                                         </thead>
                                         <tbody>
                                             {notes?.map((note, index) => (
-                                                <tr key={note.noteNo}>
+                                                <tr key={note.noteNo} className="note-row">
                                                     <td className="first-column">
                                                         <input
                                                             className="checkbox-custom"

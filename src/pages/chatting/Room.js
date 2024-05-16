@@ -1,31 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import '../../css/chatting/room.css';
 import { Client } from '@stomp/stompjs';
-import '../../css/chat.css';
+import { decodeJwt } from '../../utils/tokenUtils';
 
 function Room() {
-    const navigate = useNavigate();
     const { roomId } = useParams();
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
-    const [memberId, setMemberId] = useState('');
     const [stompClient, setStompClient] = useState(null);
 
+    const token = `Authorization:` + 'BEARER' + window.localStorage.getItem("accessToken");
+    const decodedTokenInfo = decodeJwt(window.localStorage.getItem("accessToken"));
+    const memberId = decodedTokenInfo.memberId;
+    const name = decodedTokenInfo.name;
+    const imageUrl = decodedTokenInfo.imageUrl;
+
     useEffect(() => {
-        const socket = new WebSocket('ws://localhost:8080/wss/chatting');
+        const socket = new WebSocket(`ws://localhost:8080/wss/chatting`);
 
         const client = new Client({
             webSocketFactory: () => socket,
             debug: (msg) => console.log(msg),
+            token: token
         });
 
         client.onConnect = () => {
-            console.log('STOMP 클라이언트가 서버에 연결되었습니다.');
+            console.log('STOMP client connected to the server.');
             setStompClient(client);
 
             sendMessageToEnteredRoom(client);
 
-            const subscription = client.subscribe(`/sub/room/${roomId}`, Headers, message => {
+            const subscription = client.subscribe(`/sub/room/${roomId}`, message => {
                 console.log('Received message:', message.body);
                 try {
                     const newMessage = JSON.parse(message.body);
@@ -41,7 +47,7 @@ function Room() {
         return () => {
             if (client && client.connected) {
                 client.deactivate();
-                console.log('초기화됨 ㅋ');
+                console.log('Deactivated.');
             }
         };
     }, [roomId]);
@@ -50,14 +56,15 @@ function Room() {
         if (client !== null && client.connected) {
             const message = {
                 senderId: memberId,
-                message: `${memberId}님이 입장하셨습니다.`
+                senderName: name,
+                message: `${name} 님이 입장하셨습니다.`
             };
             client.publish({
                 destination: `/pub/room/${roomId}/entered`,
                 body: JSON.stringify(message),
             });
         } else {
-            console.error('STOMP 클라이언트가 초기화되지 않았거나 연결되지 않았습니다.');
+            console.error('STOMP client is not initialized or connected.');
         }
     };
 
@@ -65,6 +72,7 @@ function Room() {
         if (inputValue.trim() !== '' && stompClient) {
             const message = {
                 senderId: memberId,
+                senderName: name, // 발신자의 이름 추가
                 message: inputValue,
                 isSent: true
             };
@@ -77,33 +85,28 @@ function Room() {
         if (stompClient && stompClient.connected) {
             stompClient.publish({
                 destination: `/pub/room/${roomId}/leave`,
-                body: JSON.stringify({ senderId: memberId, message: `${memberId}님이 떠나셨습니다.` }),
+                body: JSON.stringify({ senderId: name, message: `${name} 님이 떠나셨습니다.` }),
             });
         } else {
-            console.error('STOMP 클라이언트가 초기화되지 않았거나 연결되지 않았습니다.');
-        }
-    };
-
-    const handleMemberIdChange = (e) => {
-        setMemberId(e.target.value);
-    };
-
-    const handleJoinRoom = () => {
-        if (memberId.trim() !== '') {
-            navigate(`/room/${roomId}`);
+            console.error('STOMP client is not initialized or connected.');
         }
     };
 
     return (
         <div className="chat-room">
             <div className="chat-content">
-            <ul>
-                {messages.map((message, index) => (
-                    <li key={index} className={message.senderId === memberId ? 'sent-message' : 'received-message'}>{message.message}</li>
-                ))}
-            </ul>
+                <ul>
+                    {messages.map((message, index) => (
+                        <li style={{ listStyle: 'none' }} key={index} className={message.senderId === memberId ? 'sent-message' : 'received-message'}>
+                            <div className="message-info">
+                                <img src={imageUrl} className="avatar" />
+                                <span className="sender-name">{message.senderName}</span>
+                            </div>
+                            <span className="message-text">{message.message}</span>
+                        </li>
+                    ))}
+                </ul>
             </div>
-
             <div className="send-area">
                 <div className="message-input">
                     <input
@@ -112,10 +115,10 @@ function Room() {
                         onChange={(e) => setInputValue(e.target.value)}
                     />
                     <button onClick={sendMessage}>Send</button>
+                    <button onClick={handleLeaveRoom}>Leave Room</button>
                 </div>
             </div>
         </div>
-
     );
 }
 

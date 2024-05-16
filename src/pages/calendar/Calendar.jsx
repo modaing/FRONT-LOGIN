@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import Fullcalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import koLocale from '@fullcalendar/core/locales/ko';
+import { callDeleteCalendarAPI, callInsertCalendarAPI, callSelectCalendarAPI, callUpdateCalendarAPI } from '../../apis/CalendarAPICalls';
+import CalendarModal from './CalendarModal';
+import CalendarUpdateModal from './CalendarUpdateModal';
+import { calendarPopover, updateEvents } from '../../utils/CalendarUtil';
+import { decodeJwt } from '../../utils/tokenUtils';
+import { convertToUtc } from '../../utils/CommonUtil';
+import '../../css/common.css'
 import '../../css/calendar/Calendar.css';
 import "bootstrap/dist/css/bootstrap.min.css";
-import CalendarModal from './CalendarModal';
-import { callDeleteCalendarAPI, callInsertCalendarAPI, callSelectCalendarAPI, callUpdateCalendarAPI } from '../../apis/CalendarAPICalls';
-import { useSelector, useDispatch } from 'react-redux';
-import '../../css/common.css'
-import CalendarUpdateModal from './CalendarUpdateModal';
-import { calendarPopover, convertToUtc, updateEvents } from '../../utils/CalendarUtill';
-import { Link } from 'react-router-dom';
-import { decodeJwt } from '../../utils/tokenUtils';
 
 
 function Calendar() {
@@ -39,7 +40,7 @@ function Calendar() {
         handleOpenModal();
     };
 
-    const handleSaveChanges = ({ title, start, end, color, detail }) => {
+    const handleInsert = ({ title, start, end, color, detail }) => {
         const requestData = {
             calendarStart: convertToUtc(start),
             calendarEnd: convertToUtc(end),
@@ -52,7 +53,7 @@ function Calendar() {
         dispatch(callInsertCalendarAPI(requestData));
     };
 
-    const handleUpdateChanges = ({ id, title, start, end, color, detail }) => {
+    const handleUpdate = ({ id, title, start, end, color, detail }) => {
         const requestData = {
             calendarNo: id,
             calendarStart: convertToUtc(start),
@@ -64,7 +65,7 @@ function Calendar() {
         dispatch(callUpdateCalendarAPI(requestData));
     };
 
-    const handleDeleteChanges = id => dispatch(callDeleteCalendarAPI(id));
+    const handleDelete = id => dispatch(callDeleteCalendarAPI(id));
 
     // TODO: 나중에 부서 선택해서 추가하는 기능넣어야 함
     useEffect(() => {dispatch(callSelectCalendarAPI("개발팀"))} , [insertMessage, updateMessage, deleteMessage]);
@@ -104,8 +105,8 @@ function Calendar() {
                 locale={koLocale}
             />
         </main>
-        <CalendarModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveChanges} />
-        {selectedEvent && <CalendarUpdateModal isOpen={isModalOpen} onClose={handleCloseModal} onUpdate={handleUpdateChanges} onDelete={handleDeleteChanges} event={selectedEvent} />}
+        <CalendarModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} />
+        {selectedEvent && <CalendarUpdateModal isOpen={isModalOpen} onClose={handleCloseModal} onUpdate={handleUpdate} onDelete={handleDelete} event={selectedEvent} />}
     </>
 
 }

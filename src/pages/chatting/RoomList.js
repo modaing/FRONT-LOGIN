@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchRooms, leaveRoom, createRoom, memberList } from '../../apis/ChattingAPICalls';
+import { callCahttingAPI, leaveRoom, createRoom, memberList } from '../../apis/ChattingAPICalls';
 import { callMemberListAPI } from '../../apis/ChattingAPICalls';
 import { decodeJwt } from '../../utils/tokenUtils';
 import '../../css/chatting/roomList.css';
-import { Link } from 'react-router-dom';
 import Room from './Room';
 import InsertRoomModal from './InsertRoomModal'; // 모달창 컴포넌트 임포트
 
@@ -22,10 +21,11 @@ function RoomList() {
   const [roomId, setRoomId] = useState(null); // 클릭한 방의 ID를 상태로 관리
   const [enteredRooms, setEnteredRooms] = useState(null); // 클릭한 방의 ID를 상태로 관리
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetchRooms(memberId);
+        const response = await callCahttingAPI(memberId);
         console.log(response); // 방 정보 확인
         setRooms(response);
         setIsLoadingRooms(false);
@@ -51,7 +51,7 @@ function RoomList() {
     setRoomId(roomId); // 클릭한 방의 ID 설정
   };
 
-
+  console.log(roomId)
 
   return (
     <main id="main" className="main">
@@ -76,25 +76,25 @@ function RoomList() {
                   </div>
                   {/* 여기에 3개짜리 점 삭제버튼 만들기 */}
                 </div>
+
                 <div className="inbox_chat">
                   <div className="chat_list active_chat">
                     <div className="chat_people">
-                      <div className="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil" /> </div>
-                      <div className="chat_ib">
-                        {isLoadingRooms ? (
-                          <p>Loading Rooms...</p>
-                        ) : (
-                          <ul>
-                            {Array.isArray(rooms) && rooms.length > 0 ? (
-                              rooms.map((room, index) => (
-                                <li key={index} onClick={() => handleRoomClick(room.enteredRoomId)}>{room.roomName}</li>
-                              ))
-                            ) : (
-                              <li>메시지가 없습니다</li>
-                            )}
-                          </ul>
-                        )}
-                      </div>
+                      {Array.isArray(rooms) && rooms.length > 0 ? (
+                        rooms.map((room, index) => (
+                          <div key={index} onClick={() => handleRoomClick(room.enteredRoomId)} className="chat_room">
+                            <div className="chat_img">
+                              <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil" />
+                            </div>
+                            <div className="chat_ib">
+                              <h5>{room.roomName}</h5>
+                              <p>{/* 여기에 채팅방 설명이나 마지막 메시지 등을 넣을 수 있습니다. */}</p>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <p>메시지가 없습니다</p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -109,9 +109,9 @@ function RoomList() {
         </div>
       </div>
       {/* 모달창 */}
-      <InsertRoomModal 
-        show={isModalOpen} 
-        handleClose={() => setIsModalOpen(false)} 
+      <InsertRoomModal
+        show={isModalOpen}
+        handleClose={() => setIsModalOpen(false)}
       />
     </main>
   );

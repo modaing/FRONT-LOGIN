@@ -1,3 +1,5 @@
+// Main.js
+
 import React, { useEffect, useState } from 'react';
 import Fullcalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -6,8 +8,12 @@ import koLocale from '@fullcalendar/core/locales/ko';
 import { useSelector, useDispatch } from 'react-redux';
 import "bootstrap/dist/css/bootstrap.min.css";
 import '../css/common.css'
-import { calendarPopover, updateEvents } from '../utils/CalendarUtill';
+import { calendarPopover, updateEvents } from '../utils/CalendarUtil';
 import { callSelectCalendarAPI } from '../apis/CalendarAPICalls';
+import AnnounceList from './announce/AnnouceList';
+ // TODO: 임시 로그아웃, 삭제예정
+import { callLogoutAPI, callGetProfilePictureAPI } from '../apis/MemberAPICalls';
+
 
 function Main() {
     const { calendarList } = useSelector(state => state.calendarReducer)
@@ -19,6 +25,21 @@ function Main() {
 
     useEffect(() => updateEvents(calendarList, setEvents), [calendarList]);
 
+    const maxVisibleAnnouncements = 5; // 최대 공지사항 수
+
+    const onClickLogoutHandler = () => {
+        dispatch(callLogoutAPI())
+            .then(() => {
+                window.localStorage.removeItem("accessToken");
+                console.log('구성원 로그아웃');
+                alert('로그아웃 합니다');
+            })
+            .catch(error => {
+                console.error("Error during logout:", error);
+            });
+    };
+
+
     return (
         <main id="main" className="main">
             <div className="pagetitle">
@@ -27,16 +48,25 @@ function Main() {
             <Fullcalendar
                 plugins={[dayGridPlugin, interactionPlugin]}
                 initialView={'dayGridWeek'} // dayGridWeek로 변경
+                customButtons={{  // TODO: 임시 로그아웃, 삭제예정
+                    addButton: {
+                        text: "로그아웃",
+                        click: onClickLogoutHandler
+                    }
+                }}
                 headerToolbar={{
                     start: 'prev,today,next',
                     center: 'title',
-                    end: ''
+                    end: 'addButton' // TODO: 임시 로그아웃, 삭제예정
                 }}
                 events={events}
                 eventDidMount={info => calendarPopover(info)}
                 locale={koLocale} 
                 height="300px"
             />
+            <div className='annouce' style={{marginTop: '50px'}}>
+                <AnnounceList maxVisibleAnnouncements={5} hidePagination={true} hidePlus={true} /> {/* hidePagination을 true로 설정하여 페이징 숨김 */}
+            </div>
         </main>
     );
 }

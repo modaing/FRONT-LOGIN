@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { callDeleteLeaveSubmitAPI, callInsertLeaveSubmitAPI, callSelectMyLeaveSubmitAPI } from '../../apis/LeaveAPICalls';
+import { SET_PAGENUMBER } from '../../modules/LeaveModule';
+import LeaveInsertModal from './LeaveInsertModal';
+import { decodeJwt } from '../../utils/tokenUtils';
+import { renderLeaveSubmit } from '../../utils/leaveUtil';
+import { convertToUtc } from '../../utils/CommonUtil';
 import '../../css/common.css'
 import '../../css/leave/MyLeave.css'
-import { callInsertLeaveSubmitAPI, callSelectMyLeaveSubmitAPI } from '../../apis/LeaveAPICalls';
-import { renderLeaveSubmit } from '../../utils//leaveUtill';
-import { SET_PAGENUMBER } from '../../modules/LeaveModule';
-import { decodeJwt } from '../../utils/tokenUtils';
-import LeaveInsertModal from './LeaveInsertModal';
 
 function MyLeave() {
     const { leaveInfo, submitPage } = useSelector(state => state.leaveReducer);
@@ -15,9 +16,9 @@ function MyLeave() {
     const { number, content, totalPages } = submitPage || {};
     const [properties, setProperties] = useState('leaveSubNo')
     const [direction, setDirection] = useState('DESC')
-    const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
 
     const dispatch = useDispatch();
 
@@ -47,7 +48,7 @@ function MyLeave() {
         setDirection(direction === 'DESC' ? 'ASC' : 'DESC');
     }
 
-    // 등록 관련 핸들러
+    // CUD 관련 핸들러
     const handleOpenModal = () => {
         setIsModalOpen(true);
     };
@@ -56,19 +57,30 @@ function MyLeave() {
         setIsModalOpen(false);
     };
 
-    const handleSaveChanges = ({ leaveSubStartDate, leaveSubEndDate, leaveType, leaveReason }) => {
+    const handleInsert = ({ start, end, type, reason }) => {
         const requestData = {
-            memberId,
-            leaveSubStartDate,
-            leaveSubEndDate,
-            leaveType,
-            leaveReason
+            leaveSubApplicant: memberId,
+            leaveSubStartDate : convertToUtc(start),
+            leaveSubEndDate: convertToUtc(end),
+            leaveSubType: type,
+            leaveSubReason: reason
         };
         dispatch(callInsertLeaveSubmitAPI(requestData));
 
     };
 
+    const handleDelete = id => {
+        console.log('delete 실행됨', id);
+        dispatch(callDeleteLeaveSubmitAPI(id))
+        console.log('체크');
+    };
 
+    const handleCancleInsert = id => {
+        console.log('cancle 실행됨', id);
+    };
+
+    
+    
     return <>
         <main id="main" className="main">
             <div className="pagetitle">
@@ -128,7 +140,7 @@ function MyLeave() {
                                         <td colSpan="8" className="loadingText"></td>
                                     </tr>
                                 ) : (
-                                    renderLeaveSubmit(content) // 로딩 중이 아니면 실제 데이터 표시
+                                    renderLeaveSubmit(content, handleDelete, handleCancleInsert) // 로딩 중이 아니면 실제 데이터 표시
                                 )}
                             </tbody>
                         </table>
@@ -160,7 +172,7 @@ function MyLeave() {
                 </div>
             </div>
         </main>
-        <LeaveInsertModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveChanges} />
+        <LeaveInsertModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} />
     </>
 
 }

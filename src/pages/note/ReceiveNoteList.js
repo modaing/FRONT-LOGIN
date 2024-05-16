@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../css/note/noteLists.css';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { useSelector, useDispatch } from 'react-redux';
 import { callPutReceiceNotesAPI, callReceiveNotesAPI } from '../../apis/NoteAPICalls';
@@ -9,6 +9,7 @@ import SendNoteForm from './SendNoteForm';
 const ReceiveNoteList = () => {
     const { receiveNoteList } = useSelector(state => state.noteReducer);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [selectAll, setSelectAll] = useState(false);
     const [checkboxes, setCheckboxes] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
@@ -70,17 +71,20 @@ const ReceiveNoteList = () => {
     };
 
 
-    const handleDeleteSelectedItems = () => {
-        if (notes && Array.isArray(notes)) { // notes 배열이 존재하고 배열인지 확인
-            selectedItems.forEach(index => {
-                if (index >= 0 && index < notes.length) { // index가 유효한지 확인
+    const handleDeleteSelectedItems = async () => {
+        if (notes && Array.isArray(notes)) {
+            await Promise.all(selectedItems.map(async index => {
+                if (index >= 0 && index < notes.length) {
                     const noteNo = notes[index].noteNo;
-                    dispatch(callPutReceiceNotesAPI(noteNo, 'Y', 'N'));
+                    await dispatch(callPutReceiceNotesAPI(noteNo, 'Y', 'N'));
                 }
-            });
-            window.location.reload();
+            }));
+            // 비동기로 삭제된 후에 새로운 노트를 받아오도록 상태를 업데이트합니다.
+            await dispatch(callReceiveNotesAPI(currentPage, 10, 'noteNo'));
             setCheckboxes(Array(notes.length).fill(false));
             setSelectedItems([]);
+
+            navigate('/receiveNoteList');
         }
     };
 
@@ -175,7 +179,7 @@ const ReceiveNoteList = () => {
                                         </thead>
                                         <tbody>
                                             {notes?.map((note, index) => (
-                                                <tr key={index}>
+                                                <tr key={note.noteNo} className="note-row">
                                                     <td className="first-column">
                                                         <input
                                                             className="checkbox-custom"

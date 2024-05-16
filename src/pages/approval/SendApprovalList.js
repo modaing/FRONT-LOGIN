@@ -5,6 +5,7 @@ import { decodeJwt } from "../../utils/tokenUtils";
 import '../../css/approval/approval.css';
 import { Link } from 'react-router-dom';
 import { callAppListAPI } from "../../apis/ApprovalAPICalls";
+import { getApprovals } from "../../modules/ApprovalModule";
 import { ApprovalAPICalls } from "../../apis/ApprovalAPICalls";
 import AppList from "../../components/approvals/AppList";
 
@@ -26,7 +27,7 @@ import AppList from "../../components/approvals/AppList";
 
 function SendApprovalList() {
 
- /*    const sendAppListButton = {
+    const sendAppListButton = {
         height: '40px',
         width: '120px',
         backgroundColor: '#112D4E',
@@ -76,10 +77,12 @@ function SendApprovalList() {
 
     const dispatch = useDispatch();
 
-    const apps = useSelector(state => state);
+    const apps = useSelector(state => state.commuteReducer);
+    console.log('[Approval] result : ', apps);
+    
     const appList = apps.data?.content; //Page<ApprovalDTO>에서 실제 데이터 리스트 추출
 
-    console.log(appList);
+    console.log('[ApprovalList] result : ' + appList);
 
     if(!appList){
         console.log('appList 없음');
@@ -98,11 +101,11 @@ function SendApprovalList() {
                 pageNo: currentPage
             })
         )
-    }, [currentPage, fg, direction])
+    }, [dispatch, fg, currentPage, direction])
 
     const onChangeHandler = (e) =>{
         setTitle(e.target.value);
-    }   //검색어 */
+    }   //검색어
 
     
 /* 
@@ -112,7 +115,7 @@ function SendApprovalList() {
 
     useEffect(() => {
         callSelectAPI(currentPage)
-    }, [fg, title, direction, currentPage]); */
+    }, [fg, title, direction, currentPage]); 
 
     /* useEffect(() => {
         axios.get('http://localhost:8080/approvals',{
@@ -143,8 +146,8 @@ function SendApprovalList() {
                     </ol>
                     <div className="approvalBar">
                         <div className="approvalBarLeft">
-                           {/*  <Link to="/sendApprovalList" className="ApprovalListBtn" style={sendAppListButton}>내 결재함</Link>
-                            <Link to="/tempApprovalList" className="ApprovalListBtn" style={tempAppListButton}>임시 저장함</Link> */}
+                            <Link to="/sendApprovalList" className="ApprovalListBtn" style={sendAppListButton}>내 결재함</Link>
+                            <Link to="/tempApprovalList" className="ApprovalListBtn" style={tempAppListButton}>임시 저장함</Link>
                         </div>
                         <div className="approvalBarRight">
                             <div className="approvalSearch">
