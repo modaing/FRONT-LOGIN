@@ -65,7 +65,7 @@ function Main() {
                 height="300px"
             />
             <div className='annouce' style={{marginTop: '50px'}}>
-                <AnnounceList maxVisibleAnnouncements={5} hidePagination={true} /> {/* hidePagination을 true로 설정하여 페이징 숨김 */}
+                <AnnounceList maxVisibleAnnouncements={5} hidePagination={true} hidePlus={true} /> {/* hidePagination을 true로 설정하여 페이징 숨김 */}
             </div>
         </main>
     );

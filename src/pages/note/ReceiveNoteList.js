@@ -179,7 +179,7 @@ const ReceiveNoteList = () => {
                                         </thead>
                                         <tbody>
                                             {notes?.map((note, index) => (
-                                                <tr key={index}>
+                                                <tr key={note.noteNo} className="note-row">
                                                     <td className="first-column">
                                                         <input
                                                             className="checkbox-custom"
