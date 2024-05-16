@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchAnnouncementsAsync, setCurrentPage } from '../../modules/AnnounceModule';
 import '../../css/common.css';
+import AnnounceList from '../announce/AnnouceList'
 
 function Announces() {
     const { announcements, currentPage, totalPages } = useSelector(state => state.announceReducer);
@@ -38,26 +39,6 @@ function Announces() {
         dispatch(setCurrentPage({ page: newPage })); // 페이지 변경을 액션으로 디스패치
     };
 
-    const handlePrevPage = () => {
-        if (currentPage > 0) {
-            handlePageChange(currentPage - 1);
-        }
-    };
-
-    const handleNextPage = () => {
-        if (currentPage < totalPages - 1) {
-            handlePageChange(currentPage + 1);
-        }
-    };
-
-
-
-    const paginationStyle = {
-        display: 'flex',
-        justifyContent: 'center',
-    };
-
-
     return (
         <main id="main" className="main">
             <div className="pagetitle">
@@ -71,48 +52,8 @@ function Announces() {
                     </ol>
                 </nav>
             </div>
-            <div className="col-lg-12">
-                <div className="card">
-                    <h5 className="card-title">Notice</h5>
-                    <div className="ancListContent" >
-                        <table className="table table-hover">
-                            <thead>
-                                <tr style={{ backgroundColor: '#f9f9f9' }}>
-                                    <th style={{ width: '10%', textAlign: 'center', padding: '10px' }} scope="row">#</th>
-                                    <th style={{ width: '40%', textAlign: 'center', padding: '10px' }} scope="row">제목</th>
-                                    <th style={{ width: '20%', textAlign: 'center', padding: '10px' }} scope="row">작성자</th>
-                                    <th style={{ width: '20%', textAlign: 'center', padding: '10px' }} scope="row">작성일자</th>
-                                    <th style={{ width: '10%', textAlign: 'center', padding: '10px' }} scope="row">조회수</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {renderAnnouncements()}
-                            </tbody>
-                        </table>
-
-                        <nav style={paginationStyle}>
-                            <ul className="pagination">
-
-                                <li className={`page-item ${currentPage === 0 ? 'disabled' : ''}`}>
-                                    <button className="page-link" onClick={handlePrevPage}>◀</button>
-                                </li>
-                                {Array.from(Array(totalPages).keys()).map((page, index) => (
-                                    <li key={index} className={`page-item ${currentPage === page ? 'active' : ''}`}>
-                                        <button className="page-link" onClick={() => handlePageChange(page)}>
-                                            {page + 1}
-                                        </button>
-                                    </li>
-                                ))}
-                                <li className={`page-item ${currentPage === totalPages - 1 ? 'disabled' : ''}`}>
-                                    <button className="page-link" onClick={handleNextPage}>▶</button>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
+            <AnnounceList/>
         </main>
     );
 }
-
 export default Announces;
