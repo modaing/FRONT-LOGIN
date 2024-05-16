@@ -23,6 +23,7 @@ import MyLeave from './pages/leave/MyLeave';
 import RoomList from './pages/chatting/RoomList';
 import Room from './pages/chatting/Room';
 import SendApprovalList from './pages/approval/SendApprovalList';
+import ApprovalList from './pages/approval/ApprovalList';
 
 function App() {
   const isLoggedIn = !!window.localStorage.getItem("accessToken");
@@ -65,6 +66,7 @@ function App() {
             <Route path="chatRoomList" element={<RoomList />} />
             <Route path="/room/:roomId" element={<Room />} />
             <Route path='approvalSendList' element={<SendApprovalList />} />
+            <Route path='ApprovalList' element={<ApprovalList />} />
           </Route>
         ) : (
           // Redirect to login page if not logged in

@@ -52,7 +52,7 @@ export const callAppListAPI = ({fg, title, direction, pageNo}) =>{
         } */
 
         try{
-            const response = await axios.get(`${API_BASE_URL}/${requestURL}`);
+            const response = await axios.get(`${API_BASE_URL}${requestURL}`);
             dispatch(getApprovals(response.data));
         }catch(error){
             console.error('API request 에러: ', error);
