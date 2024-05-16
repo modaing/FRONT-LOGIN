@@ -1,3 +1,5 @@
+// Main.js
+
 import React, { useEffect, useState } from 'react';
 import Fullcalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -8,6 +10,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import '../css/common.css'
 import { calendarPopover, updateEvents } from '../utils/CalendarUtill';
 import { callSelectCalendarAPI } from '../apis/CalendarAPICalls';
+import AnnounceList from './announce/AnnouceList';
 
 function Main() {
     const { calendarList } = useSelector(state => state.calendarReducer)
@@ -18,6 +21,8 @@ function Main() {
     useEffect(() => { dispatch(callSelectCalendarAPI("개발팀")) }, []);
 
     useEffect(() => updateEvents(calendarList, setEvents), [calendarList]);
+
+    const maxVisibleAnnouncements = 5; // 최대 공지사항 수
 
     return (
         <main id="main" className="main">
@@ -37,6 +42,9 @@ function Main() {
                 locale={koLocale} 
                 height="300px"
             />
+            <div className='annouce' style={{marginTop: '50px'}}>
+                <AnnounceList maxVisibleAnnouncements={5} hidePagination={true} /> {/* hidePagination을 true로 설정하여 페이징을 숨깁니다. */}
+            </div>
         </main>
     );
 }

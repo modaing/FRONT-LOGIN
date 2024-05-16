@@ -14,6 +14,10 @@ function Sidebar() {
         textDecoration: 'none'
     }
 
+    const isActiveMenu = (path) => {
+        return location.pathname === path ? 'active' : '';
+    };
+
     return (
         <aside id="sidebar" className="sidebar">
             <ul className="sidebar-nav" id="sidebar-nav">
@@ -131,39 +135,32 @@ function Sidebar() {
                         </li>
                     </ul>
                 </li>
-
-                <li className="nav-item">
-                    <Link className="nav-link collapsed" to="/" data-bs-target="#ntc-nav" data-bs-toggle="collapse">
-                        <i className="bi-globe2"></i><span>기타</span><i className="bi bi-chevron-down ms-auto"></i>
+                <li className={`nav-item ${location.pathname === '/insite' ? 'active' : ''}`}>
+                    <Link className={`nav-link ${location.pathname === '/insite' ? '' : 'nav-link-main-cal collapsed'}`} to="/insite">
+                        <i className="bi bi-bar-chart"></i><span>인사이트</span>
                     </Link>
-                    <ul id="ntc-nav" className="nav-content collapse " data-bs-parent="#sidebar-nav">
-                        <li>
-                            <Link to="/insite" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>인사이트</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/Announces" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>공지사항</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>수요 조사</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>건의함</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/receiveNoteList" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>쪽지함</span>
-                            </Link>
-                        </li>
-                    </ul>
                 </li>
+                <li className={`nav-item ${location.pathname === '/Announces' ? 'active' : ''}`}>
+                    <Link className={`nav-link ${location.pathname === '/Announces' ? '' : 'nav-link-main-cal collapsed'}`} to="/Announces">
+                        <i className="bi bi-megaphone"></i><span>공지사항</span>
+                    </Link>
+                </li>
+                <li className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
+                    <Link className={`nav-link ${location.pathname === '/' ? '' : 'nav-link-main-cal collapsed'}`} to="/">
+                        <i className="bi bi-clipboard-check"></i><span>수요조사</span>
+                    </Link>
+                </li>
+                <li className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
+                    <Link className={`nav-link ${location.pathname === '/' ? '' : 'nav-link-main-cal collapsed'}`} to="/">
+                        <i className="bi bi-exclamation-square"></i><span>건의함</span>
+                    </Link>
+                </li>
+                <li className={`nav-item ${location.pathname === '/receiveNoteList' ? 'active' : ''}`}>
+                    <Link className={`nav-link ${location.pathname === '/receiveNoteList' ? '' : 'nav-link-main-cal collapsed'}`} to="/receiveNoteList">
+                        <i className="bi bi-envelope"></i><span>쪽지</span>
+                    </Link>
+                </li>
+                
             </ul>
         </aside>
     );
