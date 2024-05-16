@@ -1,0 +1,131 @@
+/* 프로필 사진 preview */
+.profilePic {
+    height: 190px;
+    width: 190px;
+    margin-bottom: 10px;
+}
+
+/* 공용으로 사용하는 코드를 덮어쓰기 위한 logic */
+.colSm10 {
+    border-radius: 5px;
+    height: 35px;
+}
+
+.cardFontSize {
+    font-size: 20px;
+}
+
+.notice-cancel-button {
+    background-color: #ffffff;
+    color: black;
+    border: 1px solid #D5D5D5;
+    border-radius: 15px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.buttonClass {
+    margin-top: 370px;
+    margin-bottom: 40px;
+    margin-right: 100px;
+    text-align: right;
+}
+
+.notice-insert-button {
+    background-color: #112D4E;
+    color: white;
+    border: 1px solid #D5D5D5;
+    border-radius: 15px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.shortInput {
+    width: 40%;
+}
+/*  */
+
+.verticalLine {
+    border-right: 1px solid black; /* Adjust the color and style as needed */
+    height: 100%;
+}
+
+/* 사진 등록하는 label */
+.chooseFile {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* Make the input fill the container */
+    height: 100%; /* Make the input fill the container */
+    opacity: 0; /* Hide the input */
+    cursor: pointer;
+}
+
+.chooseFile:hover {
+    background-color: #e0e0e0;
+}
+
+.uploadContainer {
+    /* position: relative; */
+    display: flex;
+    display: inline-block;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* background-color: #3F72AF;
+    color: white;
+    border: 1px solid #D5D5D5;
+    border-radius: 15px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-left: 10px; */
+.uploadLabel {
+    position: relative;
+    display: inline-block;
+    padding: 7px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #3F72AF; /* Background color */
+    border: 1px solid #D5D5D5; /* Border */
+    color: white;
+    margin-left: 45px;
+    margin-top: 5px;
+}
+
+.uploadLabel input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* Make the input fill the container */
+    height: 100%; /* Make the input fill the container */
+    opacity: 0; /* Hide the input */
+    cursor: pointer;
+}
+
+.uploadLabel span {
+    cursor: pointer;
+}
+
+.uploadLabel:hover {
+    background-color: #e0e0e0; /* Darken the background on hover */
+}
+
+.dividePage {
+    /* display: flex; */
+    justify-content: space-between;
+}
+
+.leftSection {
+    flex: 1;
+    width: 50%;
+    float: left;
+}
+
+.rightSection {
+    flex: 1;
+    width: 50%;
+    float: right;
+}
