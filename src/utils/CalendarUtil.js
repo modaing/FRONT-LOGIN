@@ -1,7 +1,5 @@
 import { Popover } from 'bootstrap';
 
-
-
 export const updateEvents = (calendarList, setEvents) => {
     if (calendarList) {
         const newEvents = calendarList.map(calendar => {
