@@ -1,12 +1,14 @@
-export function renderLeaveSubmit(content, handleDelete, handleCancleInsert) {
+export function renderLeaveSubmit(content, handleDelete, handleCancle, setInfo) {
     if (!content) {
-        return null; 
+        return null;
     }
 
     return content.map((leaveSubmit, index) => {
         const { formattedStartDate, formattedEndDate, leaveDaysCalc } = formattedLocalDate(leaveSubmit);
         const buttonClassName = leaveSubmit.leaveSubProcessDate ? 'cancelRequest' : 'requestDelete';
-        const onClickHandler = leaveSubmit.leaveSubProcessDate ? () => handleCancleInsert(id) : () => handleDelete(id);
+        const onClickHandler = leaveSubmit.leaveSubProcessDate ? () => {
+            setInfo({start: formattedStartDate, end: formattedEndDate})
+            handleCancle(id)} : () => handleDelete(id);
         const buttonText = leaveSubmit.leaveSubProcessDate ? '취소 신청' : '신청 삭제';
         const id = leaveSubmit.leaveSubNo;
 
@@ -20,8 +22,8 @@ export function renderLeaveSubmit(content, handleDelete, handleCancleInsert) {
                 <td>{leaveSubmit.leaveSubApprover || "-"}</td>
                 <td>{leaveSubmit.leaveSubProcessDate || "-"}</td>
                 <td>
-                     <span className={`${buttonClassName}`} onClick={onClickHandler}>
-                    {buttonText}
+                    <span className={`${buttonClassName}`} onClick={onClickHandler}>
+                        {buttonText}
                     </span>
                 </td>
             </tr>

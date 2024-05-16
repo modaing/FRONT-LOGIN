@@ -8,7 +8,9 @@ function ApprovalList() {
 
     const [fg, setFg] = useState('given');
     const [title, setTitle] = useState('');
+    const [searchTitle, setSearchTitle] = useState('');
     const [pageInfo, setPageInfo] = useState({ totalPages: 0, currentPage : 0 });
+    
 
     const handlePageChange = (newPage) =>{
         setPageInfo({ ...pageInfo, currentPage: newPage });
@@ -21,11 +23,14 @@ function ApprovalList() {
 
     const handleSearchChange = (e) => {
         setTitle(e.target.value);           //입력된 검색어로 title 상태 업데이트
+        // setPageInfo({ ...pageInfo, currentPage: 0});
     };
 
     const handleSearchSubmit = (e) =>{
         e.preventDefault();
-        setPageInfo({ totalPages: 0, currentPage : 0 });        //페이지 정보 초기화
+        setSearchTitle(title);
+        setPageInfo({ totalPages : 0, currentPage : 0 });        //페이지 정보 초기화
+        
     }
 
     const sendAppListButton = {
@@ -73,7 +78,7 @@ function ApprovalList() {
                             </div>
                         </div>
                     </nav>
-                    <ApprovalListComponent pageInfo={pageInfo} setPageInfo={setPageInfo} fg={fg} title={title} />
+                    <ApprovalListComponent pageInfo={pageInfo} setPageInfo={setPageInfo} fg={fg} title={searchTitle} />
                     {/* <Pagination 
                         totalPages={pageInfo.totalPages}
                         currentPage={pageInfo.currentPage}
