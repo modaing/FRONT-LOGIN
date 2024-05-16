@@ -1,3 +1,5 @@
+// Main.js
+
 import React, { useEffect, useState } from 'react';
 import Fullcalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -8,6 +10,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import '../css/common.css'
 import { calendarPopover, updateEvents } from '../utils/CalendarUtil';
 import { callSelectCalendarAPI } from '../apis/CalendarAPICalls';
+import AnnounceList from './announce/AnnouceList';
  // TODO: 임시 로그아웃, 삭제예정
 import { callLogoutAPI, callGetProfilePictureAPI } from '../apis/MemberAPICalls';
 
@@ -22,6 +25,8 @@ function Main() {
 
     useEffect(() => updateEvents(calendarList, setEvents), [calendarList]);
 
+    const maxVisibleAnnouncements = 5; // 최대 공지사항 수
+
     const onClickLogoutHandler = () => {
         dispatch(callLogoutAPI())
             .then(() => {
@@ -33,6 +38,7 @@ function Main() {
                 console.error("Error during logout:", error);
             });
     };
+
 
     return (
         <main id="main" className="main">
@@ -58,6 +64,9 @@ function Main() {
                 locale={koLocale} 
                 height="300px"
             />
+            <div className='annouce' style={{marginTop: '50px'}}>
+                <AnnounceList maxVisibleAnnouncements={5} hidePagination={true} /> {/* hidePagination을 true로 설정하여 페이징 숨김 */}
+            </div>
         </main>
     );
 }
