@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { callInsertLeaveSubmitAPI, callSelectMyLeaveSubmitAPI } from '../../apis/LeaveAPICalls';
+import { SET_PAGENUMBER } from '../../modules/LeaveModule';
+import LeaveInsertModal from './LeaveInsertModal';
+import { decodeJwt } from '../../utils/tokenUtils';
+import { renderLeaveSubmit } from '../../utils/leaveUtil';
+import { convertToUtc } from '../../utils/CommonUtil';
 import '../../css/common.css'
 import '../../css/leave/MyLeave.css'
-import { callInsertLeaveSubmitAPI, callSelectMyLeaveSubmitAPI } from '../../apis/LeaveAPICalls';
-import { renderLeaveSubmit } from '../../utils//leaveUtill';
-import { SET_PAGENUMBER } from '../../modules/LeaveModule';
-import { decodeJwt } from '../../utils/tokenUtils';
-import LeaveInsertModal from './LeaveInsertModal';
 
 function MyLeave() {
     const { leaveInfo, submitPage } = useSelector(state => state.leaveReducer);
@@ -15,9 +16,9 @@ function MyLeave() {
     const { number, content, totalPages } = submitPage || {};
     const [properties, setProperties] = useState('leaveSubNo')
     const [direction, setDirection] = useState('DESC')
-    const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
 
     const dispatch = useDispatch();
 
@@ -56,13 +57,13 @@ function MyLeave() {
         setIsModalOpen(false);
     };
 
-    const handleSaveChanges = ({ leaveSubStartDate, leaveSubEndDate, leaveType, leaveReason }) => {
+    const handleSaveChanges = ({  start, end, type, reason  }) => {
         const requestData = {
-            memberId,
-            leaveSubStartDate,
-            leaveSubEndDate,
-            leaveType,
-            leaveReason
+            leaveSubApplicant: memberId,
+            leaveSubStartDate : convertToUtc(start),
+            leaveSubEndDate: convertToUtc(end),
+            leaveSubType: type,
+            leaveSubReason: reason
         };
         dispatch(callInsertLeaveSubmitAPI(requestData));
 
