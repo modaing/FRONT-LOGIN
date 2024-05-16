@@ -22,7 +22,7 @@
     height: 37.65px;
 }
 
-.onlyFelx input[type="text"],
+.form-control,
 .onlyFelx select {
     margin-left: 6px;
 }
