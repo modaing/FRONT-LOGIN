@@ -40,7 +40,7 @@ function Calendar() {
         handleOpenModal();
     };
 
-    const handleSaveChanges = ({ title, start, end, color, detail }) => {
+    const handleInsert = ({ title, start, end, color, detail }) => {
         const requestData = {
             calendarStart: convertToUtc(start),
             calendarEnd: convertToUtc(end),
@@ -53,7 +53,7 @@ function Calendar() {
         dispatch(callInsertCalendarAPI(requestData));
     };
 
-    const handleUpdateChanges = ({ id, title, start, end, color, detail }) => {
+    const handleUpdate = ({ id, title, start, end, color, detail }) => {
         const requestData = {
             calendarNo: id,
             calendarStart: convertToUtc(start),
@@ -65,7 +65,7 @@ function Calendar() {
         dispatch(callUpdateCalendarAPI(requestData));
     };
 
-    const handleDeleteChanges = id => dispatch(callDeleteCalendarAPI(id));
+    const handleDelete = id => dispatch(callDeleteCalendarAPI(id));
 
     // TODO: 나중에 부서 선택해서 추가하는 기능넣어야 함
     useEffect(() => {dispatch(callSelectCalendarAPI("개발팀"))} , [insertMessage, updateMessage, deleteMessage]);
@@ -105,8 +105,8 @@ function Calendar() {
                 locale={koLocale}
             />
         </main>
-        <CalendarModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSaveChanges} />
-        {selectedEvent && <CalendarUpdateModal isOpen={isModalOpen} onClose={handleCloseModal} onUpdate={handleUpdateChanges} onDelete={handleDeleteChanges} event={selectedEvent} />}
+        <CalendarModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} />
+        {selectedEvent && <CalendarUpdateModal isOpen={isModalOpen} onClose={handleCloseModal} onUpdate={handleUpdate} onDelete={handleDelete} event={selectedEvent} />}
     </>
 
 }

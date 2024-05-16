@@ -10,7 +10,7 @@ const CalendarModal = ({ isOpen, onClose, onSave }) => {
     const [color, setColor] = useState('red');
     const [detail, setDetail] = useState('');
 
-    const handleSave = () => {
+    const handleImport = () => {
         onSave({ title, start, end, color, detail });
         onClose();
     };
@@ -59,7 +59,7 @@ const CalendarModal = ({ isOpen, onClose, onSave }) => {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
-                            <button type="button" className="btn btn-primary" onClick={handleSave}>등록</button>
+                            <button type="button" className="btn btn-primary" onClick={handleImport}>등록</button>
                         </div>
                     </div>
                 </div>
