@@ -6,6 +6,7 @@ import memberReducer from "./MemberModule";
 import passwordReducer from "./PasswordReducer";
 import noteReducer from "./NoteMudule";
 import leaveReducer from "./LeaveModule";
+import chattingReducer from "./CahttingModules";
 
 const rootReducer = combineReducers({
     memberReducer,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
     announceReducer,
     passwordReducer,
     noteReducer,
-    leaveReducer
+    leaveReducer,
+    chattingReducer
 });
 
 export default rootReducer;

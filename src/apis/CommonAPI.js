@@ -11,7 +11,7 @@ export const request = async (method, url, data) => {
             url: `${DOMAIN}${url}`,
             data,
             headers: {
-                Authorization: 'Bearer` ' + window.localStorage.getItem('accessToken'),
+                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
             },
         });
 

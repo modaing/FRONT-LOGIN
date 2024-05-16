@@ -1,6 +1,5 @@
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import Tooltip from 'bootstrap/js/dist/tooltip';
 import Quill from 'quill';
@@ -310,3 +309,14 @@ import * as echarts from 'echarts';
   }
 
 })();
+
+document.addEventListener('DOMContentLoaded', function() {
+  var collapsibleElements = document.querySelectorAll('[data-bs-toggle="collapse"]');
+
+  collapsibleElements.forEach(function(element) {
+    element.addEventListener('hide.bs.collapse', function(event) {
+      // 토글이 닫힐 때 실행되는 코드
+      document.body.classList.remove('toggle-sidebar');
+    });
+  });
+});

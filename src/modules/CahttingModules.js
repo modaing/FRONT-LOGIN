@@ -12,7 +12,7 @@ export const addMessage = (message) => ({
 });
 
 
-const ChattingReducer = (state = initialState, action) => {
+const chattingReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_MESSAGE:
       return {
@@ -24,4 +24,4 @@ const ChattingReducer = (state = initialState, action) => {
   }
 };
 
-export default ChattingReducer;
+export default chattingReducer;

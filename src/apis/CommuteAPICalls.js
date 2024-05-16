@@ -31,7 +31,6 @@ export const callSelectCommuteListAPI = (target, targetValue, date) => {
 export const callInsertCommuteAPI = (newCommute) => {
     return async (dispatch) => {
         try {
-
             const url = `/commutes`;
             const response = await request('POST', url, newCommute);
 
@@ -49,8 +48,6 @@ export const callInsertCommuteAPI = (newCommute) => {
 export const callUpdateCommuteAPI = (updateCommute) => {
     return async (dispatch) => {
         try {
-            // const todayCommuteUrl = `/commutes?target=${target}&targetValue=${targetValue}&date=${date}`;
-            // const commuteNo = await request('GET', todayCommuteUrl);
             console.log('[callUpdateCommuteAPI] updateCommute.commuteNo : ', updateCommute.commuteNo);
 
             const url = `/commutes/${updateCommute.commuteNo}`;
