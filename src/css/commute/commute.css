@@ -27,29 +27,6 @@
     text-align: center;
 };
 
-/* .insertButton {
-    background-color: #112D4E;
-    color: white;
-    border-radius: 5px;
-    padding: 1% 1.5%;
-    cursor: pointer;
-    margin-left: 60%;
-    height: 45px;
-    text-decoration: none;
-};
-
-.red {
-    color: #AF3131;
+.bold {
     font-weight: 900;
-};
-
-.blue {
-    color: #3F72AF;
-    font-weight: 900;
-
-};
-
-.black {
-    color: '#00000';
-    font-weight: 900;
-}; */
+}
