@@ -1,6 +1,8 @@
 import { Link, Route, Router } from 'react-router-dom';
 import ApprovalListComponent from '../../components/approvals/ApprovalListComponent';
 import '../../css/approval/approval.css';
+import Pagination from '../../components/approvals/Pagination';
+import { useState } from 'react';
 
 function ApprovalList() {
 
@@ -37,10 +39,15 @@ function ApprovalList() {
 
     }
 
+    const [pageInfo, setPageInfo] = useState({ totalPages: 0, currentPage : 0 });
+    
+    const handlePageChange = (newPage) =>{
+        setPageInfo({ ...pageInfo, currentPage: newPage });
+    };
+
 
     return (
         <>
-
             <main id="main" className="main">
                 <div className="pagetitle">
                     <h1>결재 상신함</h1>
@@ -69,7 +76,12 @@ function ApprovalList() {
                             </div>
                         </div>
                     </nav>
-                    <ApprovalListComponent />
+                    <ApprovalListComponent pageInfo={pageInfo} setPageInfo={setPageInfo}/>
+                    {/* <Pagination 
+                        totalPages={pageInfo.totalPages}
+                        currentPage={pageInfo.currentPage}
+                        onPageChange={handlePageChange}
+                    /> */}
                 </div>
             </main>
 

@@ -1,9 +1,10 @@
 .tableContainer {
     margin: 10px;
     width : 100%;
-    overflow-x: auto;
     background-color: white;
     padding-right: 50px;
+    font-size: 15px;
+    margin-bottom : 50px;
 }
 
 .table{
@@ -15,21 +16,64 @@
 }
 .table thead{
     font-weight: bold;
-    font-size: 17px;
+    font-size: 16px;
 }
 .table th, .table td{
     padding: 25px;
     border-bottom: 1px solid #D5D5D5;
+    font-weight: bold;
+    height: 100px;
 }
 .table tbody tr:hover{
     background-color: #F4F4F4;
+    cursor: pointer;
 }
 
 .loadingMessage {
     text-align: center;
-    font-size: 20px;
+    font-size: 16px;
     padding: 20px;
     align-items: center;
     background-color: white;
     font-weight: bold;
+}
+
+.approved{
+
+}
+
+.rejected{
+    color: red;
+}
+
+.withdrawn{
+    color: #AAAAAA;
+}
+
+.approving{
+
+}
+
+.standByApprover{
+    color: #4154F1;
+}
+
+.pagination{
+    color : red;
+}
+
+.pageButton{
+    background-color: white;
+    color: #0A95DB;
+}
+.pageButton:hover{
+    background-color: #E9ECEF;
+    cursor: pointer;
+}
+.activePage{
+    background-color: #E9ECEF;
+    border: 3px solid #C2DBFE;
+}
+.approvalPage{
+    margin-top : 50px;
 }
