@@ -22,9 +22,9 @@ export const callMemberListAPI = () => {
 };
 
 
-export const fetchRooms = async (memberId) => {
+export const callCahttingAPI = async (memberId) => {
   try {
-    let url = `${API_BASE_URL}/api/rooms/?memberId=${memberId}&receiverMemberId=${memberId}`;
+    let url = `${API_BASE_URL}/api/rooms/?memberId=${memberId}&receiverMemberId=${memberId}` ;
 
     const response = await axios.get(url, {headers});
     return response.data;

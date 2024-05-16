@@ -46,6 +46,7 @@
     "remark-html": "^16.0.1",
     "remixicon": "^4.2.0",
     "simple-datatables": "^9.0.3",
+    "sockjs-client": "^1.6.1",
     "styled-components": "^6.1.9",
     "tinymce": "^7.0.1",
     "web-vitals": "^2.1.4"
