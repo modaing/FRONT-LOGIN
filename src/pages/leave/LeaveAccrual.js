@@ -1,31 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { callSelectLeaveAccrual } from '../../apis/LeaveAPICalls';
+import { callInsertLeaveAccrualAPI, callSelectLeaveAccrual } from '../../apis/LeaveAPICalls';
 import { SET_PAGENUMBER } from '../../modules/LeaveModule';
-import MyLeaveModal from './MyLeaveModal';
+import LeaveAccrualModal from './LeaveAccrualModal';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { renderLeaveAccrual } from '../../utils/leaveUtil';
 import '../../css/common.css'
+import '../../css/leave/LeaveAccrual.css'
 
 function LeaveAccrual() {
-    const { accrualPage } = useSelector(state => state.leaveReducer);
+    const { accrualPage, insertMessage } = useSelector(state => state.leaveReducer);
     const { number, content, totalPages } = accrualPage || {};
-    const [ properties, setProperties ] = useState('leaveAccrualNo')
-    const [ direction, setDirection ] = useState('DESC')
-    const [ isModalOpen, setIsModalOpen ] = useState(false);
-    const [ isLoading, setIsLoading ] = useState(false);
+    const [properties, setProperties] = useState('leaveAccrualNo')
+    const [direction, setDirection] = useState('DESC')
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
 
     const dispatch = useDispatch();
-
     // 조회 관련 핸들러
-    useEffect(() => {
-        setIsLoading(true);
-        dispatch(callSelectLeaveAccrual(number, properties, direction))
-            .finally(() => setIsLoading(false));
-    }, [number]);
-
     const handlePageChange = page => dispatch({ type: SET_PAGENUMBER, payload: page });
 
     const handlePrevPage = () => {
@@ -54,13 +48,23 @@ function LeaveAccrual() {
         setIsModalOpen(false);
     };
 
-    const handleInsert = ({}) => {
+    const handleInsert = ({ id, days, reason }) => {
         const requestData = {
-        };
-
+            recipientId: id,
+            leaveAccrualDays: days,
+            leaveAccrualReason: reason,
+            grantorId: memberId
+        }; 
+        dispatch(callInsertLeaveAccrualAPI(requestData));
     };
-    
-    
+
+    useEffect(() => {
+        setIsLoading(true);
+        dispatch(callSelectLeaveAccrual(number, properties, direction))
+            .finally(() => setIsLoading(false));
+    }, [number, insertMessage]);
+
+
     return <>
         <main id="main" className="main">
             <div className="pagetitle">
@@ -72,10 +76,14 @@ function LeaveAccrual() {
                         <li className="breadcrumb-item active">휴가 발생 관리</li>
                     </ol>
                 </nav>
+                <div className="leaveHeader">
+                    <div> </div>
+                    <span className="insertAccrual" onClick={handleOpenModal} >휴가 발생</span>
+                </div>
             </div>
             <div className="col-lg-12">
                 <div className="card">
-                    <div className="myLeaveListContent" >
+                    <div className="LeaveAccrualListContent" >
                         <table className="table table-hover">
                             <thead>
                                 <tr>
@@ -134,7 +142,7 @@ function LeaveAccrual() {
                 </div>
             </div>
         </main>
-        <MyLeaveModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert}/>
+        <LeaveAccrualModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} />
     </>
 
 }

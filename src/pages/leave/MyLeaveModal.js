@@ -54,7 +54,7 @@ const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime }) => 
                                     : <DatePicker selected={end} onChange={e => setEnd(e)} dateFormat="yyyy-MM-dd" className="form-control" />
                                 }
                             </div>
-                            <div className="onlyFelx">
+                            <div className="myLeave">
                                 <label>휴가 유형</label>
                                 {leaveSubNo ?
                                     <select value={type} onChange={e => setType(e.target.value)} className="form-select" disabled >

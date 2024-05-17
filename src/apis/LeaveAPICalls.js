@@ -1,4 +1,4 @@
-import { DELETE_LEAVESUBMIT, GET_LEAVEACCRUAL, GET_LEAVESUBMIT, POST_LEAVESUBMIT } from "../modules/LeaveModule";
+import { DELETE_LEAVESUBMIT, GET_LEAVEACCRUAL, GET_LEAVESUBMIT, GET_MEMBERLIST, POST_LEAVEACCRUAL, POST_LEAVESUBMIT } from "../modules/LeaveModule";
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8080';
@@ -60,10 +60,36 @@ export const callSelectLeaveAccrual = ( number, properties, direction ) => {
 
             const response = await axios.get(`${API_BASE_URL}/leaveAccruals?page=${page}&properties=${properties}&direction=${direction}`, { headers });
 
-            console.log('[response.data]', response.data);
             dispatch({ type: GET_LEAVEACCRUAL, payload: response.data.results});
+            
         } catch {
             console.log('휴가 발생 조회에 문제 발생', Error);
+        }
+    }
+};
+
+export const callSelectMemberList = name => {
+    return async dispatch => {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/leaveAccruals/${name}`, { headers });
+
+            dispatch({ type: GET_MEMBERLIST, payload: response.data.results});
+            
+        } catch {
+            console.log('멤버 목록 조회에 문제 발생', Error);
+        }
+    }
+};
+
+export const callInsertLeaveAccrualAPI = requestData => {
+    return async dispatch => {
+        try {
+            const response = await axios.post(`${API_BASE_URL}/leaveAccruals`, requestData, { headers });
+
+            dispatch({ type: POST_LEAVEACCRUAL, payload: response.data});
+
+        } catch (error) {
+            console.log('휴가 발생에 문제 발생', error)
         }
     }
 };

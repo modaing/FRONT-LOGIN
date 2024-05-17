@@ -66,7 +66,7 @@ function MyLeave() {
         const requestData = {
             leaveSubNo,
             leaveSubApplicant: memberId,
-            leaveSubStartDate : convertToUtc(start),
+            leaveSubStartDate: convertToUtc(start),
             leaveSubEndDate: convertToUtc(end),
             leaveSubType: type,
             leaveSubReason: reason
@@ -86,8 +86,8 @@ function MyLeave() {
         setIsModalOpen(true);
     };
 
-    
-    
+
+
     return <>
         <main id="main" className="main">
             <div className="pagetitle">
