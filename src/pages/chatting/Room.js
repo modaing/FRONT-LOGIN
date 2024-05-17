@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import '../../css/chatting/room.css';
 import { Client } from '@stomp/stompjs';
 import { decodeJwt } from '../../utils/tokenUtils';
 
-function Room() {
+function Room({ onLeaveRoom }) {
     const { roomId } = useParams();
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const [stompClient, setStompClient] = useState(null);
+    const [roomLeft, setRoomLeft] = useState(false);
+    const navigate = useNavigate();
 
     const token = `Authorization:` + 'BEARER' + window.localStorage.getItem("accessToken");
     const decodedTokenInfo = decodeJwt(window.localStorage.getItem("accessToken"));
@@ -77,7 +79,6 @@ function Room() {
                 isSent: true
             };
             stompClient.publish({ destination: `/sub/room/${roomId}`, body: JSON.stringify(message) });
-            setInputValue('');
         }
     };
 
@@ -87,10 +88,16 @@ function Room() {
                 destination: `/pub/room/${roomId}/leave`,
                 body: JSON.stringify({ senderId: name, message: `${name} 님이 떠나셨습니다.` }),
             });
+            setRoomLeft(true);
+            if (onLeaveRoom) {
+                onLeaveRoom(); // 부모 컴포넌트로 방을 나갔음을 알림
+            }
         } else {
             console.error('STOMP client is not initialized or connected.');
         }
     };
+
+    
 
     return (
         <div className="chat-room">
@@ -115,7 +122,7 @@ function Room() {
                         onChange={(e) => setInputValue(e.target.value)}
                     />
                     <button onClick={sendMessage}>Send</button>
-                    <button onClick={handleLeaveRoom}>Leave Room</button>
+                    <button className='button-leave' onClick={handleLeaveRoom}>Leave Room</button>
                 </div>
             </div>
         </div>
