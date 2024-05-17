@@ -1,0 +1,45 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modalContent {
+    width: 342px;
+    height: 216px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.modalAction{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.modalActions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.modalActions button:first-of-type {
+    background-color: #d9534f;
+    color: white;
+}
+
+.modalActions button:last-of-type {
+    background-color: #5bc0de;
+    color: white;
+}
