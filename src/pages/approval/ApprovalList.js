@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ApprovalListComponent from '../../components/approvals/ApprovalListComponent';
 import '../../css/approval/approval.css';
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useSate } from 'react';
 import approvalReducer, { setFg, setTitle, setPageInfo } from '../../modules/ApprovalReducer';
 
 const initialState = {
@@ -10,7 +10,7 @@ const initialState = {
     pageInfo: { totalPages: 0, currentPage: 0 },
     approvals: [],
     error: null,
-  };
+};
 
 function ApprovalList() {
 
@@ -25,30 +25,37 @@ function ApprovalList() {
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
-       
-            if (!params.has('fg') || !params.has('page') || !params.has('title') || !params.has('direction')) {
-                navigate('/approvals?fg=given&page=0&title=&direction=DESC', { replace: true });
-            }else{
-                dispatch(setFg(params.get('fg') || 'given'));
-                dispatch(setTitle(params.get('title') || ''));
-                dispatch(setPageInfo({
-                    ...state.pageInfo,
-                    currentPage: parseInt(params.get('page'), 10) || 0
-                }));
-            }
-        
+        const fg = params.get('fg') || 'given';
+        const title = params.get('title') || '';
+        const currentPage = parseInt(params.get('page'), 10) || 0;
+
+
+        if (!params.has('fg') || !params.has('page') || !params.has('title') || !params.has('direction')) {
+            navigate('/approvals?fg=given&page=0&title=&direction=DESC', { replace: true });
+        } else {
+            dispatch(setFg(fg));
+            dispatch(setTitle(title));
+
+            dispatch(setPageInfo({
+                totalPages: state.pageInfo.totalPages,
+                currentPage: currentPage
+                // totalPages: state.pageInfo.totalPages
+
+            }));
+        }
+
     }, [location.search, navigate]);
 
-    const handlePageChange = (newPage) =>{
+    const handlePageChange = (newPage) => {
         // setPageInfo({ ...pageInfo, currentPage: newPage });
         const params = new URLSearchParams(location.search);
         params.set('page', newPage);
         // dispatch(setPageInfo({ ...state.pageInfo, currentPage : newPage}));
-                                //현재 페이지(...state.pageInfo)를 가져와서 currentPage로 바꿔줌
+        //현재 페이지(...state.pageInfo)를 가져와서 currentPage로 바꿔줌
         navigate(`/approvals?${params.toString()}`);
     };
 
-    const handleFgChange = (newFg) => { 
+    const handleFgChange = (newFg) => {
         const params = new URLSearchParams(location.search);
         params.set('fg', newFg);
         params.set('page', '0');
@@ -56,7 +63,7 @@ function ApprovalList() {
         params.set('direction', params.get('direction') || 'DESC');
         navigate(`/approvals?${params.toString()}`);
         dispatch(setFg(newFg));
-        
+
         // setFg(newFg);
         // setPageInfo({ totalPages: 0, currentPage : 0 });    //페이지 정보를 초기화 
     };
@@ -66,7 +73,7 @@ function ApprovalList() {
         dispatch(setTitle(e.target.value));
     };
 
-    const handleSearchSubmit = (e) =>{
+    const handleSearchSubmit = (e) => {
         e.preventDefault();
         const params = new URLSearchParams(location.search);
         params.set('title', state.title);
@@ -74,7 +81,9 @@ function ApprovalList() {
         // setPageInfo({ totalPages: 0, currentPage : 0 });        //페이지 정보 초기화
         // dispatch(setPageInfo({ totalPages : 0, currentPage : 0 }));
         navigate(`/approvals?${params.toString()}`);
+
     };
+
 
     const sendAppListButton = {
         backgroundColor: state.fg === 'given' ? '#112D4E' : 'white',
@@ -88,9 +97,9 @@ function ApprovalList() {
         border: state.fg === 'tempGiven' ? 'none' : '1px solid #D5D5D5'
     }
 
-   
-    
-   
+
+
+
     return (
         <>
             <main id="main" className="main">
@@ -121,12 +130,12 @@ function ApprovalList() {
                             </div>
                         </div>
                     </nav>
-                    <ApprovalListComponent 
+                    <ApprovalListComponent
                         key={`${state.fg}-${state.title}-${state.pageInfo.currentPage}`}
-                        pageInfo={state.pageInfo} 
-                        setPageInfo={(info) => dispatch(setPageInfo(info))} 
-                        fg={state.fg} 
-                        title={state.title} 
+                        pageInfo={state.pageInfo}
+                        setPageInfo={(info) => dispatch(setPageInfo(info))}
+                        fg={state.fg}
+                        title={state.title}
                     />
                     {/* <Pagination 
                         totalPages={pageInfo.totalPages}

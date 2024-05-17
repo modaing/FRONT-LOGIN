@@ -69,19 +69,8 @@
     color : red;
 }
 
-.pageButton{
-    background-color: white;
-    color: #0A95DB;
-    transition: none;
-}
-.pageButton:hover{
-    background-color: #E9ECEF;
-    cursor: pointer;
-}
-.activePage{
-    background-color: #E9ECEF;
-    border: 3px solid #C2DBFE;
-}
+
+
 .approvalPage{
     margin-top : 50px;
 }
@@ -94,7 +83,24 @@
     background-color: white;
     border: 1px solid #BBBBBB;
     font-weight: bold;
+    color: black;
 }
 .deleteButton:hover{
     background-color:#112D4E;
+}
+.approvalButton{
+    background-color: white;
+    color: #0A95DB;
+    transition: none;
+    padding: 10px 18px;
+    border: none;
+    cursor: pointer;
+    margin-left: 0px;
+}
+.approvalButton:hover{
+    background-color: #E9ECEF;
+}
+.activePage{
+    background-color: #E9ECEF;
+    border: 3px solid #C2DBFE;
 }

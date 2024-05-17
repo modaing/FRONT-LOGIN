@@ -3,12 +3,21 @@ import styles from '../../css/approval/ApprovalListComponent.module.css'
 
 function Pagination({ totalPages, currentPage, onPageChange }) {
     
+    console.log(`현재 페이지 : ${currentPage}`);
+    console.log(`총 페이지 : ${totalPages}`);
 
     const handleClick = (pageNumber, event) => {
 
-        event.stopPropagation();
+        if(event){
+            event.stopPropagation();
+        }
+        
         onPageChange(pageNumber);
     };
+
+    const buttonStyle = () => {
+        return {marginLeft : '0px'};
+    }
 
     return (
         <div className='pagination approvalPage'>
@@ -24,9 +33,9 @@ function Pagination({ totalPages, currentPage, onPageChange }) {
                 {Array.from({ length: totalPages }, (_, index) => (
                     <button
                         key={index}
-                        className={`${styles.pageButton} ${index === currentPage ? styles.activePage : ''}`}
+                        className={`${styles.approvalButton} ${index === currentPage ? styles.activePage : ''}`}
                         disabled={index === currentPage}
-                        onClick={() => handleClick(index)}
+                        onClick={(event) => handleClick(index, event)}
                     >
                         {index + 1}
                     </button>
@@ -36,6 +45,7 @@ function Pagination({ totalPages, currentPage, onPageChange }) {
                 className='page-link'
                 disabled={currentPage === totalPages - 1}
                 onClick={(event) => handleClick(currentPage + 1, event)}
+                style={buttonStyle()}
             >
                 {'>>'}
             </button>

@@ -6,12 +6,12 @@ import Pagination from "./Pagination";
 import { useLocation, useNavigate } from "react-router-dom";
 import DeleteConfirmModal from "./DeleteConfirmModal";
 import approvalReducer, {
-     deleteApprovalFailure, 
-     deleteApprovalSuccess, 
-     fetchApprovalsFailure, 
-     fetchApprovalsSuccess,
-     setPageInfo 
-    } from "../../modules/ApprovalReducer";
+    deleteApprovalFailure,
+    deleteApprovalSuccess,
+    fetchApprovalsFailure,
+    fetchApprovalsSuccess,
+    setPageInfo
+} from "../../modules/ApprovalReducer";
 
 function ApprovalListComponent({ pageInfo, setPageInfo, fg, title }) {
 
@@ -19,7 +19,7 @@ function ApprovalListComponent({ pageInfo, setPageInfo, fg, title }) {
         fg,
         title,
         pageInfo,
-        approvals : [],
+        approvals: [],
         error: null
     });
 
@@ -51,13 +51,14 @@ function ApprovalListComponent({ pageInfo, setPageInfo, fg, title }) {
     }, [location.pathname]) */;
 
     useEffect(() => {
+        const params = new URLSearchParams(location.search)
         setLoading(true);
         ApprovalAPI.getApprovals({
-             fg: state.fg, 
-             page: state.pageInfo.currentPage, 
-             title: state.title, 
-             direction: queryParams.get("direction") || 'DESC' 
-            }).then((res) => {
+            fg: params.get('fg') || 'given' /* state.fg */,
+            page: parseInt(params.get('page'), 10) || 0 /* state.pageInfo.currentPage */,
+            title: params.get('title') || '' /* state.title */,
+            direction: params.get('direction') || 'DESC' /* queryParams.get("direction") || 'DESC' */
+        }).then((res) => {
             // setApprovals(res.data?.data);
             /* 
             console.log('approvals data: ' + JSON.stringify(res.data, null, 2));
@@ -69,8 +70,18 @@ function ApprovalListComponent({ pageInfo, setPageInfo, fg, title }) {
             console.log('totalPage : ' + pageInfo.totalPages);
             
              */
+            const { content, pageable, totalPages } = res.data.data;
             dispatch(fetchApprovalsSuccess(res.data.data?.content || []));
-            dispatch(setPageInfo({ currentPage : res.data.data.pageable.pageNumber, totalPages: res.data.data.totalPages }));
+            // setPageInfo({ currentPage : res.data.data.pageable.pageNumber, totalPages: res.data.data.totalPages });
+            if (pageable.pageNumber !== state.pageInfo.currentPage || totalPages !== state.pageInfo.totalPages) {
+
+                dispatch(setPageInfo({
+                    currentPage: pageable.pageNumber,
+                    totalPages: totalPages
+                }));
+            }
+            console.log("dispatch 이후 : totalPages : " + JSON.stringify(pageInfo, null, 2));
+            console.log('dispatch 이후 : state.totalPages :' + totalPages);
             setLoading(false);      //데이터 로딩이 완료되면 로딩 상태를  false로 변경
 
         }).catch(error => {
@@ -78,9 +89,12 @@ function ApprovalListComponent({ pageInfo, setPageInfo, fg, title }) {
             dispatch(fetchApprovalsFailure(error));
             setLoading(false);      //에러 발생 시에도 로딩 상태를 false로 변경
         });
-    }, [state.fg, state.pageInfo.currentPage, state.title, queryParams.get("direction")]);
+    }, [
+        location.search
+        /* state.fg, state.pageInfo.currentPage, state.title, queryParams.get("direction") */
+    ]);
 
-    useEffect(() => {
+    /* useEffect(() => {
         const params = new URLSearchParams({
              fg: state.fg, 
              page: state.pageInfo.currentPage, 
@@ -88,46 +102,54 @@ function ApprovalListComponent({ pageInfo, setPageInfo, fg, title }) {
              direction:queryParams.get("direction") || 'DESC' 
             });
         navigate(`/approvals?${params.toString()}`, { replace: true });
-    }, [state.fg, state.pageInfo.currentPage, state.title, queryParams, navigate]);
+    }, [state.fg, state.pageInfo.currentPage, state.title, queryParams, navigate]); */
 
     /* useEffect(() => {
         setPage(0);
     }, [title]);
  */
+
     const handleSortDirectionChange = () => {
         /* const newDirection = direction === 'ASC' ? 'DESC' : 'ASC';
         setDirection(newDirection);
         setPage(0);         // 정렬이 변경될 때 페이지를 으로 초기화 */
-        const newDirection = queryParams.get("direction") === 'ASC' ? 'DESC' : 'ASC';
-        queryParams.set("direction", newDirection);
-        navigate(`approvals?${queryParams.toString()}`);
+        const params = new URLSearchParams(location.search);
+        const currentDirection = params.get("direction");
+        const newDirection = currentDirection === 'ASC' ? 'DESC' : 'ASC';
+        params.set("direction", newDirection);
+        params.set('page', '0');
+        navigate(`/approvals?${params.toString()}`);
     };
 
     const handlePageChange = (newPage) => {
+        const params = new URLSearchParams(location.search);
+        params.set('page', newPage);
+        navigate(`/approvals?${params.toString()}`);
         // setPage(newPage);
-        dispatch(setPageInfo({ ...state.pageInfo, currentPage: newPage}));
+        // dispatch(setPageInfo({ ...state.pageInfo, currentPage: newPage}));
     };
 
-    const handleDeleteClick = (approvalNo) => {
+    const handleDeleteClick = (e, approvalNo) => {
+        e.stopPropagation();
         setDeleteApproval(approvalNo);
         setIsModalOpen(true);
     };
 
     const handleDeleteConfirm = () => {
-        if(deleteApproval){
+        if (deleteApproval) {
             ApprovalAPI.deleteApproval(deleteApproval).then(() => {
                 /* ApprovalAPI.getApprovals({ fg, page, title, direction }).then((res) => {
                     setApprovals(res.data.data?.content || []);
                     setPageInfo({ currentPage : res.data.data.pageable.pageNumber, totalPages: res.data.data.totalPages});
                     setIsModalOpen(false);
                     setDeleteApproval(null); */
-                    dispatch(deleteApprovalSuccess(deleteApproval));
-                    setIsModalOpen(false);
-                    setDeleteApproval(null);
-                }).catch(error => {
-                    console.error('Error fetching approvals : ' + error);
-                    dispatch(deleteApprovalFailure(error));
-                });
+                dispatch(deleteApprovalSuccess(deleteApproval));
+                setIsModalOpen(false);
+                setDeleteApproval(null);
+            }).catch(error => {
+                console.error('Error fetching approvals : ' + error);
+                dispatch(deleteApprovalFailure(error));
+            });
             /*} ).catch(error => {
                 console.error('Error deleting approval : ' , error);
             }); */
@@ -153,7 +175,7 @@ function ApprovalListComponent({ pageInfo, setPageInfo, fg, title }) {
                         <tr>
                             <th onClick={handleSortDirectionChange} style={{ cursor: 'pointer' }}>
                                 기안 일시
-                                <i className={`bx ${queryParams.get("direction") === 'ASC' ? 'bx-sort-up' : 'bx-sort-down'} ${styles.sortIcon}`}></i>
+                                <i className={`bx ${new URLSearchParams(location.search).get("direction") === 'ASC' ? 'bx-sort-up' : 'bx-sort-down'} ${styles.sortIcon}`}></i>
                             </th>
                             <th>양식</th>
                             <th>제목</th>
@@ -220,7 +242,7 @@ function ApprovalListComponent({ pageInfo, setPageInfo, fg, title }) {
 
             </div>
             <Pagination
-                totalPages={state.pageInfo.totalPages}
+                totalPages={pageInfo.totalPages}
                 currentPage={state.pageInfo.currentPage}
                 onPageChange={handlePageChange}
             />

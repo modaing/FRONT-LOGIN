@@ -53,7 +53,6 @@ const initialState = {
 };
 
 const approvalReducer = (state = initialState, action = {}) => {
-    console.log('Action received:', action);  // 디버깅을 위해 추가
     switch (action.type) {
       case SET_FG:
         return {
