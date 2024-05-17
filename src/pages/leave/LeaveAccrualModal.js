@@ -12,7 +12,7 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const dispatch = useDispatch();
-console.log('[memberList]',memberList);
+    
     const handleSave = () => {
         onSave({ id, days, reason });
         onClose();
