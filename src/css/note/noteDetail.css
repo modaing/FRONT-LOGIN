@@ -1,0 +1,30 @@
+.note-detail-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.note-detail-label {
+    font-weight: bold;
+    margin-right: 10px;
+    flex-shrink: 0;
+    width: 120px;
+}
+
+.note-detail-value {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    margin-left: 10px;
+    width: 100%;
+}
+
+.note-content-item {
+    margin-top: 2px;
+}
+
+.note-content-value {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
