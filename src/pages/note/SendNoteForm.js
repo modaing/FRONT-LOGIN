@@ -6,7 +6,7 @@ import { callPostNoteAPI } from '../../apis/NoteAPICalls';
 import { callMemberListAPI } from '../../apis/ChattingAPICalls';
 import { useNavigate } from 'react-router-dom';
 
-function SendNoteForm({ closeModal, isModalOpen }) {
+function SendNoteForm({ closeForm, isFormOpen }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const token = window.localStorage.getItem("accessToken");
@@ -45,8 +45,8 @@ function SendNoteForm({ closeModal, isModalOpen }) {
     };
 
     return (
-        <div className={`send-note-modal-content ${isModalOpen ? 'modal-open' : ''}`}>
-            {isModalOpen && (
+        <div className={`send-note-modal-content ${isFormOpen ? 'modal-open' : ''}`}>
+            {isFormOpen && (
                 <div className="send-note-modal-card">
                     <div className="send-note-modal-card-header"></div>
                     <div className="send-note-modal-card-body">
@@ -82,7 +82,7 @@ function SendNoteForm({ closeModal, isModalOpen }) {
                             placeholder="내용을 입력하세요"
                             className="note-textarea"
                         ></textarea>
-                        <button className="send-note-modal-close" onClick={closeModal}>취소</button>
+                        <button className="send-note-modal-close" onClick={closeForm}>취소</button>
                         <button className="send-note-modal-submit" onClick={handleNoteSubmit}>전송</button>
                     </div>
                 </div>

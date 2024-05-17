@@ -5,6 +5,7 @@ import { decodeJwt } from '../../utils/tokenUtils';
 import { useSelector, useDispatch } from 'react-redux';
 import { callSendNotesAPI, callPutSendNotesAPI } from '../../apis/NoteAPICalls';
 import SendNoteForm from './SendNoteForm';
+import NoteDetail from './NoteDetail';
 
 const SendNoteList = () => {
     const { sendNoteList } = useSelector(state => state.noteReducer);
@@ -13,7 +14,8 @@ const SendNoteList = () => {
     const [selectAll, setSelectAll] = useState(false);
     const [checkboxes, setCheckboxes] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [selectedNote, setSelectedNote] = useState(null);
     const token = window.localStorage.getItem("accessToken");
     const memberInfo = decodeJwt(token);
     const profilePic = memberInfo.imageUrl;
@@ -73,14 +75,22 @@ const SendNoteList = () => {
         }
     };
 
-    const openModal = () => {
-        setIsModalOpen(true);
+    const openForm = () => {
+        setIsFormOpen(true);
         document.body.classList.add('modal-open');
     };
 
-    const closeModal = () => {
-        setIsModalOpen(false);
+    const closeForm = () => {
+        setIsFormOpen(false);
         document.body.classList.remove('modal-open');
+    };
+
+    const openNoteDetailModal = (index) => {
+        setSelectedNote(notes[index]);
+    };
+
+    const closeNoteDetailModal = () => {
+        setSelectedNote(null);
     };
 
     useEffect(() => {
@@ -133,11 +143,11 @@ const SendNoteList = () => {
             </div>
             <div className="col-lg-12">
                 <div className="card">
-                    <div className="ancListContent" style={{ backgroundColor: isModalOpen ? '#f1f3f5' : 'transparent' }}>
+                    <div className="ancListContent" style={{ backgroundColor: isFormOpen ? '#f1f3f5' : 'transparent' }}>
                         <div className="row">
                             <div className="col-lg-2" style={{ borderRight: '1px solid #ccc' }}>
                                 <div style={{ marginTop: '50px' }}>
-                                    <Link to="#" className="sendMailBtn" type="button" onClick={openModal}>Compose</Link>
+                                    <Link to="#" className="sendMailBtn" type="button" onClick={openForm}>Compose</Link>
                                     <Link to="/sendNoteList" className="sidebar-fake">
                                         <i className="bi bi-envelope" style={{ marginRight: '10px' }}></i><span>Sent</span>
                                     </Link>
@@ -147,55 +157,58 @@ const SendNoteList = () => {
                                 </div>
                             </div>
 
-                            <div className={`col-lg-10 ${isModalOpen ? 'modal-open' : ''}`} style={{ height: isModalOpen ? '60vh' : 'auto' }}>
-                                {isModalOpen ? (
-                                    <SendNoteForm closeModal={closeModal} isModalOpen={isModalOpen} />
+                            <div className={`col-lg-10 ${isFormOpen ? 'form-open' : ''}`} style={{ height: isFormOpen ? '60vh' : 'auto' }}>
+                                {isFormOpen ? (
+                                    <SendNoteForm closeForm={closeForm} isFormOpen={isFormOpen} />
                                 ) : (
-                                    <table className="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th className="first-column"> <input className="checkbox-custom" type="checkbox" checked={selectAll} onChange={toggleSelectAll} /></th>
-                                                <th className="second-column-top">
-                                                    <div style={{ marginBottom: '-2px', marginLeft: '-25px' }}>
-                                                        <Link to="/" className="bi bi-trash" style={{ fontSize: '1.3rem', color: '#a1a1a1', background: 'none' }} onClick={handleDeleteSelectedItems}></Link>
-                                                        <Link to="/" className="bi bi-envelope" style={{ fontSize: '1.2rem', color: '#808080', background: 'none', marginLeft: '20px' }}></Link>
-                                                    </div>
-                                                </th>
-                                                <th className="third-column"></th>
-                                                <th className="fourth-column"></th>
-                                                <th className="fifth-column">
-                                                    <i className="bx bx-chevron-left arrow-icon" style={{ background: 'none', marginRight: '10%' }}></i>
-                                                    <i className="bx bx-chevron-right arrow-icon" style={{ background: 'none', fontweight: 'bold0', marginRight: '-20%' }}></i>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {notes?.map((note, index) => (
-                                                <tr key={note.noteNo} className="note-row">
-                                                    <td className="first-column">
-                                                        <input
-                                                            className="checkbox-custom"
-                                                            type="checkbox"
-                                                            checked={checkboxes[index]}
-                                                            onChange={() => handleCheckboxChange(index)}
-                                                        />
-                                                    </td>
-                                                    <td className="second-column">
-                                                        <img src={profilePic} alt="Profile" className="rounded-circle" />
-                                                    </td>
-                                                    <td className="third-column">{note.receiverId}</td>
-                                                    <td className="fourth-column">{note.noteTitle}</td>
-                                                    <td className="fifth-column">{note.sendNoteDate}</td>
+                                    <React.Fragment>
+                                        <table className="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th className="first-column"> <input className="checkbox-custom" type="checkbox" checked={selectAll} onChange={toggleSelectAll} /></th>
+                                                    <th className="second-column-top">
+                                                        <div style={{ marginBottom: '-2px', marginLeft: '-25px' }}>
+                                                            <Link to="/" className="bi bi-trash" style={{ fontSize: '1.3rem', color: '#a1a1a1', background: 'none' }} onClick={handleDeleteSelectedItems}></Link>
+                                                            <Link to="/" className="bi bi-envelope" style={{ fontSize: '1.2rem', color: '#808080', background: 'none', marginLeft: '20px' }}></Link>
+                                                        </div>
+                                                    </th>
+                                                    <th className="third-column"></th>
+                                                    <th className="fourth-column"></th>
+                                                    <th className="fifth-column">
+                                                        <i className="bx bx-chevron-left arrow-icon" style={{ background: 'none', marginRight: '10%' }}></i>
+                                                        <i className="bx bx-chevron-right arrow-icon" style={{ background: 'none', fontweight: 'bold0', marginRight: '-20%' }}></i>
+                                                    </th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                {notes?.map((note, index) => (
+                                                    <tr key={note.noteNo} className="note-row" onClick={() => openNoteDetailModal(index)}>
+                                                        <td className="first-column">
+                                                            <input
+                                                                className="checkbox-custom"
+                                                                type="checkbox"
+                                                                checked={checkboxes[index]}
+                                                                onChange={() => handleCheckboxChange(index)}
+                                                            />
+                                                        </td>
+                                                        <td className="second-column">
+                                                            <img src={profilePic} alt="Profile" className="rounded-circle" />
+                                                        </td>
+                                                        <td className="third-column">{note.receiverId}</td>
+                                                        <td className="fourth-column">{note.noteTitle}</td>
+                                                        <td className="fifth-column">{note.sendNoteDate}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </React.Fragment>
                                 )}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            {selectedNote && <NoteDetail note={selectedNote} onClose={closeNoteDetailModal} showResponseButton={false} isSentNote={true} />}
         </main>
     );
 }
