@@ -1,4 +1,4 @@
-import { DELETE_LEAVESUBMIT, GET_LEAVESUBMIT, POST_LEAVESUBMIT } from "../modules/LeaveModule";
+import { DELETE_LEAVESUBMIT, GET_LEAVEACCRUAL, GET_LEAVESUBMIT, POST_LEAVESUBMIT } from "../modules/LeaveModule";
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8080';
@@ -12,10 +12,9 @@ const headers = {
 
 export const callSelectMyLeaveSubmitAPI = ( number, properties, direction, memberId ) => {
     return async (dispatch) => {
-
-        const page = number ? number : 0;
-        
         try {
+
+            const page = number ? number : 0;
             
             const response = await axios.get(`${API_BASE_URL}/leaveSubmits?page=${page}&properties=${properties}&direction=${direction}&memberId=${memberId}`, { headers });
 
@@ -49,6 +48,22 @@ export const callDeleteLeaveSubmitAPI = id => {
 
         } catch (error) {
             console.log('휴가 신청 삭제에 문제 발생', error)
+        }
+    }
+};
+
+export const callSelectLeaveAccrual = ( number, properties, direction ) => {
+    return async dispatch => {
+        try {
+
+            const page = number ? number : 0;
+
+            const response = await axios.get(`${API_BASE_URL}/leaveAccruals?page=${page}&properties=${properties}&direction=${direction}`, { headers });
+
+            console.log('[response.data]', response.data);
+            dispatch({ type: GET_LEAVEACCRUAL, payload: response.data.results});
+        } catch {
+            console.log('휴가 발생 조회에 문제 발생', Error);
         }
     }
 };

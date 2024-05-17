@@ -1,25 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { callDeleteLeaveSubmitAPI, callInsertLeaveSubmitAPI, callSelectMyLeaveSubmitAPI } from '../../apis/LeaveAPICalls';
+import { callSelectLeaveAccrual } from '../../apis/LeaveAPICalls';
 import { SET_PAGENUMBER } from '../../modules/LeaveModule';
 import MyLeaveModal from './MyLeaveModal';
 import { decodeJwt } from '../../utils/tokenUtils';
-import { renderLeaveSubmit } from '../../utils/leaveUtil';
-import { convertToUtc } from '../../utils/CommonUtil';
+import { renderLeaveAccrual } from '../../utils/leaveUtil';
 import '../../css/common.css'
-import '../../css/leave/MyLeave.css'
 
-function MyLeave() {
-    const { leaveInfo, submitPage } = useSelector(state => state.leaveReducer);
-    const { totalDays, consumedDays, remainingDays } = leaveInfo || {};
-    const { number, content, totalPages } = submitPage || {};
-    const [ properties, setProperties ] = useState('leaveSubNo')
+function LeaveAccrual() {
+    const { accrualPage } = useSelector(state => state.leaveReducer);
+    const { number, content, totalPages } = accrualPage || {};
+    const [ properties, setProperties ] = useState('leaveAccrualNo')
     const [ direction, setDirection ] = useState('DESC')
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const [ isLoading, setIsLoading ] = useState(false);
-    const [ leaveSubNo, setLeaveSubNo ] = useState('');
-    const [ selectedTime, setSelectedTime ] = useState('');
     const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
 
     const dispatch = useDispatch();
@@ -27,10 +22,9 @@ function MyLeave() {
     // 조회 관련 핸들러
     useEffect(() => {
         setIsLoading(true);
-        dispatch(callSelectMyLeaveSubmitAPI(number, properties, direction, memberId))
+        dispatch(callSelectLeaveAccrual(number, properties, direction))
             .finally(() => setIsLoading(false));
-        console.log('실행');
-    }, [number, properties, direction]);
+    }, [number]);
 
     const handlePageChange = page => dispatch({ type: SET_PAGENUMBER, payload: page });
 
@@ -58,34 +52,13 @@ function MyLeave() {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        setLeaveSubNo('')
-        setSelectedTime('');
     };
 
-    const handleInsert = ({ leaveSubNo, start, end, type, reason }) => {
+    const handleInsert = ({}) => {
         const requestData = {
-            leaveSubNo,
-            leaveSubApplicant: memberId,
-            leaveSubStartDate : convertToUtc(start),
-            leaveSubEndDate: convertToUtc(end),
-            leaveSubType: type,
-            leaveSubReason: reason
         };
-        dispatch(callInsertLeaveSubmitAPI(requestData));
 
     };
-
-    const handleDelete = id => {
-        console.log('delete 실행됨', id);
-        dispatch(callDeleteLeaveSubmitAPI(id))
-    };
-
-    const handleCancle = id => {
-        console.log('cancle 실행됨', id);
-        setLeaveSubNo(id);
-        setIsModalOpen(true);
-    };
-
     
     
     return <>
@@ -96,16 +69,8 @@ function MyLeave() {
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><Link to="/">Home</Link></li>
                         <li className="breadcrumb-item">휴가</li>
-                        <li className="breadcrumb-item active">나의 휴가 관리</li>
+                        <li className="breadcrumb-item active">휴가 발생 관리</li>
                     </ol>
-                    <div className="leaveHeader">
-                        <div className="leaveInfo">
-                            <span>부여 휴가 일수</span><span>{totalDays}</span>
-                            <span>소진 휴가 일수</span><span>{consumedDays}</span>
-                            <span>잔여 휴가 일수</span><span>{remainingDays}</span>
-                        </div>
-                        <span className="insertLeave" onClick={handleOpenModal} >휴가 신청</span>
-                    </div>
                 </nav>
             </div>
             <div className="col-lg-12">
@@ -115,30 +80,20 @@ function MyLeave() {
                             <thead>
                                 <tr>
                                     <th onClick={() => handleSort('leaveSubStartDate')}>
-                                        <span>휴가 시작일</span><i className="bx bxs-sort-alt"></i>
+                                        <span>사원명</span><i className="bx bxs-sort-alt"></i>
                                     </th>
 
-                                    <th onClick={() => handleSort('leaveSubEndDate')}>
-                                        <span>휴가 종료일</span><i className="bx bxs-sort-alt"></i>
+                                    <th onClick={() => handleSort('leaveSubStartDate')}>
+                                        <span>사번</span><i className="bx bxs-sort-alt"></i>
                                     </th>
 
-                                    <th onClick={() => handleSort('leaveSubType')}>
-                                        <span>휴가 유형</span><i className="bx bxs-sort-alt"></i>
+                                    <th onClick={() => handleSort('leaveSubStartDate')}>
+                                        <span>발생 일자</span><i className="bx bxs-sort-alt"></i>
                                     </th>
 
-                                    <th><span>차감 일수</span></th>
+                                    <th><span>발생 일수</span></th>
 
-                                    <th onClick={() => handleSort('leaveSubApplyDate')}>
-                                        <span>신청 일자</span><i className="bx bxs-sort-alt"></i>
-                                    </th>
-
-                                    <th><span>승인자</span></th>
-
-                                    <th onClick={() => handleSort('leaveSubProcessDate')}>
-                                        <span>승인 일자</span><i className="bx bxs-sort-alt"></i>
-                                    </th>
-
-                                    <th><span></span></th>
+                                    <th><span>발생 사유</span></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -147,7 +102,7 @@ function MyLeave() {
                                         <td colSpan="8" className="loadingText"></td>
                                     </tr>
                                 ) : (
-                                    renderLeaveSubmit(content, handleDelete, handleCancle, setSelectedTime) // 로딩 중이 아니면 실제 데이터 표시
+                                    renderLeaveAccrual(content) // 로딩 중이 아니면 실제 데이터 표시
                                 )}
                             </tbody>
                         </table>
@@ -179,9 +134,9 @@ function MyLeave() {
                 </div>
             </div>
         </main>
-        <MyLeaveModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} leaveSubNo={leaveSubNo} selectedTime={selectedTime}/>
+        <MyLeaveModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert}/>
     </>
 
 }
 
-export default MyLeave;
+export default LeaveAccrual;

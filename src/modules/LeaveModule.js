@@ -7,13 +7,15 @@ export const POST_LEAVESUBMIT = 'leave/POST_LEAVESUBMIT';
 export const PUT_LEAVESUBMIT = 'leave/PUT_LEAVESUBMIT';
 export const DELETE_LEAVESUBMIT = 'leave/DELETE_LEAVESUBMIT';
 export const SET_PAGENUMBER = 'leave/SET_PAGENUMBER';
+export const GET_LEAVEACCRUAL = 'leave/GET_LEAVEACCRUAL';
 
 const actions = createActions({
     [GET_LEAVESUBMIT]: () => {},
     [POST_LEAVESUBMIT]: () => {},
     [PUT_LEAVESUBMIT]: () => {},
     [DELETE_LEAVESUBMIT]: () => {},
-    [SET_PAGENUMBER]:() => {}     
+    [SET_PAGENUMBER]:() => {},     
+    [GET_LEAVEACCRUAL]: () => {}
 });
 
 const leaveReducer = handleActions({
@@ -27,7 +29,8 @@ const leaveReducer = handleActions({
             ...state.submitPage,
             number: payload
         }
-    })
+    }),
+    [GET_LEAVEACCRUAL]: (state, {payload}) => ({accrualPage: payload.accrualPage})
 }, initialState);
 
 export default leaveReducer;

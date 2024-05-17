@@ -4,7 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import '../../css/leave/MyLeaveModal.css';
 
 
-const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, info }) => {
+const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime }) => {
     const [start, setStart] = useState('');
     const [end, setEnd] = useState('');
     const [type, setType] = useState(leaveSubNo ? '취소' : '연차');
@@ -17,8 +17,8 @@ const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, info }) => {
     };
 
     const resetModal = () => {
-        setStart(leaveSubNo ? new Date(info.start) : '');
-        setEnd(leaveSubNo ? new Date(info.end) : '');
+        setStart(leaveSubNo ? new Date(selectedTime.start) : '');
+        setEnd(leaveSubNo ? new Date(selectedTime.end) : '');
         setType(leaveSubNo ? '취소' : '연차');
         setReason('');
     };
@@ -42,7 +42,7 @@ const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, info }) => {
                             <div className="form-group">
                                 <label>시작 일자</label>
                                 {leaveSubNo ?
-                                    <DatePicker selected={new Date(info.start)} dateFormat="yyyy-MM-dd" className="form-control" disabled />
+                                    <DatePicker selected={new Date(selectedTime.start)} dateFormat="yyyy-MM-dd" className="form-control" disabled />
                                     : <DatePicker selected={start} onChange={e => setStart(e)} dateFormat="yyyy-MM-dd" className="form-control" />
                                 }
                             </div>
@@ -50,7 +50,7 @@ const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, info }) => {
                             <div className="form-group">
                                 <label>종료 일자</label>
                                 {leaveSubNo ?
-                                    <DatePicker selected={new Date(info.end)} dateFormat="yyyy-MM-dd" className="form-control" disabled />
+                                    <DatePicker selected={new Date(selectedTime.end)} dateFormat="yyyy-MM-dd" className="form-control" disabled />
                                     : <DatePicker selected={end} onChange={e => setEnd(e)} dateFormat="yyyy-MM-dd" className="form-control" />
                                 }
                             </div>
