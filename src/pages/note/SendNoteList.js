@@ -208,7 +208,7 @@ const SendNoteList = () => {
                     </div>
                 </div>
             </div>
-            {selectedNote && <NoteDetail note={selectedNote} onClose={closeNoteDetailModal} showResponseButton={false} />}
+            {selectedNote && <NoteDetail note={selectedNote} onClose={closeNoteDetailModal} showResponseButton={false} isSentNote={true} />}
         </main>
     );
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../../css/note/noteDetail.css';
 import ResponseNoteModal from './ResponseNoteModal';
 
-const NoteDetail = ({ note, onClose, showResponseButton }) => {
+const NoteDetail = ({ note, onClose, showResponseButton, isSentNote  }) => {
     const [isResponseModalOpen, setIsResponseModalOpen] = useState(false);
 
     const openResponseModal = () => {
@@ -19,12 +19,12 @@ const NoteDetail = ({ note, onClose, showResponseButton }) => {
                 <div className="modal-dialog modal-lg" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">쪽지</h5>
+                            <h5 className="modal-title">✉️쪽지✉️</h5>
                         </div>
                         <div className="modal-body">
-                            <div className="note-detail-item">
-                                <div className="note-detail-label">보낸 사람:</div>
-                                <div className="note-detail-value">{note.receiverId}</div>
+                        <div className="note-detail-item">
+                                <div className="note-detail-label">{isSentNote ? '받는 사람:' : '보낸 사람:'}</div>
+                                <div className="note-detail-value">{isSentNote ? note.receiverId : note.senderId}</div>
                             </div>
                             <div className="note-detail-item">
                                 <div className="note-detail-label">제목:</div>

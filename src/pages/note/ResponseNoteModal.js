@@ -3,13 +3,22 @@ import '../../css/note/noteDetail.css';
 import SendNoteForm from './SendNoteForm';
 import { callPostNoteAPI } from '../../apis/NoteAPICalls';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { decodeJwt } from '../../utils/tokenUtils';
+
 
 const ResponseNoteModal = ({ note, onClose, showResponseButton = true }) => {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [noteTitle, setNoteTitle] = useState('');
     const [noteContent, setNoteContent] = useState('');
-    const dispatch = useDispatch();
+    const [receiverId, setReceiverId] = useState(note.senderId);
+    const token = window.localStorage.getItem("accessToken");
+    const memberInfo = decodeJwt(token);
+    const memberId = memberInfo.memberId;
 
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const openForm = () => {
         setIsFormOpen(true);
     };
@@ -22,11 +31,15 @@ const ResponseNoteModal = ({ note, onClose, showResponseButton = true }) => {
         const noteDTO = {
             noteTitle: noteTitle,
             noteContent: noteContent,
-            receiverId: note.receiverId,
-            senderId: note.senderId
+            receiverId: receiverId,
+            senderId: memberId
         };
         dispatch(callPostNoteAPI(noteDTO));
+        onClose();
+        navigate('/sendNoteList')
     };
+
+    console.log(receiverId)
 
     return (
         <div className="modal" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
@@ -36,10 +49,10 @@ const ResponseNoteModal = ({ note, onClose, showResponseButton = true }) => {
                         <h5 className="modal-title">답장</h5>
                     </div>
                     <div className="modal-body">
-                        <div className="note-detail-item">
-                            <div className="note-detail-label">받는 사람:</div>
-                            <div className="note-detail-value">{note.senderId}</div>
-                        </div>
+                    <div className="note-detail-item">
+                                <div className="note-detail-label">보낸 사람:</div>
+                                <div className="note-detail-value">{note.senderId}</div>
+                            </div>
                         <div className="note-detail-item">
                             <div className="note-detail-label">제목:</div>
                             <input

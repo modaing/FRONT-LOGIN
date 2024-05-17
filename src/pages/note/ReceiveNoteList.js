@@ -216,7 +216,7 @@ const ReceiveNoteList = () => {
                     </div>
                 </div>
             </div>
-            {selectedNote && <NoteDetail note={selectedNote} onClose={closeNoteDetailModal} showResponseButton={true} />}
+            {selectedNote && <NoteDetail note={selectedNote} onClose={closeNoteDetailModal} showResponseButton={true} isSentNote={false}  />}
         </main>
     );
 }
