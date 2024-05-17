@@ -8,16 +8,20 @@ const headers = {
     Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
 };
 
-class ApprovalAPI{
+const ApprovalAPI = {
 
-    approvalListUrl = 'approvals?fg=given&page=0&title=';
+    getApprovals : ({ fg, page, title, direction }) => {
 
-    getApprovals () {
+        const params = {
+            fg, page, title, direction
+        };
 
-        return axios.get(API_BASE_URL + this.approvalListUrl, { headers });
+        const approvalListUrl = `approvals?fg=${fg}&page=${page}&title=${title}&direction=${direction}`;
+
+        return axios.get(API_BASE_URL + approvalListUrl, { headers });
         
     }
 }
 
 
-export default new ApprovalAPI();
+export default ApprovalAPI;

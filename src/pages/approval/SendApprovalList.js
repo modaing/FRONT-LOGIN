@@ -77,10 +77,11 @@ function SendApprovalList() {
 
     const dispatch = useDispatch();
 
-    const apps = useSelector(state => state.commuteReducer);
-    console.log('[Approval] result : ', apps);
+    const apps = useSelector(state => state.approvalReducer);
+    console.log('[Approval] apps : ', apps);
+    console.log('approvals data: ' + JSON.stringify(apps, null, 2));
     
-    const appList = apps.data?.content; //Page<ApprovalDTO>에서 실제 데이터 리스트 추출
+    const appList = apps.data.data?.content; //Page<ApprovalDTO>에서 실제 데이터 리스트 추출
 
     console.log('[ApprovalList] result : ' + appList);
 

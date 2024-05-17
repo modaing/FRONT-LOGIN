@@ -70,7 +70,7 @@ function App() {
             <Route path="/room/:roomId" element={<Room />} />
             <Route path='/departmentAndPosition' element={<DepartmentAndPosition />} />
             <Route path='approvalSendList' element={<SendApprovalList />} />
-            <Route path='ApprovalList' element={<ApprovalList />} />
+            <Route path='approvals' element={<ApprovalList />} />
           </Route>
         ) : (
           // Redirect to login page if not logged in
