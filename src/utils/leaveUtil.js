@@ -19,7 +19,7 @@ export function renderLeaveSubmit(content, handleDelete, handleCancle, setInfo) 
                 <td>{leaveSubmit.leaveSubType}</td>
                 <td>{leaveDaysCalc}</td>
                 <td>{leaveSubmit.leaveSubApplyDate}</td>
-                <td>{leaveSubmit.leaveSubApprover || "-"}</td>
+                <td>{leaveSubmit.approverName || "-"}</td>
                 <td>{leaveSubmit.leaveSubProcessDate || "-"}</td>
                 <td>
                     <span className={`${buttonClassName}`} onClick={onClickHandler}>
@@ -46,4 +46,23 @@ function formattedLocalDate(leaveSubmit) {
     const leaveDaysCalc = differenceInTime / (1000 * 3600 * 24) + 1;
 
     return { formattedStartDate, formattedEndDate, leaveDaysCalc };
+}
+
+export function renderLeaveAccrual(content) {
+    if (!content) {
+        return null;
+    }
+
+    return content.map((leaveAccrual, index) => {
+
+        return (
+            <tr key={index}>
+                <td>{leaveAccrual.recipientName}</td>
+                <td>{leaveAccrual.recipientId}</td>
+                <td>{leaveAccrual.accrualDate}</td>
+                <td>{leaveAccrual.leaveAccrualDays}</td>
+                <td>{leaveAccrual.leaveAccrualReason}</td>
+            </tr>
+        );
+    });
 }

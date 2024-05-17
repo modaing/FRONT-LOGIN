@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import CommuteItem from "./CommuteItem";
 
-function CommuteListByMember({ commute, date }) {
+function CommuteListByMember({ commute, date, parsingDateOffset }) {
 
     console.log('[CommuteListByMember] commute : ', commute);
     console.log('[CommuteListByMember] date : ', date);
+    console.log('[CommuteListByMember] parsingDateOffset : ', parsingDateOffset);
 
     const content2 = {
         marginLeft: '25px'
@@ -101,7 +102,7 @@ function CommuteListByMember({ commute, date }) {
                                 <th style={tableStyles.tableHeaderCell} scope="col">정정 요청</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        {/* <tbody>
                             {commute && commute.length > 0 ? (
                                 commute.map((item, index) => (
                                     <CommuteItem key={item.commuteNo} commute={item} tableStyles={tableStyles} evenRow={index % 2 === 0} date={date} />
@@ -111,7 +112,7 @@ function CommuteListByMember({ commute, date }) {
                                     <td colSpan={7}>출퇴근 내역이 없습니다.</td>
                                 </tr>
                             )}
-                        </tbody>
+                        </tbody> */}
                         <tbody>
                             {generateDates().map((dateItem, index) => {
                                 const matchingCommute = commute.find(
@@ -123,7 +124,7 @@ function CommuteListByMember({ commute, date }) {
                                         commute={matchingCommute || { workingDate: dateItem }}
                                         tableStyles={tableStyles}
                                         evenRow={index % 2 === 0}
-                                        date={date}
+                                        date={formatWorkingDate(date)}
                                     />
                                 );
                             })}
