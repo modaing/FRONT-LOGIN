@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import '../../css/note/noteLists.css';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { useSelector, useDispatch } from 'react-redux';
 import { callSendNotesAPI, callPutSendNotesAPI } from '../../apis/NoteAPICalls';
+import { callMemberListAPI } from '../../apis/ChattingAPICalls';
 import SendNoteForm from './SendNoteForm';
 import NoteDetail from './NoteDetail';
 
@@ -16,10 +17,21 @@ const SendNoteList = () => {
     const [selectedItems, setSelectedItems] = useState([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [selectedNote, setSelectedNote] = useState(null);
+    const [members, setMembers] = useState([]); 
     const token = window.localStorage.getItem("accessToken");
     const memberInfo = decodeJwt(token);
     const profilePic = memberInfo.imageUrl;
     const memberId = memberInfo.memberId;
+
+    useEffect(() => {
+        // 멤버 리스트를 가져오는 API 호출
+        callMemberListAPI().then(response => {
+            const responseData = response.data;
+            setMembers(responseData);
+        }).catch(error => {
+            console.error('Error fetching members:', error);
+        });
+    }, []);
 
     useEffect(() => {
         if (!sendNoteList) {
@@ -42,7 +54,6 @@ const SendNoteList = () => {
             } else {
                 setSelectedItems(prevSelectedItems => prevSelectedItems.filter(item => item !== index));
             }
-
             console.log('Selected noteNo:', notes[index].noteNo);
         } else {
             console.error("Notes array or its length is undefined");
@@ -66,11 +77,9 @@ const SendNoteList = () => {
                     await dispatch(callPutSendNotesAPI(noteNo, 'Y', 'N'));
                 }
             }));
-            // 비동기로 삭제된 후에 새로운 노트를 받아오도록 상태를 업데이트합니다.
             await dispatch(callSendNotesAPI(currentPage, 10, 'noteNo'));
             setCheckboxes(Array(notes.length).fill(false));
             setSelectedItems([]);
-
             navigate('/sendNoteList');
         }
     };
@@ -127,7 +136,21 @@ const SendNoteList = () => {
                 nextButton.removeEventListener('click', goToNextPage);
             }
         };
-    }, [dispatch, memberId, currentPage, totalPages]);
+    }, [dispatch, currentPage, totalPages]);
+
+    const findUserName = (receiverId) => {
+        // 멤버 리스트에서 receiverId와 동일한 memberId를 가진 멤버를 찾음
+        const member = members.find(member => member.memberId === receiverId);
+        // 해당 멤버가 존재하면 해당 멤버의 이름과 receiverId를 반환
+        return member ? `${member.name} (${receiverId})` : null;
+    };
+
+    const findUserPhoto = (receiverId) => {
+        const memberPhoto = members.find(member => member.memberId === receiverId);
+        const imageUrl = memberPhoto ? memberPhoto.imageUrl : null;
+        return imageUrl;
+    };
+
 
     return (
         <main id="main" className="main">
@@ -172,12 +195,9 @@ const SendNoteList = () => {
                                                             <Link to="/" className="bi bi-envelope" style={{ fontSize: '1.2rem', color: '#808080', background: 'none', marginLeft: '20px' }}></Link>
                                                         </div>
                                                     </th>
-                                                    <th className="third-column"></th>
-                                                    <th className="fourth-column"></th>
-                                                    <th className="fifth-column">
-                                                        <i className="bx bx-chevron-left arrow-icon" style={{ background: 'none', marginRight: '10%' }}></i>
-                                                        <i className="bx bx-chevron-right arrow-icon" style={{ background: 'none', fontweight: 'bold0', marginRight: '-20%' }}></i>
-                                                    </th>
+                                                    <th className="third-column">Receiver</th> {/* Receiver 추가 */}
+                                                    <th className="fourth-column">Title</th>
+                                                    <th className="fifth-column">Date</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -192,9 +212,9 @@ const SendNoteList = () => {
                                                             />
                                                         </td>
                                                         <td className="second-column">
-                                                            <img src={profilePic} alt="Profile" className="rounded-circle" />
+                                                            {findUserPhoto(note.receiverId) && <img src={findUserPhoto(note.receiverId)} alt="Profile" className="rounded-circle" />}
                                                         </td>
-                                                        <td className="third-column">{note.receiverId}</td>
+                                                        <td className="third-column" style={{ fontSize: '14px' }}>{findUserName(note.receiverId)}</td>
                                                         <td className="fourth-column">{note.noteTitle}</td>
                                                         <td className="fifth-column">{note.sendNoteDate}</td>
                                                     </tr>

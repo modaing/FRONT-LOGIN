@@ -4,6 +4,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { useSelector, useDispatch } from 'react-redux';
 import { callPutReceiceNotesAPI, callReceiveNotesAPI } from '../../apis/NoteAPICalls';
+import { callMemberListAPI } from '../../apis/ChattingAPICalls';
 import SendNoteForm from './SendNoteForm';
 import NoteDetail from './NoteDetail';
 
@@ -16,13 +17,22 @@ const ReceiveNoteList = () => {
     const [selectedItems, setSelectedItems] = useState([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [selectedNote, setSelectedNote] = useState(null);
-
+    const [members, setMembers] = useState([]);
 
     const token = window.localStorage.getItem("accessToken");
     const memberInfo = decodeJwt(token);
     const profilePic = memberInfo.imageUrl;
     const memberId = memberInfo.memberId;
 
+    useEffect(() => {
+        // 멤버 리스트를 가져오는 API 호출
+        callMemberListAPI().then(response => {
+            const responseData = response.data;
+            setMembers(responseData);
+        }).catch(error => {
+            console.error('Error fetching members:', error);
+        });
+    }, []);
 
     useEffect(() => {
         if (!receiveNoteList) {
@@ -137,6 +147,19 @@ const ReceiveNoteList = () => {
     }, [dispatch, memberId, currentPage, totalPages]);
 
 
+    const findUserName = (senderId) => {
+        // 멤버 리스트에서 receiverId와 동일한 memberId를 가진 멤버를 찾음
+        const member = members.find(member => member.memberId === senderId);
+        // 해당 멤버가 존재하면 해당 멤버의 이름과 receiverId를 반환
+        return member ? `${member.name} (${senderId})` : null;
+    };
+
+    const findUserPhoto = (senderId) => {
+        const memberPhoto = members.find(member => member.memberId === senderId);
+        const imageUrl = memberPhoto ? memberPhoto.imageUrl : null;
+        return imageUrl;
+    };
+
     return (
         <main id="main" className="main">
             <div className="pagetitle">
@@ -200,9 +223,9 @@ const ReceiveNoteList = () => {
                                                             />
                                                         </td>
                                                         <td className="second-column">
-                                                            <img src={profilePic} alt="Profile" className="rounded-circle" />
+                                                            {findUserPhoto(note.senderId) && <img src={findUserPhoto(note.senderId)} alt="Profile" className="rounded-circle" />}
                                                         </td>
-                                                        <td className="third-column">{note.senderId}</td>
+                                                        <td className="third-column" style={{ fontSize: '14px' }}>{findUserName(note.senderId)}</td>
                                                         <td className="fourth-column">{note.noteTitle}</td>
                                                         <td className="fifth-column">{note.sendNoteDate}</td>
                                                     </tr>
@@ -216,7 +239,7 @@ const ReceiveNoteList = () => {
                     </div>
                 </div>
             </div>
-            {selectedNote && <NoteDetail note={selectedNote} onClose={closeNoteDetailModal} showResponseButton={true} isSentNote={false}  />}
+            {selectedNote && <NoteDetail note={selectedNote} onClose={closeNoteDetailModal} showResponseButton={true} />}
         </main>
     );
 }
