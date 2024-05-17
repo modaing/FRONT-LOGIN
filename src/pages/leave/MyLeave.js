@@ -19,7 +19,7 @@ function MyLeave() {
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const [ isLoading, setIsLoading ] = useState(false);
     const [ leaveSubNo, setLeaveSubNo ] = useState('');
-    const [ info, setInfo ] = useState('');
+    const [ selectedTime, setSelectedTime ] = useState('');
     const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
 
     const dispatch = useDispatch();
@@ -29,6 +29,7 @@ function MyLeave() {
         setIsLoading(true);
         dispatch(callSelectMyLeaveSubmitAPI(number, properties, direction, memberId))
             .finally(() => setIsLoading(false));
+        console.log('실행');
     }, [number, properties, direction]);
 
     const handlePageChange = page => dispatch({ type: SET_PAGENUMBER, payload: page });
@@ -58,14 +59,14 @@ function MyLeave() {
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setLeaveSubNo('')
-        setInfo('');
+        setSelectedTime('');
     };
 
     const handleInsert = ({ leaveSubNo, start, end, type, reason }) => {
         const requestData = {
             leaveSubNo,
             leaveSubApplicant: memberId,
-            leaveSubStartDate : convertToUtc(start),
+            leaveSubStartDate: convertToUtc(start),
             leaveSubEndDate: convertToUtc(end),
             leaveSubType: type,
             leaveSubReason: reason
@@ -85,8 +86,8 @@ function MyLeave() {
         setIsModalOpen(true);
     };
 
-    
-    
+
+
     return <>
         <main id="main" className="main">
             <div className="pagetitle">
@@ -146,7 +147,7 @@ function MyLeave() {
                                         <td colSpan="8" className="loadingText"></td>
                                     </tr>
                                 ) : (
-                                    renderLeaveSubmit(content, handleDelete, handleCancle, setInfo) // 로딩 중이 아니면 실제 데이터 표시
+                                    renderLeaveSubmit(content, handleDelete, handleCancle, setSelectedTime) // 로딩 중이 아니면 실제 데이터 표시
                                 )}
                             </tbody>
                         </table>
@@ -178,7 +179,7 @@ function MyLeave() {
                 </div>
             </div>
         </main>
-        <MyLeaveModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} leaveSubNo={leaveSubNo} info={info}/>
+        <MyLeaveModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} leaveSubNo={leaveSubNo} selectedTime={selectedTime}/>
     </>
 
 }
