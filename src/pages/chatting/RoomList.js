@@ -82,7 +82,6 @@ function RoomList() {
           <ol className="breadcrumb">
             <li className="breadcrumb-item"><a href="/">Home</a></li>
             <li className="breadcrumb-item">채팅</li>
-            <button onClick={() => setIsModalOpen(true)} style={{ backgroundColor: '#112D4E', color: 'white', borderRadius: '10px', padding: '1% 2%', cursor: 'pointer', marginLeft: '76%', textDecoration: 'none' }}>방 만들기</button>
           </ol>
         </nav>
       </div>

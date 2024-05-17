@@ -31,7 +31,6 @@ function InsertRoomModal({ show, handleClose }) {
           <label htmlFor="receiver">받는 사람:</label>
           <select id="receiver" value={selectedReceiver} onChange={handleReceiverChange}>
             <option value="">선택하세요</option>
-            {/* 받는 사람 목록 옵션 추가 */}
           </select>
           <button type="submit">방 만들기</button>
         </form>
