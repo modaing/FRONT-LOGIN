@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { callCahttingAPI, leaveRoom, createRoom, memberList } from '../../apis/ChattingAPICalls';
+import { callCahttingAPI, leaveRoom } from '../../apis/ChattingAPICalls';
 import { callMemberListAPI } from '../../apis/ChattingAPICalls';
 import { decodeJwt } from '../../utils/tokenUtils';
 import '../../css/chatting/roomList.css';
 import Room from './Room';
 import InsertRoomModal from './InsertRoomModal'; // 모달창 컴포넌트 임포트
+import JoinRoom from './JoinRoom';
 
 function RoomList() {
   const [rooms, setRooms] = useState([]);
@@ -51,7 +52,27 @@ function RoomList() {
     setRoomId(roomId); // 클릭한 방의 ID 설정
   };
 
-  console.log(roomId)
+  const handleLeaveRoom = async () => {
+    try {
+      await leaveRoom(); // 방을 나가는 API 호출
+      // 방을 나갔을 때 방 목록을 다시 가져옵니다.
+      const updatedRooms = await callCahttingAPI(memberId);
+      setRooms(updatedRooms);
+      setRoomId(null); // 방을 나가면 roomId를 null로 설정합니다.
+    } catch (error) {
+      console.error('Error leaving room:', error);
+    }
+  };
+
+  const handleInsertRoom = async () => {
+    try {
+      const updatedRooms = await callCahttingAPI(memberId);
+      setRooms(updatedRooms);
+    } catch (error) {
+      console.error('Error update room:', error);
+    }
+};
+  
 
   return (
     <main id="main" className="main">
@@ -88,7 +109,6 @@ function RoomList() {
                             </div>
                             <div className="chat_ib">
                               <h5>{room.roomName}</h5>
-                              <p>{/* 여기에 채팅방 설명이나 마지막 메시지 등을 넣을 수 있습니다. */}</p>
                             </div>
                           </div>
                         ))
@@ -101,7 +121,13 @@ function RoomList() {
               </div>
               <div className="mesgs">
                 <div className="msg_history">
-                  {roomId && <Room roomId={roomId} />} {/* 클릭한 방의 ID를 props로 전달하여 Room 컴포넌트 렌더링 */}
+                  {roomId ? (
+                    <Room roomId={roomId} onLeaveRoom={handleLeaveRoom} />
+                  ) : (
+                    <div>
+                      <JoinRoom onRoomCreated={handleInsertRoom} />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
