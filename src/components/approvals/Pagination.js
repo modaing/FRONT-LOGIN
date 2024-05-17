@@ -1,11 +1,12 @@
 import React from 'react';
 import styles from '../../css/approval/ApprovalListComponent.module.css'
 
-function Pagination({ totalPages, currentPage, onPageChange, fg, title, direction }) {
+function Pagination({ totalPages, currentPage, onPageChange }) {
     
 
-    const handleClick = (pageNumber) => {
+    const handleClick = (pageNumber, event) => {
 
+        event.stopPropagation();
         onPageChange(pageNumber);
     };
 
@@ -15,7 +16,7 @@ function Pagination({ totalPages, currentPage, onPageChange, fg, title, directio
             <button
                 className='page-link'
                 disabled={currentPage === 0}
-                onClick={() => handleClick(currentPage - 1)}
+                onClick={(event) => handleClick(currentPage - 1, event)}
             >
                 {'<<'}
             </button>
@@ -34,7 +35,7 @@ function Pagination({ totalPages, currentPage, onPageChange, fg, title, directio
             <button
                 className='page-link'
                 disabled={currentPage === totalPages - 1}
-                onClick={() => handleClick(currentPage + 1)}
+                onClick={(event) => handleClick(currentPage + 1, event)}
             >
                 {'>>'}
             </button>
