@@ -8,7 +8,10 @@ import { decodeJwt } from '../../utils/tokenUtils';
 import { Link, useParams } from 'react-router-dom';
 import styled from "styled-components";
 import { handleAction } from 'redux-actions';
-import ClockInModal from './ClockInModal';
+import ClockInModal from '../../components/commutes/ClockInModal';
+import { TuiDatePicker } from 'nextjs-tui-date-picker';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 function RecordCommute() {
 
@@ -90,7 +93,7 @@ function RecordCommute() {
     const [lastCommuteNo, setLastCommuteNo] = useState(null);
     const [todaysCommute, setTodaysCommute] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    // const [isClockInModalOpen, setIsClockedInModalOpen] = useState(false);
+    const [chooseMonth, setChooseMonth] = useState(null);
 
     const dispatch = useDispatch();
 
@@ -232,6 +235,13 @@ function RecordCommute() {
         }
     };
 
+    const Example = () => {
+        const [startDate, setStartDate] = useState(new Date());
+        return (
+          <DatePicker selected={startDate} onChange={date => setStartDate(date)} />
+        );
+      };
+
     return <>
             <main id="main" className="main">
                 <div className="pagetitle">
@@ -251,6 +261,8 @@ function RecordCommute() {
                                 </Link>
                             )}
                             <SelectBox options={OPTIONS} defaultValue={date} onChange={handleAction}></SelectBox>
+                            {/* <DatePicker selected={chooseMonth} onChange={(date) => setChooseMonth(date)} /> */}
+                            {/* <TuiDatePicker date={new Date('2024-05')} inputWidth={140} fontSize={16} /> */}
                         </ol>
                     </nav>
                 </div>
@@ -261,7 +273,7 @@ function RecordCommute() {
                 </div>
                 <div>
                     {commuteList && (
-                        <CommuteListByMember key={commuteList.commuteNo} commute={commuteList} date={date} />
+                        <CommuteListByMember key={commuteList.commuteNo} commute={commuteList} date={date} parsingDateOffset={parsingDateOffset}/>
                     )}
                 </div>
             </main>

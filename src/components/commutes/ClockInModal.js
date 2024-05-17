@@ -1,6 +1,5 @@
 import React from 'react';
 import '../../css/commute/commute.css';
-import 'react-datepicker/dist/react-datepicker.module.css';
 
 const ClockInModal = ({ isOpen, onClose, date }) => {
     return (
