@@ -25,21 +25,14 @@ function MyLeave() {
     const dispatch = useDispatch();
 
     // 조회 관련 핸들러
-    useEffect(() => {
-        setIsLoading(true);
-        dispatch(callSelectMyLeaveSubmitAPI(number, properties, direction, memberId))
-            .finally(() => setIsLoading(false));
-        console.log('실행');
-    }, [number, properties, direction]);
-
     const handlePageChange = page => dispatch({ type: SET_PAGENUMBER, payload: page });
-
+    
     const handlePrevPage = () => {
         if (number > 0) {
             dispatch({ type: SET_PAGENUMBER, payload: number - 1 });
         }
     };
-
+    
     const handleNextPage = () => {
         if (number < totalPages - 1) {
             dispatch({ type: SET_PAGENUMBER, payload: number + 1 });
@@ -61,7 +54,7 @@ function MyLeave() {
         setLeaveSubNo('')
         setSelectedTime('');
     };
-
+    
     const handleInsert = ({ leaveSubNo, start, end, type, reason }) => {
         const requestData = {
             leaveSubNo,
@@ -72,21 +65,27 @@ function MyLeave() {
             leaveSubReason: reason
         };
         dispatch(callInsertLeaveSubmitAPI(requestData));
-
+        
     };
-
+    
     const handleDelete = id => {
         console.log('delete 실행됨', id);
         dispatch(callDeleteLeaveSubmitAPI(id))
     };
-
+    
     const handleCancle = id => {
         console.log('cancle 실행됨', id);
         setLeaveSubNo(id);
         setIsModalOpen(true);
     };
-
-
+    
+    useEffect(() => {
+        setIsLoading(true);
+        dispatch(callSelectMyLeaveSubmitAPI(number, properties, direction, memberId))
+            .finally(() => setIsLoading(false));
+        console.log('실행');
+    }, [number, properties, direction]);
+    
 
     return <>
         <main id="main" className="main">

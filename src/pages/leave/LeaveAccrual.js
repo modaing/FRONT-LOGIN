@@ -19,6 +19,7 @@ function LeaveAccrual() {
     const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
 
     const dispatch = useDispatch();
+    
     // 조회 관련 핸들러
     const handlePageChange = page => dispatch({ type: SET_PAGENUMBER, payload: page });
 
