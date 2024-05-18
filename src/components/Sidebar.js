@@ -97,12 +97,12 @@ function Sidebar() {
                             </Link>
                         </li>
                         <li>
-                            <Link to="/approvals" style={underLineStyle}>
+                            <Link to="/approvals?fg=given&page=0&title=&direction=DESC" style={underLineStyle}>
                                 <i className="bi bi-circle"></i><span>결재 상신함</span>
                             </Link>
                         </li>
                         <li>
-                            <Link to="/" style={underLineStyle}>
+                            <Link to="/approvals?fg=received&page=0&title=&direction=DESC" style={underLineStyle}>
                                 <i className="bi bi-circle"></i><span>결재 수신함</span>
                             </Link>
                         </li>

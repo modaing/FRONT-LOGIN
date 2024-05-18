@@ -9,7 +9,7 @@ const DeleteConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
     return (
         <div className={styles.modalOverlay}>
             <div className={styles.modalContent}>
-                <div>
+                <div className={styles.modalConfirmMessage}>
                     <p>삭제하시겠습니까?</p>
                     <p>작성한 내용은 완전히 삭제됩니다.</p>
                 </div>
