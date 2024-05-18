@@ -1,102 +1,88 @@
-
-const SET_FG = 'SET_FG';
-const SET_TITLE = 'SET_TITLE';
-const SET_PAGE_INFO = 'SET_PAGE_INFO';
-const FETCH_APPROVALS_SUCCESS = 'FETCH_APPROVALS_SUCCESS';
-const FETCH_APPROVALS_FAILURE = 'FETCH_APPROVALS_FAILURE';
-const DELETE_APPROVAL_SUCCESS = 'DELETE_APPROVAL_SUCCESS';
-const DELETE_APPROVAL_FAILURE = 'DELETE_APPROVAL_FAILURE';
-
-
-export const setFg = (fg) => ({
-  type: SET_FG,
-  payload: fg,
-});
-
-export const setTitle = (title) => ({
-  type: SET_TITLE,
-  payload: title,
-});
-
-export const setPageInfo = (pageInfo) => ({
-  type: SET_PAGE_INFO,
-  payload: pageInfo,
-});
-
-export const fetchApprovalsSuccess = (approvals) => ({
-  type: FETCH_APPROVALS_SUCCESS,
-  payload: approvals,
-});
-
-export const fetchApprovalsFailure = (error) => ({
-  type: FETCH_APPROVALS_FAILURE,
-  payload: error,
-});
-
-export const deleteApprovalSuccess = (approvalNo) => ({
-  type: DELETE_APPROVAL_SUCCESS,
-  payload: approvalNo,
-});
-
-export const deleteApprovalFailure = (error) => ({
-  type: DELETE_APPROVAL_FAILURE,
-  payload: error,
-});
-
+import { createActions, handleActions } from "redux-actions";
 
 const initialState = {
   fg: 'given',
   title: '',
   pageInfo: { totalPages: 0, currentPage: 0 },
   approvals: [],
+  loading: false,
   error: null,
 };
 
-const approvalReducer = (state = initialState, action = {}) => {
-    switch (action.type) {
-      case SET_FG:
-        return {
+// 액션 타입 및 액션 생성자 정의
+export const {
+  setFg,
+  setTitle,
+  setPageInfo,
+  fetchApprovalsSuccess,
+  fetchApprovalsFailure,
+  deleteApprovalSuccess,
+  deleteApprovalFailure,
+  updateApprovalStatus,
+  setLoading,
+} = createActions({
+  SET_FG: (fg) => fg,
+  SET_TITLE: (title) => title,
+  SET_PAGE_INFO: (pageInfo) => pageInfo,
+  FETCH_APPROVALS_SUCCESS: (approvals) => approvals,
+  FETCH_APPROVALS_FAILURE: (error) => error,
+  DELETE_APPROVAL_SUCCESS: (approvalNo) => approvalNo,
+  DELETE_APPROVAL_FAILURE: (error) => error,
+  UPDATE_APPROVAL_STATUS: (approvalNo, status) => ({ approvalNo, status }),
+  SET_LOADING: (loading) => loading,
+});
+
+// 리듀서 정의
+const approvalReducer = handleActions(
+  {
+      [setFg]: (state, { payload }) => ({
           ...state,
-          fg: action.payload,
+          fg: payload,
           pageInfo: { totalPages: 0, currentPage: 0 },
-        };
-      case SET_TITLE:
-        return {
+      }),
+      [setTitle]: (state, { payload }) => ({
           ...state,
-          title: action.payload,
+          title: payload,
           pageInfo: { totalPages: 0, currentPage: 0 },
-        };
-      case SET_PAGE_INFO:
-        return {
+      }),
+      [setPageInfo]: (state, { payload }) => ({
           ...state,
-          pageInfo: action.payload,
-        };
-      case FETCH_APPROVALS_SUCCESS:
-        return {
+          pageInfo: payload,
+      }),
+      [fetchApprovalsSuccess]: (state, { payload }) => ({
           ...state,
-          approvals: action.payload,
+          approvals: payload,
           error: null,
-        };
-      case FETCH_APPROVALS_FAILURE:
-        return {
+      }),
+      [fetchApprovalsFailure]: (state, { payload }) => ({
           ...state,
-          error: action.payload,
-        };
-      case DELETE_APPROVAL_SUCCESS:
-        return {
+          error: payload,
+      }),
+      [deleteApprovalSuccess]: (state, { payload }) => ({
           ...state,
-          approvals: state.approvals.filter((a) => a.approvalNo !== action.payload),
+          approvals: state.approvals.filter((a) => a.approvalNo !== payload),
           error: null,
-        };
-      case DELETE_APPROVAL_FAILURE:
-        return {
+      }),
+      [deleteApprovalFailure]: (state, { payload }) => ({
           ...state,
-          error: action.payload,
-        };
-      default:
-        return state;
-    }
-  };
-  
+          error: payload,
+      }),
+      [updateApprovalStatus]: (state, { payload }) => ({
+          ...state,
+          approvals: state.approvals.map((approval) =>
+              approval.approvalNo === payload.approvalNo
+                  ? { ...approval, approvalStatus: payload.status }
+                  : approval
+          ),
+      }),
+      [setLoading]: (state, { payload }) => ({
+        ...state,
+        loading : payload,
+      }),
+  },
+  initialState
+);
+
+
 
 export default approvalReducer;

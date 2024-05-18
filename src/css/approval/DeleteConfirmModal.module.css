@@ -16,16 +16,21 @@
     background-color: white;
     padding: 20px;
     border-radius: 5px;
+    border: 2px solid black;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    display: grid;
+}
+.modalConfirmMessage {
+    align-self: center;
+    margin-top: 20px;
 }
 
-.modalAction{
-    margin-top: 20px;
+.modalActions{
+    /* margin-top: 20px;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-around; */
+    align-self: end;
+    justify-self: flex-end;
 }
 
 .modalActions button {
@@ -34,12 +39,19 @@
     border-radius: 5px;
     cursor: pointer;
 }
+
+
 .modalActions button:first-of-type {
-    background-color: #d9534f;
-    color: white;
+    background-color: white;
+    color: black;
+    border: 1px solid #BBBBBB;
 }
 
 .modalActions button:last-of-type {
-    background-color: #5bc0de;
+    background-color: #3F72AF;
     color: white;
+}
+.modalActions button:hover{
+    background-color: #E9ECEF;
+    color: black;
 }

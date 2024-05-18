@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styles from '../../css/approval/ApprovalListComponent.module.css'
 
 function Pagination({ totalPages, currentPage, onPageChange }) {
@@ -6,14 +6,14 @@ function Pagination({ totalPages, currentPage, onPageChange }) {
     console.log(`현재 페이지 : ${currentPage}`);
     console.log(`총 페이지 : ${totalPages}`);
 
-    const handleClick = (pageNumber, event) => {
+    const handleClick = useCallback((pageNumber, event) => {
 
         if(event){
             event.stopPropagation();
         }
         
         onPageChange(pageNumber);
-    };
+    }, [onPageChange]);
 
     const buttonStyle = () => {
         return {marginLeft : '0px'};
