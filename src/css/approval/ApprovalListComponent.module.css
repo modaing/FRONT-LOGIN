@@ -86,7 +86,9 @@
     color: black;
 }
 .deleteButton:hover{
-    background-color:#112D4E;
+    /* background-color:#112D4E; */
+    background-color: #E9ECEF;
+    color: black;
 }
 .approvalButton{
     background-color: white;
