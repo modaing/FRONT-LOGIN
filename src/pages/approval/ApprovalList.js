@@ -143,6 +143,7 @@ function ApprovalList() {
         navigate(`/approvals?${params.toString()}`);
     };
 
+
     const handleDeleteClick = (e, approvalNo) => {
         e.stopPropagation();
         setDeleteApproval(approvalNo);
@@ -156,6 +157,7 @@ function ApprovalList() {
             setDeleteApproval(null);
         }
     };
+
 
     const handleDeleteCancel = () => {
         setIsModalOpen(false);
@@ -172,12 +174,13 @@ function ApprovalList() {
         backgroundColor: approvalState.fg === 'tempGiven' ? '#112D4E' : 'white',
         color: approvalState.fg === 'tempGiven' ? 'white' : '#112D4E',
         border: approvalState.fg === 'tempGiven' ? 'none' : '1px solid #D5D5D5'
-    };
+    }
 
     const receivedAppListButton = {
         backgroundColor: approvalState.fg === 'received' ? '#112D4E' : 'white',
         color: approvalState.fg === 'received' ? 'white' : '#112D4E',
         border: approvalState.fg === 'received' ? 'none' : '1px solid #D5D5D5'
+
     }
 
     const receivedRefAppListButton = {
@@ -237,7 +240,9 @@ function ApprovalList() {
                         fg={fg}
                         handleDeleteClick={handleDeleteClick}
                         handleSortDirectionChange={handleSortDirectionChange}
+
                         loggedInUserId={memberId}
+
                     />
                     <Pagination 
                         totalPages={pageInfo.totalPages}

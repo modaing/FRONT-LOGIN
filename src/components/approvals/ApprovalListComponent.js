@@ -3,6 +3,7 @@ import styles from '../../css/approval/ApprovalListComponent.module.css';
 
 
 
+
 const ApprovalListComponent = ({ approvals, fg, handleDeleteClick, handleSortDirectionChange, loggedInUserId }) => {
     return (
         <div className={styles.tableContainer}>
@@ -35,6 +36,7 @@ const ApprovalListComponent = ({ approvals, fg, handleDeleteClick, handleSortDir
                                 </th>
                             </>
                         ) }
+
                     </tr>
                 </thead>
                 <tbody>
@@ -47,6 +49,7 @@ const ApprovalListComponent = ({ approvals, fg, handleDeleteClick, handleSortDir
                             <td colSpan="4" className={styles.loadingMessage}>오류가 발생했습니다: {error.message}</td>
                         </tr>
                     ) : */} {approvals.length > 0 ? (
+
                         approvals.map(approval => {
                             const approver = approval.approver.find(a => a.memberId === loggedInUserId);
                             const approverStatus = approver ? approver.approverStatus : '';
