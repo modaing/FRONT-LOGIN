@@ -5,7 +5,9 @@ import {
     deleteApprovalSuccess, 
     deleteApprovalFailure,
     setPageInfo, 
-    setLoading
+    setLoading,
+    fetchFormsSuccess,
+    fetchFormsFailure
 } from "../modules/ApprovalReducer";
 
 const API_BASE_URL = "http://localhost:8080";
@@ -16,6 +18,29 @@ const headers = {
     Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
 };
 
+
+export const getFormsAPI = () => {
+    
+    return async (dispatch) => {
+        try{
+            const response = await axios.get(`${API_BASE_URL}/approvals/forms`, { headers });
+            if(Array.isArray(response.data)){
+                dispatch(fetchFormsSuccess(response.data));
+            }else if(Array.isArray(response.data.data)){
+                dispatch(fetchFormsSuccess(response.data.data));
+            }
+            else{
+                throw new Error("Invalid API response structure");
+            }
+        } catch(error) {
+            dispatch(fetchFormsFailure(error));
+            console.error('Error fetching forms :' , error);
+        }finally{
+            dispatch(setLoading(false));
+        }
+    }
+
+};
 
 export const getApprovalsAPI = ( fg, page, title, direction )  => {
     

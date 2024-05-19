@@ -26,8 +26,10 @@ function ApprovalList() {
     const [localTitle, setLocalTitle] = useState('');
     const location = useLocation();
     const navigate = useNavigate();
+
     const decodedToken = decodeJwt(window.localStorage.getItem('accessToken'));
     const memberId = decodedToken.memberId;
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [deleteApproval, setDeleteApproval] = useState(null);
 
@@ -141,6 +143,7 @@ function ApprovalList() {
         navigate(`/approvals?${params.toString()}`);
     };
 
+
     const handleDeleteClick = (e, approvalNo) => {
         e.stopPropagation();
         setDeleteApproval(approvalNo);
@@ -154,6 +157,7 @@ function ApprovalList() {
             setDeleteApproval(null);
         }
     };
+
 
     const handleDeleteCancel = () => {
         setIsModalOpen(false);
@@ -172,6 +176,18 @@ function ApprovalList() {
         border: approvalState.fg === 'tempGiven' ? 'none' : '1px solid #D5D5D5'
     }
 
+    const receivedAppListButton = {
+        backgroundColor: approvalState.fg === 'received' ? '#112D4E' : 'white',
+        color: approvalState.fg === 'received' ? 'white' : '#112D4E',
+        border: approvalState.fg === 'received' ? 'none' : '1px solid #D5D5D5'
+
+    }
+
+    const receivedRefAppListButton = {
+        backgroundColor: approvalState.fg === 'receivedRef' ? '#112D4E' : 'white',
+        color: approvalState.fg === 'receivedRef' ? 'white' : '#112D4E',
+        border: approvalState.fg === 'receivedRef' ? 'none' : '1px solid #D5D5D5'
+    }
 
 
 
@@ -179,17 +195,31 @@ function ApprovalList() {
         <>
             <main id="main" className="main">
                 <div className="pagetitle">
-                    <h1>결재 상신함</h1>
+                    <h1>{fg === 'given' || fg === 'tempGiven' ? '결재 상신함' : 
+                         fg === 'received' || fg == 'receivedRef' ? '결재 수신함' 
+                            : ''}</h1>
                     <nav>
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item"><a href="/">Home</a></li>
                             <li className="breadcrumb-item">전자결재</li>
-                            <li className="breadcrumb-item active">결재 상신 내역</li>
+                            <li className="breadcrumb-item active">{fg === 'given' || fg === 'tempGiven' ? '결재 상신 내역' :
+                                                                    fg === 'received' || fg === 'receivedRef' ? '결재 수신 내역'
+                                                                    : ''}</li>
                         </ol>
                         <div className="approvalBar">
                             <div className="approvalBarLeft">
-                                <Link to="/approvals?fg=given&page=0&title=&direction=DESC" className="ApprovalListBtn" style={sendAppListButton} onClick={() => handleFgChange('given')}>내 결재함</Link>
-                                <Link to="/approvals?fg=tempGiven&page=0&title=&direction=DESC" className="ApprovalListBtn" style={tempAppListButton} onClick={() => handleFgChange('tempGiven')}>임시 저장함</Link>
+                                {fg === 'given' || fg === 'tempGiven' ? (
+                                    <Link to="/approvals?fg=given&page=0&title=&direction=DESC" className="ApprovalListBtn" style={sendAppListButton} onClick={() => handleFgChange('given')}>내 결재함</Link>
+                               
+                                ) : fg === 'received' || fg === 'receivedRef' ? (
+                                    <Link to="/approvals?fg=received&page=0&title=&direction=DESC" className="ApprovalListBtn" style={receivedAppListButton} onClick={() => handleFgChange('received')}>결재 대기함</Link>
+                                ) : ''}
+                                {fg === 'given' || fg === 'tempGiven' ? (
+                                    <Link to="/approvals?fg=tempGiven&page=0&title=&direction=DESC" className="ApprovalListBtn" style={tempAppListButton} onClick={() => handleFgChange('tempGiven')}>임시 저장함</Link>
+                                ) : fg === 'received' || fg === 'receivedRef' ? (
+                                    <Link to="/approvals?fg=receivedRef&page=0&title=&direction=DESC" className="ApprovalListBtn" style={receivedRefAppListButton} onClick={() => handleFgChange('receivedRef')}>수신 참조함</Link>
+                                ) : ''}
+                                 
                             </div>
                             <div className="approvalBarRight">
                                 <form className="approvalSearch" onSubmit={handleSearchSubmit}>
@@ -210,6 +240,9 @@ function ApprovalList() {
                         fg={fg}
                         handleDeleteClick={handleDeleteClick}
                         handleSortDirectionChange={handleSortDirectionChange}
+
+                        loggedInUserId={memberId}
+
                     />
                     <Pagination 
                         totalPages={pageInfo.totalPages}
