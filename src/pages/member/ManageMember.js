@@ -26,6 +26,7 @@ const ManageMember = () => {
                 setAllMemberInfo(formattedMembers);
                 console.log('formatted members:', formattedMembers);
                 setFilteredMemberInfo(formattedMembers); // Initially show all members
+                console.log('filteredMemberInfo:',filteredMemberInfo);
             } else {
                 console.error('member list is not an array:', memberLists);
             }

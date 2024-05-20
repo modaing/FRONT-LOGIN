@@ -44,6 +44,7 @@ function JoinRoom({ onRoomCreated }) {
 
     return (
         <form onSubmit={handleNoteSubmit}>
+            <label htmlFor="roomName" className="form-label">With Member ?</label>
             <select
                 className="form-select"
                 aria-label="Default select example"

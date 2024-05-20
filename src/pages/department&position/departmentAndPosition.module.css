@@ -75,5 +75,8 @@
 .firstPage td, .secondPage td {
     text-align: center;
     padding: 10px;
+}
 
+td {
+    align-content: center;
 }

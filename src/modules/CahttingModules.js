@@ -7,12 +7,14 @@ const initialState = {
 
 const initialRoomState = {
     postRoom: null,
+    deleteRoom: null,
     loading: false,
     error: null,
 };
 
 export const ADD_MESSAGE = 'ADD_MESSAGE';
 export const POST_ROOM = 'room/POST_ROOM';
+export const DELETE_ROOM = 'room/DELETE_ROOM';
 
 
 export const addMessage = (message) => ({
@@ -21,7 +23,8 @@ export const addMessage = (message) => ({
 });
 
 const actions = createActions({
-    [POST_ROOM]: ()=> {}
+    [POST_ROOM]: ()=> {},
+    [DELETE_ROOM]: () => {}
 });
 
 
@@ -41,6 +44,7 @@ export const chattingReducer = (state = initialState, action) => {
 
 export const roomReducer = handleActions (
   {
-    [POST_ROOM]: (state, {payload}) => ({postRoom: payload})
+    [POST_ROOM]: (state, {payload}) => ({postRoom: payload}),
+    [DELETE_ROOM]: (state, {payload}) => ({deleteRoom: payload}) 
   } , initialRoomState
 )
