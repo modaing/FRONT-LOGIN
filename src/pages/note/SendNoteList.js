@@ -7,6 +7,9 @@ import { callSendNotesAPI, callPutSendNotesAPI } from '../../apis/NoteAPICalls';
 import { callMemberListAPI } from '../../apis/ChattingAPICalls';
 import SendNoteForm from './SendNoteForm';
 import NoteDetail from './NoteDetail';
+import Modal from './modal';
+
+// 모달 컴포넌트를 import
 
 const SendNoteList = () => {
     const { sendNoteList } = useSelector(state => state.noteReducer);
@@ -18,6 +21,7 @@ const SendNoteList = () => {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [selectedNote, setSelectedNote] = useState(null);
     const [members, setMembers] = useState([]);
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false); // 모달 열림 여부
     const token = window.localStorage.getItem("accessToken");
     const memberInfo = decodeJwt(token);
     const profilePic = memberInfo.imageUrl;
@@ -100,6 +104,26 @@ const SendNoteList = () => {
 
     const closeNoteDetailModal = () => {
         setSelectedNote(null);
+    };
+
+    const handleUpdateButtonClick = () => {
+        // 업데이트 모달을 열기 위한 함수
+        setIsUpdateModalOpen(true);
+    };
+
+    const handleUpdateConfirm = async () => {
+        // 업데이트 모달에서 확인 버튼을 눌렀을 때의 동작
+        await Promise.all(selectedItems.map(async index => {
+            if (index >= 0 && index < notes.length) {
+                const noteNo = notes[index].noteNo;
+                await dispatch(callPutSendNotesAPI(noteNo, 'Y', 'N'));
+            }
+        }));
+        await dispatch(callSendNotesAPI(currentPage, 10, 'noteNo'));
+        setCheckboxes(Array(notes.length).fill(false));
+        setSelectedItems([]);
+        setIsUpdateModalOpen(false); // 모달 닫기
+        navigate('/sendNoteList');
     };
 
     useEffect(() => {
@@ -191,8 +215,8 @@ const SendNoteList = () => {
                                                     <th className="first-column"> <input className="checkbox-custom" type="checkbox" checked={selectAll} onChange={toggleSelectAll} /></th>
                                                     <th className="second-column-top">
                                                         <div style={{ marginBottom: '-2px', marginLeft: '-25px' }}>
-                                                            <Link to="/" className="bi bi-trash" style={{ fontSize: '1.3rem', color: '#a1a1a1', background: 'none' }} onClick={handleDeleteSelectedItems}></Link>
-                                                            <Link to="/" className="bi bi-envelope" style={{ fontSize: '1.2rem', color: '#808080', background: 'none', marginLeft: '20px' }}></Link>
+                                                            <Link to="#" className="bi bi-trash" style={{ fontSize: '1.3rem', color: '#a1a1a1', background: 'none' }} onClick={() => setIsUpdateModalOpen(true)}></Link>
+                                                            <Link to="#" className="bi bi-envelope" style={{ fontSize: '1.2rem', color: '#808080', background: 'none', marginLeft: '20px' }}></Link>
                                                         </div>
                                                     </th>
                                                     <th className="third-column">보낸 사원</th>
@@ -232,6 +256,7 @@ const SendNoteList = () => {
                 </div>
             </div>
             {selectedNote && <NoteDetail note={selectedNote} onClose={closeNoteDetailModal} showResponseButton={false} isSentNote={true} />}
+            <Modal isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)} onConfirm={handleUpdateConfirm} />
         </main>
     );
 }

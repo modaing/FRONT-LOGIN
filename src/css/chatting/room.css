@@ -19,14 +19,13 @@
   margin-bottom: auto;
   overflow-y: auto;
 }
-
 .sent-message {
   background-color: #3498db;
   color: white;
   border-radius: 10px;
   padding: 10px;
   margin-bottom: 10px;
-  width: 40%;
+  max-width: 60%; /* 말풍선의 최대 너비 지정 */
   text-align: right;
   clear: both;
   float: right;
@@ -37,11 +36,26 @@
   color: black;
   border-radius: 10px;
   padding: 10px;
-  margin-bottom: 5px;
-  width: 40%;
+  margin-bottom: 10px;
+  max-width: 60%; /* 말풍선의 최대 너비 지정 */
   text-align: left;
   clear: both;
   float: left;
+}
+
+.message-bubble {
+  display: flex;
+  align-items: flex-start;
+}
+
+.sender-info {
+  margin-right: 5px;
+}
+
+.avatar-room {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
 }
 
 .message-input {
@@ -65,7 +79,6 @@
   cursor: pointer;
   margin-left: 10px;
 }
-
 
 button {
   padding: 10px 18px;
