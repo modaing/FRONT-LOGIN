@@ -68,12 +68,10 @@ function MyLeave() {
     };
     
     const handleDelete = id => {
-        console.log('delete 실행됨', id);
         dispatch(callDeleteLeaveSubmitAPI(id))
     };
     
     const handleCancle = id => {
-        console.log('cancle 실행됨', id);
         setLeaveSubNo(id);
         setIsModalOpen(true);
     };
@@ -82,7 +80,6 @@ function MyLeave() {
         setIsLoading(true);
         dispatch(callSelectLeaveSubmitAPI(number, properties, direction, memberId))
             .finally(() => setIsLoading(false));
-        console.log('실행');
     }, [number, properties, direction]);
     
 
