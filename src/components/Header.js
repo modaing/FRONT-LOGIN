@@ -9,14 +9,16 @@ function Header() {
     
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [imageUrl, setImageUrl] = useState(null);
+    // const [imageUrl, setImageUrl] = useState(null);
 
     let memberRole = null;
 
     const token = window.localStorage.getItem("accessToken");
     const memberInfo = decodeJwt(token);
-    // const profilePic = memberInfo.imageUrl;
-    // console.log('구성원 프로필 사진:',profilePic);
+    const image = memberInfo.imageUrl;
+    const imageUrl = `/img/${image}`;
+
+    // console.log('imageUrl:',memberInfo.imageUrl);
     
     if (token) {
         try {
@@ -34,12 +36,12 @@ function Header() {
     //     console.log('imageData:', imageData);
     // }
 
-    useEffect(() => {
-        if (token && memberInfo && memberInfo.imageUrl) {
-            // Set the profile picture URL in state
-            setImageUrl(memberInfo.imageUrl);
-        }
-    }, [token, memberInfo]);
+    // useEffect(() => {
+    //     if (token && memberInfo && memberInfo.imageUrl) {
+    //         // Set the profile picture URL in state
+    //         setImageUrl(memberInfo.imageUrl);
+    //     }
+    // }, [token, memberInfo]);
     
     const onClickLogoutHandler = (event) => {
         event.preventDefault();

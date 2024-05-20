@@ -25,6 +25,7 @@ import Room from './pages/chatting/Room';
 import DepartmentAndPosition from './pages/department&position/departmentAndPosition';
 import ApprovalPage from './pages/approval/ApprovalPage';
 import LeaveAccrual from './pages/leave/LeaveAccrual';
+import ApprovalList from './pages/approval/ApprovalList';
 
 function App() {
   const isLoggedIn = !!window.localStorage.getItem("accessToken");
@@ -60,7 +61,7 @@ function App() {
             <Route path="chatRoomList" element={<RoomList />} />
             <Route path="/room/:roomId" element={<Room />} />
             <Route path='/departmentAndPosition' element={<DepartmentAndPosition />} />
-            <Route path='approvalSendList' element={<SendApprovalList />} />
+            {/* <Route path='approvalSendList' element={<SendApprovalList />} /> */}
             <Route path='approvals' element={<ApprovalList />} />
             <Route path='approvals' element={<ApprovalPage />} />
           </Route>
