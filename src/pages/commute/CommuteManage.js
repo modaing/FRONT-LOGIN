@@ -3,6 +3,6 @@ function CommuteManage() {
         <>
         </>
     );
-}
+};
 
 export default CommuteManage;

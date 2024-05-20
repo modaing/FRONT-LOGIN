@@ -58,25 +58,42 @@
 }
 
 .message-input button {
-  padding: 10px 20px;
+  padding: 10px 18px;
   border-radius: 5px;
   border: none;
-  background-color: #2f1cdb;
   color: white;
   cursor: pointer;
+  margin-left: 10px;
 }
 
+
 button {
-  padding: 10px 20px;
+  padding: 10px 18px;
   border-radius: 5px;
   border: none;
-  background-color: #f2f2f2;
-  color: #333;
+  background-color: #3498db;
+  color: white;
   cursor: pointer;
+  margin-left: 10px;
 }
 
 button:hover {
-  background-color: #ccc;
+  background-color: #005583;
+  color: #fff;
+}
+
+.button-leave {
+  padding: 10px 18px;
+  border-radius: 5px;
+  border: none;
+  background-color: #ec76a2;
+  color: white;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.button-leave:hover {
+  background-color: #b5325a;
   color: #fff;
 }
 

@@ -5,10 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { callInsertCommuteAPI, callSelectCommuteListAPI, callUpdateCommuteAPI } from "../../apis/CommuteAPICalls";
 import CommuteTime from "../../components/commutes/CommuteTime";
 import { decodeJwt } from '../../utils/tokenUtils';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from "styled-components";
 import { handleAction } from 'redux-actions';
-import ClockInModal from './ClockInModal';
+import ClockInModal from '../../components/commutes/ClockInModal';
+import 'react-datepicker/dist/react-datepicker.css';
 
 function RecordCommute() {
 
@@ -90,7 +91,7 @@ function RecordCommute() {
     const [lastCommuteNo, setLastCommuteNo] = useState(null);
     const [todaysCommute, setTodaysCommute] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    // const [isClockInModalOpen, setIsClockedInModalOpen] = useState(false);
+    const [chooseMonth, setChooseMonth] = useState(null);
 
     const dispatch = useDispatch();
 
@@ -99,6 +100,9 @@ function RecordCommute() {
     console.log('[RecordCommute] result : ', result);
     const commuteList = result.commutelist;
     console.log('[RecordCommute] commuteList : ', commuteList);
+    const correctionList = result.correctionlist;
+    console.log('[RecordCommute] correctionList : ', correctionList);
+
 
     /* 출근 시간 액션 */
     const postCommute = result.postcommute;
@@ -261,7 +265,7 @@ function RecordCommute() {
                 </div>
                 <div>
                     {commuteList && (
-                        <CommuteListByMember key={commuteList.commuteNo} commute={commuteList} date={date} />
+                        <CommuteListByMember key={commuteList.commuteNo} commute={commuteList} date={date} parsingDateOffset={parsingDateOffset}/>
                     )}
                 </div>
             </main>

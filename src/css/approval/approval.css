@@ -10,10 +10,13 @@
     margin-top : 30px;
     display: flex;
     justify-content: space-between;
-    height: 100px;
+    height: 50px;
+    margin-bottom : 0px;
 }
 .approvalBarLeft{
     width: 60%;
+    display: flex;
+    gap: 10px;
 }
 
 .approvalSearch{
@@ -24,9 +27,11 @@
 .approvalSearchLabel{
     background-color: white;
     color : #112D4E;
-    padding-right: 10px;
+    padding-right: 15px;
+    padding-left: 15px;
     align-content: center;
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: bold;
 }
 
 .approvalSearchInput input{
@@ -35,7 +40,7 @@
     padding-right : 10px;
     text-align: right;
     font-size: 14px;
-    height: 30px;
+    height: 35px;
 }
 .approvalSearchInput input:focus{
     background-color: #F4F4F4;
@@ -48,4 +53,24 @@
     font-size: 14px;
     padding: 4px 12px;
     border-radius: 5px;
+    height: 35px;
+}
+
+.ApprovalListBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    min-width: 120px;
+    border-radius: 5px;
+    padding: 1% 1.5%;
+    cursor: pointer;
+    text-decoration: none;
+    margin-right: 20px;
+    vertical-align: middle;
+    text-align: center;
+    padding-top: 7px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

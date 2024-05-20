@@ -1,0 +1,33 @@
+.leaveHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.insertAccrual {
+    background-color: #112D4E;
+    color: #ffffff;
+    border-radius: 10px; 
+    padding: 1% 1%;
+    cursor: pointer;
+    text-decoration: none;
+    width: auto;
+}
+
+.LeaveAccrualListContent th {
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    width: 12.5%;
+}
+
+.LeaveAccrualListContent th span,
+.LeaveAccrualListContent th i {
+    cursor: pointer;
+}
+
+.LeaveAccrualListContent td {
+    text-align: center;
+    padding: 10px;
+
+}

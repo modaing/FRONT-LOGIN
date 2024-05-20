@@ -1,12 +1,14 @@
-export function renderLeaveSubmit(content, handleDelete, handleCancleInsert) {
+export function renderLeaveSubmit(content, handleDelete, handleCancle, setInfo) {
     if (!content) {
-        return null; 
+        return null;
     }
 
     return content.map((leaveSubmit, index) => {
         const { formattedStartDate, formattedEndDate, leaveDaysCalc } = formattedLocalDate(leaveSubmit);
         const buttonClassName = leaveSubmit.leaveSubProcessDate ? 'cancelRequest' : 'requestDelete';
-        const onClickHandler = leaveSubmit.leaveSubProcessDate ? () => handleCancleInsert(id) : () => handleDelete(id);
+        const onClickHandler = leaveSubmit.leaveSubProcessDate ? () => {
+            setInfo({start: formattedStartDate, end: formattedEndDate})
+            handleCancle(id)} : () => handleDelete(id);
         const buttonText = leaveSubmit.leaveSubProcessDate ? '취소 신청' : '신청 삭제';
         const id = leaveSubmit.leaveSubNo;
 
@@ -17,11 +19,11 @@ export function renderLeaveSubmit(content, handleDelete, handleCancleInsert) {
                 <td>{leaveSubmit.leaveSubType}</td>
                 <td>{leaveDaysCalc}</td>
                 <td>{leaveSubmit.leaveSubApplyDate}</td>
-                <td>{leaveSubmit.leaveSubApprover || "-"}</td>
+                <td>{leaveSubmit.approverName || "-"}</td>
                 <td>{leaveSubmit.leaveSubProcessDate || "-"}</td>
                 <td>
-                     <span className={`${buttonClassName}`} onClick={onClickHandler}>
-                    {buttonText}
+                    <span className={`${buttonClassName}`} onClick={onClickHandler}>
+                        {buttonText}
                     </span>
                 </td>
             </tr>
@@ -44,4 +46,23 @@ function formattedLocalDate(leaveSubmit) {
     const leaveDaysCalc = differenceInTime / (1000 * 3600 * 24) + 1;
 
     return { formattedStartDate, formattedEndDate, leaveDaysCalc };
+}
+
+export function renderLeaveAccrual(content) {
+    if (!content) {
+        return null;
+    }
+
+    return content.map((leaveAccrual, index) => {
+
+        return (
+            <tr key={index}>
+                <td>{leaveAccrual.recipientName}</td>
+                <td>{leaveAccrual.recipientId}</td>
+                <td>{leaveAccrual.accrualDate}</td>
+                <td>{leaveAccrual.leaveAccrualDays}</td>
+                <td>{leaveAccrual.leaveAccrualReason}</td>
+            </tr>
+        );
+    });
 }

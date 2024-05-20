@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { callDeleteLeaveSubmitAPI, callInsertLeaveSubmitAPI, callSelectMyLeaveSubmitAPI } from '../../apis/LeaveAPICalls';
 import { SET_PAGENUMBER } from '../../modules/LeaveModule';
-import LeaveInsertModal from './LeaveInsertModal';
+import MyLeaveModal from './MyLeaveModal';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { renderLeaveSubmit } from '../../utils/leaveUtil';
 import { convertToUtc } from '../../utils/CommonUtil';
@@ -14,10 +14,12 @@ function MyLeave() {
     const { leaveInfo, submitPage } = useSelector(state => state.leaveReducer);
     const { totalDays, consumedDays, remainingDays } = leaveInfo || {};
     const { number, content, totalPages } = submitPage || {};
-    const [properties, setProperties] = useState('leaveSubNo')
-    const [direction, setDirection] = useState('DESC')
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [ properties, setProperties ] = useState('leaveSubNo')
+    const [ direction, setDirection ] = useState('DESC')
+    const [ isModalOpen, setIsModalOpen ] = useState(false);
+    const [ isLoading, setIsLoading ] = useState(false);
+    const [ leaveSubNo, setLeaveSubNo ] = useState('');
+    const [ selectedTime, setSelectedTime ] = useState('');
     const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
 
     const dispatch = useDispatch();
@@ -27,6 +29,7 @@ function MyLeave() {
         setIsLoading(true);
         dispatch(callSelectMyLeaveSubmitAPI(number, properties, direction, memberId))
             .finally(() => setIsLoading(false));
+        console.log('실행');
     }, [number, properties, direction]);
 
     const handlePageChange = page => dispatch({ type: SET_PAGENUMBER, payload: page });
@@ -55,12 +58,15 @@ function MyLeave() {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
+        setLeaveSubNo('')
+        setSelectedTime('');
     };
 
-    const handleInsert = ({ start, end, type, reason }) => {
+    const handleInsert = ({ leaveSubNo, start, end, type, reason }) => {
         const requestData = {
+            leaveSubNo,
             leaveSubApplicant: memberId,
-            leaveSubStartDate : convertToUtc(start),
+            leaveSubStartDate: convertToUtc(start),
             leaveSubEndDate: convertToUtc(end),
             leaveSubType: type,
             leaveSubReason: reason
@@ -72,15 +78,16 @@ function MyLeave() {
     const handleDelete = id => {
         console.log('delete 실행됨', id);
         dispatch(callDeleteLeaveSubmitAPI(id))
-        console.log('체크');
     };
 
-    const handleCancleInsert = id => {
+    const handleCancle = id => {
         console.log('cancle 실행됨', id);
+        setLeaveSubNo(id);
+        setIsModalOpen(true);
     };
 
-    
-    
+
+
     return <>
         <main id="main" className="main">
             <div className="pagetitle">
@@ -140,7 +147,7 @@ function MyLeave() {
                                         <td colSpan="8" className="loadingText"></td>
                                     </tr>
                                 ) : (
-                                    renderLeaveSubmit(content, handleDelete, handleCancleInsert) // 로딩 중이 아니면 실제 데이터 표시
+                                    renderLeaveSubmit(content, handleDelete, handleCancle, setSelectedTime) // 로딩 중이 아니면 실제 데이터 표시
                                 )}
                             </tbody>
                         </table>
@@ -172,7 +179,7 @@ function MyLeave() {
                 </div>
             </div>
         </main>
-        <LeaveInsertModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} />
+        <MyLeaveModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} leaveSubNo={leaveSubNo} selectedTime={selectedTime}/>
     </>
 
 }
