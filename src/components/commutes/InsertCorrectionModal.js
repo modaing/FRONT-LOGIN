@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from "react";
 import '../../css/commute/commute.css';
 import '../../css/common.css';
-import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider, PickersActionBar, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from "dayjs";
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'boxicons/css/boxicons.css';
+import 'remixicon/fonts/remixicon.css';
+import '../../style.css';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const InsertCorrectionModal = ({ isOpen, onClose, onSave, date, startWork, endWork }) => {
 
-    console.log('정정 요청 날짜 : ', date);
-    console.log('기존 출근 시간 : ', startWork);
-    console.log('기존 퇴근 시간 : ', endWork);
+    // console.log('정정 요청 날짜 : ', date);
+    // console.log('기존 출근 시간 : ', startWork);
+    // console.log('기존 퇴근 시간 : ', endWork);
 
     const [corrStartWork, setCorrStartWork] = useState(null);
     const [corrEndWork, setCorrEndWork] = useState(null);
@@ -24,18 +28,18 @@ const InsertCorrectionModal = ({ isOpen, onClose, onSave, date, startWork, endWo
     const [showReasonErrorMessage, setShowReasonErrorMessage] = useState(false);
 
     const handleSave = () => {
-    
+
         if (!reason && !corrStartWork && !corrEndWork) {
             setShowReasonErrorMessage(true);
             setShowTimeErrorMessage(true);
             return;
         };
-    
+
         if (!reason) {
             setShowReasonErrorMessage(true);
             return;
         };
-    
+
         if (!corrStartWork && !corrEndWork) {
             setShowTimeErrorMessage(true);
             return;
@@ -53,12 +57,13 @@ const InsertCorrectionModal = ({ isOpen, onClose, onSave, date, startWork, endWo
     };
 
     const resetModal = () => {
-        setCorrStartWork('');
-        setCorrEndWork('');
+        setCorrStartWork(null);
+        setCorrEndWork(null);
         setReason('');
         setShowTimeErrorMessage(false);
         setShowReasonErrorMessage(false);
     };
+
 
     useEffect(() => {
         if (isOpen) {
@@ -91,7 +96,9 @@ const InsertCorrectionModal = ({ isOpen, onClose, onSave, date, startWork, endWo
                     <div className="modal-content" style={{ padding: '25px', width: '550px' }}>
                         <div className="modal-header" style={{ paddingBottom: '20px', paddingTop: '0px' }}>
                             <h5 className="modal-title">출퇴근 정정 등록</h5>
-                            <button type="button" className="btn-close" onClick={onClose}></button>
+                            <button type="button" onClick={resetModal} style={{ background: '#ffffff', color: '#000000', paddingLeft: '20px', cursor: 'pointer' }}><i className="bi bi-arrow-counterclockwise"></i></button>
+                            <button type="button" className="btn-close" onClick={onClose} style={{ backgroundColor: '#ffffff', cursor: 'pointer' }}></button>
+                            {/* 시간 새로고침 안됨! 추후 해결해야 할 것 */}
                         </div>
                         <div className="modal-body" style={{ paddingTop: '30px', paddingBottom: '20px' }}>
                             <div style={{ display: 'flex' }}>
@@ -145,6 +152,7 @@ const InsertCorrectionModal = ({ isOpen, onClose, onSave, date, startWork, endWo
                                             }}
                                             format="HH:mm"
                                             TimePicker={corrEndWork}
+                                            onBlur={e => this.focusOut(e.target.value)}
                                         />
                                         {/* </DemoContainer> */}
                                     </LocalizationProvider>
