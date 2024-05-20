@@ -14,15 +14,16 @@ import '../../style.css';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const InsertCorrectionModal = ({ isOpen, onClose, onSave, date, startWork, endWork }) => {
+const InsertCorrectionModal = ({ commute, isOpen, onClose, onSave, date, startWork, endWork }) => {
 
     // console.log('정정 요청 날짜 : ', date);
     // console.log('기존 출근 시간 : ', startWork);
     // console.log('기존 퇴근 시간 : ', endWork);
+    // console.log('commute : ', commute.commuteNo);
 
     const [corrStartWork, setCorrStartWork] = useState(null);
     const [corrEndWork, setCorrEndWork] = useState(null);
-    const [reason, setReason] = useState(null);
+    const [reason, setReason] = useState('');
     const [isInputClicked, setIsInputClicked] = useState(false);
     const [showTimeErrorMessage, setShowTimeErrorMessage] = useState(false);
     const [showReasonErrorMessage, setShowReasonErrorMessage] = useState(false);
@@ -51,7 +52,7 @@ const InsertCorrectionModal = ({ isOpen, onClose, onSave, date, startWork, endWo
         onSave({
             corrStartWork: koreaStartTime,
             corrEndWork: koreaEndTime,
-            reason
+            reason: reason
         });
         onClose();
     };

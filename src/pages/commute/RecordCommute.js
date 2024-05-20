@@ -10,6 +10,7 @@ import styled from "styled-components";
 import { handleAction } from 'redux-actions';
 import ClockInModal from '../../components/commutes/ClockInModal';
 import 'react-datepicker/dist/react-datepicker.css';
+import RecordCorrectionOfCommute from './RecordCorrectionOfCommute';
 
 function RecordCommute() {
 
@@ -98,10 +99,11 @@ function RecordCommute() {
     /* 출퇴근 내역 액션 */
     const result = useSelector(state => state.commuteReducer);
     console.log('[RecordCommute] result : ', result);
+    const {commutelist} = result || {};
     const commuteList = result.commutelist;
     console.log('[RecordCommute] commuteList : ', commuteList);
-    const correctionList = result.correctionlist;
-    console.log('[RecordCommute] correctionList : ', correctionList);
+    // const correctionList = result.correctionlist;
+    // console.log('[RecordCommute] correctionList : ', correctionList);
 
 
     /* 출근 시간 액션 */
@@ -111,18 +113,6 @@ function RecordCommute() {
     /* 퇴근 시간 액션 */
     const putCommute = result.putcommute;
     console.log('[RecordCommute] putCommute : ', putCommute);
-
-    // 출퇴근 정정 관리 때 필요함!!
-    // useEffect(() => {
-    //     if (role === 'ADMIN') {
-    //         setTarget('depart');
-    //         setTargetValue(departNo);
-    //     } else {
-    //         setTarget('member');
-    //         setTargetValue(1);
-    //     }
-    // }, [role, memberId, departNo]
-    // );
 
     /* UTC 기준 날짜 반환으로 한국 표준시보다 9시간 빠른 날짜가 표시 되는 문제 해결 */
     let offset = date.getTimezoneOffset() * 60000;      // ms 단위이기 때문에 60000 곱해야함
@@ -139,10 +129,7 @@ function RecordCommute() {
 
     /* 출퇴근 내역 API 호출 */
     useEffect(() => {
-        // console.log('[useEffect] target : ', target);
-        // console.log('[useEffect] targetValue : ', targetValue);
-        // console.log('[useEffect] date : ', date);
-        dispatch(callSelectCommuteListAPI(target, targetValue, dateOffset.toISOString().slice(0, 10)));
+        dispatch(callSelectCommuteListAPI(target, targetValue, parsingDateOffset));
     }, [dispatch, target, targetValue, date, postCommute, putCommute, parsingDateOffset, todaysCommute]);
 
     /* 한 주 전으로 이동 */

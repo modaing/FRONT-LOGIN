@@ -3,11 +3,12 @@ import '../../css/commute/commute.css';
 import styled from "styled-components";
 import { decodeJwt } from '../../utils/tokenUtils';
 import { useEffect, useState } from 'react';
-import { callSelectCommuteListAPI, callSelectCorrectionListAPI } from '../../apis/CommuteAPICalls';
+import { callSelectCorrectionListAPI } from '../../apis/CommuteAPICalls';
 import CorrectionItem from '../../components/commutes/CorrectionItem';
 import { SET_PAGENUMBER, fetchCommuteListAsync } from '../../modules/CommuteModule';
 
 function RecordCorrectionOfCommute() {
+
 
     const pageTitleStyle = {
         marginBottom: '20px',
@@ -105,44 +106,42 @@ function RecordCorrectionOfCommute() {
     // console.log('[RecordCommute] memberId : ', memberId);
 
     const [date, setDate] = useState(new Date());
-    // const [page, setPage] = useState(0);
-    // const [totalPages, setTotalPages] = useState(0);
-    // const [size, setSize] = useState(10);
-    // const [sort, setSort] = useState(corrNo);
 
     /* UTC 기준 날짜 반환으로 한국 표준시보다 9시간 빠른 날짜가 표시 되는 문제 해결 */
     let offset = date.getTimezoneOffset() * 60000;      // ms 단위이기 때문에 60000 곱해야함
     let dateOffset = new Date(date.getTime() - offset); // 한국 시간으로 파싱
     let parsingDateOffset = dateOffset.toISOString().slice(0, 10);
 
+    console.log('utc 변환 ', parsingDateOffset);
+
     /* 출퇴근 정정 내역 액션 */
     const result = useSelector(state => state.commuteReducer);
-    const {commutelist, correctionlist } = result || {};
-    const { currentPage, totalItems, totalPages } = correctionlist || {};
-
-
     console.log('[RecordCorrectionOfCommute] result : ', result);
-    console.log('[RecordCorrectionOfCommute] commutelist : ', commutelist);
+
+    // const { commute, correction } = result || {};
+    const correctionlist = result.correctionlist;
     console.log('[RecordCorrectionOfCommute] correctionlist : ', correctionlist);
 
-
-    // const correctionlist = result.correctionlist.correctionlist;
-    const commuteList = result.commutelist;
-    const correctionList = correctionlist?.correctionlist.result || [];
-    console.log('[RecordCorrectionOfCommute] commuteList : ', commuteList);
+    const correctionList = correctionlist?.correctionlist.response.data.results.correction || [];
+    const commuteList = correctionlist?.correctionlist.response.data.results.commute || [];
     console.log('[RecordCorrectionOfCommute] correctionList : ', correctionList);
+    console.log('[RecordCorrectionOfCommute] commuteList : ', commuteList);
+
+    const pageInfo = correctionlist?.correctionlist.response.data.results || [];
+    console.log('[RecordCorrectionOfCommute]  pageInfo : ', pageInfo);
+    const { currentPage, totalItems, totalPages } = pageInfo || {};
 
     // const { submitPage } = useSelector(state => state.commuteReducer.correctionlist);
     // const { currentPage, totalItems, totalPages } = submitPage || {};
     // console.log('[출퇴근 정정 내역] submitPage : ', submitPage);
 
-    const page = correctionlist?.correctionlist.currentPage || [];
+    const page = 0;
     const size = 10;
     const sort = 'corrNo';
     const direction = 'DESC';
 
-    const target = memberId;
-    const targetValue = 'member';
+    // const target = memberId;
+    // const targetValue = 'member';
 
     const dispatch = useDispatch();
 
@@ -156,18 +155,10 @@ function RecordCorrectionOfCommute() {
     useEffect(() => {
         console.log('[useEffect] memberId : ', memberId);
         console.log('[useEffect] page : ', currentPage);
-        console.log('[useEffect] date 파싱 : ', formatWorkingDate(date));
-        dispatch(callSelectCommuteListAPI(target, targetValue , dateOffset.toISOString().slice(0, 10)));
-        dispatch(callSelectCorrectionListAPI(memberId, page, size, sort, direction, formatWorkingDate(date)));
-        // dispatch(fetchCommuteListAsync(memberId, targetValue, formatWorkingDate(date)))
-    }, [memberId, date, currentPage, dispatch, target, targetValue, date]);
+        console.log('[useEffect] parsingDateOffset : ', parsingDateOffset);
+        dispatch(callSelectCorrectionListAPI(memberId, page, size, sort, direction, parsingDateOffset));
+    }, [memberId, date]);
 
-    /* 정정 대상 일자 가져오기 */
-    const findWorkingDate = (commuteNo) => {
-        const commute = commutelist.find(item => item.commuteNo === commuteNo);
-        return commute ? commute.workingDate : '';
-    };
-    
     /* 페이징 핸들러 */
     const handlePageChange = (page) => {
         dispatch({ type: SET_PAGENUMBER, payload: { page: page } });
@@ -214,7 +205,7 @@ function RecordCorrectionOfCommute() {
                             <tbody>
                                 {correctionList.length > 0 ? (
                                     correctionList.map((item, index) => (
-                                        <CorrectionItem key={item.corrNo} findWorkingDate={findWorkingDate} correction={item} tableStyles={tableStyles} evenRow={index % 2 === 0} date={formatWorkingDate(date)} />
+                                        <CorrectionItem key={item.corrNo} correction={item} commute={commuteList} tableStyles={tableStyles} evenRow={index % 2 === 0} date={parsingDateOffset} style={{zIndex: '1'}}/>
                                     ))
                                 ) : (
                                     <tr>
@@ -223,14 +214,14 @@ function RecordCorrectionOfCommute() {
                                 )}
                             </tbody>
                         </table>
-                        <nav >
+                        <nav>
                             <ul className="pagination">
 
                                 <li className={`page-item ${currentPage === 0 ? 'disabled' : ''}`}>
                                     <button className="page-link" onClick={handlePrevPage}>◀</button>
                                 </li>
                                 {[...Array(totalPages).keys()].map((page, index) => (
-                                    <li key={index} className={`page-item ${currentPage === page ? 'active' : ''}`}>
+                                    <li key={index} className={`page-item ${currentPage === page ? 'active' : ''}`} style={{zIndex: '0'}}>
                                         <button className="page-link" onClick={() => {
                                             console.log('[page]', page);
                                             handlePageChange(page)
