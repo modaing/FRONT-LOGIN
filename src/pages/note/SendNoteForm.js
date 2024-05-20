@@ -37,7 +37,7 @@ function SendNoteForm({ closeForm, isFormOpen }) {
             senderId: senderId
         };
         dispatch(callPostNoteAPI(noteDTO));
-        navigate('/receiveNoteList'); // 보낸쪽지 상세로 이동하도록 바꿀 예정
+        closeForm();
     };
 
     const handleReceiverChange = (event) => {

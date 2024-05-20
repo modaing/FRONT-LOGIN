@@ -5,12 +5,14 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { ancDetailAPI } from '../../apis/AncAPICalls';
 import { ancDeleteAPI } from '../../apis/AncAPICalls';
 import '../../css/announce/ancDetail.css';
+import DeleteRoomModal from '../chatting/DeleteModal'; // DeleteRoomModal 임포트
 
 function AnnounceDetail() {
     const navigate = useNavigate();
     const { ancNo } = useParams();
     const [announceDetailFiles, setAnnounceDetailFiles] = useState(null);
     const [announceDetails, setAnnounceDetails] = useState(null);
+    const [showModal, setShowModal] = useState(false); // 모달 상태 추가
     const contentRef = useRef(null);
 
     const cardTitleStyle = {
@@ -64,16 +66,23 @@ function AnnounceDetail() {
         document.body.removeChild(a);
     };
 
-    const handleDelete = async (ancNo) => {
+    const handleDeleteModalOpen = () => {
+        setShowModal(true);
+    };
+
+    const handleDeleteConfirmed = async () => {
         try {
             // ancDeleteAPI 함수를 호출하여 해당 공지사항을 삭제
             const response = await ancDeleteAPI(ancNo);
             navigate('/announces');
-
         } catch (error) {
             // 삭제에 실패한 경우 오류를 콘솔에 출력합니다.
             console.error('Error deleting announcement:', error.message);
         }
+    };
+
+    const handleDeleteCancelled = () => {
+        setShowModal(false);
     };
 
     const handleUpdate = () => {
@@ -97,7 +106,7 @@ function AnnounceDetail() {
                         <li className="breadcrumb-item">기타</li>
                         <li className="breadcrumb-item"><Link to="/announcements">공지사항</Link></li>
                         <div className="col-sm-10" style={marginButtonGroup}>
-                            <button className="deleteButton" onClick={() => handleDelete(ancNo)}>삭제</button>
+                            <button className="deleteButton" onClick={handleDeleteModalOpen}>삭제</button>
                             <button className="updateButton" onClick={handleUpdate}>수정</button>
                             <button className="listButton" onClick={() => navigate('/announces')}>목록</button>
                         </div>
@@ -150,6 +159,13 @@ function AnnounceDetail() {
                     </div>
                 </div>
             </div>
+            {/* 모달 */}
+            <DeleteRoomModal
+                show={showModal}
+                handleClose={handleDeleteCancelled}
+                handleConfirmDelete={handleDeleteConfirmed}
+                handleCancelDelete={handleDeleteCancelled}
+            />
         </main>
     );
 }

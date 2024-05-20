@@ -42,6 +42,19 @@ function JoinRoom({ onRoomCreated }) {
         navigate('/chatRoomList');
     };
 
+    const findUserName = (receiverId) => {
+        // 멤버 리스트에서 receiverId와 동일한 memberId를 가진 멤버를 찾음
+        const member = members.find(member => member.memberId === receiverId);
+        // 해당 멤버가 존재하면 해당 멤버의 이름과 receiverId를 반환
+        return member ? `${member.name} (${receiverId})` : null;
+    };
+
+    const findUserPhoto = (receiverId) => {
+        const memberPhoto = members.find(member => member.memberId === receiverId);
+        const imageUrl = memberPhoto ? memberPhoto.imageUrl : null;
+        return imageUrl;
+    };
+
     return (
         <form onSubmit={handleNoteSubmit}>
             <label htmlFor="roomName" className="form-label">With Member ?</label>
