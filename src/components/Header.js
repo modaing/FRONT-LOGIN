@@ -21,9 +21,9 @@ function Header() {
     if (token) {
         try {
             const decodedTokenInfo = decodeJwt(token);
-            console.log('Decoded token info:', decodedTokenInfo);
+            // console.log('Decoded token info:', decodedTokenInfo);
             memberRole = decodedTokenInfo.role;
-            console.log('구성원의 role:',memberRole);
+            // console.log('구성원의 role:',memberRole);
         } catch (error) {
             console.log('Error decoding JWT token:', error);
         }
@@ -41,12 +41,15 @@ function Header() {
         }
     }, [token, memberInfo]);
     
-    const onClickLogoutHandler = () => {
+    const onClickLogoutHandler = (event) => {
+        event.preventDefault();
         dispatch(callLogoutAPI())
             .then(() => {
                 window.localStorage.removeItem("accessToken");
                 console.log('구성원 로그아웃');
-                alert('로그아웃 합니다');
+                // alert('로그아웃 합니다');
+                /* 토큰 정보 없앴는지 확인용 */
+                console.log("token 정보:", window.localStorage.getItem("accessToken"));
                 navigate("/login", { replace: true });
             })
             .catch(error => {
@@ -157,10 +160,10 @@ function Header() {
                             </li>
                             {/* 프로필 메뉴 항목 */}
                             <li>
-                                <Link to="#" className="dropdown-item d-flex align-items-center" onClick={onClickLogoutHandler}>
+                                <button to="#" className="dropdown-item d-flex align-items-center" onClick={onClickLogoutHandler}>
                                     <i className="bi bi-box-arrow-right"></i>
                                     <span>Sign Out</span>
-                                </Link>
+                                </button>
                             </li>
                         </ul>
                     </li>
