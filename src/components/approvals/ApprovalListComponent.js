@@ -1,10 +1,13 @@
 import React from "react";
 import styles from '../../css/approval/ApprovalListComponent.module.css';
-
-
+import { useSelector } from "react-redux";
 
 
 const ApprovalListComponent = ({ approvals, fg, handleDeleteClick, handleSortDirectionChange, loggedInUserId }) => {
+
+    const loading = useSelector((state) => state.approval.loading);
+    const error = useSelector((state) => state.approval.error);
+
     return (
         <div className={styles.tableContainer}>
             <table className={styles.table}>
@@ -40,7 +43,7 @@ const ApprovalListComponent = ({ approvals, fg, handleDeleteClick, handleSortDir
                     </tr>
                 </thead>
                 <tbody>
-                    {/* {loading ? (
+                    {loading ? (
                         <tr>
                             <td colSpan="4" className={styles.loadingMessage}>전자결재 목록을 불러오는 중입니다...</td>
                         </tr>
@@ -48,7 +51,7 @@ const ApprovalListComponent = ({ approvals, fg, handleDeleteClick, handleSortDir
                         <tr>
                             <td colSpan="4" className={styles.loadingMessage}>오류가 발생했습니다: {error.message}</td>
                         </tr>
-                    ) : */} {approvals.length > 0 ? (
+                    ) : approvals.length > 0 ? (
 
                         approvals.map(approval => {
                             const approver = approval.approver.find(a => a.memberId === loggedInUserId);
@@ -117,9 +120,7 @@ const ApprovalListComponent = ({ approvals, fg, handleDeleteClick, handleSortDir
                             </td>
                         </tr>
                     )}
-                    {/*  <tr>
-                            <td colSpan="4" className={styles.loadingMessage}>{fg == "given" ? "상신한" : "임시저장된"} 전자결재가 없습니다.</td>
-                        </tr> */}
+                
                 </tbody>
             </table>
         </div>

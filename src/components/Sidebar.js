@@ -92,7 +92,7 @@ function Sidebar() {
                     </Link>
                     <ul id="charts-nav" className="nav-content collapse" data-bs-parent="#sidebar-nav">
                         <li>
-                            <Link to="/" style={underLineStyle}>
+                            <Link to="/approvals" style={underLineStyle}>
                                 <i className="bi bi-circle"></i><span>결재 작성하기</span>
                             </Link>
                         </li>
