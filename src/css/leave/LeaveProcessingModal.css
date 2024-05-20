@@ -1,0 +1,28 @@
+.modal-body div {
+    margin-bottom: 3%;
+}
+
+.leaveProcessing {
+    display: flex;
+    height: 57.65px;
+}
+
+.leaveProcessing > label {
+    height: 24px;
+    margin-top: 1.6%;
+}
+
+.leaveProcessing input[type="text"] {
+    width: 202.4px;
+    height: 37.65px;
+}
+
+.leaveProcessing select {
+    width: 120px;
+    height: 37.65px;
+}
+
+.leaveProcessing label,
+.form-group label {
+    margin-right: 11px;
+}
