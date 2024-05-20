@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { callDeleteLeaveSubmitAPI, callInsertLeaveSubmitAPI, callSelectMyLeaveSubmitAPI } from '../../apis/LeaveAPICalls';
+import { callDeleteLeaveSubmitAPI, callInsertLeaveSubmitAPI, callSelectLeaveSubmitAPI } from '../../apis/LeaveAPICalls';
 import { SET_PAGENUMBER } from '../../modules/LeaveModule';
 import MyLeaveModal from './MyLeaveModal';
 import { decodeJwt } from '../../utils/tokenUtils';
@@ -11,9 +11,9 @@ import '../../css/common.css'
 import '../../css/leave/MyLeave.css'
 
 function MyLeave() {
-    const { leaveInfo, submitPage } = useSelector(state => state.leaveReducer);
+    const { page, leaveInfo } = useSelector(state => state.leaveReducer);
     const { totalDays, consumedDays, remainingDays } = leaveInfo || {};
-    const { number, content, totalPages } = submitPage || {};
+    const { number, content, totalPages } = page || {};
     const [ properties, setProperties ] = useState('leaveSubNo')
     const [ direction, setDirection ] = useState('DESC')
     const [ isModalOpen, setIsModalOpen ] = useState(false);
@@ -21,25 +21,17 @@ function MyLeave() {
     const [ leaveSubNo, setLeaveSubNo ] = useState('');
     const [ selectedTime, setSelectedTime ] = useState('');
     const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
-
     const dispatch = useDispatch();
 
     // 조회 관련 핸들러
-    useEffect(() => {
-        setIsLoading(true);
-        dispatch(callSelectMyLeaveSubmitAPI(number, properties, direction, memberId))
-            .finally(() => setIsLoading(false));
-        console.log('실행');
-    }, [number, properties, direction]);
-
     const handlePageChange = page => dispatch({ type: SET_PAGENUMBER, payload: page });
-
+    
     const handlePrevPage = () => {
         if (number > 0) {
             dispatch({ type: SET_PAGENUMBER, payload: number - 1 });
         }
     };
-
+    
     const handleNextPage = () => {
         if (number < totalPages - 1) {
             dispatch({ type: SET_PAGENUMBER, payload: number + 1 });
@@ -61,7 +53,7 @@ function MyLeave() {
         setLeaveSubNo('')
         setSelectedTime('');
     };
-
+    
     const handleInsert = ({ leaveSubNo, start, end, type, reason }) => {
         const requestData = {
             leaveSubNo,
@@ -72,21 +64,27 @@ function MyLeave() {
             leaveSubReason: reason
         };
         dispatch(callInsertLeaveSubmitAPI(requestData));
-
+        
     };
-
+    
     const handleDelete = id => {
         console.log('delete 실행됨', id);
         dispatch(callDeleteLeaveSubmitAPI(id))
     };
-
+    
     const handleCancle = id => {
         console.log('cancle 실행됨', id);
         setLeaveSubNo(id);
         setIsModalOpen(true);
     };
-
-
+    
+    useEffect(() => {
+        setIsLoading(true);
+        dispatch(callSelectLeaveSubmitAPI(number, properties, direction, memberId))
+            .finally(() => setIsLoading(false));
+        console.log('실행');
+    }, [number, properties, direction]);
+    
 
     return <>
         <main id="main" className="main">

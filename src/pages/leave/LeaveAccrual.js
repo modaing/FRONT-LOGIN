@@ -10,8 +10,8 @@ import '../../css/common.css'
 import '../../css/leave/LeaveAccrual.css'
 
 function LeaveAccrual() {
-    const { accrualPage, insertMessage } = useSelector(state => state.leaveReducer);
-    const { number, content, totalPages } = accrualPage || {};
+    const { page, insertMessage } = useSelector(state => state.leaveReducer);
+    const { number, content, totalPages } = page || {};
     const [properties, setProperties] = useState('leaveAccrualNo')
     const [direction, setDirection] = useState('DESC')
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,6 +19,7 @@ function LeaveAccrual() {
     const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
 
     const dispatch = useDispatch();
+
     // 조회 관련 핸들러
     const handlePageChange = page => dispatch({ type: SET_PAGENUMBER, payload: page });
 
@@ -87,15 +88,15 @@ function LeaveAccrual() {
                         <table className="table table-hover">
                             <thead>
                                 <tr>
-                                    <th onClick={() => handleSort('leaveSubStartDate')}>
+                                    <th onClick={() => handleSort('recipientName')}>
                                         <span>사원명</span><i className="bx bxs-sort-alt"></i>
                                     </th>
 
-                                    <th onClick={() => handleSort('leaveSubStartDate')}>
+                                    <th onClick={() => handleSort('recipientId')}>
                                         <span>사번</span><i className="bx bxs-sort-alt"></i>
                                     </th>
 
-                                    <th onClick={() => handleSort('leaveSubStartDate')}>
+                                    <th onClick={() => handleSort('accrualDate')}>
                                         <span>발생 일자</span><i className="bx bxs-sort-alt"></i>
                                     </th>
 
