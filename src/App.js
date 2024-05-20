@@ -32,18 +32,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Redirect to main page if logged in */}
-        <Route
-          path="/"
-          element={
-            isLoggedIn ? (
-              <Navigate to="/main" replace />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-        {/* Authenticated routes */}
+        {/* Public routes */}
+        <Route path="/login" element={<Login />} />
+        
+        {/* Private routes */}
         {isLoggedIn ? (
           <Route element={<Layout />}>
             <Route index element={<Main />} />
@@ -71,8 +63,7 @@ function App() {
             <Route path='approvals' element={<ApprovalPage />} />
           </Route>
         ) : (
-          // Redirect to login page if not logged in
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
         )}
         {/* Error route */}
         <Route path='*' element={<Error />} />

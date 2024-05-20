@@ -203,8 +203,8 @@ const ReceiveNoteList = () => {
                                                             <Link to="/" className="bi bi-envelope" style={{ fontSize: '1.2rem', color: '#808080', background: 'none', marginLeft: '20px' }}></Link>
                                                         </div>
                                                     </th>
-                                                    <th className="third-column"></th>
-                                                    <th className="fourth-column"></th>
+                                                    <th className="third-column">받을 사원</th>
+                                                    <th className="fourth-column" >제목</th>
                                                     <th className="fifth-column">
                                                         <i className="bx bx-chevron-left arrow-icon" style={{ background: 'none', marginRight: '10%' }}></i>
                                                         <i className="bx bx-chevron-right arrow-icon" style={{ background: 'none', fontweight: 'bold0', marginRight: '-20%' }}></i>
@@ -213,7 +213,7 @@ const ReceiveNoteList = () => {
                                             </thead>
                                             <tbody>
                                                 {notes?.map((note, index) => (
-                                                    <tr key={note.noteNo} className="note-row" onClick={() => openNoteDetailModal(index)}>
+                                                    <tr key={note.noteNo} className="note-row">
                                                         <td className="first-column">
                                                             <input
                                                                 className="checkbox-custom"
@@ -222,12 +222,12 @@ const ReceiveNoteList = () => {
                                                                 onChange={() => handleCheckboxChange(index)}
                                                             />
                                                         </td>
-                                                        <td className="second-column">
+                                                        <td className="second-column" onClick={() => openNoteDetailModal(index)}>
                                                             {findUserPhoto(note.senderId) && <img src={findUserPhoto(note.senderId)} alt="Profile" className="rounded-circle" />}
                                                         </td>
-                                                        <td className="third-column" style={{ fontSize: '14px' }}>{findUserName(note.senderId)}</td>
-                                                        <td className="fourth-column">{note.noteTitle}</td>
-                                                        <td className="fifth-column">{note.sendNoteDate}</td>
+                                                        <td className="third-column" style={{ fontSize: '14px' }} onClick={() => openNoteDetailModal(index)}>{findUserName(note.senderId)}</td>
+                                                        <td className="fourth-column" onClick={() => openNoteDetailModal(index)}>{note.noteTitle}</td>
+                                                        <td className="fifth-column" onClick={() => openNoteDetailModal(index)}>{note.sendNoteDate}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>

@@ -1,4 +1,8 @@
 
+.button:hover {
+  background-color: #25293d;
+  color: #fff;
+}
    .button {
     background-color: #404663;
     color: #fff;
@@ -21,13 +25,6 @@
       text-align: center;
   }
 
-  .button:hover {
-    background-color: #25293d;
-    color: #fff;
-  }
-  
-  .button:active {
-    transform: scale(1.01);
-  }
-
-  
+.button:active {
+  transform: scale(1.01);
+}
