@@ -99,3 +99,24 @@ export function renderLeaveAccrual(content) {
         );
     });
 }
+
+export function renderLeaves(content) {
+    if (!content) {
+        return null;
+    }
+    return content.map((leaves, index) => {
+
+        return (
+            <tr key={index}>
+                <td>{leaves.name}</td>
+                <td>{leaves.memberId}</td>
+                <td>{leaves.annualLeave}</td>
+                <td>{leaves.vacationLeave}</td>
+                <td>{leaves.familyEventLeave}</td>
+                <td>{leaves.specialLeave}</td>
+                <td>{leaves.consumedDays}</td>
+                <td>{leaves.remainingDays}</td>
+            </tr>
+        );
+    });
+}

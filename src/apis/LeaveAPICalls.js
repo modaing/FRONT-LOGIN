@@ -107,3 +107,18 @@ export const callInsertLeaveAccrualAPI = requestData => {
         }
     }
 };
+
+export const callSelectLeavesAPI = (number, properties, direction) => {
+    return async (dispatch) => {
+        try {
+            const page = number ? number : 0;
+
+            const response = await axios.get(`${API_BASE_URL}/leaves?page=${page}&properties=${properties}&direction=${direction}`, { headers });
+console.log(response.data.results);
+            dispatch({ type: GET_PAGE, payload: response.data.results.page });
+
+        } catch (error) {
+            console.log('휴가 보유 내역 조회에 문제 발생', error);
+        }
+    }
+};
