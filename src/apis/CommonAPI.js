@@ -15,8 +15,8 @@ export const request = async (method, url, data) => {
             },
         });
 
-        // console.log('[request] response.data.results.result : ', response.data.results.result);
-        // console.log('[request] response.data : ', response.data);
+        console.log('[request] response.data.results.result : ', response.data.results.result);
+        console.log('[request] response.data : ', response.data);
         return {response};
 
     } catch (error) {

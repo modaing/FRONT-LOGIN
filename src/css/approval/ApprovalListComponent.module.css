@@ -24,8 +24,12 @@
 .table th, .table td{
     padding: 25px;
     border-bottom: 1px solid #D5D5D5;
-    font-weight: bold;
+    font-weight:500;
     height: 100px;
+}
+.table th{
+    font-weight: 900;
+    font-family: sans-serif ;
 }
 .table tbody tr:hover{
     background-color: #F4F4F4;
@@ -54,7 +58,7 @@
 }
 
 .approving{
-
+    color: black;
 }
 
 .standByApprover{
@@ -65,19 +69,40 @@
     color : red;
 }
 
-.pageButton{
+
+
+.approvalPage{
+    margin-top : 50px;
+}
+.sortIcon{
+    margin-left: 5px;
+    cursor:pointer;
+    
+}
+.deleteButton{
+    background-color: white;
+    border: 1px solid #BBBBBB;
+    font-weight: bold;
+    color: black;
+}
+.deleteButton:hover{
+    /* background-color:#112D4E; */
+    background-color: #E9ECEF;
+    color: black;
+}
+.approvalButton{
     background-color: white;
     color: #0A95DB;
     transition: none;
-}
-.pageButton:hover{
-    background-color: #E9ECEF;
+    padding: 10px 18px;
+    border: none;
     cursor: pointer;
+    margin-left: 0px;
+}
+.approvalButton:hover{
+    background-color: #E9ECEF;
 }
 .activePage{
     background-color: #E9ECEF;
     border: 3px solid #C2DBFE;
-}
-.approvalPage{
-    margin-top : 50px;
 }

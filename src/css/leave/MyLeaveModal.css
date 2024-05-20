@@ -2,32 +2,27 @@
     margin-bottom: 3%;
 }
 
-.onlyFelx {
+.myLeave {
     display: flex;
     height: 57.65px;
 }
 
-.onlyFelx > label {
+.myLeave > label {
     height: 24px;
     margin-top: 1.6%;
 }
 
-.onlyFelx input[type="text"] {
+.myLeave input[type="text"] {
     width: 202.4px;
     height: 37.65px;
 }
 
-.onlyFelx select {
+.myLeave select {
     width: 120px;
     height: 37.65px;
 }
 
-.form-control,
-.onlyFelx select {
-    margin-left: 6px;
-}
-
-.onlyFelx label,
+.myLeave label,
 .form-group label {
-    margin-right: 5px;
+    margin-right: 11px;
 }
