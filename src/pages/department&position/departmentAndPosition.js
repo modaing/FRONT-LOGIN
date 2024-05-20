@@ -1,10 +1,16 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { callDepartmentDetailListAPI } from '../../apis/DepartmentAPICalls';
 // import { SET_PAGENUMBER } from '../../modules/DepartmentAndPositionModule';
+import DepartNameModal from './DepartNameModal';
 import departmentAndPositionCSS from './departmentAndPosition.module.css';
 import { callPositionDetailListAPI } from '../../apis/PositionAPICalls';
+import DepartRegistModal from './DepartRegistModal';
+import PositionRegisterModal from './PositionRegisterModal';
+import PositionNameModal from './PositionNameModal';
+import DepartDeleteModal from './DepartDeleteModal';
+import PositionDeleteModal from './PositionDeleteModal';
 
 function DepartmentAndPosition() {
     // const { leaveInfo, submitPage } = useSelector(state => state.leaveReducer);
@@ -12,14 +18,29 @@ function DepartmentAndPosition() {
     const [filteredDepartInfo, setFilteredDepartInfo] = useState([]);
     const [filteredPositionInfo, setFilteredPositionInfo] = useState([]);
     const navigate = useNavigate();
-    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+    const [departmentSortConfig, setDepartmentSortConfig] = useState({ key: null, direction: 'ascending' });
+    const [positionSortConfig, setPositionSortConfig] = useState({ key: null, direction: 'ascending' });
     const [position, setPosition] = useState([]);
     const [department, setDepartment] = useState([]);
-    const searchButtonRef = useRef(null);
+    const searchButtonRef1 = useRef(null);
+    const searchButtonRef2 = useRef(null);
+    const [changePositionNameModalVisible, setChangePositionNameModalVisible] = useState(false);
+    const [registerDepartmentModalVisible, setRegisterDepartmentModalVisible] = useState(false);
+    const [changeDepartmentNameModalVisible, setChangeDepartmentNameModalVisible] = useState(false);
+    const [registerPositionModalVisible, setRegisterPositionModalVisible] = useState(false);
+    const [deleteDepartmentModalVisible, setDeleteDepartmentModalVisible] = useState(false);
+    const [deletePositionModalVisible, setDeletePositionModalVisible] = useState(false);
+    const [departmentInfos, setDepartmentInfos] = useState('');
+    const [positionInfos, setPositionInfos] = useState('');
+    // const [currentPositionName, setCurrentPositionName] = useState('');
+    // const [search, setSearch] = useState('');
+    const [positionSearch, setPositionSearch] = useState('');
+    const [departSearch, setDepartSearch] = useState('');
 
     const dispatch = useDispatch();
 
 
+    /* 부서 정보 가져오기 */
     const fetchDepartmentDetails = async () => {
         try {
             const departmentDetailList = await callDepartmentDetailListAPI();
@@ -30,6 +51,8 @@ function DepartmentAndPosition() {
                 setDepartment(departmentInfo);
                 setFilteredDepartInfo(departmentInfo);
                 console.log('department info:', departmentInfo);
+                console.log('department:',department);
+                console.log('filteredDepartInfo:', filteredDepartInfo);
             } else {
                 console.error ('department details is not an array:', departmentDetailList);
             }
@@ -38,16 +61,18 @@ function DepartmentAndPosition() {
         }
     }
 
+    /* 직급 정보 가져오기 */
     const fetchPositionDetails = async() => {
         try {
             const positionDetailList = await callPositionDetailListAPI();
             if (Array.isArray(positionDetailList)) {
-                const positionInfo = positionDetailList.map(position => ({
-                    ...position
-                }));
-                setPosition(positionInfo);
-                setFilteredPositionInfo(positionInfo);
-                console.log('position info:',positionInfo);
+                // const positionInfo = positionDetailList.map(position => ({
+                //     ...position
+                // }));
+                setPosition(positionDetailList);
+                setFilteredPositionInfo(positionDetailList);
+                console.log('filteredPositionInfo:',filteredPositionInfo);
+                // console.log('position info:',positionInfo);
             } else {
                 console.error('position details is not an array:', positionDetailList);
             }
@@ -62,13 +87,13 @@ function DepartmentAndPosition() {
             await fetchPositionDetails();
         };
         fetchData();
-
     }, []);
 
     useEffect(() => {
         const handleKeyPress = (event) => {
             if (event.key === 'Enter') {
-                searchButtonRef.current.click();
+                searchButtonRef1.current.click();
+                searchButtonRef2.current.click();
             }
         };
 
@@ -79,98 +104,135 @@ function DepartmentAndPosition() {
         };
     }, []);
 
-    const sortData = (key) => {
+    const sortData1 = (key) => {
         let direction = 'ascending';
-        if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+        if (departmentSortConfig.key === key && departmentSortConfig.direction === 'ascending') {
             direction = 'descending';
         }
-        setSortConfig({ key, direction });
+        setDepartmentSortConfig({ key, direction });
+    }
+
+    const sortData2 = (key) => {
+        let direction = 'ascending';
+        if (positionSortConfig.key === key && positionSortConfig.direction === 'ascending') {
+            direction = 'descending';
+        }
+        setPositionSortConfig({ key, direction });
     }
 
     const getValueForSorting = (value) => {
-        if (sortConfig.key === '') {
+        if (positionSortConfig.key === 'positionLevel' || departmentSortConfig.key === 'noOfPeople') {
             return parseFloat(value) || 0;
         }
         return value;
     }
 
+    /* 부서 정렬 */
     const sortedDepartment = useMemo(() => {
         let sortableDepartment = [...filteredDepartInfo];
 
-        if (sortConfig.key !== null) {
+        if (departmentSortConfig.key !== null) {
             sortableDepartment.sort((a,b) => {
-                const valueA = getValueForSorting(a[sortConfig.key]);
-                const valueB = getValueForSorting(b[sortConfig.key]);
+                const valueA = getValueForSorting(a[departmentSortConfig.key]);
+                const valueB = getValueForSorting(b[departmentSortConfig.key]);
 
                 if (valueA < valueB) {
-                    return sortConfig.direction === 'ascending' ? -1 : 1;
+                    return departmentSortConfig.direction === 'ascending' ? -1 : 1;
                 }
 
                 if (valueA > valueB)  {
-                    return sortConfig.direction === 'ascending' ? 1 : -1;
+                    return departmentSortConfig.direction === 'ascending' ? 1 : -1;
                 }
                 return 0;
             });
         }
 
         return sortableDepartment;
-    }, [filteredDepartInfo, sortConfig]);
+    }, [filteredDepartInfo, departmentSortConfig]);
 
+    /* 직급 정렬 */
     const sortedPosition = useMemo(() => {
         let sortablePosition = [...filteredPositionInfo];
 
-        if (sortConfig.key !== null) {
+        if (positionSortConfig.key !== null) {
             sortablePosition.sort((a,b) => {
-                const valueA = getValueForSorting(a[sortConfig.key]);
-                const valueB = getValueForSorting(b[sortConfig.key]);
+                const valueA = getValueForSorting(a[positionSortConfig.key]);
+                const valueB = getValueForSorting(b[positionSortConfig.key]);
 
                 if (valueA < valueB) {
-                    return sortConfig.direction === 'ascending' ? -1 : 1;
+                    return positionSortConfig.direction === 'ascending' ? -1 : 1;
                 }
 
                 if (valueA > valueB)  {
-                    return sortConfig.direction === 'ascending' ? 1 : -1;
+                    return positionSortConfig.direction === 'ascending' ? 1 : -1;
                 }
                 return 0;
             });
         }
-
         return sortablePosition;
-    }, [filteredPositionInfo, sortConfig]);
+    }, [filteredPositionInfo, positionSortConfig]);
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         await fetchDepartmentDetails();
-    //         await fetchPositionDetails();
-    //     };
-    
-    //     const handleKeyPress = (event) => {
-    //         if (event.key === 'Enter') {
-    //             searchButtonRef.current.click();
-    //         }
-    //     };
-    
-    //     fetchData();
-    //     document.addEventListener('keydown', handleKeyPress);
-    
-    //     return () => {
-    //         document.removeEventListener('keydown', handleKeyPress);
-    //     };
-    // }, [fetchDepartmentDetails, fetchPositionDetails]);    
+    /* 부서 검색 */
+    const handleSearchForDepartment = () => {
+        let results;
+        if (departSearch.trim() === ''){
+            setFilteredDepartInfo(department);
+        } else {
+            results = department.filter(department=> department.departName.toLowerCase().includes(departSearch.toLowerCase()));
+            setFilteredDepartInfo(results);
+        };
+    }
 
-    // const handlePrevPage = () => {
-    //     if (number > 0) {
-    //         dispatch({ type: SET_PAGENUMBER, payload: number - 1 });
-    //     }
-    // };
+    /* 직급 검색 */
+    const handleSearchForPosition = () => {
+        let results;
+        if (positionSearch.trim() === '') {
+            setFilteredPositionInfo(position);
+        } else {
+            results = position.filter(position => position.positionName.toLowerCase().includes(positionSearch.toLowerCase()));
+            setFilteredPositionInfo(results);
+        };
+    }
 
-    // const handleNextPage = () => {
-    //     if (number < totalPages - 1) {
-    //         dispatch({ type: SET_PAGENUMBER, payload: number + 1 });
-    //     }
-    // };
+    /* 모달창 띄우는 기능 구현 */
+    const handlePositionNameChange = (position) => {
+        setPositionInfos(position);
+        setChangePositionNameModalVisible(true);
+        window.history.replaceState(null, '', `/departmentAndPosition/${position.positionName}`)
+    }
 
-    // const handlePageChange = page => dispatch({ type: SET_PAGENUMBER, payload: page });
+    const handleDepartmentNameChange = (department) => {
+        setDepartmentInfos(department);
+        setChangeDepartmentNameModalVisible(true);
+        window.history.replaceState(null, '', `/departmentAndPosition/${department.departNo}`)
+    }
+
+    const handleDeletePosition = () => {
+        setDeletePositionModalVisible(true);
+    }
+
+    const handleDeleteDepartment = () => {
+        setDeleteDepartmentModalVisible(true);
+    }
+
+    const handleRegisterDepartment = () => {
+        setRegisterDepartmentModalVisible(true);
+    }
+
+    const handleRegisterPosition = () => {
+        setRegisterPositionModalVisible(true);
+    }
+
+
+
+    const handleCloseModal = () => {
+        setDeletePositionModalVisible(false);
+        setDeleteDepartmentModalVisible(false);
+        setChangeDepartmentNameModalVisible(false);
+        setChangePositionNameModalVisible(false);
+        setRegisterDepartmentModalVisible(false);
+        setRegisterPositionModalVisible(false);
+    }
 
     return (
         <main id="main" className={`main ${departmentAndPositionCSS.mainPage}`}>
@@ -193,24 +255,27 @@ function DepartmentAndPosition() {
                                 className={departmentAndPositionCSS.inputBox}
                                 placeholder=" 부서명"
                                 type="text" 
-                                // value={search} 
-                                // onChange={(e) => setSearch(e.target.value)} 
+                                value={departSearch} 
+                                onChange={(e) => setDepartSearch(e.target.value)} 
                             />
-                            <button className={departmentAndPositionCSS.searchButton} ref={searchButtonRef}>검색</button>
+                            <button className={departmentAndPositionCSS.searchButton} onClick={handleSearchForDepartment} ref={searchButtonRef1}>검색</button>
                         </div>
                         <div className={departmentAndPositionCSS.buttonClass}>
-                            <button className={departmentAndPositionCSS.registerButton}>등록</button>
-                            <button className={departmentAndPositionCSS.deleteButton}>삭제</button>
+                            <button className={departmentAndPositionCSS.registerButton} onClick={handleRegisterDepartment}>등록</button>
+                            <button className={departmentAndPositionCSS.deleteButton} onClick={handleDeleteDepartment}>삭제</button>
                         </div>
                     </div>
+                    {filteredDepartInfo.length === 0 ? (
+                        <div className={departmentAndPositionCSS.noResult}>결과 없는데요... 돌아가</div>
+                    ): (
                     <table className="table table-hover">
                         <thead>
                             <tr>
-                                <th onClick={() => sortData('departName')}>
+                                <th onClick={() => sortData1('departName')}>
                                     <span>부서명</span><i className="bx bxs-sort-alt" />
                                 </th>
-                                <th>
-                                    <span>인원수</span>
+                                <th onClick={() => sortData1('noOfPeople')}>
+                                    <span>인원수</span><i className="bx bxs-sort-alt" />
                                 </th>
                                 <th>
                                     <span>부서명 변경</span>
@@ -221,7 +286,7 @@ function DepartmentAndPosition() {
                         <tbody>
                             {sortedDepartment.map((department,index) => (
                             <tr key={index}>
-                                <td>
+                                <td className={departmentAndPositionCSS.alignCenter}>
                                     <div className={departmentAndPositionCSS.memberProfile}>
                                         {department.departName}
                                     </div>
@@ -231,34 +296,14 @@ function DepartmentAndPosition() {
                                         {department.noOfPeople}
                                     </div>
                                 </td>
-                                <td>변경</td>
+                                <td>
+                                    <button onClick={() => handleDepartmentNameChange(department)}>변경</button>
+                                </td>
                             </tr>
                             ))}
                         </tbody>
                     </table>
-                    {/* <nav>
-                        <ul className="pagination">
-
-                            <li className={`page-item ${number === 0 && 'disabled'}`}>
-                                <button className="page-link" onClick={handlePrevPage}>◀</button>
-                            </li>
-
-                            {[...Array(totalPages).keys()].map((page, index) => (
-                                <li key={index} className={`page-item ${number === page && 'active'}`}>
-                                    <button className="page-link" onClick={() => {
-                                        console.log('[page]', page);
-                                        handlePageChange(page)
-                                    }}>
-                                        {page + 1}
-                                    </button>
-                                </li>
-                            ))}
-
-                            <li className={`page-item ${number === totalPages - 1 && 'disabled'}`}>
-                                <button className="page-link" onClick={handleNextPage}>▶</button>
-                            </li>
-                        </ul>
-                    </nav> */}
+                    )}
                 </div>
 
                 <div className={`card ${departmentAndPositionCSS.secondPage}`}>
@@ -268,23 +313,28 @@ function DepartmentAndPosition() {
                             <input 
                                 className={departmentAndPositionCSS.inputBox}
                                 placeholder=" 직급명"
-                                type="text"  
+                                type="text"
+                                value={positionSearch} 
+                                onChange={(e) => setPositionSearch(e.target.value)} 
                             />
-                            <button className={departmentAndPositionCSS.searchButton} ref={searchButtonRef}>검색</button>
+                            <button className={departmentAndPositionCSS.searchButton} onClick={handleSearchForPosition} ref={searchButtonRef2}>검색</button>
                         </div>
                         <div className={departmentAndPositionCSS.buttonClass}>
-                            <button className={departmentAndPositionCSS.registerButton}>등록</button>
-                            <button className={departmentAndPositionCSS.deleteButton}>삭제</button>
+                            <button className={departmentAndPositionCSS.registerButton} onClick={handleRegisterPosition}>등록</button>
+                            <button className={departmentAndPositionCSS.deleteButton} onClick={handleDeletePosition}>삭제</button>
                         </div>
                     </div>
+                    {filteredPositionInfo.length === 0 ? (
+                        <div className={departmentAndPositionCSS.noResult}>결과 없는데요... 돌아가</div>
+                    ): (
                     <table className="table table-hover">
                         <thead>
                             <tr>
-                                <th onClick={() => sortData('positionName')}>
+                                <th onClick={() => sortData2('positionName')}>
                                     <span>직급명</span><i className="bx bxs-sort-alt" />
                                 </th>
-                                <th>
-                                    <span>인원수</span>
+                                <th onClick={() => sortData2('positionLevel')}>
+                                    <span>직급 레벨</span><i className="bx bxs-sort-alt" />
                                 </th>
                                 <th>
                                     <span>직급명 변경</span>
@@ -305,36 +355,22 @@ function DepartmentAndPosition() {
                                         {position.positionLevel}
                                     </div>
                                 </td>
-                                <td>변경</td>
+                                <td>
+                                    <button onClick={() => handlePositionNameChange(position)}>변경</button>
+                                </td>
                             </tr>
                             ))}
                         </tbody>
                     </table>
-                    {/* <nav>
-                        <ul className="pagination">
-
-                            <li className={`page-item ${number === 0 && 'disabled'}`}>
-                                <button className="page-link" onClick={handlePrevPage}>◀</button>
-                            </li>
-
-                            {[...Array(totalPages).keys()].map((page, index) => (
-                                <li key={index} className={`page-item ${number === page && 'active'}`}>
-                                    <button className="page-link" onClick={() => {
-                                        console.log('[page]', page);
-                                        handlePageChange(page)
-                                    }}>
-                                        {page + 1}
-                                    </button>
-                                </li>
-                            ))}
-
-                            <li className={`page-item ${number === totalPages - 1 && 'disabled'}`}>
-                                <button className="page-link" onClick={handleNextPage}>▶</button>
-                            </li>
-                        </ul>
-                    </nav> */}
+                    )}
                 </div>
             </div>
+            <PositionDeleteModal visible={deletePositionModalVisible} onClose={handleCloseModal} positionInformation={positionInfos} />
+            <DepartDeleteModal visible={deleteDepartmentModalVisible} onClose={handleCloseModal} departmentInformation={departmentInfos}/>
+            <PositionRegisterModal visible={registerPositionModalVisible} onClose={handleCloseModal} positionInformation={positionInfos}/>
+            <PositionNameModal visible={changePositionNameModalVisible} onClose={handleCloseModal} positionInformation={positionInfos} />
+            <DepartRegistModal visible={registerDepartmentModalVisible} onClose={handleCloseModal} departmentInformation={departmentInfos} />
+            <DepartNameModal visible={changeDepartmentNameModalVisible} onClose={handleCloseModal} departmentInformation={departmentInfos} />
         </main>
     );
 }

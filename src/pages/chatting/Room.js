@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../../css/chatting/room.css';
 import { Client } from '@stomp/stompjs';
@@ -11,6 +11,9 @@ function Room({ onLeaveRoom }) {
     const [stompClient, setStompClient] = useState(null);
     const [roomLeft, setRoomLeft] = useState(false);
     const navigate = useNavigate();
+
+    // Ref to the scrollable container
+    const messagesEndRef = useRef(null);
 
     const token = `Authorization:` + 'BEARER' + window.localStorage.getItem("accessToken");
     const decodedTokenInfo = decodeJwt(window.localStorage.getItem("accessToken"));
@@ -38,6 +41,7 @@ function Room({ onLeaveRoom }) {
                 try {
                     const newMessage = JSON.parse(message.body);
                     setMessages(prevMessages => [...prevMessages, newMessage]);
+                    scrollToBottom(); // Scroll to bottom when new message arrives
                 } catch (error) {
                     console.error('Error parsing JSON:', error);
                 }
@@ -53,6 +57,15 @@ function Room({ onLeaveRoom }) {
             }
         };
     }, [roomId]);
+
+    useEffect(() => {
+        scrollToBottom(); // Scroll to bottom when messages update
+    }, [messages]);
+
+    const scrollToBottom = () => {
+        const chatContent = document.querySelector('.chat-content');
+        chatContent.scrollTop = chatContent.scrollHeight;
+    };
 
     const sendMessageToEnteredRoom = (client) => {
         if (client !== null && client.connected) {
@@ -74,11 +87,12 @@ function Room({ onLeaveRoom }) {
         if (inputValue.trim() !== '' && stompClient) {
             const message = {
                 senderId: memberId,
-                senderName: name, // 발신자의 이름 추가
+                senderName: name,
                 message: inputValue,
                 isSent: true
             };
             stompClient.publish({ destination: `/sub/room/${roomId}`, body: JSON.stringify(message) });
+            setInputValue(''); // Clear input after sending message
         }
     };
 
@@ -90,14 +104,12 @@ function Room({ onLeaveRoom }) {
             });
             setRoomLeft(true);
             if (onLeaveRoom) {
-                onLeaveRoom(); // 부모 컴포넌트로 방을 나갔음을 알림
+                onLeaveRoom(); // Notify parent component that the user has left the room
             }
         } else {
             console.error('STOMP client is not initialized or connected.');
         }
     };
-
-    
 
     return (
         <div className="chat-room">
@@ -105,13 +117,13 @@ function Room({ onLeaveRoom }) {
                 <ul>
                     {messages.map((message, index) => (
                         <li style={{ listStyle: 'none' }} key={index} className={message.senderId === memberId ? 'sent-message' : 'received-message'}>
-                            <div className="message-info">
-                                <img src={imageUrl} className="avatar" />
-                                <span className="sender-name">{message.senderName}</span>
-                            </div>
+                            <img src={imageUrl} className="avatar-room" />
+                            <span className="sender-name">{message.senderName}</span>
+                            <div className="message-info"></div>
                             <span className="message-text">{message.message}</span>
                         </li>
                     ))}
+                    <div ref={messagesEndRef} />
                 </ul>
             </div>
             <div className="send-area">
@@ -120,6 +132,11 @@ function Room({ onLeaveRoom }) {
                         type="text"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                sendMessage();
+                            }
+                        }}
                     />
                     <button onClick={sendMessage}>Send</button>
                     <button className='button-leave' onClick={handleLeaveRoom}>Leave Room</button>

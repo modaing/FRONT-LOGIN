@@ -64,40 +64,34 @@ export default function TinyEditor(props) {
                     contentUiCss,
                     init.content_style || '',
                 `
-                    table {
+                    
+                #titleform {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-top: 50px;
+                    margin-bottom: 80px;
+                    position: relative;
+                }
+                .input-container {
                     width: 100%;
-                    border-collapse: collapse;
-                    }
-                    th, td {
-                    border: 1px solid #ddd;
-                    padding: 8px;
-                    }
-                    th {
-                    background-color: #f2f2f2;
-                    text-align: left;
-                    }
-                    tr:nth-child(even) {
-                    background-color: #f9f9f9;
-                    }
-                    #titleform {
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        margin-top: 50px;
-                        margin-bottom: 80px;
-                
-                    }
-                
-                    #title {
-                        width: 400px;
-                        border: none;
-                        border-bottom: 2px solid black;
-                        height: 50px;
-                        font-size: 20px;
-                        text-align: center;
-                
-                    }
-                
+                    display: flex;
+                    justify-content: center;
+                    position: relative;
+                }
+                .input-container:not(input){
+                    pointer-events: none;
+                }
+                .input-container input {
+                    width: 400px;
+                    border: none;
+                    border-bottom: 2px solid black;
+                    height: 50px;
+                    font-size: 20px;
+                    text-align: center;
+                    outline: none;
+                    background: transparent;
+                }
                     table {
                         border-collapse: collapse;
                         width: 100%;
@@ -220,7 +214,33 @@ export default function TinyEditor(props) {
                 elementpath: false,
                 statusbar: false,
                 apiKey:'rycrpdzecr2jsi6ynnzcievvp4toluceiawzt0dgpbuzkkpk',
-                
+                setup: (editor) => {
+                    editor.on('init', () => {
+                        // 'titleform' 내부의 모든 텍스트를 제거하고 input만 남김
+                        const titleForm = editor.getDoc().querySelector('#titleform');
+                        console.log('title : ' + titleForm);
+                        if (titleForm) {
+                            // 'titleform' 내부의 모든 텍스트 노드를 제거하고 input을 포함하는 div를 추가
+                            while(titleForm.firstChild){
+                                
+                                titleForm.removeChild(titleForm.firstChild);
+                                console.log('첫자식 없앰');
+                            }
+                            titleForm.innerHTML = '<div class="input-container"><input type="text" id="title" placeholder="제목"></div>';
+                            const titleInput = titleForm.querySelector('input');
+                            titleForm.addEventListener('click', () => {
+                                titleInput.focus();
+                            });
+                            titleForm.addEventListener('keypress', (e) => {
+                                if (e.target !== titleInput) {
+                                    e.preventDefault();
+                                    titleInput.focus();
+                                }
+                            });
+                        }
+                        
+                    });
+                }
             }}
             {...rest}
         />

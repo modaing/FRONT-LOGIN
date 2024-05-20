@@ -1,27 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { callCahttingAPI, leaveRoom } from '../../apis/ChattingAPICalls';
+import React, { useState, useEffect, useRef } from 'react';
+import { callCahttingAPI, leaveRoom, callDeleteRoomAPI } from '../../apis/ChattingAPICalls';
 import { callMemberListAPI } from '../../apis/ChattingAPICalls';
+import { useDispatch, useSelector } from 'react-redux';
 import { decodeJwt } from '../../utils/tokenUtils';
 import '../../css/chatting/roomList.css';
+import '../../css/chatting/customDropdown.css';
 import Room from './Room';
-import InsertRoomModal from './InsertRoomModal'; // 모달창 컴포넌트 임포트
+import DeleteRoomModal from './DeleteModal'; // 모달창 컴포넌트 임포트
 import JoinRoom from './JoinRoom';
 
 function RoomList() {
+  const dispatch = useDispatch();
+  const [members, setMembers] = useState([]);
   const [rooms, setRooms] = useState([]);
-  const [isLoadingRooms, setIsLoadingRooms] = useState(true);
-  const [receivers, setReceivers] = useState([]); // 받는 사람 목록
+  const [setIsLoadingRooms] = useState(true);
+  const [setReceivers] = useState([]); // 받는 사람 목록
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 창 띄우는 상태
-  const history = useNavigate();
+  const [showDropdown, setShowDropdown] = useState(null); // 드롭다운 메뉴 상태
+  const dropdownRef = useRef(null);
+  const [activeRoomId, setActiveRoomId] = useState(null); // 활성화된 방의 ID를 상태로 관리
+  const [roomToDelete, setRoomToDelete] = useState(null); // 삭제할 방 정보를 상태로 관리
 
   const token = window.localStorage.getItem("accessToken");
   const memberInfo = decodeJwt(token);
-  const profilePic = memberInfo.imageUrl;
   const memberId = memberInfo.memberId;
-  const [roomId, setRoomId] = useState(null); // 클릭한 방의 ID를 상태로 관리
-  const [enteredRooms, setEnteredRooms] = useState(null); // 클릭한 방의 ID를 상태로 관리
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,10 +48,10 @@ function RoomList() {
     });
 
     return () => { };
-  }, []);
+  }, [memberId, setIsLoadingRooms, setReceivers]);
 
   const handleRoomClick = (roomId) => {
-    setRoomId(roomId); // 클릭한 방의 ID 설정
+    setActiveRoomId(roomId); // 클릭한 방의 ID로 활성화된 방 설정
   };
 
   const handleLeaveRoom = async () => {
@@ -58,7 +60,7 @@ function RoomList() {
       // 방을 나갔을 때 방 목록을 다시 가져옵니다.
       const updatedRooms = await callCahttingAPI(memberId);
       setRooms(updatedRooms);
-      setRoomId(null); // 방을 나가면 roomId를 null로 설정합니다.
+      setActiveRoomId(null); // 방을 나가면 활성화된 방 ID를 null로 설정합니다.
     } catch (error) {
       console.error('Error leaving room:', error);
     }
@@ -71,8 +73,81 @@ function RoomList() {
     } catch (error) {
       console.error('Error update room:', error);
     }
-};
-  
+  };
+
+  const handleDeleteRoom = async (enteredRoomId) => {
+    try {
+      // 모달 창을 열어서 삭제 여부를 묻습니다.
+      setRoomToDelete(enteredRoomId);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('Error deleting room:', error);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await dispatch(callDeleteRoomAPI(roomToDelete));
+      console.log(`Deleting room with ID: ${roomToDelete}`);
+      if (activeRoomId === roomToDelete) {
+        await handleLeaveRoom();
+      }
+      // 방 삭제 후 방 목록을 다시 가져옵니다.
+      const updatedRooms = await callCahttingAPI(memberId);
+      setRooms(updatedRooms);
+      setShowDropdown(null); // 드롭다운 메뉴 닫기
+    } catch (error) {
+      console.error('Error deleting room:', error);
+    } finally {
+      // 모달 창을 닫습니다.
+      setIsModalOpen(false);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    // 모달 창을 닫습니다.
+    setIsModalOpen(false);
+    // 삭제할 방 정보를 초기화합니다.
+    setRoomToDelete(null);
+  };
+
+  const handleToggleDropdown = (index, event) => {
+    event.stopPropagation(); // 이벤트 버블링 중지
+    setShowDropdown(showDropdown === index ? null : index); // 드롭다운 메뉴 토글
+  };
+
+  useEffect(() => {
+    callMemberListAPI().then(response => {
+      const responseData = response.data;
+      setMembers(responseData);
+    }).catch(error => {
+      console.error('Error fetching receivers:', error);
+    });
+  }, []);
+
+  const findUserName = (receiverId, memberId, members, room) => {
+    if (receiverId === memberId) {
+      // receiverId와 memberId가 같다면, memberId의 이름을 반환
+      const member = members.find(member => member.memberId === room.memberId);
+      return member ? member.name : null;
+    } else {
+      // 그렇지 않으면 receiverId의 이름을 반환
+      const receiver = members.find(member => member.memberId === receiverId);
+      return receiver ? receiver.name : null;
+    }
+  };
+
+  const findUserPhoto = (receiverId, memberId, members, room) => {
+    if (receiverId === memberId) {
+      // receiverId와 memberId가 같다면, room.memberId의 사진을 반환
+      const memberPhoto = members.find(member => member.memberId === room.memberId);
+      return memberPhoto ? memberPhoto.imageUrl : null;
+    } else {
+      // 그렇지 않으면 receiverId의 사진을 반환
+      const receiverPhoto = members.find(member => member.memberId === receiverId);
+      return receiverPhoto ? receiverPhoto.imageUrl : null;
+    }
+  };
 
   return (
     <main id="main" className="main">
@@ -94,34 +169,50 @@ function RoomList() {
                   <div className="recent_heading">
                     <h4>Chatting</h4>
                   </div>
-                  {/* 여기에 3개짜리 점 삭제버튼 만들기 */}
                 </div>
 
                 <div className="inbox_chat">
                   <div className="chat_list active_chat">
                     <div className="chat_people">
-                      {Array.isArray(rooms) && rooms.length > 0 ? (
-                        rooms.map((room, index) => (
-                          <div key={index} onClick={() => handleRoomClick(room.enteredRoomId)} className="chat_room">
-                            <div className="chat_img">
-                              <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil" />
+                      {
+                        Array.isArray(rooms) && rooms.length > 0 ? (
+                          rooms.map((room, index) => (
+                            <div
+                              key={index}
+                              className={`chat_room ${room.enteredRoomId === activeRoomId ? 'active' : ''}`}
+                              onClick={() => !activeRoomId && handleRoomClick(room.enteredRoomId)}
+                            >
+                              <div className="chat_room_info">
+                                <div className="chat_img">
+                                  <img src={findUserPhoto(room.receiverId, memberId, members, room)} alt="User Profile" />
+                                </div>
+                                <div className="chat_ib">
+                                  <h5>{findUserName(room.receiverId, memberId, members, room)}</h5>
+                                  <span className="room_name">{room.roomName}</span> {/* 방 이름 추가 */}
+                                </div>
+                              </div>
+                              <div className="custom-dropdown" ref={dropdownRef} onMouseLeave={() => setShowDropdown(null)}>
+                                <button onClick={(event) => handleToggleDropdown(index, event)} className="custom-dropbtn">⋮</button>
+                                {showDropdown === index && (
+                                  <div className="custom-dropdown-content custom-show" onClick={(e) => e.stopPropagation()}>
+                                    <span onClick={() => handleDeleteRoom(room.enteredRoomId)}>삭제</span>
+                                  </div>
+                                )}
+                              </div>
                             </div>
-                            <div className="chat_ib">
-                              <h5>{room.roomName}</h5>
-                            </div>
-                          </div>
-                        ))
-                      ) : (
-                        <p>메시지가 없습니다</p>
-                      )}
+                          ))
+                        ) : (
+                          <p>메시지가 없습니다</p>
+                        )
+                      }
                     </div>
                   </div>
                 </div>
               </div>
               <div className="mesgs">
                 <div className="msg_history">
-                  {roomId ? (
-                    <Room roomId={roomId} onLeaveRoom={handleLeaveRoom} />
+                  {activeRoomId ? (
+                    <Room roomId={activeRoomId} onLeaveRoom={handleLeaveRoom} />
                   ) : (
                     <div>
                       <JoinRoom onRoomCreated={handleInsertRoom} />
@@ -134,9 +225,11 @@ function RoomList() {
         </div>
       </div>
       {/* 모달창 */}
-      <InsertRoomModal
+      <DeleteRoomModal
         show={isModalOpen}
         handleClose={() => setIsModalOpen(false)}
+        handleConfirmDelete={handleConfirmDelete}
+        handleCancelDelete={handleCancelDelete}
       />
     </main>
   );

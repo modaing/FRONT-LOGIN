@@ -192,39 +192,16 @@ function RegisterMember() {
 
         const formData = new FormData();
 
-        // const memberDTO = {
-        //     name: name,
-        //     address: address,
-        //     email: email,
-        //     memberId: generatedMemberId,
-        //     employedDate: employedDate,
-        //     password: '0000',
-        //     role: role,
-        //     phoneNo: inputtedPhoneNo,
-        //     memberStatus: "재직",
-        //     departmentDTO: {
-        //         departNo: departDTO.departNo,
-        //         departName: departDTO.departName
-        //     },
-        //     positionDTO: {
-        //         positionName: positionDTO.positionName,
-        //         positionLevel: positionDTO.positionLevel
-        //     }
-        // };
-
+        // formData.append('memberDTO', new Blob([JSON.stringify({name: name, address: address, email, email, memberId: memberId, memberStatus: "재직", employedDate: employedDate, password: '0000', role: role, phoneNo: inputtedPhoneNo, departmentDTO: {departNo: departDTO.departNo, departName: departDTO.departName}, positionDTO: {positionName: positionDTO.positionName, positionLevel: positionDTO.positionLevel}})], { type: 'application/json'}));
         formData.append('memberDTO', new Blob([JSON.stringify({name: name, address: address, email, email, memberId: memberId, memberStatus: "재직", employedDate: employedDate, password: '0000', role: role, phoneNo: inputtedPhoneNo, departmentDTO: {departNo: departDTO.departNo, departName: departDTO.departName}, positionDTO: {positionName: positionDTO.positionName, positionLevel: positionDTO.positionLevel}})], { type: 'application/json'}));
         formData.append('memberProfilePicture', uploadedImage);
-        // try {
-        //     const response = await callRegisterMemberAPI(formData);
-        //     console.log('Registration successful:', response);
-        // } catch (error) {
-        //     console.error('Registration fialed:', error);
-        // }
+
         try {
-            callRegisterMemberAPI(formData);
+            await callRegisterMemberAPI(formData);
 
             alert(`memberId: ${memberId}을 등록하는데 성공했습니다`);
-            navigate("/ManageMember");
+            // window.location.reload();
+            // navigate("/ManageMember");
         } catch (error) {
             console.error("Registration failed:", error);
         }
@@ -248,8 +225,6 @@ function RegisterMember() {
         setInputtedPhoneNo(formattedPhoneNumber);
     }
     
-    
-
     return (
         <main id="main" className="main">
             <div className="pagetitle">

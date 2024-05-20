@@ -68,12 +68,20 @@ function CommuteTime({ commute, date, handlePreviousClick, handleNextClick }) {
     /* 주 단위로 이동하는 버튼 */
     const Button = ({ children, onClick }) => {
         return (
-            <button onClick={onClick} style={{
+            <button 
+            onClick={onClick} 
+            style={{
                 backgroundColor: 'transparent',
                 border: 'none',
                 fontSize: '24px',
                 cursor: 'pointer',
-                fontWeight: 900
+                fontWeight: 900,
+                color: '#000000',
+                paddingLeft: '10px',
+                paddingRight: '10px',
+                ':hover': {
+                    backgroundColor: '#d5d5d5',
+                },
             }}>
                 {children}
             </button>

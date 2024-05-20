@@ -1,23 +1,6 @@
-// const passwordReducer = {
-//     // Define your reducer or variable here
-//   };
-  
-//   export const SET_PASSWORD_1 = 'SET_PASSWORD_1';
-//   export const SET_PASSWORD_2 = 'SET_PASSWORD_2';
-  
-//   export const setPassword1Action = (password) => ({
-//       type: SET_PASSWORD_1,
-//       payload: password,
-//   });
-  
-//   export const setPassword2Action = (password) => ({
-//       type: SET_PASSWORD_2,
-//       payload: password,
-//   });
-  
-//   export default passwordReducer;
-
-// PasswordReducer.js
+// Define action types
+const SET_PASSWORD_1 = 'SET_PASSWORD_1';
+const SET_PASSWORD_2 = 'SET_PASSWORD_2';
 
 // Define initial state
 const initialState = {
@@ -25,26 +8,15 @@ const initialState = {
   password2: ''
 };
 
-// Define action types
-export const setPassword1Action = (password) => ({
-    type: setPassword1Action,
-    payload: password
-  });
-  
-  export const setPassword2Action = (password) => ({
-    type: setPassword2Action,
-    payload: password
-  });
-
-// Define reducer function
+// Define the reducer function
 const passwordReducer = (state = initialState, action) => {
   switch (action.type) {
-    case setPassword1Action:
+    case SET_PASSWORD_1:
       return {
         ...state,
         password1: action.payload
       };
-    case setPassword2Action:
+    case SET_PASSWORD_2:
       return {
         ...state,
         password2: action.payload
@@ -53,5 +25,16 @@ const passwordReducer = (state = initialState, action) => {
       return state;
   }
 };
+
+// Define action creators
+export const setPassword1Action = (password) => ({
+  type: SET_PASSWORD_1,
+  payload: password
+});
+
+export const setPassword2Action = (password) => ({
+  type: SET_PASSWORD_2,
+  payload: password
+});
 
 export default passwordReducer;

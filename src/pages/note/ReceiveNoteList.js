@@ -7,11 +7,13 @@ import { callPutReceiceNotesAPI, callReceiveNotesAPI } from '../../apis/NoteAPIC
 import { callMemberListAPI } from '../../apis/ChattingAPICalls';
 import SendNoteForm from './SendNoteForm';
 import NoteDetail from './NoteDetail';
+import Modal from './modal';
 
 const ReceiveNoteList = () => {
     const { receiveNoteList } = useSelector(state => state.noteReducer);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const [selectAll, setSelectAll] = useState(false);
     const [checkboxes, setCheckboxes] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
@@ -102,7 +104,7 @@ const ReceiveNoteList = () => {
             await dispatch(callReceiveNotesAPI(currentPage, 10, 'noteNo'));
             setCheckboxes(Array(notes.length).fill(false));
             setSelectedItems([]);
-
+            
             navigate('/receiveNoteList');
         }
     };
@@ -160,6 +162,21 @@ const ReceiveNoteList = () => {
         return imageUrl;
     };
 
+    const handleUpdateConfirm = async () => {
+        // 업데이트 모달에서 확인 버튼을 눌렀을 때의 동작
+        await Promise.all(selectedItems.map(async index => {
+            if (index >= 0 && index < notes.length) {
+                const noteNo = notes[index].noteNo;
+                await dispatch(callPutReceiceNotesAPI(noteNo, 'Y', 'N'));
+            }
+        }));
+        await dispatch(callReceiveNotesAPI(currentPage, 10, 'noteNo'));
+        setCheckboxes(Array(notes.length).fill(false));
+        setSelectedItems([]);
+        setIsUpdateModalOpen(false); // 모달 닫기
+        navigate('/receiveNoteList');
+    };
+
     return (
         <main id="main" className="main">
             <div className="pagetitle">
@@ -199,12 +216,12 @@ const ReceiveNoteList = () => {
                                                     <th className="first-column"> <input className="checkbox-custom" type="checkbox" checked={selectAll} onChange={toggleSelectAll} /></th>
                                                     <th className="second-column-top">
                                                         <div style={{ marginBottom: '-2px', marginLeft: '-25px' }}>
-                                                            <Link to="/" className="bi bi-trash" style={{ fontSize: '1.3rem', color: '#a1a1a1', background: 'none' }} onClick={handleDeleteSelectedItems}></Link>
-                                                            <Link to="/" className="bi bi-envelope" style={{ fontSize: '1.2rem', color: '#808080', background: 'none', marginLeft: '20px' }}></Link>
+                                                            <Link to="#" className="bi bi-trash" style={{ fontSize: '1.3rem', color: '#a1a1a1', background: 'none' }} onClick={() => setIsUpdateModalOpen(true)}></Link>
+                                                            <Link to="#" className="bi bi-envelope" style={{ fontSize: '1.2rem', color: '#808080', background: 'none', marginLeft: '20px' }}></Link>
                                                         </div>
                                                     </th>
-                                                    <th className="third-column"></th>
-                                                    <th className="fourth-column"></th>
+                                                    <th className="third-column">받을 사원</th>
+                                                    <th className="fourth-column" >제목</th>
                                                     <th className="fifth-column">
                                                         <i className="bx bx-chevron-left arrow-icon" style={{ background: 'none', marginRight: '10%' }}></i>
                                                         <i className="bx bx-chevron-right arrow-icon" style={{ background: 'none', fontweight: 'bold0', marginRight: '-20%' }}></i>
@@ -213,7 +230,7 @@ const ReceiveNoteList = () => {
                                             </thead>
                                             <tbody>
                                                 {notes?.map((note, index) => (
-                                                    <tr key={note.noteNo} className="note-row" onClick={() => openNoteDetailModal(index)}>
+                                                    <tr key={note.noteNo} className="note-row">
                                                         <td className="first-column">
                                                             <input
                                                                 className="checkbox-custom"
@@ -222,12 +239,12 @@ const ReceiveNoteList = () => {
                                                                 onChange={() => handleCheckboxChange(index)}
                                                             />
                                                         </td>
-                                                        <td className="second-column">
+                                                        <td className="second-column" onClick={() => openNoteDetailModal(index)}>
                                                             {findUserPhoto(note.senderId) && <img src={findUserPhoto(note.senderId)} alt="Profile" className="rounded-circle" />}
                                                         </td>
-                                                        <td className="third-column" style={{ fontSize: '14px' }}>{findUserName(note.senderId)}</td>
-                                                        <td className="fourth-column">{note.noteTitle}</td>
-                                                        <td className="fifth-column">{note.sendNoteDate}</td>
+                                                        <td className="third-column" style={{ fontSize: '14px' }} onClick={() => openNoteDetailModal(index)}>{findUserName(note.senderId)}</td>
+                                                        <td className="fourth-column" onClick={() => openNoteDetailModal(index)}>{note.noteTitle}</td>
+                                                        <td className="fifth-column" onClick={() => openNoteDetailModal(index)}>{note.sendNoteDate}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -240,6 +257,7 @@ const ReceiveNoteList = () => {
                 </div>
             </div>
             {selectedNote && <NoteDetail note={selectedNote} onClose={closeNoteDetailModal} showResponseButton={true} />}
+            <Modal isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)} onConfirm={handleUpdateConfirm} />
         </main>
     );
 }

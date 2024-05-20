@@ -49,13 +49,13 @@ function Login() {
     }, [loginMember]);
 
     /* 설명 필요 */
-    useEffect(() => {
-        if (loginMember.status === 200) {
-            dispatch(callLoginAPI({ form }));
-            console.log(`Login success!`, loginMember);
-            navigate("/", { replace: true });
-        }
-    }, [loginMember, navigate]);
+    // useEffect(() => {
+    //     if (loginMember.status === 200) {
+    //         dispatch(callLoginAPI({ form }));
+    //         console.log(`Login success!`, loginMember);
+    //         navigate("/", { replace: true });
+    //     }
+    // }, [loginMember, navigate]);
 
     /* 모달창 */
     const handleFindIDClick = () => {
@@ -79,23 +79,18 @@ function Login() {
         }));
     };
 
-    // const onClickLoginHandler = () => {
-    //     dispatch(callLoginAPI({
-    //         form: form
-    //     }));
-    // }
-
     const isValidMemberId = (memberId) => {
         // Check if memberId is a valid integer and within the acceptable range
         const intValue = parseInt(memberId);
         return !isNaN(intValue) && intValue >= -2147483648 && intValue <= 2147483647;
     };
     
-    const memberIdInt = parseInt(form.memberId);
+    // const memberIdInt = parseInt(form.memberId);
     const onClickLoginHandler = async () => {
 
         if (!isValidMemberId(form.memberId)) {
             alert("Enter a valid memberId");
+            setForm({memberId: '', password: ''});
             return;
         }
         try {
@@ -119,12 +114,10 @@ function Login() {
                     setForm({memberId: '', password: ''});
                 } else {
                     /* 로그인 성공시 */
-                    console.log("responseData.failType:",responseData.failType);
                     const token = responseData.token;
                     localStorage.setItem('accessToken', token); // Store the token in localStorage for future use
                     console.log("token 정보:",token);
-                    console.log("inputted memberID:",form.memberId);
-                    console.log("inputted password:",form.password);
+                    
                     // Navigate to the home page if login is successful
                     navigate("/");
                 }
@@ -132,8 +125,8 @@ function Login() {
                 
             else if (response.status === 401) {
                 // Display an alert if login fails due to unauthorized access
-                alert('로그인을 다시 해주세요');
-                setForm({ id: '', pass: '' });
+                alert('로그인 중에 오류가 발생했습니다. 다시 시도해주세요.');
+                setForm({ memberId: '', password: '' });
             }
         } catch (error) {
             // Handle any errors that occur during login
