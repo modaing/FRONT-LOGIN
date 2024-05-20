@@ -1,4 +1,4 @@
-export function renderLeaveSubmit(content, handleOpenModal, handleDelete, handleCancle, setInfo) {
+export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelectedTime, setDetailInfo, handleOpenModal) {
     if (!content) {
         return null;
     }
@@ -8,7 +8,7 @@ export function renderLeaveSubmit(content, handleOpenModal, handleDelete, handle
             const { formattedStartDate, formattedEndDate, leaveDaysCalc } = formattedLocalDate(leaveSubmit);
             const buttonClassName = leaveSubmit.leaveSubProcessDate ? 'cancelRequest' : 'requestDelete';
             const onClickHandler = leaveSubmit.leaveSubProcessDate ? () => {
-                setInfo({ start: formattedStartDate, end: formattedEndDate })
+                setSelectedTime({ start: formattedStartDate, end: formattedEndDate })
                 handleCancle(id)
             } : () => handleDelete(id);
             const buttonText = leaveSubmit.leaveSubProcessDate ? '취소 신청' : '신청 삭제';
@@ -46,11 +46,18 @@ export function renderLeaveSubmit(content, handleOpenModal, handleDelete, handle
                     <td>{leaveSubmit.leaveSubType}</td>
                     <td>{leaveDaysCalc}</td>
                     <td>{leaveSubmit.leaveSubStatus}</td>
-                    <td>
-                        <span className="leaveDetail" onClick={() => handleOpenModal()}>
-                            상세
-                        </span>
-                    </td>
+                    {leaveSubmit.leaveSubProcessDate ?
+                        <td></td>
+                        : <td>
+                            <span className="leaveDetail" onClick={() => {
+                                setSelectedTime({ start: formattedStartDate, end: formattedEndDate })
+                                setDetailInfo({ name: leaveSubmit.applicantName, memberId: leaveSubmit.leaveSubApplicant, type: leaveSubmit.leaveSubType, reason: leaveSubmit.leaveSubReason })
+                                handleOpenModal(id)
+                            }}>
+                                상세
+                            </span>
+                        </td>
+                    }
                 </tr>
             );
         });

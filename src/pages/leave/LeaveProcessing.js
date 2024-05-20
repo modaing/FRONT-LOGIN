@@ -4,9 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { callSelectLeaveSubmitAPI, callUpdateLeaveSubmitAPI } from '../../apis/LeaveAPICalls';
 import { SET_PAGENUMBER } from '../../modules/LeaveModule';
 import LeaveProcessingModal from './LeaveProcessingModal';
-import { decodeJwt } from '../../utils/tokenUtils';
 import { renderLeaveSubmit } from '../../utils/leaveUtil';
-import { convertToUtc } from '../../utils/CommonUtil';
 import '../../css/common.css'
 import '../../css/leave/LeaveProcessing.css'
 
@@ -19,7 +17,7 @@ function LeaveProcessing() {
     const [isLoading, setIsLoading] = useState(false);
     const [leaveSubNo, setLeaveSubNo] = useState('');
     const [selectedTime, setSelectedTime] = useState('');
-    const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
+    const [detailInfo, setDetailInfo] = useState('');
 
     const dispatch = useDispatch();
 
@@ -44,7 +42,8 @@ function LeaveProcessing() {
     }
 
     // CUD 관련 핸들러
-    const handleOpenModal = () => {
+    const handleOpenModal = id => {
+        setLeaveSubNo(id);
         setIsModalOpen(true);
     };
 
@@ -54,15 +53,19 @@ function LeaveProcessing() {
         setSelectedTime('');
     };
 
-    const handleUpdate = () => {
-
+    const handleUpdate = ({leaveSubNo, decision, reason}) => {
+        const requestDate = {
+            leaveSubNo,
+            leaveSubStatus: decision,
+            leaveSubReason: reason
+        }
+        dispatch(callUpdateLeaveSubmitAPI(requestDate));
     }
 
     useEffect(() => {
         setIsLoading(true);
         dispatch(callSelectLeaveSubmitAPI(number, properties, direction))
             .finally(() => setIsLoading(false));
-        console.log('실행');
     }, [number, properties, direction]);
 
 
@@ -117,7 +120,7 @@ function LeaveProcessing() {
                                         <td colSpan="8" className="loadingText"></td>
                                     </tr>
                                 ) : (
-                                    renderLeaveSubmit(content, handleOpenModal, setSelectedTime) // 로딩 중이 아니면 실제 데이터 표시
+                                    renderLeaveSubmit(content, null, null, setSelectedTime, setDetailInfo, handleOpenModal) // 로딩 중이 아니면 실제 데이터 표시
                                 )}
                             </tbody>
                         </table>
@@ -149,7 +152,7 @@ function LeaveProcessing() {
                 </div>
             </div>
         </main>
-        <LeaveProcessingModal isOpen={isModalOpen} onClose={handleCloseModal} onUpdate={handleUpdate} leaveSubNo={leaveSubNo} selectedTime={selectedTime} />
+        <LeaveProcessingModal isOpen={isModalOpen} onClose={handleCloseModal} onUpdate={handleUpdate} leaveSubNo={leaveSubNo} selectedTime={selectedTime} detailInfo={detailInfo} />
     </>
 
 }

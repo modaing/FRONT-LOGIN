@@ -4,23 +4,17 @@ import 'react-datepicker/dist/react-datepicker.css';
 import '../../css/leave/LeaveProcessingModal.css';
 
 
-const LeaveProcessingModal = ({ isOpen, onClose, onUpdate, leaveSubNo, selectedTime }) => {
-    const [start, setStart] = useState('');
-    const [end, setEnd] = useState('');
-    const [type, setType] = useState(leaveSubNo ? '취소' : '연차');
+const LeaveProcessingModal = ({ isOpen, onClose, onUpdate, leaveSubNo, selectedTime, detailInfo }) => {
+    const [decision, setDecision] = useState('승인');
     const [reason, setReason] = useState('');
-    const isCancle = leaveSubNo ? '취소 신청' : '휴가 신청';
 
-    const handleSave = () => {
-        onUpdate({ leaveSubNo, start, end, type, reason });
+    const handleUpdate = () => {
+        onUpdate({ leaveSubNo, decision, reason });
         onClose();
     };
 
     const resetModal = () => {
-        setStart(leaveSubNo ? new Date(selectedTime.start) : '');
-        setEnd(leaveSubNo ? new Date(selectedTime.end) : '');
-        setType(leaveSubNo ? '취소' : '연차');
-        setReason('');
+      
     };
 
     // 모달이 열릴 때 초기화
@@ -36,45 +30,47 @@ const LeaveProcessingModal = ({ isOpen, onClose, onUpdate, leaveSubNo, selectedT
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">{isCancle}</h5>
+                            <h5 className="modal-title">휴가 요청 상세 조회</h5>
                         </div>
                         <div className="modal-body">
+
+                            <div className="leaveProcessing"><label>사원명</label><input type="text" value={detailInfo.name} className="form-control" disabled /></div>
+
+                            <div className="leaveProcessing"><label>사번</label><input type="number" value={detailInfo.memberId} className="form-control" disabled /></div>
+
                             <div className="form-group">
-                                <label>시작 일자</label>
-                                {leaveSubNo ?
+                                <label>휴가 기간</label>
+                                <div className='dateFlex'>
                                     <DatePicker selected={new Date(selectedTime.start)} dateFormat="yyyy-MM-dd" className="form-control" disabled />
-                                    : <DatePicker selected={start} onChange={e => setStart(e)} dateFormat="yyyy-MM-dd" className="form-control" />
-                                }
-                            </div>
-
-                            <div className="form-group">
-                                <label>종료 일자</label>
-                                {leaveSubNo ?
                                     <DatePicker selected={new Date(selectedTime.end)} dateFormat="yyyy-MM-dd" className="form-control" disabled />
-                                    : <DatePicker selected={end} onChange={e => setEnd(e)} dateFormat="yyyy-MM-dd" className="form-control" />
-                                }
-                            </div>
-                            <div className="leaveProcessing">
-                                <label>휴가 유형</label>
-                                {leaveSubNo ?
-                                    <select value={type} onChange={e => setType(e.target.value)} className="form-select" disabled >
-                                        <option value="취소">취소</option>
-                                    </select>
-                                    : <select value={type} onChange={e => setType(e.target.value)} className="form-select">
-                                        <option value="연차">연차</option>
-                                        <option value="반차오전">반차오전</option>
-                                        <option value="반차오후">반차오후</option>
-                                        <option value="특별휴가">특별휴가</option>
-                                    </select>
-                                }
+                                </div>
                             </div>
 
-                            <label>일정 상세</label>
-                            <textarea type="text" value={reason} onChange={e => setReason(e.target.value)} className="form-control" rows="3" />
+                            <div className="leaveProcessingF"><label>휴가 유형</label><input type="text" value={detailInfo.type} className="form-control" disabled /></div>
+
+                            <label>신청 사유</label>
+                            <textarea type="text" value={detailInfo.reason} className="form-control" rows="3" disabled />
+
+                            <div className="radioButtons">
+                                <div>
+                                    <input type="radio" id="approve" name="decision" value="승인" checked={decision === '승인'} onChange={e => setDecision(e.target.value)} />
+                                    <label htmlFor="approve">승인</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="reject" name="decision" value="반려" checked={decision === '반려'} onChange={e => setDecision(e.target.value)} />
+                                    <label htmlFor="reject">반려</label>
+                                </div>
+                                {decision === '반려' ?
+                                    <>
+                                        <label>반려 사유</label>
+                                        <textarea type="text" value={reason} onChange={e => setReason(e.target.value)} className="form-control" rows="3" />
+                                    </>
+                                    : ''}
+                            </div>
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
-                            <button type="button" className="btn btn-primary" onClick={handleSave}>등록</button>
+                            <button type="button" className="btn btn-primary" onClick={handleUpdate}>처리</button>
                         </div>
                     </div>
                 </div>
