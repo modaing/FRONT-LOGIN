@@ -1,0 +1,60 @@
+.modal-content {
+    width: 100% !important;
+}
+
+.modal-body div {
+    margin-bottom: 3%;
+}
+
+.leaveProcessing,
+.leaveProcessingF {
+    display: flex;
+    height: 57.65px;
+}
+
+.leaveProcessing > label,
+.leaveProcessingF > label {
+    height: 24px;
+    margin-top: 1.6%;
+}
+
+.leaveProcessing input[type="text"],
+.leaveProcessingF input[type="text"],
+.leaveProcessing input[type="number"] {
+    width: 202.4px;
+    height: 37.65px;
+}
+
+.leaveProcessing input[type="text"] {
+    margin-left: 32px;
+
+}
+
+.leaveProcessingF input[type="text"] {
+    margin-left: 11px;
+
+}
+
+.leaveProcessing input[type="number"] {
+    margin-left: 48px;
+}
+
+.leaveProcessing select {
+    width: 120px;
+    height: 37.65px;
+}
+
+.leaveProcessing label,
+.leaveProcessingF label,
+.form-group label {
+    margin-right: 11px;
+}
+
+.dateFlex {
+    display: flex;
+    gap: 10px;
+}
+
+.radioButtons {
+    margin-top: 3%;
+}
