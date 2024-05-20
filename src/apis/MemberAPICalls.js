@@ -10,25 +10,19 @@ const headers = {
     Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
   };
 
-export const callGetMemberAPI = ({ memberId }) => {
-    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8080/api/v1/members/${memberId}`;
+export const callGetMemberAPI = async (memberId) => {
 
-    return async (dispatch, getState) => {
-        // 클라이언트 fetch mode : no-cors 사용시 application/json 방식으로 요청이 불가능
-        // 서버에서 cors 허용을 해주어야 함
-        const result = await fetch(requestURL, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: '*/*',
-                Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
-            },
-        }).then((response) => response.json());
-
-        console.log('[MemberAPICalls] callGetMemberAPI RESULT : ', result);
-
-        dispatch({ type: GET_MEMBER, payload: result });
-    };
+    console.log('memberId:',memberId);
+        try {
+            const response = await axios.get(`${API_BASE_URL}/members/${memberId}`,
+                { headers }
+            );
+            console.log('response:', response);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to fetch member information:',error);
+        }
+    // };
 };
 
 export const callLoginAPI = ({ form }) => {
@@ -65,14 +59,23 @@ export const callLogoutAPI = () => {
 };
 
 export const callRegisterMemberAPI = async (formData) => {
+    const memberDTOFile = formData.get('memberDTO');
+
+    const memberDTOString = await memberDTOFile.text();
+    const memberDTO = JSON.parse(memberDTOString);
+    console.log('memberDTO:', memberDTO);
+    
+    const memberProfilePicture = formData.get('memberProfilePicture');
+    console.log('memberProfilePicture:', memberProfilePicture);
+
     try {
-        const result = await axios.post(`${API_BASE_URL}/signUp`, formData);
-        console.log('Registration successful:', result);
-        
+        const result = await axios.post(`${API_BASE_URL}/signUp`, 
+        formData
+    );
+    console.log('Registration successful:', result);
     } catch (error) {
         console.error('Registration failed:',error);
     }
-    
 }
 
 export const callGetDepartmentListAPI = async () => {
@@ -119,5 +122,44 @@ export const callDownloadExcelFileAPI = async () => {
     } catch(error) {
         console.error('Error downloading excel file:', error);
         throw error;
+    }
+}
+
+export const callGetTransferredHistory = async (memberId) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/transferredHistory/${memberId}`,
+        { headers }
+    );
+    console.log('response:',response);
+    return response.data;
+    } catch (error) {
+        console.error('Error bringing in transferred history:', error);
+    }
+}
+
+export const callResetPasswordAPI = async () => {
+    try {
+        const response = await axios.put(`${API_BASE_URL}/resetMemberPassword`,
+        { headers }
+    );
+    console.log('response:',response);
+    return response.data;
+    } catch (error) {
+        console.error('Error resetting member password:', error);
+    }
+}
+
+export const callChangePasswordAPI = async (data) => {
+    console.log('password1:', data.newPassword1);
+    console.log('password2:', data.newPassword2);
+    try {
+        const response = await axios.put(`${API_BASE_URL}/updateOwnPassword`,
+        data,
+        { headers }
+    );
+    console.log('response:',response);
+    return response.data;
+    } catch (error) {
+        console.error('Error updating member password:', error);
     }
 }
