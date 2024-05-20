@@ -1,0 +1,60 @@
+.pageTop{
+    display: flex;
+    justify-content: space-between;
+}
+.tempSave{
+    justify-content: flex-end;
+    margin-right: 50px;
+    margin-top : 50px;
+}
+
+.bigContent{
+    margin: 10px;
+    width : 100%;
+    max-width: 1800px;
+    padding-right: 50px;
+    font-size: 15px;
+    margin-top : 50px;
+    
+    
+}
+.middleContent{
+    display:flex;
+    justify-content: space-between;
+    gap: 30px;
+}
+.insertAppSide{
+    flex : 1;
+    background-color: white;
+    padding : 40px;
+    height: 1800px;
+    max-height: 2500px;
+    border-radius: 15px;
+
+}
+.chooseForm{
+    margin-bottom: 20px;
+}
+.chooseForm label {
+    display: block;
+    margin-bottom : 10px;
+    font-size: 17px;
+    font-weight: bold;
+}
+.chooseForm select{
+    width: 80%;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    font-size: 16px;
+}
+.formAlert{
+    color: #D5D5D5;
+}
+
+.insertAppButtons{
+    margin-top: 30px;
+    margin-bottom : 50px;
+    display: flex;
+    justify-content: flex-end;
+}

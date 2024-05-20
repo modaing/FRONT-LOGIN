@@ -22,9 +22,8 @@ import SendNoteList from './pages/note/SendNoteList';
 import MyLeave from './pages/leave/MyLeave';
 import RoomList from './pages/chatting/RoomList';
 import Room from './pages/chatting/Room';
-import SendApprovalList from './pages/approval/SendApprovalList';
 import DepartmentAndPosition from './pages/department&position/departmentAndPosition';
-import ApprovalList from './pages/approval/ApprovalList';
+import ApprovalPage from './pages/approval/ApprovalPage';
 import LeaveAccrual from './pages/leave/LeaveAccrual';
 
 function App() {
@@ -69,8 +68,7 @@ function App() {
             <Route path="chatRoomList" element={<RoomList />} />
             <Route path="/room/:roomId" element={<Room />} />
             <Route path='/departmentAndPosition' element={<DepartmentAndPosition />} />
-            <Route path='approvalSendList' element={<SendApprovalList />} />
-            <Route path='approvals' element={<ApprovalList />} />
+            <Route path='approvals' element={<ApprovalPage />} />
           </Route>
         ) : (
           // Redirect to login page if not logged in

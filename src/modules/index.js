@@ -7,6 +7,7 @@ import passwordReducer from "./PasswordReducer";
 import noteReducer from "./NoteMudule";
 import leaveReducer from "./LeaveModule";
 import {chattingReducer, roomReducer} from "./CahttingModules";
+import approvalReducer from "./ApprovalReducer";
 
 
 const rootReducer = combineReducers({
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
     noteReducer,
     leaveReducer,
     chattingReducer,
-    roomReducer
+    roomReducer,
+    approval: approvalReducer
 });
 
 export default rootReducer;

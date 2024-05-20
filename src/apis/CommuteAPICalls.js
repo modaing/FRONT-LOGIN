@@ -1,5 +1,4 @@
-import { getCommutelist, postCommute, postCorrection, putCommute } from "../modules/CommuteModule";
-import { decodeJwt } from "../utils/tokenUtils";
+import { getCommutelist, getCorrectionlist, postCommute, postCorrection, putCommute } from "../modules/CommuteModule";
 import { request } from "./CommonAPI";
 
 /* 출퇴근 내역 조회 API  */
@@ -13,7 +12,6 @@ export const callSelectCommuteListAPI = (target, targetValue, date) => {
 
             const url = `/commutes?target=${target}&targetValue=${targetValue}&date=${date}`;
             console.log('url : ', url);
-            // const url = `/commutes?target=member&targetValue=240401835&date=2024-05-09`;
             const response = await request('GET', url);
 
             console.log('[callSelectCommuteListAPI] response : ', response.response.data.results.result);
@@ -79,3 +77,29 @@ export const callInsertCorrectionAPI = (newCorrection) => {
         }
     }
 };
+
+/* 출퇴근 정정 내역 조회 API */
+export const callSelectCorrectionListAPI = (memberId, page, size, sort, direction, date) => {
+    return async (dispatch) => {
+        try {
+            console.log('[page] ', page);
+            console.log('[size] ', size);
+            console.log('[sort] ', sort);
+            console.log('[direction] ', direction);
+            console.log('[date] ', date);
+
+            const url = `/corrections?memberId=${memberId}&page=${page}&size=${size}&sort=${sort}&direction=${direction}&date=${date}`;
+            const response = await request('GET', url);
+
+            console.log('[callSelectCorrectionListAPI] response : ', response.response.data.results);
+
+            dispatch(getCorrectionlist(response.response.data.results));
+
+        } catch (error) {
+            console.log('[callSelectCorrectionListAPI] error : ', error);
+        }
+    }
+};
+
+
+
