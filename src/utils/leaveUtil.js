@@ -1,34 +1,67 @@
-export function renderLeaveSubmit(content, handleDelete, handleCancle, setInfo) {
+export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelectedTime, setDetailInfo, handleOpenModal) {
     if (!content) {
         return null;
     }
+    if (handleDelete != null && handleCancle != null) {
 
-    return content.map((leaveSubmit, index) => {
-        const { formattedStartDate, formattedEndDate, leaveDaysCalc } = formattedLocalDate(leaveSubmit);
-        const buttonClassName = leaveSubmit.leaveSubProcessDate ? 'cancelRequest' : 'requestDelete';
-        const onClickHandler = leaveSubmit.leaveSubProcessDate ? () => {
-            setInfo({start: formattedStartDate, end: formattedEndDate})
-            handleCancle(id)} : () => handleDelete(id);
-        const buttonText = leaveSubmit.leaveSubProcessDate ? '취소 신청' : '신청 삭제';
-        const id = leaveSubmit.leaveSubNo;
+        return content.map((leaveSubmit, index) => {
+            const { formattedStartDate, formattedEndDate, leaveDaysCalc } = formattedLocalDate(leaveSubmit);
+            const buttonClassName = leaveSubmit.leaveSubProcessDate ? 'cancelRequest' : 'requestDelete';
+            const onClickHandler = leaveSubmit.leaveSubProcessDate ? () => {
+                setSelectedTime({ start: formattedStartDate, end: formattedEndDate })
+                handleCancle(id)
+            } : () => handleDelete(id);
+            const buttonText = leaveSubmit.leaveSubProcessDate ? '취소 신청' : '신청 삭제';
+            const id = leaveSubmit.leaveSubNo;
 
-        return (
-            <tr key={index}>
-                <td>{formattedStartDate}</td>
-                <td>{formattedEndDate}</td>
-                <td>{leaveSubmit.leaveSubType}</td>
-                <td>{leaveDaysCalc}</td>
-                <td>{leaveSubmit.leaveSubApplyDate}</td>
-                <td>{leaveSubmit.approverName || "-"}</td>
-                <td>{leaveSubmit.leaveSubProcessDate || "-"}</td>
-                <td>
-                    <span className={`${buttonClassName}`} onClick={onClickHandler}>
-                        {buttonText}
-                    </span>
-                </td>
-            </tr>
-        );
-    });
+            return (
+                <tr key={index}>
+                    <td>{formattedStartDate}</td>
+                    <td>{formattedEndDate}</td>
+                    <td>{leaveSubmit.leaveSubType}</td>
+                    <td>{leaveDaysCalc}</td>
+                    <td>{leaveSubmit.leaveSubApplyDate}</td>
+                    <td>{leaveSubmit.approverName || "-"}</td>
+                    <td>{leaveSubmit.leaveSubProcessDate || "-"}</td>
+                    <td>
+                        <span className={`${buttonClassName}`} onClick={onClickHandler}>
+                            {buttonText}
+                        </span>
+                    </td>
+                </tr>
+            );
+        });
+    } else {
+
+        return content.map((leaveSubmit, index) => {
+            const { formattedStartDate, formattedEndDate, leaveDaysCalc } = formattedLocalDate(leaveSubmit);
+            const id = leaveSubmit.leaveSubNo;
+
+            return (
+                <tr key={index}>
+                    <td>{leaveSubmit.applicantName}</td>
+                    <td>{leaveSubmit.leaveSubApplicant}</td>
+                    <td>{formattedStartDate}</td>
+                    <td>{formattedEndDate}</td>
+                    <td>{leaveSubmit.leaveSubType}</td>
+                    <td>{leaveDaysCalc}</td>
+                    <td>{leaveSubmit.leaveSubStatus}</td>
+                    {leaveSubmit.leaveSubProcessDate ?
+                        <td></td>
+                        : <td>
+                            <span className="leaveDetail" onClick={() => {
+                                setSelectedTime({ start: formattedStartDate, end: formattedEndDate })
+                                setDetailInfo({ name: leaveSubmit.applicantName, memberId: leaveSubmit.leaveSubApplicant, type: leaveSubmit.leaveSubType, reason: leaveSubmit.leaveSubReason })
+                                handleOpenModal(id)
+                            }}>
+                                상세
+                            </span>
+                        </td>
+                    }
+                </tr>
+            );
+        });
+    }
 }
 
 function formattedLocalDate(leaveSubmit) {

@@ -2,42 +2,38 @@ import { createActions, handleActions } from 'redux-actions';
 
 const initialState = {};
 
-export const GET_LEAVESUBMIT = 'leave/GET_LEAVESUBMIT';
-export const POST_LEAVESUBMIT = 'leave/POST_LEAVESUBMIT';
-export const PUT_LEAVESUBMIT = 'leave/PUT_LEAVESUBMIT';
-export const DELETE_LEAVESUBMIT = 'leave/DELETE_LEAVESUBMIT';
+export const GET_PAGE = 'leave/GET_PAGE';
+export const GET_LEAVEINFO = 'leave/GET_LEAVEINFO';
 export const SET_PAGENUMBER = 'leave/SET_PAGENUMBER';
-export const GET_LEAVEACCRUAL = 'leave/GET_LEAVEACCRUAL';
 export const GET_MEMBERLIST = 'leave/GET_MEMBERLIST';
-export const POST_LEAVEACCRUAL = 'leave/POST_LEAVEACCRUAL';
+export const POST_MESSAGE = 'leave/POST_MESSAGE';
+export const PUT_MESSAGE = 'leave/PUT_MESSAGE';
+export const DELETE_MESSAGE = 'leave/DELETE_MESSAGE';
 
 const actions = createActions({
-    [GET_LEAVESUBMIT]: () => {},
-    [POST_LEAVESUBMIT]: () => {},
-    [PUT_LEAVESUBMIT]: () => {},
-    [DELETE_LEAVESUBMIT]: () => {},
+    [GET_PAGE]: () => {},
+    [GET_LEAVEINFO]: () => {},
     [SET_PAGENUMBER]:() => {},     
-    [GET_LEAVEACCRUAL]: () => {},
     [GET_MEMBERLIST]: () => {},
-    [POST_LEAVEACCRUAL]: () => {}
-    
+    [POST_MESSAGE]: () => {},
+    [PUT_MESSAGE]: () => {},
+    [DELETE_MESSAGE]: () => {},
 });
 
 const leaveReducer = handleActions({
-    [GET_LEAVESUBMIT]: (state, {payload}) => ({leaveInfo: payload.leaveInfo, submitPage: payload.submitPage}),
-    [POST_LEAVESUBMIT]: (state, {payload}) => ({insertMessage: payload}),
-    [PUT_LEAVESUBMIT]: (state, {payload}) => ({updateMessage: payload}),
-    [DELETE_LEAVESUBMIT]: (state, {payload}) => ({deleteMessage: payload}),
+    [GET_PAGE]: (state, {payload}) => ({...state, page: payload}),
+    [GET_LEAVEINFO]: (state, {payload}) => ({...state, leaveInfo: payload}),
     [SET_PAGENUMBER]: (state, {payload}) => ({
         ...state,
-        submitPage: {
-            ...state.submitPage,
+        page: {
+            ...state.page,
             number: payload
         }
     }),
-    [GET_LEAVEACCRUAL]: (state, {payload}) => ({...state, accrualPage: payload.accrualPage}),
     [GET_MEMBERLIST]: (state, {payload}) => ({...state, memberList: payload.memberList}),
-    [POST_LEAVEACCRUAL]: (state, {payload}) => ({insertMessage: payload})
+    [POST_MESSAGE]: (state, {payload}) => ({insertMessage: payload}),
+    [PUT_MESSAGE]: (state, {payload}) => ({updateMessage: payload}),
+    [DELETE_MESSAGE]: (state, {payload}) => ({deleteMessage: payload}),
 }, initialState);
 
 export default leaveReducer;

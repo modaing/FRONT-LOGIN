@@ -7,11 +7,13 @@ import { callPutReceiceNotesAPI, callReceiveNotesAPI } from '../../apis/NoteAPIC
 import { callMemberListAPI } from '../../apis/ChattingAPICalls';
 import SendNoteForm from './SendNoteForm';
 import NoteDetail from './NoteDetail';
+import Modal from './modal';
 
 const ReceiveNoteList = () => {
     const { receiveNoteList } = useSelector(state => state.noteReducer);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const [selectAll, setSelectAll] = useState(false);
     const [checkboxes, setCheckboxes] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
@@ -102,7 +104,7 @@ const ReceiveNoteList = () => {
             await dispatch(callReceiveNotesAPI(currentPage, 10, 'noteNo'));
             setCheckboxes(Array(notes.length).fill(false));
             setSelectedItems([]);
-
+            
             navigate('/receiveNoteList');
         }
     };
@@ -160,6 +162,21 @@ const ReceiveNoteList = () => {
         return imageUrl;
     };
 
+    const handleUpdateConfirm = async () => {
+        // 업데이트 모달에서 확인 버튼을 눌렀을 때의 동작
+        await Promise.all(selectedItems.map(async index => {
+            if (index >= 0 && index < notes.length) {
+                const noteNo = notes[index].noteNo;
+                await dispatch(callPutReceiceNotesAPI(noteNo, 'Y', 'N'));
+            }
+        }));
+        await dispatch(callReceiveNotesAPI(currentPage, 10, 'noteNo'));
+        setCheckboxes(Array(notes.length).fill(false));
+        setSelectedItems([]);
+        setIsUpdateModalOpen(false); // 모달 닫기
+        navigate('/receiveNoteList');
+    };
+
     return (
         <main id="main" className="main">
             <div className="pagetitle">
@@ -199,8 +216,8 @@ const ReceiveNoteList = () => {
                                                     <th className="first-column"> <input className="checkbox-custom" type="checkbox" checked={selectAll} onChange={toggleSelectAll} /></th>
                                                     <th className="second-column-top">
                                                         <div style={{ marginBottom: '-2px', marginLeft: '-25px' }}>
-                                                            <Link to="/" className="bi bi-trash" style={{ fontSize: '1.3rem', color: '#a1a1a1', background: 'none' }} onClick={handleDeleteSelectedItems}></Link>
-                                                            <Link to="/" className="bi bi-envelope" style={{ fontSize: '1.2rem', color: '#808080', background: 'none', marginLeft: '20px' }}></Link>
+                                                            <Link to="#" className="bi bi-trash" style={{ fontSize: '1.3rem', color: '#a1a1a1', background: 'none' }} onClick={() => setIsUpdateModalOpen(true)}></Link>
+                                                            <Link to="#" className="bi bi-envelope" style={{ fontSize: '1.2rem', color: '#808080', background: 'none', marginLeft: '20px' }}></Link>
                                                         </div>
                                                     </th>
                                                     <th className="third-column">받을 사원</th>
@@ -240,6 +257,7 @@ const ReceiveNoteList = () => {
                 </div>
             </div>
             {selectedNote && <NoteDetail note={selectedNote} onClose={closeNoteDetailModal} showResponseButton={true} />}
+            <Modal isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)} onConfirm={handleUpdateConfirm} />
         </main>
     );
 }
