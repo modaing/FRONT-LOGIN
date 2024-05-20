@@ -5,12 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { callInsertCommuteAPI, callSelectCommuteListAPI, callUpdateCommuteAPI } from "../../apis/CommuteAPICalls";
 import CommuteTime from "../../components/commutes/CommuteTime";
 import { decodeJwt } from '../../utils/tokenUtils';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from "styled-components";
 import { handleAction } from 'redux-actions';
 import ClockInModal from '../../components/commutes/ClockInModal';
-import { TuiDatePicker } from 'nextjs-tui-date-picker';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 function RecordCommute() {
@@ -102,6 +100,9 @@ function RecordCommute() {
     console.log('[RecordCommute] result : ', result);
     const commuteList = result.commutelist;
     console.log('[RecordCommute] commuteList : ', commuteList);
+    const correctionList = result.correctionlist;
+    console.log('[RecordCommute] correctionList : ', correctionList);
+
 
     /* 출근 시간 액션 */
     const postCommute = result.postcommute;
@@ -235,13 +236,6 @@ function RecordCommute() {
         }
     };
 
-    const Example = () => {
-        const [startDate, setStartDate] = useState(new Date());
-        return (
-          <DatePicker selected={startDate} onChange={date => setStartDate(date)} />
-        );
-      };
-
     return <>
             <main id="main" className="main">
                 <div className="pagetitle">
@@ -261,8 +255,6 @@ function RecordCommute() {
                                 </Link>
                             )}
                             <SelectBox options={OPTIONS} defaultValue={date} onChange={handleAction}></SelectBox>
-                            {/* <DatePicker selected={chooseMonth} onChange={(date) => setChooseMonth(date)} /> */}
-                            {/* <TuiDatePicker date={new Date('2024-05')} inputWidth={140} fontSize={16} /> */}
                         </ol>
                     </nav>
                 </div>
