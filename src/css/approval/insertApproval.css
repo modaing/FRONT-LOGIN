@@ -24,14 +24,20 @@
     gap: 30px;
 }
 .insertAppSide{
-    flex : 1;
     background-color: white;
     padding : 40px;
     height: 1800px;
     max-height: 2500px;
     border-radius: 15px;
-
 }
+
+.insertAppSide.left {
+    flex: 40%;
+}
+.insertAppSide.right{
+    flex: 55%;
+}
+
 .chooseForm{
     margin-bottom: 20px;
 }

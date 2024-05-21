@@ -70,12 +70,12 @@ function Sidebar() {
                             </Link>
                         </li>
                         <li>
-                            <Link to="/" style={underLineStyle}>
+                            <Link to="/leaveProcessing" style={underLineStyle}>
                                 <i className="bi bi-circle"></i><span>휴가 신청 처리</span>
                             </Link>
                         </li>
                         <li>
-                            <Link to="/" style={underLineStyle}>
+                            <Link to="/leaves" style={underLineStyle}>
                                 <i className="bi bi-circle"></i><span>휴가 보유 내역 조회</span>
                             </Link>
                         </li>

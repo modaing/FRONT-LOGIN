@@ -40,6 +40,7 @@ function CommuteItem({ commute, tableStyles, evenRow, date, parsingDateOffset })
     };
 
     const handleSaveModal = ({ corrStartWork, corrEndWork, reason }) => {
+        console.log('commuteNo ', commute.commuteNo);
         const newCorrection = {
             commuteNo: commute.commuteNo,
             reqStartWork: corrStartWork,
@@ -49,6 +50,8 @@ function CommuteItem({ commute, tableStyles, evenRow, date, parsingDateOffset })
             corrStatus: '대기'
         };
         dispatch(callInsertCorrectionAPI(newCorrection));
+        console.log('이유', reason);
+        console.log('정정 요청 성공~!!!!!');
         setShowBtn(false);
     }
 
@@ -199,7 +202,18 @@ function CommuteItem({ commute, tableStyles, evenRow, date, parsingDateOffset })
                 </td>
             )}
         </tr>
-        <InsertCorrectionModal isOpen={showModal} onClose={handleCloseModal} onSave={handleSaveModal} date={commute.workingDate} startWork={formatWorkingTime(commute.startWork)} endWork={formatWorkingTime(commute.endWork)} />
+        {/* <InsertCorrectionModal commute={commute} isOpen={showModal} onClose={handleCloseModal} onSave={handleSaveModal} date={commute.workingDate} startWork={formatWorkingTime(commute.startWork)} endWork={formatWorkingTime(commute.endWork)} /> */}
+        {showModal && (
+            <InsertCorrectionModal
+                commute={commute}
+                isOpen={showModal}
+                onClose={handleCloseModal}
+                onSave={handleSaveModal}
+                date={commute.workingDate}
+                startWork={formatWorkingTime(commute.startWork)}
+                endWork={formatWorkingTime(commute.endWork)}
+            />
+        )}
     </>
 }
 

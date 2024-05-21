@@ -25,6 +25,8 @@ import Room from './pages/chatting/Room';
 import DepartmentAndPosition from './pages/department&position/departmentAndPosition';
 import ApprovalPage from './pages/approval/ApprovalPage';
 import LeaveAccrual from './pages/leave/LeaveAccrual';
+import LeaveProcessing from './pages/leave/LeaveProcessing';
+import Leaves from './pages/leave/Leaves';
 
 function App() {
   const isLoggedIn = !!window.localStorage.getItem("accessToken");
@@ -48,6 +50,8 @@ function App() {
             <Route path="commuteCorrectionManage" element={<CommuteCorrectionManage />} />
             <Route path="myLeave" element={<MyLeave />} />
             <Route path="leaveAccrual" element={<LeaveAccrual />} />
+            <Route path="leaveProcessing" element={<LeaveProcessing />} />
+            <Route path="leaves" element={<Leaves />} />
             <Route path="announces" element={<Announces />} />
             <Route path="announces/:ancNo" element={<AnnounceDetail />} />
             <Route path="updateAnnounces/:ancNo" element={<UpdateAnnounce />} />

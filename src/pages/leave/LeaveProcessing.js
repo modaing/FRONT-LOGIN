@@ -1,37 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { callDeleteLeaveSubmitAPI, callInsertLeaveSubmitAPI, callSelectLeaveSubmitAPI } from '../../apis/LeaveAPICalls';
+import { callSelectLeaveSubmitAPI, callUpdateLeaveSubmitAPI } from '../../apis/LeaveAPICalls';
 import { SET_PAGENUMBER } from '../../modules/LeaveModule';
-import MyLeaveModal from './MyLeaveModal';
-import { decodeJwt } from '../../utils/tokenUtils';
+import LeaveProcessingModal from './LeaveProcessingModal';
 import { renderLeaveSubmit } from '../../utils/leaveUtil';
-import { convertToUtc } from '../../utils/CommonUtil';
 import '../../css/common.css'
-import '../../css/leave/MyLeave.css'
+import '../../css/leave/LeaveProcessing.css'
 
-function MyLeave() {
-    const { page, leaveInfo } = useSelector(state => state.leaveReducer);
-    const { totalDays, consumedDays, remainingDays } = leaveInfo || {};
+function LeaveProcessing() {
+    const { page } = useSelector(state => state.leaveReducer);
     const { number, content, totalPages } = page || {};
-    const [ properties, setProperties ] = useState('leaveSubNo')
-    const [ direction, setDirection ] = useState('DESC')
-    const [ isModalOpen, setIsModalOpen ] = useState(false);
-    const [ isLoading, setIsLoading ] = useState(false);
-    const [ leaveSubNo, setLeaveSubNo ] = useState('');
-    const [ selectedTime, setSelectedTime ] = useState('');
-    const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
+    const [properties, setProperties] = useState('leaveSubNo')
+    const [direction, setDirection] = useState('DESC')
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [leaveSubNo, setLeaveSubNo] = useState('');
+    const [selectedTime, setSelectedTime] = useState('');
+    const [detailInfo, setDetailInfo] = useState('');
+
     const dispatch = useDispatch();
 
     // 조회 관련 핸들러
     const handlePageChange = page => dispatch({ type: SET_PAGENUMBER, payload: page });
-    
+
     const handlePrevPage = () => {
         if (number > 0) {
             dispatch({ type: SET_PAGENUMBER, payload: number - 1 });
         }
     };
-    
+
     const handleNextPage = () => {
         if (number < totalPages - 1) {
             dispatch({ type: SET_PAGENUMBER, payload: number + 1 });
@@ -44,7 +42,8 @@ function MyLeave() {
     }
 
     // CUD 관련 핸들러
-    const handleOpenModal = () => {
+    const handleOpenModal = id => {
+        setLeaveSubNo(id);
         setIsModalOpen(true);
     };
 
@@ -53,35 +52,22 @@ function MyLeave() {
         setLeaveSubNo('')
         setSelectedTime('');
     };
-    
-    const handleInsert = ({ leaveSubNo, start, end, type, reason }) => {
-        const requestData = {
+
+    const handleUpdate = ({leaveSubNo, decision, reason}) => {
+        const requestDate = {
             leaveSubNo,
-            leaveSubApplicant: memberId,
-            leaveSubStartDate: convertToUtc(start),
-            leaveSubEndDate: convertToUtc(end),
-            leaveSubType: type,
+            leaveSubStatus: decision,
             leaveSubReason: reason
-        };
-        dispatch(callInsertLeaveSubmitAPI(requestData));
-        
-    };
-    
-    const handleDelete = id => {
-        dispatch(callDeleteLeaveSubmitAPI(id))
-    };
-    
-    const handleCancle = id => {
-        setLeaveSubNo(id);
-        setIsModalOpen(true);
-    };
-    
+        }
+        dispatch(callUpdateLeaveSubmitAPI(requestDate));
+    }
+
     useEffect(() => {
         setIsLoading(true);
-        dispatch(callSelectLeaveSubmitAPI(number, properties, direction, memberId))
+        dispatch(callSelectLeaveSubmitAPI(number, properties, direction))
             .finally(() => setIsLoading(false));
     }, [number, properties, direction]);
-    
+
 
     return <>
         <main id="main" className="main">
@@ -91,24 +77,24 @@ function MyLeave() {
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><Link to="/">Home</Link></li>
                         <li className="breadcrumb-item">휴가</li>
-                        <li className="breadcrumb-item active">나의 휴가 관리</li>
+                        <li className="breadcrumb-item active">휴가 신청 처리</li>
                     </ol>
-                    <div className="leaveHeader">
-                        <div className="leaveInfo">
-                            <span>부여 휴가 일수</span><span>{totalDays}</span>
-                            <span>소진 휴가 일수</span><span>{consumedDays}</span>
-                            <span>잔여 휴가 일수</span><span>{remainingDays}</span>
-                        </div>
-                        <span className="insertLeave" onClick={handleOpenModal} >휴가 신청</span>
-                    </div>
                 </nav>
             </div>
             <div className="col-lg-12">
                 <div className="card">
-                    <div className="myLeaveListContent" >
+                    <div className="leaveProcessingListContent" >
                         <table className="table table-hover">
                             <thead>
                                 <tr>
+                                    <th onClick={() => handleSort('applicantName')}>
+                                        <span>사원명</span><i className="bx bxs-sort-alt"></i>
+                                    </th>
+
+                                    <th onClick={() => handleSort('leaveSubApplicant')}>
+                                        <span>사번</span><i className="bx bxs-sort-alt"></i>
+                                    </th>
+
                                     <th onClick={() => handleSort('leaveSubStartDate')}>
                                         <span>휴가 시작일</span><i className="bx bxs-sort-alt"></i>
                                     </th>
@@ -123,15 +109,7 @@ function MyLeave() {
 
                                     <th><span>차감 일수</span></th>
 
-                                    <th onClick={() => handleSort('leaveSubApplyDate')}>
-                                        <span>신청 일자</span><i className="bx bxs-sort-alt"></i>
-                                    </th>
-
-                                    <th><span>승인자</span></th>
-
-                                    <th onClick={() => handleSort('leaveSubProcessDate')}>
-                                        <span>승인 일자</span><i className="bx bxs-sort-alt"></i>
-                                    </th>
+                                    <th><span>처리 상태</span></th>
 
                                     <th><span></span></th>
                                 </tr>
@@ -142,7 +120,7 @@ function MyLeave() {
                                         <td colSpan="8" className="loadingText"></td>
                                     </tr>
                                 ) : (
-                                    renderLeaveSubmit(content, handleDelete, handleCancle, setSelectedTime) // 로딩 중이 아니면 실제 데이터 표시
+                                    renderLeaveSubmit(content, null, null, setSelectedTime, setDetailInfo, handleOpenModal) // 로딩 중이 아니면 실제 데이터 표시
                                 )}
                             </tbody>
                         </table>
@@ -174,9 +152,9 @@ function MyLeave() {
                 </div>
             </div>
         </main>
-        <MyLeaveModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} leaveSubNo={leaveSubNo} selectedTime={selectedTime}/>
+        <LeaveProcessingModal isOpen={isModalOpen} onClose={handleCloseModal} onUpdate={handleUpdate} leaveSubNo={leaveSubNo} selectedTime={selectedTime} detailInfo={detailInfo} />
     </>
 
 }
 
-export default MyLeave;
+export default LeaveProcessing;

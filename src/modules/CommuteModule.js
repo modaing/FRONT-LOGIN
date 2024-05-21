@@ -1,5 +1,5 @@
 import { createActions, handleActions } from "redux-actions";
-import { callSelectCommuteListAPI } from "../apis/CommuteAPICalls";
+import { callSelectCommuteDetailAPI, callSelectCommuteListAPI } from "../apis/CommuteAPICalls";
 
 /* 초기값 */
 const initialState = {
@@ -12,6 +12,7 @@ const initialState = {
 };
 
 /* 액션 타입 */
+export const GET_COMMUTE = 'commute/GET_COMMUTE';
 export const GET_COMMUTELIST = 'commute/GET_COMMUTELIST';
 export const POST_COMMUTE = 'commute/POST_COMMUTE';
 export const PUT_COMMUTE = 'commute/PUT_COMMUTE';
@@ -24,7 +25,8 @@ export const PUT_CORRECTION = 'commute/PUT_CORRECTION';
 export const SET_PAGENUMBER = 'commute/SET_PAGENUMBER';
 
 /* 액션 함수 */
-export const { commute: { getCommutelist, postCommute, putCommute, getCorrection, getCorrectionlist, postCorrection, putCorrection, setPagenumber } } = createActions({
+export const { commute: { getCommute, getCommutelist, postCommute, putCommute, getCorrection, getCorrectionlist, postCorrection, putCorrection, setPagenumber } } = createActions({
+    [GET_COMMUTE]: (res) => ({commute: res}),
     [GET_COMMUTELIST]: (res) => ({ commutelist: res }),
     [POST_COMMUTE]: (res) => ({ postcommute: res }),
     [PUT_COMMUTE]: (res) => ({ putcommute: res }),
@@ -35,20 +37,12 @@ export const { commute: { getCommutelist, postCommute, putCommute, getCorrection
     [SET_PAGENUMBER]: (page) => ({ page: page })
 });
 
-/* 비동기 액션 생성자 */
-// export const fetchCommuteListAsync = (memberId, member, date) => async (dispatch) => {
-//     try {
-//         // API를 호출하여 출퇴근 내역 전체 가져오기
-//         const data = await callSelectCommuteListAPI(memberId, member, date);
-//         dispatch(getCommutelist(data));
-//     } catch (error) {
-//         console.error('Error fetching commute list:', error.message);
-//     }
-// };
-
 /* 리듀서 */
 const commuteReducer = handleActions(
     {
+        [GET_COMMUTE]: (state, {payload}) => {
+            return payload;
+        },
         [GET_COMMUTELIST]: (state, { payload }) => {
             return payload;
         },

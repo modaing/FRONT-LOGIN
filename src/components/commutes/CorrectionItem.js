@@ -1,29 +1,58 @@
 import { useDispatch, useSelector } from "react-redux";
 import { SET_PAGENUMBER } from "../../modules/CommuteModule";
+import CorrectionDetailModal from "./CorrectionDetailModal";
+import { useEffect, useState } from "react";
+import { callSelectCommuteDetailAPI } from "../../apis/CommuteAPICalls";
+import zIndex from "@mui/material/styles/zIndex";
 
-function CorrectionItem({ findWorkingDate, correction, tableStyles, evenRow, date }) {
+function CorrectionItem({ correction, commute, tableStyles, evenRow, date }) {
 
     // console.log('[CorrectionItem] correction : ', correction);
     // console.log('[CorrectionItem] correction.corrNo : ', correction.corrNo);
     // console.log('[CorrectionItem] date : ', date);
+    // console.log('[CorrectionItem] commute : ', commute);
 
-    /* 정정 대상 일자 찾기 */
-    
+    const [showModal, setShowModal] = useState(false);
+    const [selectedData, setSelectedData] = useState(null);
+
+    const dispatch = useDispatch();
+
+    /* 액션 */
+    // const { commute } = useSelector(state => state.commuteReducer);
+    // const commuteDetail = result.commute;
+    // console.log('commute : ', commute);
+
     /* 근무 일자 형식 변경 */
     const formatWorkingDate = (workingDate) => {
         const date = new Date(workingDate);
         return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     };
 
+    /* 정정 상세 조회 핸들러 */
+    const handleOpenModal = (data) => {
+        setSelectedData(data);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+
     return (
         <>
-            <tr style={evenRow ? tableStyles.evenRow : {}}>
-                <td style={tableStyles.tableCell1} scope="row">{formatWorkingDate(findWorkingDate(correction.commuteNo))}</td>
+            <tr style={evenRow ? tableStyles.evenRow : {}} onClick={() => handleOpenModal(commute)}>
+                <td style={tableStyles.tableCell1} scope="row">
+                {commute.map((item, index) => (formatWorkingDate(item.workingDate)))}
+                </td>
                 <td style={tableStyles.tableCell2}>{correction.reqStartWork}</td>
                 <td style={tableStyles.tableCell3}>{correction.reqEndWork}</td>
                 <td style={tableStyles.tableCell4}>{formatWorkingDate(correction.corrRegistrationDate)}</td>
                 <td style={tableStyles.tableCell5}>{correction.corrStatus}</td>
             </tr>
+            <CorrectionDetailModal isOpen={showModal} onClose={handleCloseModal} correction={correction} commute={commute}/>
+            {/* {showModal && (
+                <CorrectionDetailModal isOpen={showModal} onClose={handleCloseModal} correction={correction} />
+            )} */}
         </>
     );
 };

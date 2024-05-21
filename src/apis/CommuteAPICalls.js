@@ -1,4 +1,4 @@
-import { getCommutelist, getCorrectionlist, postCommute, postCorrection, putCommute } from "../modules/CommuteModule";
+import { getCommute, getCommutelist, getCorrectionlist, postCommute, postCorrection, putCommute } from "../modules/CommuteModule";
 import { request } from "./CommonAPI";
 
 /* 출퇴근 내역 조회 API  */
@@ -24,6 +24,23 @@ export const callSelectCommuteListAPI = (target, targetValue, date) => {
         }
     }
 };
+
+// /* 출퇴근 상세 조회 API */
+// export const callSelectCommuteDetailAPI = (commuteNo) => {
+//     return async (dispatch) => {
+//         try {
+//             const url = `/commutes/${commuteNo}`;
+//             const response = await request('GET', url);
+
+//             console.log('[callSelectCommuteDetailAPI] response : ', response);
+
+//             dispatch(getCommute(response));
+            
+//         } catch (error) {
+//             console.log('[] Error : ', error);
+//         }
+//     }
+// };
 
 /* 출근 시간 등록 API */
 export const callInsertCommuteAPI = (newCommute) => {
@@ -82,18 +99,18 @@ export const callInsertCorrectionAPI = (newCorrection) => {
 export const callSelectCorrectionListAPI = (memberId, page, size, sort, direction, date) => {
     return async (dispatch) => {
         try {
-            console.log('[page] ', page);
-            console.log('[size] ', size);
-            console.log('[sort] ', sort);
-            console.log('[direction] ', direction);
-            console.log('[date] ', date);
+            // console.log('[page] ', page);
+            // console.log('[size] ', size);
+            // console.log('[sort] ', sort);
+            // console.log('[direction] ', direction);
+            // console.log('[date] ', date);
 
             const url = `/corrections?memberId=${memberId}&page=${page}&size=${size}&sort=${sort}&direction=${direction}&date=${date}`;
             const response = await request('GET', url);
 
-            console.log('[callSelectCorrectionListAPI] response : ', response.response.data.results);
+            console.log('[callSelectCorrectionListAPI] response : ', response);
 
-            dispatch(getCorrectionlist(response.response.data.results));
+            dispatch(getCorrectionlist(response));
 
         } catch (error) {
             console.log('[callSelectCorrectionListAPI] error : ', error);
