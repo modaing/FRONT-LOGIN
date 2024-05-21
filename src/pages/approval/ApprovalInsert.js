@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import insertStyles from '../../css/approval/insertApproval.css';
-import ReactQuill, { Quill } from 'react-quill';
 import { Editor } from '@tinymce/tinymce-react';
 import 'react-quill/dist/quill.snow.css';
 import SelectFormComponent from '../../components/approvals/SelectFormComponent';
@@ -20,8 +19,8 @@ const ApprovalInsert = () => {
             
             if (editorRef.current) {
                 editorRef.current.setContent(htmlContent);
+                setEditableElements(editorRef.current.getDoc());
             }
-
         }
     };
 
@@ -36,6 +35,39 @@ const ApprovalInsert = () => {
         console.log('기안 완료 : ', formData);
     };
 
+    const setEditableElements = (doc) => {
+    const formElements = doc.querySelectorAll('input, td, div[contenteditable="true"]');
+    formElements.forEach(element => {
+        element.setAttribute('contenteditable', 'true');
+    });
+    doc.body.querySelectorAll('*:not(input):not(td):not(div[contenteditable="true"])').forEach(element => {
+        element.setAttribute('contenteditable', 'false');
+    });
+
+    const titleInput = doc.querySelector('#titleform input');
+    if (titleInput) {
+        titleInput.addEventListener('click', () => {
+            titleInput.focus();
+        });
+        titleInput.setAttribute('contenteditable', 'true');
+    }
+};
+
+    useEffect(() => {
+        if(editorRef.current) {
+            const doc = editorRef.current.getDoc();
+            setEditableElements(doc);
+            const dateDiv = doc.querySelector('#date div');
+            console.log('dateDiv : ' + dateDiv);
+            if(dateDiv){
+                dateDiv.innerHTML = '';
+                const currentDate = new Date().toLocaleDateString();
+                dateDiv.textContent = currentDate;
+                console.log(`dateDiv date :  + ${currentDate}`);
+                console.log('dateDiv textContent : ' + dateDiv.textContent);
+            }
+        }
+    }, []);
    
 
     return (
@@ -73,8 +105,19 @@ const ApprovalInsert = () => {
                         </div>
                         <div className="insertAppSide right">
                             <TinyEditor  
-                                onInit={(evt, editor) => editorRef.current = editor}
+                                onInit={(evt, editor) => {
+                                    editorRef.current = editor;
+                                    setEditableElements(editor.getDoc());
+                                    const dateDiv = editor.getDoc().querySelector('#date div');
+
+                                    if(dateDiv){
+                                        const currentDate = new Date().toLocaleDateString();
+                                        dateDiv.textContent = currentDate;
+                                        console.log(`editor : Current date inserted : ${currentDate}`);
+                                    }
+                                }}
                                 value={formContent}
+                                onEditorChange={handleEditorChange}
                                 init={{
                                     menubar: false,
                                     plugins: [
@@ -85,9 +128,20 @@ const ApprovalInsert = () => {
                                     toolbar: 'undo redo | formatselect | bold italic backcolor | ' +
                                         'alignleft aligncenter alignright alignjustify | ' +
                                         'bullist numlist outdent indent | removeformat | help',
-                                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                                    setup: (editor) => {
+                                        editor.on('init', () => {
+                                            setEditableElements(editor.getDoc());
+                                            const dateDiv = editor.getDoc().querySelector('#date div');
+                                            if (dateDiv) {
+                                                const currentDate = new Date().toLocaleDateString();
+                                                dateDiv.textContent = currentDate;
+                                                console.log(`setup : Current date inserted : ${currentDate}`);
+                                            }
+                                        });
+                                    },
+                                    height: 1200
                                 }}
-                                onEditorChange={handleEditorChange}
                             />
                         </div>
                     </div>

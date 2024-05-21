@@ -53,6 +53,15 @@ import contentUiCss from '!!raw-loader!tinymce/skins/ui/oxide/content.min.css';
 
 export default function TinyEditor(props) {
     const { init, ...rest } = props;
+
+    // const insertCurrentDate = (doc) => {
+    //     const dateDiv = doc.querySelector('#date div');
+    //     if(dateDiv){
+    //         const currentDate = new Date().toLocaleDateString();
+    //         dateDiv.textContent = currentDate;
+    //     }
+    // };
+
     return (
         <Editor
             init={{
@@ -64,7 +73,9 @@ export default function TinyEditor(props) {
                     contentUiCss,
                     init.content_style || '',
                 `
-                    
+                body {
+                    contenteditable: false;
+                }
                 #titleform {
                     display: flex;
                     align-items: center;
@@ -73,7 +84,7 @@ export default function TinyEditor(props) {
                     margin-bottom: 80px;
                     position: relative;
                 }
-                .input-container {
+                /*  .input-container {
                     width: 100%;
                     display: flex;
                     justify-content: center;
@@ -81,8 +92,8 @@ export default function TinyEditor(props) {
                 }
                 .input-container:not(input){
                     pointer-events: none;
-                }
-                .input-container input {
+                }  */
+                #titleform input {
                     width: 400px;
                     border: none;
                     border-bottom: 2px solid black;
@@ -163,6 +174,7 @@ export default function TinyEditor(props) {
                         align-items: center;
                         justify-content: center;
                         font-weight: bold;
+                        height: 150px;
                     }
                 
                     #useDetail {
@@ -214,33 +226,59 @@ export default function TinyEditor(props) {
                 elementpath: false,
                 statusbar: false,
                 apiKey:'rycrpdzecr2jsi6ynnzcievvp4toluceiawzt0dgpbuzkkpk',
-                setup: (editor) => {
-                    editor.on('init', () => {
-                        // 'titleform' 내부의 모든 텍스트를 제거하고 input만 남김
-                        const titleForm = editor.getDoc().querySelector('#titleform');
-                        console.log('title : ' + titleForm);
-                        if (titleForm) {
-                            // 'titleform' 내부의 모든 텍스트 노드를 제거하고 input을 포함하는 div를 추가
-                            while(titleForm.firstChild){
-                                
-                                titleForm.removeChild(titleForm.firstChild);
-                                console.log('첫자식 없앰');
-                            }
-                            titleForm.innerHTML = '<div class="input-container"><input type="text" id="title" placeholder="제목"></div>';
-                            const titleInput = titleForm.querySelector('input');
-                            titleForm.addEventListener('click', () => {
+                 setup: (editor) => {
+                     editor.on('init', () => {
+                         const doc = editor.getDoc();
+
+                         const dateDiv = doc.querySelector('#date div');
+                         if(dateDiv){
+                            dateDiv.innerHTML = '';
+                            const currentDate = new Date().toLocaleDateString();
+                            dateDiv.textContent = currentDate;
+                            console.log(`editor 1 date inserted : ${currentDate}`);
+                         }
+
+                         
+                //         insertCurrentDate(doc);     //현재 날짜 삽입
+                //         // const titleForm = doc.querySelector('#titleform');
+                         const formElements = doc.querySelectorAll('input, td, div[contenteditable="true"]');
+                         const titleInput = doc.querySelector('#titleform input');
+
+                //         // if (titleForm) {
+                //         //     while (titleForm.firstChild) {
+                //         //         titleForm.removeChild(titleForm.firstChild);
+                //         //     }
+                //         //     titleForm.innerHTML = '<div class="input-container"><input type="text" id="title" placeholder="제목"></div>';
+                //         // }
+
+                         formElements.forEach(element => {
+                             element.setAttribute('contenteditable', 'true');
+                         });
+
+                        doc.body.querySelectorAll('*:not(input):not(td):not(div[contenteditable="true"])').forEach(element => {
+                            element.setAttribute('contenteditable', 'false');
+                            console.log("contenteditable : false 로 만듬 ")
+                        });
+
+                //         //제목 input 포커스 설정
+                        if(titleInput){
+                            titleInput.addEventListener('click', () => {
                                 titleInput.focus();
                             });
-                            titleForm.addEventListener('keypress', (e) => {
-                                if (e.target !== titleInput) {
-                                    e.preventDefault();
-                                    titleInput.focus();
-                                }
-                            });
+                            titleInput.setAttribute('contenteditable', 'true');
                         }
-                        
-                    });
-                }
+                     });
+                    }
+
+                //         editor.on('click', (e) => {
+                //             const target = e.target;
+                //             if (!target.matches('input, td, div[contenteditable="true"]')) {
+                //                 e.preventDefault();
+                //                 e.stopImmediatePropagation();
+                //             }
+                //         });
+                //     });
+                // }
             }}
             {...rest}
         />
