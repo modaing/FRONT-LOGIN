@@ -157,19 +157,19 @@ function RecordCorrectionOfCommute() {
         console.log('[useEffect] page : ', currentPage);
         console.log('[useEffect] parsingDateOffset : ', parsingDateOffset);
         dispatch(callSelectCorrectionListAPI(memberId, page, size, sort, direction, parsingDateOffset));
-    }, [memberId, date]);
+    }, [memberId, parsingDateOffset]);
 
     /* 페이징 핸들러 */
     const handlePageChange = (page) => {
         dispatch({ type: SET_PAGENUMBER, payload: { page: page } });
     };
-    
+
     const handlePrevPage = () => {
         if (currentPage > 0) {
             dispatch({ type: SET_PAGENUMBER, payload: { page: currentPage - 1 } });
         }
     };
-    
+
     const handleNextPage = () => {
         if (currentPage < totalPages - 1) {
             dispatch({ type: SET_PAGENUMBER, payload: { page: currentPage + 1 } });
@@ -205,7 +205,15 @@ function RecordCorrectionOfCommute() {
                             <tbody>
                                 {correctionList.length > 0 ? (
                                     correctionList.map((item, index) => (
-                                        <CorrectionItem key={item.corrNo} correction={item} commute={commuteList} tableStyles={tableStyles} evenRow={index % 2 === 0} date={parsingDateOffset} style={{zIndex: '1'}}/>
+                                        <CorrectionItem
+                                            key={item.corrNo}
+                                            correction={item}
+                                            commute={commuteList}
+                                            tableStyles={tableStyles}
+                                            evenRow={index % 2 === 0}
+                                            date={parsingDateOffset}
+                                            style={{ zIndex: '1' }}
+                                        />
                                     ))
                                 ) : (
                                     <tr>
@@ -221,7 +229,7 @@ function RecordCorrectionOfCommute() {
                                     <button className="page-link" onClick={handlePrevPage}>◀</button>
                                 </li>
                                 {[...Array(totalPages).keys()].map((page, index) => (
-                                    <li key={index} className={`page-item ${currentPage === page ? 'active' : ''}`} style={{zIndex: '0'}}>
+                                    <li key={index} className={`page-item ${currentPage === page ? 'active' : ''}`} style={{ zIndex: '0' }}>
                                         <button className="page-link" onClick={() => {
                                             console.log('[page]', page);
                                             handlePageChange(page)
