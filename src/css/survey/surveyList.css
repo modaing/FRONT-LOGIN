@@ -42,13 +42,12 @@
     text-decoration: none;
 }
 
-.surveycomplete{
+.surveyComplete{
     background-color: #F9F7F7;
     color: #000000;
-    border: solid #F9F7F7;
+    border: solid #D9D9D9;
     border-radius: 10px;
     padding: 1% 2%;
-    cursor: pointer;
     text-decoration: none;
 }
 

@@ -9,8 +9,10 @@ export function renderSurveyList(content, handleOpenModal) {
 
     return content.map((survey, index) => {
         const { formattedStartDate, formattedEndDate } = formattedLocalDate(survey)
-        const buttonClassName = survey.surveycompleted ? 'surveycomplete' : 'surveyOpen';
-        const buttonText = survey.surveycompleted ? '참여 완료' : '수요조사 참여';
+        const buttonClassName = survey.surveyCompleted ? 'surveyComplete' : 'surveyOpen';
+        const buttonText = survey.surveyCompleted ? '참여완료' : '참여하기';
+        const onClickHandler = survey.surveyCompleted ? null : () => handleOpenModal(); 
+
         return (
             <tr key={index}>
                 <td>{survey.surveyNo}</td>
@@ -19,7 +21,7 @@ export function renderSurveyList(content, handleOpenModal) {
                 <td>{formattedEndDate}</td>
                 <td>{survey.name}</td>
                 <td>
-                    <span className={buttonClassName} onClick={() => handleOpenModal()}>
+                    <span className={buttonClassName} onClick={onClickHandler}>
                         {buttonText}
                     </span>
                 </td>
