@@ -145,8 +145,8 @@ function Sidebar() {
                         <i className="bi bi-megaphone"></i><span>공지사항</span>
                     </Link>
                 </li>
-                <li className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
-                    <Link className={`nav-link ${location.pathname === '/' ? '' : 'nav-link-main-cal collapsed'}`} to="/">
+                <li className={`nav-item ${location.pathname === '/surveyList' ? 'active' : ''}`}>
+                    <Link className={`nav-link ${location.pathname === '/surveyList' ? '' : 'nav-link-main-cal collapsed'}`} to="/surveyList">
                         <i className="bi bi-clipboard-check"></i><span>수요조사</span>
                     </Link>
                 </li>

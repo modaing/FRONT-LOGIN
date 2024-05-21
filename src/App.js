@@ -27,6 +27,7 @@ import ApprovalPage from './pages/approval/ApprovalPage';
 import LeaveAccrual from './pages/leave/LeaveAccrual';
 import LeaveProcessing from './pages/leave/LeaveProcessing';
 import Leaves from './pages/leave/Leaves';
+import SurveyList from './pages/survey/SurveyList';
 import MemberPage from './pages/member/MemberPage';
 
 function App() {
@@ -60,6 +61,7 @@ function App() {
             <Route path="insertAnnounce" element={<InsertAnnounce />} />
             <Route path='manageMember' element={<ManageMember />} />
             <Route path='registerMember' element={<RegisterMember />} />
+            <Route path='surveyList' element={<SurveyList />} />
             <Route path='receiveNoteList' element={<ReceiveNoteList />} />
             <Route path='sendNoteList' element={<SendNoteList />} />
             <Route path="chatRoomList" element={<RoomList />} />
