@@ -75,6 +75,7 @@ export default function TinyEditor(props) {
                 `
                 body {
                     contenteditable: false;
+                    
                 }
                 #titleform {
                     display: flex;
@@ -170,11 +171,12 @@ export default function TinyEditor(props) {
                 
                     #date {
                         margin-top: 80px;
+                        margin-bottom : 80px;
                         display: flex;
                         align-items: center;
                         justify-content: center;
                         font-weight: bold;
-                        height: 150px;
+                        height: 50px;
                     }
                 
                     #useDetail {
@@ -209,6 +211,9 @@ export default function TinyEditor(props) {
                     }
                     #ovt_table td{
                     text-align: center;
+                    }
+                    .mce-content-body{
+                        scrollbar-color : rgb(241, 255, 190) black;
                     }
                     `
                 ].join('\n'),

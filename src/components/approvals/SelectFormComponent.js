@@ -10,10 +10,24 @@ const SelectFormComponent = ({ onSelectForm }) => {
     const loading = useSelector((state) => state.approval.loading);
     const error = useSelector((state) => state.approval.error);
     const [selectedForm, setSelectedForm] = useState('');
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
 
     useEffect(( ) => {
         dispatch(getFormsAPI());
     }, [dispatch]);
+
+    useEffect(() => {
+        //기본 폼 로드
+        if(isInitialLoad && forms && forms.length > 0){
+            const defaultForm = forms.find(form => form.formName === '기본');
+            if(defaultForm){
+                setSelectedForm(defaultForm.formNo);
+                onSelectForm(defaultForm);
+            }
+            setIsInitialLoad(false);
+        }
+    }, [forms], onSelectForm, isInitialLoad);
+    
 
     const handleSelectChange = (event) => {
 
@@ -51,7 +65,6 @@ const SelectFormComponent = ({ onSelectForm }) => {
             <label htmlFor="formSelect " className="formSelectTitle">양식 선택</label>
 
             <select id="formSelect" value={selectedForm} onChange={handleSelectChange}>
-                <option value="default">결재 양식 선택</option>
                 {forms.map((form) => (
                     <option key={form.formNo} value={form.formNo}>
                         {form.formName}
