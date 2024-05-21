@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../css/note/noteLists.css';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { useSelector, useDispatch } from 'react-redux';
 import { callPutReceiceNotesAPI, callReceiveNotesAPI } from '../../apis/NoteAPICalls';
@@ -23,31 +23,29 @@ const ReceiveNoteList = () => {
 
     const token = window.localStorage.getItem("accessToken");
     const memberInfo = decodeJwt(token);
-    const profilePic = memberInfo.imageUrl;
     const memberId = memberInfo.memberId;
 
     useEffect(() => {
-        // 멤버 리스트를 가져오는 API 호출
-        callMemberListAPI().then(response => {
-            const responseData = response.data;
-            setMembers(responseData);
-        }).catch(error => {
-            console.error('Error fetching members:', error);
-        });
+        callMemberListAPI()
+            .then(response => {
+                setMembers(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching members:', error);
+            });
     }, []);
 
     useEffect(() => {
         if (!receiveNoteList) {
             dispatch(callReceiveNotesAPI(0, 10, 'noteNo', 'DESC', memberId, memberId));
         } else if (receiveNoteList.notes) {
-            const initialCheckboxes = Array(receiveNoteList.notes.length).fill(false);
-            setCheckboxes(initialCheckboxes);
+            setCheckboxes(Array(receiveNoteList.notes.length).fill(false));
         }
     }, [dispatch, memberId, receiveNoteList]);
 
     const { notes, currentPage, totalPages } = receiveNoteList || {};
 
-    const handleCheckboxChange = (index) => {
+    const handleCheckboxChange = index => {
         if (notes && notes.length > index) {
             const newCheckboxes = [...checkboxes];
             newCheckboxes[index] = !newCheckboxes[index];
@@ -57,8 +55,6 @@ const ReceiveNoteList = () => {
             } else {
                 setSelectedItems(prevSelectedItems => prevSelectedItems.filter(item => item !== index));
             }
-
-            console.log('Selected noteNo:', notes[index].noteNo);
         } else {
             console.error("Notes array or its length is undefined");
         }
@@ -80,10 +76,10 @@ const ReceiveNoteList = () => {
 
     const closeForm = () => {
         setIsFormOpen(false);
-        document.body.classList.remove('modal-open');
+        document.body.classList.remove('note-modal');
     };
 
-    const openNoteDetailModal = (index) => {
+    const openNoteDetailModal = index => {
         setSelectedNote(notes[index]);
     };
 
@@ -92,89 +88,50 @@ const ReceiveNoteList = () => {
     };
 
 
-    const handleDeleteSelectedItems = async () => {
-        if (notes && Array.isArray(notes)) {
-            await Promise.all(selectedItems.map(async index => {
-                if (index >= 0 && index < notes.length) {
-                    const noteNo = notes[index].noteNo;
-                    await dispatch(callPutReceiceNotesAPI(noteNo, 'Y', 'N'));
-                }
-            }));
-            // 비동기로 삭제된 후에 새로운 노트를 받아오도록 상태를 업데이트합니다.
-            await dispatch(callReceiveNotesAPI(currentPage, 10, 'noteNo'));
-            setCheckboxes(Array(notes.length).fill(false));
-            setSelectedItems([]);
-            
-            navigate('/receiveNoteList');
-        }
-    };
-
-    useEffect(() => {
-
-        const goToPrevPage = () => {
-            const nextPage = currentPage - 1;
-            if (nextPage >= 0) {
-                dispatch(callReceiveNotesAPI(nextPage, 10, 'noteNo'));
-            }
-        };
-
-        const goToNextPage = () => {
-            const nextPage = currentPage + 1;
-            if (nextPage < totalPages) {
-                dispatch(callReceiveNotesAPI(nextPage, 10, 'noteNo'));
-            }
-        };
-
-        console.log(currentPage)
-
-        const prevButton = document.querySelector('.bx-chevron-left');
-        const nextButton = document.querySelector('.bx-chevron-right');
-
-        if (prevButton) {
-            prevButton.addEventListener('click', goToPrevPage);
-        }
-
-        if (nextButton) {
-            nextButton.addEventListener('click', goToNextPage);
-        }
-
-        return () => {
-            if (prevButton) {
-                prevButton.removeEventListener('click', goToPrevPage);
-            }
-            if (nextButton) {
-                nextButton.removeEventListener('click', goToNextPage);
-            }
-        };
-    }, [dispatch, memberId, currentPage, totalPages]);
-
-
-    const findUserName = (senderId) => {
-        // 멤버 리스트에서 receiverId와 동일한 memberId를 가진 멤버를 찾음
-        const member = members.find(member => member.memberId === senderId);
-        // 해당 멤버가 존재하면 해당 멤버의 이름과 receiverId를 반환
-        return member ? `${member.name} (${senderId})` : null;
-    };
-
-    const findUserPhoto = (senderId) => {
-        const memberPhoto = members.find(member => member.memberId === senderId);
-        const imageUrl = memberPhoto ? memberPhoto.imageUrl : null;
-        return `/img/${imageUrl}`;
-    };
-
     const handleUpdateConfirm = async () => {
-        // 업데이트 모달에서 확인 버튼을 눌렀을 때의 동작
+        
         await Promise.all(selectedItems.map(async index => {
             if (index >= 0 && index < notes.length) {
                 const noteNo = notes[index].noteNo;
-                await dispatch(callPutReceiceNotesAPI(noteNo, 'Y', 'N'));
+                const sendDeleteYn = notes[index].sendDeleteYn  === 'N' ? 'N' : 'Y';
+                await dispatch(callPutReceiceNotesAPI(noteNo, 'Y', sendDeleteYn));
             }
         }));
-        await dispatch(callReceiveNotesAPI(currentPage, 10, 'noteNo'));
+        await dispatch(callReceiveNotesAPI(currentPage, 10, 'noteNo', 'DESC', memberId, memberId));
         setCheckboxes(Array(notes.length).fill(false));
         setSelectedItems([]);
-        setIsUpdateModalOpen(false); // 모달 닫기
-        navigate('/receiveNoteList');
+        setIsUpdateModalOpen(false);
+    };
+
+    const handlePrevPage = () => {
+        if (currentPage > 0) {
+            dispatch(callReceiveNotesAPI(currentPage - 1, 10, 'noteNo', 'DESC', memberId, memberId));
+        }
+    };
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages - 1) {
+            dispatch(callReceiveNotesAPI(currentPage + 1, 10, 'noteNo', 'DESC', memberId, memberId));
+        }
+    };
+
+    const handlePageChange = pageNumber => {
+        dispatch(callReceiveNotesAPI(pageNumber, 10, 'noteNo', 'DESC', memberId, memberId));
+    };
+
+    const findUserName = senderId => {
+        const member = members.find(member => member.memberId === senderId);
+        return member ? `${member.name} (${senderId})` : null;
+    };
+
+    const findUserPhoto = senderId => {
+        const memberPhoto = members.find(member => member.memberId === senderId);
+        return memberPhoto ? `/img/${memberPhoto.imageUrl}` : null;
+    };
+
+    const paginationStyle = {
+        display: 'flex',
+        justifyContent: 'center',
     };
 
     return (
@@ -195,12 +152,12 @@ const ReceiveNoteList = () => {
                         <div className="row">
                             <div className="col-lg-2" style={{ borderRight: '1px solid #ccc' }}>
                                 <div style={{ marginTop: '50px' }}>
-                                    <Link to="#" className="sendMailBtn" type="button" onClick={openForm}>Compose</Link>
+                                    <Link to="#" className="sendMailBtn" type="button" onClick={openForm}>쪽지 보내기</Link>
                                     <Link to="/sendNoteList" className="sidebar-fake">
-                                        <i className="bi bi-envelope" style={{ marginRight: '10px' }}></i><span>Sent</span>
+                                        <i className="bi bi-envelope" style={{ marginRight: '10px' }}></i><span>보낸 편지함</span>
                                     </Link>
                                     <Link to="/receiveNoteList" className="sidebar-fake">
-                                        <i className="bi bi-cursor" style={{ marginRight: '10px' }}></i><span>Receive</span>
+                                        <i className="bi bi-cursor" style={{ marginRight: '10px' }}></i><span>받은 편지함</span>
                                     </Link>
                                 </div>
                             </div>
@@ -221,34 +178,54 @@ const ReceiveNoteList = () => {
                                                         </div>
                                                     </th>
                                                     <th className="third-column">받을 사원</th>
-                                                    <th className="fourth-column" >제목</th>
-                                                    <th className="fifth-column">
-                                                        <i className="bx bx-chevron-left arrow-icon" style={{ background: 'none', marginRight: '10%' }}></i>
-                                                        <i className="bx bx-chevron-right arrow-icon" style={{ background: 'none', fontweight: 'bold0', marginRight: '-20%' }}></i>
-                                                    </th>
+                                                    <th className="fourth-column">제목</th>
+                                                    <th className="fifth-column">받은 날짜</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {notes?.map((note, index) => (
-                                                    <tr key={note.noteNo} className="note-row">
-                                                        <td className="first-column">
-                                                            <input
-                                                                className="checkbox-custom"
-                                                                type="checkbox"
-                                                                checked={checkboxes[index]}
-                                                                onChange={() => handleCheckboxChange(index)}
-                                                            />
-                                                        </td>
-                                                        <td className="second-column" onClick={() => openNoteDetailModal(index)}>
-                                                            {findUserPhoto(note.senderId) && <img src={findUserPhoto(note.senderId)} alt="Profile" className="rounded-circle" />}
-                                                        </td>
-                                                        <td className="third-column" style={{ fontSize: '14px' }} onClick={() => openNoteDetailModal(index)}>{findUserName(note.senderId)}</td>
-                                                        <td className="fourth-column" onClick={() => openNoteDetailModal(index)}>{note.noteTitle}</td>
-                                                        <td className="fifth-column" onClick={() => openNoteDetailModal(index)}>{note.sendNoteDate}</td>
+                                                {notes && notes.length > 0 ? (
+                                                    notes.map((note, index) => (
+                                                        <tr key={note.noteNo} className="note-row">
+                                                            <td className="first-column">
+                                                                <input
+                                                                    className="checkbox-custom"
+                                                                    type="checkbox"
+                                                                    checked={checkboxes[index]}
+                                                                    onChange={() => handleCheckboxChange(index)}
+                                                                />
+                                                            </td>
+                                                            <td className="second-column" onClick={() => openNoteDetailModal(index)}>
+                                                                {findUserPhoto(note.senderId) && <img src={findUserPhoto(note.senderId)} alt="Profile" className="rounded-circle" />}
+                                                            </td>
+                                                            <td className="third-column" style={{ fontSize: '14px' }} onClick={() => openNoteDetailModal(index)}>{findUserName(note.senderId)}</td>
+                                                            <td className="fourth-column" onClick={() => openNoteDetailModal(index)}>{note.noteTitle}</td>
+                                                            <td className="fifth-column" onClick={() => openNoteDetailModal(index)}>{note.sendNoteDate}</td>
+                                                        </tr>
+                                                    ))
+                                                ) : (
+                                                    <tr>
+                                                        <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>받은 쪽지가 없습니다</td>
                                                     </tr>
-                                                ))}
+                                                )}
                                             </tbody>
                                         </table>
+                                        <nav style={paginationStyle}>
+                                            <ul className="pagination">
+                                                <li className={`page-item ${currentPage === 0 ? 'disabled' : ''}`}>
+                                                    <button className="page-link" onClick={handlePrevPage}>◀</button>
+                                                </li>
+                                                {Array.from(Array(totalPages).keys()).map((page, index) => (
+                                                    <li key={index} className={`page-item ${currentPage === page ? 'active' : ''}`}>
+                                                        <button className="page-link" onClick={() => handlePageChange(page)}>
+                                                            {page + 1}
+                                                        </button>
+                                                    </li>
+                                                ))}
+                                                <li className={`page-item ${currentPage === totalPages - 1 ? 'disabled' : ''}`}>
+                                                    <button className="page-link" onClick={handleNextPage}>▶</button>
+                                                </li>
+                                            </ul>
+                                        </nav>
                                     </React.Fragment>
                                 )}
                             </div>

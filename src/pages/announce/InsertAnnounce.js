@@ -139,7 +139,7 @@ function InsertAnnounce() {
                                             ],
                                         }}
                                     />
-                                    <ReactMarkdown>{previewContent}</ReactMarkdown>
+                                    {/* <ReactMarkdown>{previewContent}</ReactMarkdown> */}
                                 </div>
                             </div>
                             <div style={buttonClass}>
