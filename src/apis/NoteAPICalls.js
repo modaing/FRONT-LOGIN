@@ -67,7 +67,7 @@ export const callPutReceiceNotesAPI = (noteNo, receiveDeleteYn, sendDeleteYn) =>
         try {
             const putNotesResponse = await axios.put(
                 `${API_BASE_URL}/notes/${noteNo}`,
-                { receiveDeleteYn,sendDeleteYn }, // sendDeleteYn / receiveDeleteYn 값을 전달
+                { receiveDeleteYn, sendDeleteYn }, // sendDeleteYn / receiveDeleteYn 값을 전달
                 {
                     headers: {
                         'Content-Type': 'application/json', 

@@ -27,6 +27,8 @@ import ApprovalPage from './pages/approval/ApprovalPage';
 import LeaveAccrual from './pages/leave/LeaveAccrual';
 import LeaveProcessing from './pages/leave/LeaveProcessing';
 import Leaves from './pages/leave/Leaves';
+import SurveyList from './pages/survey/SurveyList';
+import MemberPage from './pages/member/MemberPage';
 
 function App() {
   const isLoggedIn = !!window.localStorage.getItem("accessToken");
@@ -59,12 +61,14 @@ function App() {
             <Route path="insertAnnounce" element={<InsertAnnounce />} />
             <Route path='manageMember' element={<ManageMember />} />
             <Route path='registerMember' element={<RegisterMember />} />
+            <Route path='surveyList' element={<SurveyList />} />
             <Route path='receiveNoteList' element={<ReceiveNoteList />} />
             <Route path='sendNoteList' element={<SendNoteList />} />
             <Route path="chatRoomList" element={<RoomList />} />
             <Route path="/room/:roomId" element={<Room />} />
             <Route path='/departmentAndPosition' element={<DepartmentAndPosition />} />
             <Route path='approvals' element={<ApprovalPage />} />
+            <Route path="/manageMember/:memberId" element={<MemberPage />} />
           </Route>
         ) : (
           <Route path="/" element={<Navigate to="/login" replace />} />

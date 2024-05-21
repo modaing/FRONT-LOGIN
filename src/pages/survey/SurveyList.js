@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { SET_PAGENUMBER } from '../../modules/LeaveModule';
-import { callSelectLeavesAPI } from '../../apis/LeaveAPICalls';
-import { renderLeaves } from '../../utils/leaveUtil';
+import { callSelectSurveyListAPI } from '../../apis/SurveyAPICalls';
+import { SET_PAGENUMBER } from '../../modules/SurveyModule';
+import { decodeJwt } from '../../utils/tokenUtils';
+import { renderSurveyList } from '../../utils/SurveyUtil';
+import '../../css/survey/surveyList.css'
 import '../../css/common.css'
 
-function Leaves() {
-    const { page } = useSelector(state => state.leaveReducer);
+
+function SurveyList() {
+    const { page } = useSelector(state => state.surveyReducer);
     const { number, content, totalPages } = page || {};
-    const [properties, setProperties] = useState('memberId')
-    const [direction, setDirection] = useState('DESC')
-    const [isLoading, setIsLoading] = useState(false);
+    const [ properties, setProperties ] = useState('surveyNo');
+    const [ direction, setDirection ] = useState('DESC');
+    const [ isModalOpen, setIsModalOpen ] = useState(false);
+    const [ isLoading, setIsLoading ] = useState(false);
+
+    const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
 
     const dispatch = useDispatch();
 
@@ -35,57 +41,60 @@ function Leaves() {
         setDirection(direction === 'DESC' ? 'ASC' : 'DESC');
     }
 
-    useEffect(() => {
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
+  useEffect(() => {
         setIsLoading(true);
-        dispatch(callSelectLeavesAPI(number, properties, direction))
+        dispatch(callSelectSurveyListAPI(number, properties, direction, memberId))
             .finally(() => setIsLoading(false));
     }, [number, properties, direction]);
 
+
     return <main id="main" className="main">
-        <div className="pagetitle">
-            <h1>휴가</h1>
+     <div className="pagetitle">
+            <h1>수요조사</h1>
             <nav>
                 <ol className="breadcrumb">
                     <li className="breadcrumb-item"><Link to="/">Home</Link></li>
-                    <li className="breadcrumb-item">휴가</li>
-                    <li className="breadcrumb-item active">휴가 보유 내역 조회</li>
                 </ol>
             </nav>
         </div>
         <div className="col-lg-12">
             <div className="card">
-                <div className="myLeaveListContent" >
+                <div className="surveyListContent" >
                     <table className="table table-hover">
                         <thead>
                             <tr>
-                                <th onClick={() => handleSort('applicantName')}>
-                                    <span>사원명</span><i className="bx bxs-sort-alt"></i>
+                                <th onClick={() => handleSort('surveyNo')}>
+                                    <span>번호</span><i className="bx bxs-sort-alt"></i>
                                 </th>
 
-                                <th onClick={() => handleSort('memberId')}>
-                                    <span>사번</span><i className="bx bxs-sort-alt"></i>
+                                <th onClick={() => handleSort('surveyTitle')} style={{width: '20%'}}>
+                                    <span>제목</span><i className="bx bxs-sort-alt"></i>
                                 </th>
 
-                                <th><span>연차</span></th>
+                                <th><span>시작 일자</span></th>
 
-                                <th><span>공가</span></th>
+                                <th><span>마감 일자</span></th>
 
-                                <th><span>경조사</span></th>
+                                <th><span>작성자</span></th>
 
-                                <th><span>특별 휴가</span></th>
-
-                                <th><span>소진 일수</span></th>
-
-                                <th><span>잔여 일수</span></th>
+                                <th><span></span></th>
                             </tr>
                         </thead>
                         <tbody>
                             {isLoading ? ( // 로딩 중이면 로딩 메시지 표시
                                 <tr>
-                                    <td colSpan="8" className="loadingText"></td>
+                                    <td colSpan="6" className="loadingText"></td>
                                 </tr>
                             ) : (
-                                renderLeaves(content) // 로딩 중이 아니면 실제 데이터 표시
+                                renderSurveyList(content, handleOpenModal) // 로딩 중이 아니면 실제 데이터 표시
                             )}
                         </tbody>
                     </table>
@@ -119,4 +128,4 @@ function Leaves() {
     </main>
 }
 
-export default Leaves;
+export default SurveyList;
