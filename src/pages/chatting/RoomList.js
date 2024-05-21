@@ -137,16 +137,21 @@ function RoomList() {
     }
   };
 
+
   const findUserPhoto = (receiverId, memberId, members, room) => {
+    let imageUrl = null;
+  
     if (receiverId === memberId) {
       // receiverId와 memberId가 같다면, room.memberId의 사진을 반환
       const memberPhoto = members.find(member => member.memberId === room.memberId);
-      return memberPhoto ? memberPhoto.imageUrl : null;
+      imageUrl = memberPhoto ? memberPhoto.imageUrl : null;
     } else {
       // 그렇지 않으면 receiverId의 사진을 반환
       const receiverPhoto = members.find(member => member.memberId === receiverId);
-      return receiverPhoto ? receiverPhoto.imageUrl : null;
+      imageUrl = receiverPhoto ? receiverPhoto.imageUrl : null;
     }
+  
+    return imageUrl ? `/img/${imageUrl}` : null;
   };
 
   return (

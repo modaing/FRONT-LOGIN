@@ -1,46 +1,42 @@
 import { Link, useNavigate } from 'react-router-dom'; // react-router-dom에서 Link 가져오기
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { decodeJwt } from'../utils/tokenUtils';
+import { decodeJwt } from '../utils/tokenUtils';
 import { useDispatch } from 'react-redux';
 import { callLogoutAPI, callGetProfilePictureAPI } from '../apis/MemberAPICalls';
 import { useEffect, useState } from 'react';
 
 function Header() {
-    
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [imageUrl, setImageUrl] = useState(null);
-
-    let memberRole = null;
-
     const token = window.localStorage.getItem("accessToken");
     const memberInfo = decodeJwt(token);
-    // const profilePic = memberInfo.imageUrl;
-    // console.log('구성원 프로필 사진:',profilePic);
-    
+    const image = memberInfo.imageUrl;
+    const imageUrl = `/img/${image}`;
+        
     if (token) {
         try {
             const decodedTokenInfo = decodeJwt(token);
             // console.log('Decoded token info:', decodedTokenInfo);
-            memberRole = decodedTokenInfo.role;
+            // memberRole = decodedTokenInfo.role;
             // console.log('구성원의 role:',memberRole);
         } catch (error) {
             console.log('Error decoding JWT token:', error);
         }
     }
-    
+
     // const getProfilePic = () => {
     //     setImageData(memberInfo.imageUrl);
     //     console.log('imageData:', imageData);
     // }
 
-    useEffect(() => {
-        if (token && memberInfo && memberInfo.imageUrl) {
-            // Set the profile picture URL in state
-            setImageUrl(memberInfo.imageUrl);
-        }
-    }, [token, memberInfo]);
-    
+    // useEffect(() => {
+    //     if (token && memberInfo && memberInfo.imageUrl) {
+    //         // Set the profile picture URL in state
+    //         setImageUrl(memberInfo.imageUrl);
+    //     }
+    // }, [token, memberInfo]);
+
     const onClickLogoutHandler = (event) => {
         event.preventDefault();
         dispatch(callLogoutAPI())
@@ -116,7 +112,6 @@ function Header() {
                         {/* 프로필 메뉴를 토글하는 링크 */}
                         <Link to="#" className="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown">
                             <img src={imageUrl} alt="Profile" className="rounded-circle" />
-
                             <span className="d-none d-md-block dropdown-toggle ps-2">{memberInfo.name} </span>
                         </Link>
                         {/* 프로필 메뉴 */}
