@@ -62,6 +62,22 @@ export default function TinyEditor(props) {
     //     }
     // };
 
+    const moveToNextEditableElement = (doc, currentElement) => {
+        const allEditableElements = doc.querySelectorAll('input,  td[contenteditable="true"], div[contenteditable="true"]');
+        const currentIndex = Array.prototype.indexOf.call(allEditableElements, currentElement);
+    
+        if (currentIndex < allEditableElements.length - 1) {
+
+            const nextElement = allEditableElements[currentIndex + 1];
+
+            if (nextElement) {
+                    nextElement.focus();
+            }else{
+                console.log('다음이 없다');
+            }
+        }
+    };
+
     return (
         <Editor
             init={{
@@ -273,6 +289,14 @@ export default function TinyEditor(props) {
                             titleInput.setAttribute('contenteditable', 'true');
                         }
                      });
+
+                     editor.on('keydown', (e) => {
+                        if(e.key === 'Tab'){
+                            e.preventDefault();
+                            moveToNextEditableElement(editor.getDoc(), editor.selection.getNode());
+                        }
+                     }
+                    )
                     }
 
                 //         editor.on('click', (e) => {
