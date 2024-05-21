@@ -3,12 +3,12 @@ import { callSelectCommuteDetailAPI, callSelectCommuteListAPI } from "../apis/Co
 
 /* 초기값 */
 const initialState = {
-    commutelist: [],
-    correctionlist: {
-        correctionlist: [],
-        currentPage: 0,
-        totalPages: 0,
-    },
+    // commutelist: [],
+    // correctionlist: {
+    //     correctionlist: [],
+    //     currentPage: 0,
+    //     totalPages: 0,
+    // },
 };
 
 /* 액션 타입 */

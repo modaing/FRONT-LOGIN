@@ -1,4 +1,4 @@
-import { getCommute, getCommutelist, getCorrectionlist, postCommute, postCorrection, putCommute } from "../modules/CommuteModule";
+import { getCommute, getCommutelist, getCorrectionlist, postCommute, postCorrection, putCommute, putCorrection } from "../modules/CommuteModule";
 import { request } from "./CommonAPI";
 
 /* 출퇴근 내역 조회 API  */
@@ -99,13 +99,13 @@ export const callInsertCorrectionAPI = (newCorrection) => {
 export const callSelectCorrectionListAPI = (memberId, page, size, sort, direction, date) => {
     return async (dispatch) => {
         try {
-            // console.log('[page] ', page);
-            // console.log('[size] ', size);
-            // console.log('[sort] ', sort);
-            // console.log('[direction] ', direction);
-            // console.log('[date] ', date);
+            let url;
 
-            const url = `/corrections?memberId=${memberId}&page=${page}&size=${size}&sort=${sort}&direction=${direction}&date=${date}`;
+            if (memberId === null) {
+                url = `/corrections?page=${page}&size=${size}&sort=${sort}&direction=${direction}&date=${date}`;
+            } else if (memberId !== null){
+                url = `/corrections?memberId=${memberId}&page=${page}&size=${size}&sort=${sort}&direction=${direction}&date=${date}`;
+            }
             const response = await request('GET', url);
 
             console.log('[callSelectCorrectionListAPI] response : ', response);
@@ -114,6 +114,23 @@ export const callSelectCorrectionListAPI = (memberId, page, size, sort, directio
 
         } catch (error) {
             console.log('[callSelectCorrectionListAPI] error : ', error);
+        }
+    }
+};
+
+/* 출퇴근 정정 처리 API */
+export const callUpdateCorrectionAPI = (updateCorrection) => {
+    return async (dispatch) => {
+        try {
+            const url = `/corrections/${updateCorrection.corrNo}`;
+            const response = await request('PUT', url);
+
+            console.log('[callUpdateCorrectionAPI] response : ', response);
+
+            dispatch(putCorrection(response));
+
+        } catch (error) {
+            console.log('[callUpdateCorrectionAPI] error : ', error);
         }
     }
 };
