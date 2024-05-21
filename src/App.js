@@ -28,6 +28,7 @@ import LeaveAccrual from './pages/leave/LeaveAccrual';
 import LeaveProcessing from './pages/leave/LeaveProcessing';
 import Leaves from './pages/leave/Leaves';
 import SurveyList from './pages/survey/SurveyList';
+import MemberPage from './pages/member/MemberPage';
 
 function App() {
   const isLoggedIn = !!window.localStorage.getItem("accessToken");
@@ -67,6 +68,7 @@ function App() {
             <Route path="/room/:roomId" element={<Room />} />
             <Route path='/departmentAndPosition' element={<DepartmentAndPosition />} />
             <Route path='approvals' element={<ApprovalPage />} />
+            <Route path="/manageMember/:memberId" element={<MemberPage />} />
           </Route>
         ) : (
           <Route path="/" element={<Navigate to="/login" replace />} />

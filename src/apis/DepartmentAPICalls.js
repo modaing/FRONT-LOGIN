@@ -51,25 +51,6 @@ export const callRegisterDepartmentAPI = async (department) => {
     }
 };
 
-// export const callGetDepartByNameAPI = async (department) => {
-//     const token = window.localStorage.getItem("accessToken");
-//     try {
-//         const { departName } = department;
-//         console.log('입력 받은 부서명 삭제:', departName);
-//         const response = await axios.get(`${API_BASE_URL}/departmentAndPosition`, {
-//             params: { departName }, // Pass departName as a query parameter
-//             headers: {
-//                 Authorization: `Bearer ${token}`
-//             }
-//         });
-//         console.log('response:', response.data);
-//         return response.data;
-//     } catch (error) {
-//         console.log('특정 부서를 불러오는데 실패했습니다:', error);
-//         throw error;
-//     }
-// }
-
 export const callDeleteDepartmentAPI = async (department) => {
     try {
         const { departNo } = department;
@@ -84,3 +65,17 @@ export const callDeleteDepartmentAPI = async (department) => {
         throw error;
     }
 };
+
+export const callGetDepartmentByDepartNoAPI = async (departNo) => {
+    console.log('departNo:',departNo);
+    try {
+        const response = await axios.get(`${API_BASE_URL}/getDepartByNo?departNo=${departNo}`,
+        { headers }
+    );
+    console.log('response:', response);
+    return response.data;
+    } catch (error) {
+        console.error('특정 부서를 불러오는데 실패했습니다:', error);
+        throw error;
+    }
+}

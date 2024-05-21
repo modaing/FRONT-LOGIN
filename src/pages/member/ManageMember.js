@@ -148,8 +148,9 @@ const ManageMember = () => {
         setFilteredMemberInfo(results);
     };
 
-    const handleNameClick = (memberId) => {
-        navigate(`${memberId}`);
+    const handleNameClick = (member) => {
+        console.log('member:', member);
+        navigate(`${member.memberId}`);
     };
 
     return (
@@ -244,12 +245,12 @@ const ManageMember = () => {
                                     {sortedMembers.map((member,index) => (
                                         <tr key={index}>
                                             <td>
-                                                <div className={manageMemberCSS.memberProfile} onClick={() => handleNameClick(member.memberId)}>
+                                                <div className={manageMemberCSS.memberProfile} onClick={() => handleNameClick(member)}>
                                                     {member.memberId}
                                                 </div>
                                             </td>
                                             <td>
-                                                <div className={manageMemberCSS.memberProfile} onClick={() => handleNameClick(member.memberId)}>
+                                                <div className={manageMemberCSS.memberProfile} onClick={() => handleNameClick(member)}>
                                                     {member.name}
                                                 </div>
                                             </td>

@@ -99,9 +99,7 @@ function RecordCommute() {
     /* 출퇴근 내역 액션 */
     const result = useSelector(state => state.commuteReducer);
     console.log('[RecordCommute] result : ', result);
-    const {commutelist} = result || {};
     const commuteList = result.commutelist;
-    console.log('[RecordCommute] commuteList : ', commuteList);
     // const correctionList = result.correctionlist;
     // console.log('[RecordCommute] correctionList : ', correctionList);
 
