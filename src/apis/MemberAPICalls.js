@@ -3,21 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8080';
+const token = window.localStorage.getItem("accessToken");
 
 const headers = {
     'Content-Type': 'application/json; charset=UTF-8',
-    Accept: '*/*',
+    // Accept: '*/*',
     Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
   };
 
 export const callGetMemberAPI = async (memberId) => {
-
-    console.log('memberId:',memberId);
+    // console.log('memberId:',memberId);
         try {
             const response = await axios.get(`${API_BASE_URL}/members/${memberId}`,
                 { headers }
             );
-            console.log('response:', response);
             return response.data;
         } catch (error) {
             console.error('Failed to fetch member information:',error);
@@ -127,6 +126,7 @@ export const callDownloadExcelFileAPI = async () => {
 
 export const callGetTransferredHistory = async (memberId) => {
     try {
+        console.log('memberId:',memberId);
         const response = await axios.get(`${API_BASE_URL}/transferredHistory/${memberId}`,
         { headers }
     );
@@ -138,11 +138,15 @@ export const callGetTransferredHistory = async (memberId) => {
 }
 
 export const callResetPasswordAPI = async () => {
+    if (!token) {
+        console.error('Token not found');
+        return;
+    }
     try {
         const response = await axios.put(`${API_BASE_URL}/resetMemberPassword`,
         { headers }
     );
-    console.log('response:',response);
+    console.log('response:',response.data);
     return response.data;
     } catch (error) {
         console.error('Error resetting member password:', error);
@@ -163,3 +167,16 @@ export const callChangePasswordAPI = async (data) => {
         console.error('Error updating member password:', error);
     }
 }
+
+export const callUpdateMemberAPI = async (memberInfo) => {
+    try {
+        const response = await axios.put(`${API_BASE_URL}/updateMemberInfo`,
+        memberInfo,
+        { headers }
+    );
+    console.log('response:',response);
+    return response.data
+    } catch (error) {
+        console.error('Error updating member:', error);
+    }
+};
