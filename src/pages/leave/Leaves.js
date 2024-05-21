@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { SET_PAGENUMBER } from '../../modules/LeaveModule';
-
-import '../../css/common.css'
 import { callSelectLeavesAPI } from '../../apis/LeaveAPICalls';
 import { renderLeaves } from '../../utils/leaveUtil';
+import '../../css/common.css'
 
 function Leaves() {
     const { page } = useSelector(state => state.leaveReducer);
