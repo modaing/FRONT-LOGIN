@@ -56,7 +56,6 @@ export const getApprovalsAPI = ( fg, page, title, direction )  => {
             dispatch(setPageInfo({
                 currentPage: pageable.pageNumber,
                 totalPages: totalPages,
-    
             }));
         }catch(error){
             dispatch(fetchApprovalsFailure(error));
