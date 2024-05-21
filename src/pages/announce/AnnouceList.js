@@ -47,8 +47,12 @@ function AnnouncementsList({ maxVisibleAnnouncements, hidePagination, hidePlus }
     return (
         <div className="col-lg-12">
             <div className="card">
+                {hidePlus && (
+                    <div className='card-title' style={{fontWeight: 'bold', marginBottom: '-20px'}}>공지사항</div>
+                )
+                }
                 {hidePlus ? (
-                    <Link to="/Announces" style={{padding: '10px 20px%', cursor: 'pointer', marginLeft: '93%', textDecoration: 'none', textAlign:'center', marginTop: '10px', marginBottom: '10px', marginRight: '10px', fontSize: '12px' }}>+더보기</Link>
+                    <Link to="/Announces" style={{ padding: '10px 20px%', cursor: 'pointer', marginLeft: '93%', textDecoration: 'none', textAlign: 'center', marginTop: '10px', marginBottom: '10px', marginRight: '10px', fontSize: '12px' }}>+더보기</Link>
                 ) : (
                     <div className='card-title'></div>
                 )}
@@ -57,7 +61,7 @@ function AnnouncementsList({ maxVisibleAnnouncements, hidePagination, hidePlus }
                     <table className="table table-hover">
                         <thead>
                             <tr style={{ backgroundColor: '#f9f9f9' }}>
-                                <th style={{ width: '10%', textAlign: 'center', padding: '10px' }} scope="row">#</th>
+                                <th style={{ width: '10%', textAlign: 'center', padding: '10px' }} scope="row">공지번호</th>
                                 <th style={{ width: '40%', textAlign: 'center', padding: '10px' }} scope="row">제목</th>
                                 <th style={{ width: '20%', textAlign: 'center', padding: '10px' }} scope="row">작성자</th>
                                 <th style={{ width: '20%', textAlign: 'center', padding: '10px' }} scope="row">작성일자</th>
