@@ -4,22 +4,36 @@ import { Editor } from '@tinymce/tinymce-react';
 import 'react-quill/dist/quill.snow.css';
 import SelectFormComponent from '../../components/approvals/SelectFormComponent';
 import TinyEditor from '../../components/approvals/TinyEditor';
+import { decodeJwt } from '../../utils/tokenUtils';
 
 
 const ApprovalInsert = () => {
 
     const [formContent, setFormContent] = useState('');
     const editorRef = useRef(null);
+    const [userInfo, setUserInfo] = useState({});
+
+    const decodedToken = decodeJwt(window.localStorage.getItem('accessToken'));
+    const memberId = decodedToken.memberId;
+
+    //사용자 정보를 가져와 설정
+    const fetchUserInfo = async () => {
+        if(memberId){
+            // const userInfo = await callGetMemberAPI(memberId);
+            setUserInfo(userInfo);
+        }
+    };
 
     const handleSelectForm = (selectedForm) => {
         console.log('Selected Form : ', selectedForm);
         if (selectedForm && selectedForm.formShape) {
             const htmlContent = selectedForm.formShape;
             setFormContent(htmlContent); // 선택된 폼의 내용을 설정
-            
+
             if (editorRef.current) {
                 editorRef.current.setContent(htmlContent);
                 setEditableElements(editorRef.current.getDoc());
+                insertCurrentDate(editorRef.current.getDoc());
             }
         }
     };
@@ -36,39 +50,48 @@ const ApprovalInsert = () => {
     };
 
     const setEditableElements = (doc) => {
-    const formElements = doc.querySelectorAll('input, td, div[contenteditable="true"]');
-    formElements.forEach(element => {
-        element.setAttribute('contenteditable', 'true');
-    });
-    doc.body.querySelectorAll('*:not(input):not(td):not(div[contenteditable="true"])').forEach(element => {
-        element.setAttribute('contenteditable', 'false');
-    });
-
-    const titleInput = doc.querySelector('#titleform input');
-    if (titleInput) {
-        titleInput.addEventListener('click', () => {
-            titleInput.focus();
+        const formElements = doc.querySelectorAll('input, td, div[contenteditable="true"]');
+        formElements.forEach(element => {
+            element.setAttribute('contenteditable', 'true');
         });
-        titleInput.setAttribute('contenteditable', 'true');
-    }
-};
+        doc.body.querySelectorAll('*:not(input):not(td):not(div[contenteditable="true"])').forEach(element => {
+            element.setAttribute('contenteditable', 'false');
+        });
+
+        const titleInput = doc.querySelector('#titleform input');
+        if (titleInput) {
+            titleInput.addEventListener('click', () => {
+                titleInput.focus();
+            });
+            titleInput.setAttribute('contenteditable', 'true');
+        }
+    };
+
+    const insertCurrentDate = (doc) => {
+        const dateDiv = doc.querySelector('#date div');
+        if(dateDiv){
+            const currentDate = new Date().toLocaleDateString();
+            dateDiv.textContent = currentDate;
+        }
+    };
+
+    const removeBogusBrTags = () => {
+        if (editorRef.current) {
+            const doc = editorRef.current.getDoc();
+            const bogusBrs = doc.querySelectorAll('br[data-mce-bogus="1"]');
+            bogusBrs.forEach(br => br.remove());
+        }
+    };
 
     useEffect(() => {
-        if(editorRef.current) {
+        if (editorRef.current) {
             const doc = editorRef.current.getDoc();
             setEditableElements(doc);
-            const dateDiv = doc.querySelector('#date div');
-            console.log('dateDiv : ' + dateDiv);
-            if(dateDiv){
-                dateDiv.innerHTML = '';
-                const currentDate = new Date().toLocaleDateString();
-                dateDiv.textContent = currentDate;
-                console.log(`dateDiv date :  + ${currentDate}`);
-                console.log('dateDiv textContent : ' + dateDiv.textContent);
-            }
+            insertCurrentDate(doc);
         }
     }, []);
-   
+
+    
 
     return (
         <>
@@ -104,17 +127,13 @@ const ApprovalInsert = () => {
                             </div>
                         </div>
                         <div className="insertAppSide right">
-                            <TinyEditor  
+                            <TinyEditor
                                 onInit={(evt, editor) => {
                                     editorRef.current = editor;
-                                    setEditableElements(editor.getDoc());
-                                    const dateDiv = editor.getDoc().querySelector('#date div');
-
-                                    if(dateDiv){
-                                        const currentDate = new Date().toLocaleDateString();
-                                        dateDiv.textContent = currentDate;
-                                        console.log(`editor : Current date inserted : ${currentDate}`);
-                                    }
+                                    const doc = editor.getDoc();
+                                    setEditableElements(doc);
+                                    insertCurrentDate(doc);
+                                    removeBogusBrTags();
                                 }}
                                 value={formContent}
                                 onEditorChange={handleEditorChange}
@@ -131,16 +150,38 @@ const ApprovalInsert = () => {
                                     content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
                                     setup: (editor) => {
                                         editor.on('init', () => {
-                                            setEditableElements(editor.getDoc());
-                                            const dateDiv = editor.getDoc().querySelector('#date div');
-                                            if (dateDiv) {
-                                                const currentDate = new Date().toLocaleDateString();
-                                                dateDiv.textContent = currentDate;
-                                                console.log(`setup : Current date inserted : ${currentDate}`);
+                                            const doc = editor.getDoc();
+                                            setEditableElements(doc);
+                                            insertCurrentDate(doc);
+                                            removeBogusBrTags();
+                                        });
+                                        editor.on('NodeChange', (e) => {
+                                            if (e && e.element && e.element.nodeName === 'TD') {
+                                                const paras = e.element.getElementsByTagName('p');
+                                                for (let i = 0; i < paras.length; i++) {
+                                                    while (paras[i].firstChild) {
+                                                        paras[i].parentNode.insertBefore(paras[i].firstChild, paras[i]);
+                                                    }
+                                                    paras[i].parentNode.removeChild(paras[i]);
+                                                }
+                                            }
+                                        });
+    
+                                        editor.on('Change', () => {
+                                            removeBogusBrTags();
+                                        });
+
+                                        editor.on('BeforeExecCommand', (e) => {
+                                            if (e.command === 'InsertLineBreak' || e.command === 'mceInsertNewLine') {
+                                                setTimeout(() => {
+                                                    removeBogusBrTags();
+                                                }, 100);
                                             }
                                         });
                                     },
-                                    height: 1200
+                                    height: 1100,
+                                    forced_root_block: 'div',
+                                    invalid_elements: 'p',
                                 }}
                             />
                         </div>
