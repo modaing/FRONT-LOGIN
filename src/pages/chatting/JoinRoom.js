@@ -52,7 +52,7 @@ function JoinRoom({ onRoomCreated }) {
     const findUserPhoto = (receiverId) => {
         const memberPhoto = members.find(member => member.memberId === receiverId);
         const imageUrl = memberPhoto ? memberPhoto.imageUrl : null;
-        return imageUrl;
+        return `/img/${imageUrl}`;
     };
 
     return (

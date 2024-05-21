@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import '../../css/chatting/room.css';
 import { Client } from '@stomp/stompjs';
 import { decodeJwt } from '../../utils/tokenUtils';
+import { callMemberListAPI } from '../../apis/ChattingAPICalls';
 
 function Room({ onLeaveRoom }) {
     const { roomId } = useParams();
@@ -10,7 +11,7 @@ function Room({ onLeaveRoom }) {
     const [inputValue, setInputValue] = useState('');
     const [stompClient, setStompClient] = useState(null);
     const [roomLeft, setRoomLeft] = useState(false);
-    const navigate = useNavigate();
+    const [members, setMembers] = useState([]);
 
     // Ref to the scrollable container
     const messagesEndRef = useRef(null);
@@ -20,6 +21,15 @@ function Room({ onLeaveRoom }) {
     const memberId = decodedTokenInfo.memberId;
     const name = decodedTokenInfo.name;
     const imageUrl = decodedTokenInfo.imageUrl;
+
+    useEffect(() => {
+        callMemberListAPI().then(response => {
+            const responseData = response.data;
+            setMembers(responseData);
+        }).catch(error => {
+            console.error('Error fetching receivers:', error);
+        });
+    }, []);
 
     useEffect(() => {
         const socket = new WebSocket(`ws://localhost:8080/wss/chatting`);
@@ -111,13 +121,35 @@ function Room({ onLeaveRoom }) {
         }
     };
 
+    const findUserPhoto = (receiverId, message) => {
+        // 자동 메시지 여부 확인
+        const isAutoMessage = message && message.message && (message.message.includes('님이 입장하셨습니다') || message.message.includes('님이 퇴장하셨습니다'));
+    
+        if (!isAutoMessage) {
+            const memberPhoto = members.find(member => member.memberId === receiverId);
+            let imageUrl = null;
+    
+            if (memberPhoto) {
+                imageUrl = `/img/${memberPhoto.imageUrl}`;
+            } else {
+                imageUrl = '/img/gpt.jpg'; // 기본 이미지 경로를 사용자가 원하는 이미지로 수정하세요.
+            }
+    
+            console.log(imageUrl);
+            return imageUrl;
+        } else {
+            return null; // 자동 메시지인 경우 이미지를 반환하지 않음
+        }
+    };
+    
     return (
         <div className="chat-room">
             <div className="chat-content">
                 <ul>
                     {messages.map((message, index) => (
+                        
                         <li style={{ listStyle: 'none' }} key={index} className={message.senderId === memberId ? 'sent-message' : 'received-message'}>
-                            <img src={imageUrl} className="avatar-room" />
+                            <img src={findUserPhoto(message.senderId, memberId, [], null)} className="avatar-room" style={{marginRight: "10PX"}}/>
                             <span className="sender-name">{message.senderName}</span>
                             <div className="message-info"></div>
                             <span className="message-text">{message.message}</span>

@@ -54,8 +54,8 @@
 
 .avatar-room {
   width: 30px;
-  height: 30px;
-  border-radius: 50%;
+  height: 29px;
+  border-radius: 60%;
 }
 
 .message-input {

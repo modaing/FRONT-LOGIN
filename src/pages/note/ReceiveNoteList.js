@@ -159,7 +159,7 @@ const ReceiveNoteList = () => {
     const findUserPhoto = (senderId) => {
         const memberPhoto = members.find(member => member.memberId === senderId);
         const imageUrl = memberPhoto ? memberPhoto.imageUrl : null;
-        return imageUrl;
+        return `/img/${imageUrl}`;
     };
 
     const handleUpdateConfirm = async () => {

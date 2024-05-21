@@ -168,11 +168,12 @@ const SendNoteList = () => {
         // 해당 멤버가 존재하면 해당 멤버의 이름과 receiverId를 반환
         return member ? `${member.name} (${receiverId})` : null;
     };
-
+    
     const findUserPhoto = (receiverId) => {
         const memberPhoto = members.find(member => member.memberId === receiverId);
         const imageUrl = memberPhoto ? memberPhoto.imageUrl : null;
-        return imageUrl;
+        console.log(imageUrl)
+        return `/img/${imageUrl}`;
     };
 
 
