@@ -104,3 +104,7 @@
     justify-content: space-between;
     margin: 20px 50px 0px 50px;
 }
+
+.transferredDateStyle, .departNameStyle, .positionNameStyle {
+    margin:20px;
+}
