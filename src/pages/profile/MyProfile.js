@@ -1,5 +1,5 @@
 import { useNavigate, Link, useParams } from 'react-router-dom';
-import { callGetMemberAPI, callGetTransferredHistory, callResetPasswordAPI, callUpdateMemberAPI } from "../../apis/MemberAPICalls";
+import { callGetMemberAPI, callGetTransferredHistory, callUpdateMemberAPI } from "../../apis/MemberAPICalls";
 import { callGetDepartmentByDepartNoAPI } from "../../apis/DepartmentAPICalls";
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import ChangePasswordModal from './ChangePasswordModal';
@@ -21,7 +21,6 @@ function MyProfile() {
     const memberInfos = decodeJwt(token);
     const image = memberInfos.imageUrl;
     const imageUrl = `/img/${image}`;
-
     const navigate = useNavigate();
 
     const fetchMemberInfo = async (e) => {
@@ -77,20 +76,6 @@ function MyProfile() {
             }
         } catch (error) {
             console.error('Failed in bringing transferred history:', error);
-        }
-    }
-
-    const handleResetPassword = async () => {
-        const confirmed = window.confirm("비밀번호를 초기화 하시겠습니끼?");
-
-        if (confirmed){
-            const response = await callResetPasswordAPI();
-            console.log('response:', response);
-            if (response.reason === 'token이 존재하지 않습니다') {
-                console.log('token error');
-            } else {
-                console.log('비밀번호 초기화에 성공했습니다');
-            }
         }
     }
 
@@ -150,10 +135,12 @@ function MyProfile() {
                             <div className="content1 contentStyle1">
                                 <div className='imageBox'>
                                     <img src={imageUrl} className='profilePic' alt="Profile" />
-                                    <div className='nameBox'>{memberInfo.name}</div>
+                                    <div className='nameBox '>{memberInfo.name}</div>
+                                </div>
+                                <div className='topRightContainer'>
+                                    <button className='changePassword' onClick={handleChangePassword}>비밀번호 변경</button>
                                 </div>
                                 {/* <h1>hi</h1> */}
-                                <button className='changePassword' onClick={handleChangePassword}>비밀번호 변경</button>
                             </div>
                             <div className='content1 contentStyle2 titleStyle'>
                                 <div className="pagetitle pageTitleStyle" >
@@ -226,7 +213,7 @@ function MyProfile() {
                                                     : history.transferredDate.join('.')}
                                             </span>
                                             <br/><br />
-                                            <span id="departName" className='departNameStyle'>{history.newDepartNo}</span> {/* Render department name */}
+                                            <span id="departName" className='departNameStyle'>{history.newDepartName}</span> {/* Render department name */}
                                             <br /><br />
                                             <span className='positionNameStyle'>{history.newPositionName}</span>
                                             <br />

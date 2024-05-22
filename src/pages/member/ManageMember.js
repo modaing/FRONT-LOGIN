@@ -75,10 +75,35 @@ const ManageMember = () => {
 
     const getValueForSorting = (value) => {
         if (sortConfig.key === 'periodOfWork') {
-            return parseFloat(value) || 0;
+            // Split the value into components (years, months, days)
+            const components = value.split(' ');
+    
+            // Initialize variables to hold the values of years, months, and days
+            let years = 0;
+            let months = 0;
+            let days = 0;
+    
+            // Loop through the components and extract the values for years, months, and days
+            components.forEach(component => {
+                if (component.includes('년')) {
+                    years = parseInt(component);
+                } else if (component.includes('개월')) {
+                    months = parseInt(component);
+                } else if (component.includes('일')) {
+                    days = parseInt(component);
+                }
+            });
+    
+            // Calculate the total number of days for sorting
+            const totalDays = years * 365 + months * 30 + days;
+    
+            // Return the sortable value
+            return totalDays;
         }
         return value;
     };
+    
+
 
     const sortedMembers = useMemo(() => {
         let sortableMembers = [...filteredMemberInfo];
@@ -227,7 +252,7 @@ const ManageMember = () => {
                                         </th>
                                         <th onClick={() => sortData('employedDate')}>
                                             <span>입사일</span><i className="bx bxs-sort-alt" />
-                                        </th>
+                                      </th>
                                         <th onClick={() => sortData('periodOfWork')}>
                                             <span>근속년수</span><i className="bx bxs-sort-alt" />
                                         </th>
