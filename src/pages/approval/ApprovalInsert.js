@@ -7,6 +7,9 @@ import TinyEditor from '../../components/approvals/TinyEditor';
 import UserInfoComponent from '../../components/approvals/UserInfoComponent';
 import { decodeJwt } from '../../utils/tokenUtils';
 import ApproverModal from '../../components/approvals/ApproverModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-regular-svg-icons';
+import { textAlign } from '@mui/system';
 
 
 const ApprovalInsert = () => {
@@ -82,13 +85,6 @@ const ApprovalInsert = () => {
             });
 
             titleInput.setAttribute('contenteditable', 'true');
-
-            titleInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Tab') {
-                    e.preventDefault();
-                    moveToNextEditableElement(doc, titleInput);
-                }
-            });
         }
     };
 
@@ -185,26 +181,63 @@ const ApprovalInsert = () => {
                         <div className="insertAppSide left" >
                             <SelectFormComponent onSelectForm={handleSelectForm} />
                             <div className="chooseApprover">
-                                <button onClick={openModal}>결재선</button>
+                                <button className="ApproversBtn" onClick={openModal}>
+                                    결재선
+                                    <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px'}}/>
+                                    </button>
                             </div>
-                            <div className="approvers">
-                                <h3>결재선</h3>
-                                <div>
-                                    <ul>
-                                        {approverLine.map(approver => (
-                                            <li key={approver.memberId}>{approver.name}</li>
-                                        ))}
-                                    </ul>
+                            <div className="LineBox">
+                                <div className="approvers">
+                                    <div className="LineTitle">결재선</div>
+                                    <div className="SelectBoxApproverLine" style={{ paddingLeft : '10px'}}>
+                                        <table className="SelectBoxApproverTable" style={{ textAlign : 'center'}}>
+                                            <thead>
+                                                <tr>
+                                                    <th>순번</th>
+                                                    <th>부서</th>
+                                                    <th>직급명</th>
+                                                    <th>이름</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {approverLine.map((approver, index) => (
+                                                    <tr key={approver.memberId} className="approvalItem">
+                                                        <td style={{ width: '70px', marginLeft: '10px' }}>{index + 1}</td>
+                                                        <td>{approver.departName}</td>
+                                                        <td>{approver.positionName}</td>
+                                                        <td style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{approver.name}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="referencers">
-                                <h3>참조선</h3>
-                                <div>
-                                    <ul>
-                                        {referencerLine.map(referencer => (
-                                            <li key={referencer.memberId}>{referencer.name}</li>
-                                        ))}
-                                    </ul>
+                                <div className="referencers">
+                                    <div className="LineTitle">참조선</div>
+                                    <div className="SelectBoxReferencerLine" style={{ paddingLeft : '10px'}}>
+                                        <table className="SelectBoxApproverTable" style={{ textAlign : 'center'}}>
+                                            <thead>
+                                                <tr>
+                                                    <th>순번</th>
+                                                    <th>부서</th>
+                                                    <th>직급명</th>
+                                                    <th>이름</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {referencerLine.map((referencer, index) => (
+                                                    <tr key={referencer.memberId} className="approvalItem">
+                                                        <td style={{ width: '70px', marginLeft: '10px' }}>{index + 1}</td>
+                                                        <td>{referencer.departName}</td>
+                                                        <td>{referencer.positionName}</td>
+                                                        <td style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{referencer.name}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -264,12 +297,6 @@ const ApprovalInsert = () => {
                                                 setTimeout(() => {
                                                     removeBogusBrTags();
                                                 }, 100);
-                                            }
-                                        });
-                                        editor.on('keydown', (e) => {
-                                            if (e.key === 'Tab') {
-                                                e.preventDefault();
-                                                moveToNextEditableElement(editor.getDoc(), editor.selection.getNode());
                                             }
                                         });
                                     },

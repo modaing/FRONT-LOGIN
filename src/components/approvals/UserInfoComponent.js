@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { GET_MEMBER } from "../../modules/MemberModule";
 import React, { useEffect } from "react";
 import { getMemberAPI } from "../../apis/ApprovalAPI";
-import "../../css/approval/UserInfoComponent.module.css";
+import styles from  "../../css/approval/UserInfoComponent.module.css";
 
 const UserInfoComponent = ({ memberId, yearFormNo }) => {
 
@@ -43,7 +43,7 @@ const UserInfoComponent = ({ memberId, yearFormNo }) => {
 
     return(
         <>
-            <table className="userInfocss.table">
+            <table className={styles.table}>
                 <tbody>
                     <tr>
                         <th>결재번호</th>
