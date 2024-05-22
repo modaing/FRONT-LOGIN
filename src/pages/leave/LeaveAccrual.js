@@ -6,14 +6,14 @@ import { SET_PAGENUMBER } from '../../modules/LeaveModule';
 import LeaveAccrualModal from './LeaveAccrualModal';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { renderLeaveAccrual } from '../../utils/leaveUtil';
-import '../../css/common.css'
-import '../../css/leave/LeaveAccrual.css'
+import '../../css/common.css';
+import '../../css/leave/LeaveAccrual.css';
 
 function LeaveAccrual() {
     const { page, insertMessage } = useSelector(state => state.leaveReducer);
     const { number, content, totalPages } = page || {};
-    const [properties, setProperties] = useState('leaveAccrualNo')
-    const [direction, setDirection] = useState('DESC')
+    const [properties, setProperties] = useState('leaveAccrualNo');
+    const [direction, setDirection] = useState('DESC');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
@@ -35,10 +35,10 @@ function LeaveAccrual() {
         }
     };
 
-    const handleSort = (propertie) => {
-        setProperties(propertie);
+    const handleSort = (property) => {
+        setProperties(property);
         setDirection(direction === 'DESC' ? 'ASC' : 'DESC');
-    }
+    };
 
     // CUD 관련 핸들러
     const handleOpenModal = () => {
@@ -71,8 +71,7 @@ function LeaveAccrual() {
         fetchData();
     }, [number, properties, direction]);
 
-
-    return <>
+    return (
         <main id="main" className="main">
             <div className="pagetitle">
                 <h1>휴가</h1>
@@ -84,13 +83,13 @@ function LeaveAccrual() {
                     </ol>
                 </nav>
                 <div className="leaveHeader">
-                    <div> </div>
+                    <div></div>
                     <span className="insertAccrual" onClick={handleOpenModal} >휴가 발생</span>
                 </div>
             </div>
             <div className="col-lg-12">
                 <div className="card">
-                    <div className="LeaveAccrualListContent" >
+                    <div className="LeaveAccrualListContent">
                         <table className="table table-hover">
                             <thead>
                                 <tr>
@@ -112,29 +111,28 @@ function LeaveAccrual() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {isLoading ? ( // 로딩 중이면 로딩 메시지 표시
-                                    <tr>
-                                        <td colSpan="8" className="loadingText"></td>
-                                    </tr>
-                                ) : (
-                                    renderLeaveAccrual(content) // 로딩 중이 아니면 실제 데이터 표시
-                                )}
+                                {
+                                    // 로딩 중이면 로딩 메시지 표시
+                                    isLoading ? (
+                                        <tr>
+                                            <td colSpan="5" className="loadingText">Loading...</td>
+                                        </tr>
+                                    ) : (
+                                        // 로딩 중이 아니면 실제 데이터 표시
+                                        renderLeaveAccrual(content)
+                                    )
+                                }
                             </tbody>
                         </table>
-
-                        <nav >
+                        <nav>
                             <ul className="pagination">
 
-                                <li className={`page-item ${number === 0 && 'disabled'}`}>
+                                <li className={`page-item ${number === 0 ? 'disabled' : ''}`}>
                                     <button className="page-link" onClick={handlePrevPage}>◀</button>
                                 </li>
-
-                                {[...Array(totalPages).keys()].map((page, index) => (
-                                    <li key={index} className={`page-item ${number === page && 'active'}`}>
-                                        <button className="page-link" onClick={() => {
-                                            console.log('[page]', page);
-                                            handlePageChange(page)
-                                        }}>
+                                {[...Array(totalPages).keys()].map(page => (
+                                    <li key={page} className={`page-item ${number === page && 'active'}`}>
+                                        <button className="page-link" onClick={() => handlePageChange(page)}>
                                             {page + 1}
                                         </button>
                                     </li>
@@ -148,10 +146,9 @@ function LeaveAccrual() {
                     </div>
                 </div>
             </div>
+            <LeaveAccrualModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} />
         </main>
-        <LeaveAccrualModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} />
-    </>
-
+    );
 }
 
 export default LeaveAccrual;
