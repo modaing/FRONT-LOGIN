@@ -11,8 +11,7 @@ import '../css/common.css'
 import { calendarPopover, updateEvents } from '../utils/CalendarUtil';
 import { callSelectCalendarAPI } from '../apis/CalendarAPICalls';
 import AnnounceList from './announce/AnnouceList';
- // TODO: 임시 로그아웃, 삭제예정
-import { callLogoutAPI, callGetProfilePictureAPI } from '../apis/MemberAPICalls';
+import { callGetProfilePictureAPI } from '../apis/MemberAPICalls';
 
 
 function Main() {
@@ -27,18 +26,6 @@ function Main() {
 
     const maxVisibleAnnouncements = 5; // 최대 공지사항 수
 
-    const onClickLogoutHandler = () => {
-        dispatch(callLogoutAPI())
-            .then(() => {
-                window.localStorage.removeItem("accessToken");
-                console.log('구성원 로그아웃');
-                alert('로그아웃 합니다');
-            })
-            .catch(error => {
-                console.error("Error during logout:", error);
-            });
-    };
-
 
     return (
         <main id="main" className="main">
@@ -48,16 +35,10 @@ function Main() {
             <Fullcalendar
                 plugins={[dayGridPlugin, interactionPlugin]}
                 initialView={'dayGridWeek'} // dayGridWeek로 변경
-                customButtons={{  // TODO: 임시 로그아웃, 삭제예정
-                    addButton: {
-                        text: "로그아웃",
-                        click: onClickLogoutHandler
-                    }
-                }}
                 headerToolbar={{
                     start: 'prev,today,next',
                     center: 'title',
-                    end: 'addButton' // TODO: 임시 로그아웃, 삭제예정
+                    end: ''
                 }}
                 events={events}
                 eventDidMount={info => calendarPopover(info)}

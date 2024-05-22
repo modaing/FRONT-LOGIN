@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { SET_PAGENUMBER } from '../../modules/LeaveModule';
 import { callSelectLeavesAPI } from '../../apis/LeaveAPICalls';
 import { renderLeaves } from '../../utils/leaveUtil';
+import '../../css/leave/Leaves.css'
 import '../../css/common.css'
 
 function Leaves() {

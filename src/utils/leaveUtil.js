@@ -114,8 +114,8 @@ export function renderLeaves(content) {
                 <td>{leaves.vacationLeave}</td>
                 <td>{leaves.familyEventLeave}</td>
                 <td>{leaves.specialLeave}</td>
-                <td>{leaves.consumedDays}</td>
-                <td>{leaves.remainingDays}</td>
+                <td className="consumedDays">{leaves.consumedDays}</td>
+                <td className="remainingDays">{leaves.remainingDays}</td>
             </tr>
         );
     });
