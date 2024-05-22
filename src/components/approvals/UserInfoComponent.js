@@ -1,12 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
-import { callGetMemberAPI } from "../../apis/MemberAPICalls";
 import { GET_MEMBER } from "../../modules/MemberModule";
 import React, { useEffect } from "react";
+import { getMemberAPI } from "../../apis/ApprovalAPI";
+import "../../css/approval/UserInfoComponent.module.css";
 
-const UserInfoComponent = ({ memberId }) => {
+const UserInfoComponent = ({ memberId, yearFormNo }) => {
 
     const dispatch = useDispatch();
-    const memberInfo = useSelector(state => state.member);
+    
     // const memberInfo = decodeJwt(token);
     // const [memberInformation, setMemberInformation] = useState('');
 
@@ -21,45 +22,44 @@ const UserInfoComponent = ({ memberId }) => {
     //     }
     // };
 
+    const member =  useSelector((state) => state.memberReducer.data) || {};
+
     useEffect(() => {
         const fetchMemberInfo = async () => {
-            const data = await callGetMemberAPI(memberId);
+            const data = await getMemberAPI(memberId);
             
-            
-            console.log("내 member 정보 : ", data); // 콘솔에 객체를 출력
+            console.log("Fetchedm member data : ", data); // 콘솔에 객체를 출력
             dispatch({ type: GET_MEMBER, payload: data });
         };
 
         fetchMemberInfo();
     }, [dispatch, memberId]);
 
+    console.log("Redux member state: ", member); 
 
-    if(!memberInfo){
-        console.log("memberInfo가 없습니다.");
-        return <div>잘못된 사원 정보입니다.</div>
+    if(!member.memberId || !member){
+        return <div>기안자 정보 불러오는 중...</div>
     }
-
-    console.log("Redux에 저장된 memberInfo : " + memberInfo);
 
     return(
         <>
-            <table>
+            <table className="userInfocss.table">
                 <tbody>
                     <tr>
                         <th>결재번호</th>
-                        <td></td>
+                        <td>{yearFormNo}</td>
                         <th>작성일자</th>
-                        <td>${new Date().toLocaleDateString}</td>
+                        <td>{new Date().toLocaleDateString()}</td>
                         <th>기안부서</th>
-                        <td>${memberInfo.departmentDTO?.departName}</td>
+                        <td>{member.departName}</td>
                     </tr>
                     <tr>
                         <th>사번</th>
-                        <td>${memberInfo.memberId}</td>
+                        <td>{member.memberId}</td>
                         <th>기안자</th>
-                        <td>${memberInfo.name}</td>
+                        <td>{member.name}</td>
                         <th>직위</th>
-                        <td>${memberInfo.positionDTO?.positionName}</td>
+                        <td>{member.positionName}</td>
                     </tr>
                 </tbody>
             </table>
