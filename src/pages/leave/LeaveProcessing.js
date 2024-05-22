@@ -61,11 +61,17 @@ function LeaveProcessing() {
         }
         dispatch(callUpdateLeaveSubmitAPI(requestDate));
     }
-
+    
     useEffect(() => {
         setIsLoading(true);
-        dispatch(callSelectLeaveSubmitAPI(number, properties, direction))
-            .finally(() => setIsLoading(false));
+        const fetchData = async () => {
+            try {
+                await dispatch(callSelectLeaveSubmitAPI(number, properties, direction));
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchData();
     }, [number, properties, direction]);
 
 

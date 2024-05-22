@@ -61,9 +61,15 @@ function LeaveAccrual() {
 
     useEffect(() => {
         setIsLoading(true);
-        dispatch(callSelectLeaveAccrual(number, properties, direction))
-            .finally(() => setIsLoading(false));
-    }, [number, insertMessage]);
+        const fetchData = async () => {
+            try {
+                await dispatch(callSelectLeaveAccrual(number, properties, direction));
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchData();
+    }, [number, properties, direction]);
 
 
     return <>
