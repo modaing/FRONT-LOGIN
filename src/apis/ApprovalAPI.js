@@ -7,7 +7,8 @@ import {
     setPageInfo, 
     setLoading,
     fetchFormsSuccess,
-    fetchFormsFailure
+    fetchFormsFailure,
+    getAllMembers,
 } from "../modules/ApprovalReducer";
 import { GET_MEMBER } from "../modules/MemberModule";
 
@@ -91,6 +92,18 @@ export const getMemberAPI = async (memberId) => {
         const response = await axios.get(`${API_BASE_URL}/approvals/members/${memberId}`, { headers });
         return response.data;
     }catch(error){
-        console.error('Failed to fetch member information : ', error);
+        console.error('사원 정보 조회 실패 : ', error);
     }
+};
+
+export const getAllMemberAPI = () => {
+    return async (dispatch) => {
+        try{
+            const response = await axios.get(`${API_BASE_URL}/approvals/members`, { headers });
+            console.log('API 응답 데이터: ', response.data);
+            dispatch(getAllMembers(response.data.data));
+        }catch(error){
+            console.error('전 사원 정보 조회 실패 ', error);
+        }
+    };
 };

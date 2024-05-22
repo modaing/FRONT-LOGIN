@@ -16,6 +16,7 @@
     text-align: center;
     transition: none;
     table-layout: fixed;
+    border: none;
 }
 .table thead{
     font-weight: bold;

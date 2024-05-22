@@ -6,6 +6,7 @@ import SelectFormComponent from '../../components/approvals/SelectFormComponent'
 import TinyEditor from '../../components/approvals/TinyEditor';
 import UserInfoComponent from '../../components/approvals/UserInfoComponent';
 import { decodeJwt } from '../../utils/tokenUtils';
+import ApproverModal from '../../components/approvals/ApproverModal';
 
 
 const ApprovalInsert = () => {
@@ -14,10 +15,15 @@ const ApprovalInsert = () => {
     const [selectedForm, setSelectedForm] = useState(null);
     const [yearFormNo, setYearFormNo] = useState('');
     const [isRemovingBogusBr, setIsRemovingBogusBr] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [approverLine, setApproverLine] = useState([]);
+    const [referencerLine, setReferencerLine] = useState([]);
     const editorRef = useRef(null);
 
     const decodedToken = decodeJwt(window.localStorage.getItem('accessToken'));
     const memberId = decodedToken.memberId;
+
+    console.log('isModalOpen : ' + isModalOpen);
 
     console.log("Decoded memberId: ", memberId);
 
@@ -31,7 +37,7 @@ const ApprovalInsert = () => {
 
             //결재 번호 생성
             const currentYear = new Date().getFullYear();
-            const approvalNumber = `${currentYear}-${selectedForm.formNo}`; 
+            const approvalNumber = `${currentYear}-${selectedForm.formNo}`;
             setYearFormNo(approvalNumber);
 
             if (editorRef.current) {
@@ -53,7 +59,9 @@ const ApprovalInsert = () => {
     const handleSubmit = () => {
         const formData = {
             content: formContent,
-            selectedForm: selectedForm
+            selectedForm: selectedForm,
+            approverLine: approverLine,
+            referencerLine: referencerLine
         };
         console.log('기안 완료 : ', formData);
     };
@@ -125,6 +133,21 @@ const ApprovalInsert = () => {
         }
     };
 
+    const openModal = () => {
+        console.log('openModal 실행 ');
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        console.log('closeModal 실행');
+        setIsModalOpen(false);
+    };
+
+    const handleSaveApprovers = (approverLine, referencerLine) => {
+        setApproverLine(approverLine);
+        setReferencerLine(referencerLine);
+    }
+
     useEffect(() => {
         if (editorRef.current) {
             const doc = editorRef.current.getDoc();
@@ -160,17 +183,31 @@ const ApprovalInsert = () => {
                         <div className="insertAppSide left" >
                             <SelectFormComponent onSelectForm={handleSelectForm} />
                             <div className="chooseApprover">
-
+                                <button onClick={openModal}>결재선</button>
                             </div>
                             <div className="approvers">
-
+                                <h3>결재선</h3>
+                                <div>
+                                    <ul>
+                                        {approverLine.map(approver => (
+                                            <li key={approver.memberId}>{approver.name}</li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </div>
                             <div className="referencers">
-
+                                <h3>참조선</h3>
+                                <div>
+                                    <ul>
+                                        {referencerLine.map(referencer => (
+                                            <li key={referencer.memberId}>{referencer.name}</li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                         <div className="insertAppSide right">
-                            <UserInfoComponent memberId={memberId} yearFormNo={yearFormNo}/>
+                            <UserInfoComponent memberId={memberId} yearFormNo={yearFormNo} />
                             <TinyEditor
                                 onInit={(evt, editor) => {
                                     editorRef.current = editor;
@@ -228,7 +265,7 @@ const ApprovalInsert = () => {
                                             }
                                         });
                                         editor.on('keydown', (e) => {
-                                            if(e.key === 'Tab'){
+                                            if (e.key === 'Tab') {
                                                 e.preventDefault();
                                                 moveToNextEditableElement(editor.getDoc(), editor.selection.getNode());
                                             }
@@ -245,6 +282,11 @@ const ApprovalInsert = () => {
                         <button>취소</button>
                         <button onClick={handleSubmit}>등록</button>
                     </div>
+                    <ApproverModal
+                        isOpen={isModalOpen}
+                        onRequestClose={closeModal}
+                        onSave={handleSaveApprovers}
+                    />
                 </div>
             </main>
 

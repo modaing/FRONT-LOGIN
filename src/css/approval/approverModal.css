@@ -1,0 +1,72 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    width: 510px;
+    height: 800px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    border: 2px solid black;
+    text-align: center;
+    display: grid;
+}
+.modalConfirmMessage {
+    align-self: center;
+    margin-top: 20px;
+}
+
+.modalActions{
+    /* margin-top: 20px;
+    display: flex;
+    justify-content: space-around; */
+    align-self: end;
+    justify-self: flex-end;
+}
+
+.modalActions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+.modalActions button:first-of-type {
+    background-color: white;
+    color: black;
+    border: 1px solid #BBBBBB;
+}
+
+.modalActions button:last-of-type {
+    background-color: #3F72AF;
+    color: white;
+}
+.modalActions button:hover{
+    background-color: #E9ECEF;
+    color: black;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}

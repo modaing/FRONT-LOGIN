@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { GET_MEMBER } from "../../modules/MemberModule";
 import React, { useEffect } from "react";
 import { getMemberAPI } from "../../apis/ApprovalAPI";
-import userInfocss from "../../css/approval/UserInfoComponent.module.css";
+import "../../css/approval/UserInfoComponent.module.css";
 
 const UserInfoComponent = ({ memberId, yearFormNo }) => {
 

@@ -5,6 +5,7 @@ const initialState = {
   title: '',
   pageInfo: { totalPages: 0, currentPage: 0 },
   approvals: [],
+  members: [],
   forms: [],
   loading: false,
   error: null,
@@ -22,7 +23,8 @@ export const {
   updateApprovalStatus,
   setLoading,
   fetchFormsSuccess,
-  fetchFormsFailure
+  fetchFormsFailure,
+  getAllMembers,
 } = createActions({
   SET_FG: (fg) => fg,
   SET_TITLE: (title) => title,
@@ -35,6 +37,7 @@ export const {
   SET_LOADING: (loading) => loading,
   FETCH_FORMS_SUCCESS: (forms) => forms,
   FETCH_FORMS_FAILURE: (error) => error,
+  GET_ALL_MEMBERS: (members) => members,
 });
 
 // 리듀서 정의
@@ -93,6 +96,10 @@ const approvalReducer = handleActions(
         ...state,
         error: payload,
     }),
+    [getAllMembers]: (state, { payload }) => ({
+      ...state, 
+      members: payload,
+    })
   },
   initialState
 );
