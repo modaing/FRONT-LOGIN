@@ -189,7 +189,7 @@ function RoomList() {
                             >
                               <div className="chat_room_info">
                                 <div className="chat_img">
-                                  <img src={findUserPhoto(room.receiverId, memberId, members, room)} alt="User Profile" />
+                                  <img src={findUserPhoto(room.receiverId, memberId, members, room)} alt="User Profile" className='profile' />
                                 </div>
                                 <div className="chat_ib">
                                   <h5>{findUserName(room.receiverId, memberId, members, room)}</h5>
