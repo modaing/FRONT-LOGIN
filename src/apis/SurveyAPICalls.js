@@ -1,6 +1,6 @@
 import { } from "../modules/LeaveModule";
 import axios from 'axios';
-import { GET_PAGE } from "../modules/SurveyModule";
+import { GET_PAGE, POST_MESSAGE } from "../modules/SurveyModule";
 
 const API_BASE_URL = 'http://localhost:8080';
 
@@ -25,3 +25,28 @@ export const callSelectSurveyListAPI = (number, properties, direction, memberId)
         }
     }
 };
+
+export const callInsertSurveyResponse = requestData => {
+    return async dispatch => {
+        try {
+        const response = await axios.post(`${API_BASE_URL}/surveyResponses`, requestData, { headers });
+
+            dispatch({ type: POST_MESSAGE, payload: response.data})
+        } catch {
+            console.log('수요조사 응답 등록에 문제 발생', Error);
+        }
+    }
+}
+
+export const callInsertSurvey = requestData => {
+    return async dispatch => {
+        console.log('[requestData]',requestData);
+        try {
+        const response = await axios.post(`${API_BASE_URL}/surveys`, requestData, { headers });
+console.log(response.data);
+            dispatch({ type: POST_MESSAGE, payload: response.data})
+        } catch {
+            console.log('수요조사 응답 등록에 문제 발생', Error);
+        }
+    }
+}
