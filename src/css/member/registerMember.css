@@ -1,0 +1,11 @@
+.memberIdStyle, .emailStyle, .addressStyle, .phoneNoStyle, .employedDateStyle, .departStyle, .positionStyle, .memberStatusStyle, .nameStyle {
+    display: flex;
+    align-items: center;
+    /* justify-content: space-between; */
+    margin-bottom: 20px;
+}
+
+.memberId, .email, .address, .phoneNo, .employedDate, .departName, .positionName, .name, .memberStatus {
+    margin-right: 20px;
+    width: 70px;
+}

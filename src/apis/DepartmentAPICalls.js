@@ -11,7 +11,7 @@ const headers = {
 export const callDepartmentDetailListAPI = async () => {
     try {
         const response = await axios.get(`${API_BASE_URL}/departments`, { headers });
-        console.log('response:', response);
+        // console.log('response:', response);
         return response.data;
     } catch (error) {
         console.error('Error fetching department details:', error);
@@ -69,7 +69,7 @@ export const callDeleteDepartmentAPI = async (department) => {
 export const callGetDepartmentByDepartNoAPI = async (departNo) => {
     console.log('departNo:',departNo);
     try {
-        const response = await axios.get(`${API_BASE_URL}/getDepartByNo?departNo=${departNo}`,
+        const response = await axios.get(`${API_BASE_URL}/getDepartByNo/${departNo}`,
         { headers }
     );
     console.log('response:', response);

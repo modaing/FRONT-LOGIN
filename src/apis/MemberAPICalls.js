@@ -3,13 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8080';
-const token = window.localStorage.getItem("accessToken");
 
 const headers = {
     'Content-Type': 'application/json; charset=UTF-8',
-    // Accept: '*/*',
+    Accept: '*/*',
     Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
-  };
+};
+
+const header = {
+    'Content-Type': 'application/json',
+    Authorization: 'BEARER ' + window.localStorage.getItem('accessToken'),
+}
 
 export const callGetMemberAPI = async (memberId) => {
     // console.log('memberId:',memberId);
@@ -17,6 +21,7 @@ export const callGetMemberAPI = async (memberId) => {
             const response = await axios.get(`${API_BASE_URL}/members/${memberId}`,
                 { headers }
             );
+            // console.log('member:',response.data);
             return response.data;
         } catch (error) {
             console.error('Failed to fetch member information:',error);
@@ -62,10 +67,9 @@ export const callRegisterMemberAPI = async (formData) => {
 
     const memberDTOString = await memberDTOFile.text();
     const memberDTO = JSON.parse(memberDTOString);
-    console.log('memberDTO:', memberDTO);
     
     const memberProfilePicture = formData.get('memberProfilePicture');
-    console.log('memberProfilePicture:', memberProfilePicture);
+    console.log('formData:',formData);
 
     try {
         const result = await axios.post(`${API_BASE_URL}/signUp`, 
@@ -80,7 +84,7 @@ export const callRegisterMemberAPI = async (formData) => {
 export const callGetDepartmentListAPI = async () => {
     try {
         const response = await axios.get(`${API_BASE_URL}/departmentDetails`, { headers });
-        console.log('response:', response);
+        // console.log('department list:', response);
         return response.data;
     } catch (error) {
         console.error('Error fetching department list:', error);
@@ -91,7 +95,7 @@ export const callGetDepartmentListAPI = async () => {
 export const callGetPositionListAPI = async () => {
     try {
         const response = await axios.get(`${API_BASE_URL}/showAllPosition`, { headers });
-        console.log('response:', response);
+        // console.log('position list:', response);
         return response.data;
     } catch (error) {
         console.error('Error fetching position list:', error);
@@ -116,7 +120,7 @@ export const callDownloadExcelFileAPI = async () => {
         headers,
         responseType: 'blob'
     });
-        console.log('response:', response);
+        // console.log('response:', response);
         return response.data;
     } catch(error) {
         console.error('Error downloading excel file:', error);
@@ -130,53 +134,96 @@ export const callGetTransferredHistory = async (memberId) => {
         const response = await axios.get(`${API_BASE_URL}/transferredHistory/${memberId}`,
         { headers }
     );
-    console.log('response:',response);
+    // console.log('transferred history:',response);
     return response.data;
     } catch (error) {
         console.error('Error bringing in transferred history:', error);
     }
 }
 
-export const callResetPasswordAPI = async () => {
-    if (!token) {
-        console.error('Token not found');
-        return;
-    }
-    try {
-        const response = await axios.put(`${API_BASE_URL}/resetMemberPassword`,
-        { headers }
-    );
-    console.log('response:',response.data);
-    return response.data;
-    } catch (error) {
-        console.error('Error resetting member password:', error);
-    }
-}
-
 export const callChangePasswordAPI = async (data) => {
+    console.log('currentPassword:', data.currentPassword);
     console.log('password1:', data.newPassword1);
     console.log('password2:', data.newPassword2);
-    try {
-        const response = await axios.put(`${API_BASE_URL}/updateOwnPassword`,
-        data,
-        { headers }
-    );
-    console.log('response:',response);
-    return response.data;
-    } catch (error) {
-        console.error('Error updating member password:', error);
+
+    if (!data.newPassword1 && !data.newPassword2) {
+        console.log('Resetting password...');
+        try {
+            const response = await axios.put(`${API_BASE_URL}/updateOwnPassword`,
+            {},
+            { headers }
+        );
+        // console.log('Password reset response:', response);
+        return response.data;
+        } catch (error) {
+            console.error('Error resetting member password:', error);
+        }
+    } else {
+        console.log('Updating password...');
+        try {
+            const response = await axios.put(`${API_BASE_URL}/updateOwnPassword`,
+            data,
+            { headers }
+        );
+        console.log('Password update response:',response);
+        return response.data;
+        } catch (error) {
+            console.log(error.response.data);
+            if (error.response.data === 'Incorrect current password') {
+                alert('비밀번호가 틀렸습니다');
+            } 
+        }
     }
 }
 
-export const callUpdateMemberAPI = async (memberInfo) => {
+export const callUpdateMemberAPI = async (formData) => {
+    const memberDTOFile = formData.get('memberDTO');
+    const memberDTOString = await memberDTOFile.text();
+    const memberDTO = JSON.parse(memberDTOString);
+    const memberId = memberDTO.memberId;
+
     try {
-        const response = await axios.put(`${API_BASE_URL}/updateMemberInfo`,
-        memberInfo,
-        { headers }
-    );
-    console.log('response:',response);
+        const response = await axios.put(`${API_BASE_URL}/members/updateProfile/${memberId}`,
+        formData,
+        {
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem('accessToken')}`
+            }
+        }
+        );
     return response.data
     } catch (error) {
-        console.error('Error updating member:', error);
+        console.log('Error updating member:', error);
     }
 };
+
+
+// export const callResetPassAPI = async (memberId) => {
+//     console.log('memberId:',memberId);
+//     try {
+//         const response = await axios.put(`${API_BASE_URL}/resetPassword/${memberId}`, {},
+//         {
+//             headers: {
+//                 'Content-Type': 'application/json; charset=UTF-8',
+//                 Accept: '*/*',
+//                 Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
+//                 'Access-Control-Allow-Origin': '*', // Optional depending on CORS policy of the server
+//                 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE', // Optional depending on CORS policy of the server
+//                 'Access-Control-Max-Age': '3600', // Optional depending on CORS policy of the server
+//                 'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization, X-XSRF-token', // Optional depending on CORS policy of the server
+//                 'Access-Control-Allow-Credentials': 'false', // Optional depending on CORS policy of the server
+//             }
+
+//             // headers: {
+//             //     'Content-Type': 'application/json',
+//             //     'Access-Control-Allow-Origin': '*', // 모든 도멘인에서 접근할 수 있음을 의미 (특정도메인을 넣고싶으면 * 대신 http://test.com)
+//             // }
+//         }
+//     );
+//     console.log('response:', response.data);
+//     return response.data;
+//     } catch (error) {
+//         console.error('fail',error);
+//         throw error;
+//     }
+// }

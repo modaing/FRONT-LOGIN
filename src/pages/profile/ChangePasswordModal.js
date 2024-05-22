@@ -36,10 +36,11 @@ function ChangePasswordModal(props) {
         } else {
             try {
                 const response = await callChangePasswordAPI(data);
+                // alert('response.data:',response.data);
                 if (response === 'Successfully changed the password') {
                     alert('비밀번호를 성공적으로 변경했습니다');
                     window.location.reload();
-                } else if (response === 'New passwords do not match') {
+                } else if (response.data === 'New passwords do not match') {
                     alert('비밀번호가 일치하지 않습니다');
                 } else if (response === 'Incorrect current password') {
                     alert('비밀번호가 틀렸습니다');
@@ -57,7 +58,7 @@ function ChangePasswordModal(props) {
             <div className={LoginCSS.modalContentStyle} onClick={(e) => e.stopPropagation()}>
                 <h2 className={LoginCSS.changePasswordStyle}>비밀번호 변경</h2>
                 <form onSubmit={handleConfirmationButtonClick}> {/* Form format */}
-                <p className={LoginCSS.pStyle}>새 비밀번호</p>
+                <p className={LoginCSS.pStyle}>기존 비밀번호</p>
                     <input type="password" name="currentPassword" placeholder="기존 비밀번호 입력" className={LoginCSS.inputStyle1} onChange={(e) => setCurrentPassword(e.target.value)}/>
                     <p className={LoginCSS.pStyle}>새 비밀번호</p>
                     <input type="password" name="newPassword1" placeholder="새 비밀번호 입력" className={LoginCSS.inputStyle1} onChange={handlePasswordChange}/>
