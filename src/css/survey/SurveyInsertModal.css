@@ -1,0 +1,36 @@
+
+.surveyInsertTextarea {
+    width: 100%;
+    box-sizing: border-box;
+    resize: none; 
+    overflow: hidden;
+}
+
+.surveyInsert {
+    display: flex;
+    height: 57.65px;
+}
+
+.surveyInsert > label {
+    height: 24px;
+    margin-top: 1.6%;
+}
+
+.surveyInsert input[type="text"] {
+    width: 202.4px;
+    height: 37.65px;
+}
+
+.surveyInsert label {
+    margin-right: 11px;
+}
+
+.surveyAnswer {
+    width: 80% !important;
+    display: inline;
+}
+
+.addAnswer {
+    margin-left: 2%;
+    cursor: pointer;
+}
