@@ -13,6 +13,7 @@ function JoinRoom({ onRoomCreated }) {
     const [selectedMemberId, setSelectedMemberId] = useState('');
     const [receiveId, setReceiveId] = useState('');
     const [roomName, setRoomName] = useState('');
+    const [selectedMember, setSelectedMember] = useState("");
 
     const memberInfo = decodeJwt(window.localStorage.getItem("accessToken"));
     const memberId = memberInfo.memberId;
@@ -49,34 +50,24 @@ function JoinRoom({ onRoomCreated }) {
         return member ? `${member.name} (${receiverId})` : null;
     };
 
-    const findUserPhoto = (receiverId) => {
-        const memberPhoto = members.find(member => member.memberId === receiverId);
-        const imageUrl = memberPhoto ? memberPhoto.imageUrl : null;
-        return `/img/${imageUrl}`;
+
+    const handleSelect = (member) => {
+        setSelectedMember(member.memberId);
+        setReceiveId(member.memberId);
+    };
+
+    const findUserPhoto = (memberId, members) => {
+        // memberId와 일치하는 멤버를 찾아서 그 멤버의 프로필 사진을 반환
+        if (members && members.length > 0) {
+            const member = members.find(member => member.memberId === memberId);
+            return member ? `/img/${member.imageUrl}` : null;
+        }
+        return null;
     };
 
     return (
         <form onSubmit={handleNoteSubmit}>
-            <label htmlFor="roomName" className="form-label">With Member ?</label>
-            <select
-                className="form-select"
-                aria-label="Default select example"
-                value={selectedMemberId}
-                onChange={(e) => {
-                    const [id, name] = e.target.value.split(' - ');
-                    setSelectedMemberId(e.target.value);
-                    setReceiveId(id);
-                }}
-            >
-                <option key="" value="">받을 사원을 선택해주세요</option>
-                {members.map((member) => (
-                    <option key={member.id} value={`${member.memberId} - ${member.name}`}>
-                        {`${member.memberId} - ${member.name}`}
-                    </option>
-                ))}
-            </select>
-
-            <div className="mb-3">
+            <div className="mb-3 room-name">
                 <label htmlFor="roomName" className="form-label">Room Name</label>
                 <input
                     type="text"
@@ -86,6 +77,30 @@ function JoinRoom({ onRoomCreated }) {
                     onChange={(e) => setRoomName(e.target.value)}
                 />
             </div>
+
+            <div className='member-list-container'>
+                <label htmlFor="selectedMember" className="form-label">대화할 상대를 선택해주세요</label>
+                <ul className="member-list">
+                    {members.map((member) => (
+                        <li key={member.id}>
+                            <span onClick={() => handleSelect(member)}>
+                                <input
+                                    type="radio"
+                                    name="member"
+                                    value={member.memberId}
+                                    checked={selectedMember === member.memberId}
+                                    readOnly
+                                />
+                                <img src={findUserPhoto(member.memberId, members)} alt="User Profile" className="user-photo" />
+                                <span>{`${member.memberId} - ${member.name}`}</span>
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+                <p>Selected Member 확인용: {receiveId}</p>
+            </div>
+
+
 
             <div className="custom-btn">
                 <CustomButton type="submit" />
