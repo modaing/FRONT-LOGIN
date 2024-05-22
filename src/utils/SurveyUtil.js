@@ -1,4 +1,4 @@
-export function renderSurveyList(content, handleOpenModal) {
+export function renderSurveyList(content, handleOpenModal, setServey) {
     if (!content) {
         return (
             <tr>
@@ -11,12 +11,15 @@ export function renderSurveyList(content, handleOpenModal) {
         const { formattedStartDate, formattedEndDate } = formattedLocalDate(survey)
         const buttonClassName = survey.surveyCompleted ? 'surveyComplete' : 'surveyOpen';
         const buttonText = survey.surveyCompleted ? '참여완료' : '참여하기';
-        const onClickHandler = survey.surveyCompleted ? null : () => handleOpenModal(); 
+        const onClickHandler = survey.surveyCompleted ? null : () => {
+            handleOpenModal()
+            setServey(content.find(item => item.surveyNo === survey.surveyNo))
+        };
 
         return (
             <tr key={index}>
                 <td>{survey.surveyNo}</td>
-                <td>{survey.surveyTitle}</td>
+                <td className="survey-title" title={survey.surveyTitle} >{survey.surveyTitle}</td>
                 <td>{formattedStartDate}</td>
                 <td>{formattedEndDate}</td>
                 <td>{survey.name}</td>

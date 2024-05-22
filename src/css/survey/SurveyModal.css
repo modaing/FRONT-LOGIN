@@ -1,0 +1,32 @@
+.modal-content {
+    width: 100% !important;
+}
+
+.modal-body div {
+    margin-bottom: 3%;
+}
+
+.surveyWriter {
+    width: 202.4px;
+    height: 37.65px;
+}
+
+.dateFlex {
+    display: flex;
+    gap: 10px;
+}
+
+.dateFlex span {
+    margin-top: 1.5%;
+}
+
+.likeTextarea {
+    white-space: pre-wrap; /* 텍스트가 요소의 너비를 넘어가면 줄바꿈, 공백은 유지 */
+    word-wrap: break-word; /* 긴 단어가 요소의 너비를 넘어갈 때 단어를 분할해서 줄바꿈 */
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    min-height: 38px;
+    background-color: #e9ecef;
+    color: #495057;
+}
