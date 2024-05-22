@@ -35,9 +35,10 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
     };
     
     useEffect(() => {
-        setIsLoading(true);
-        dispatch(callSelectMemberList(name))
-            .finally(() => setIsLoading(false));
+        if (name) {
+            setIsLoading(true);
+            dispatch(callSelectMemberList(name)).finally(() => setIsLoading(false));
+        }
     }, [name]);
 
     // 모달이 열릴 때 초기화
