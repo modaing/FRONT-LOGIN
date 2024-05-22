@@ -3,7 +3,6 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import { decodeJwt } from '../utils/tokenUtils';
 import { useDispatch } from 'react-redux';
 import { callLogoutAPI, callGetProfilePictureAPI } from '../apis/MemberAPICalls';
-import { useEffect, useState } from 'react';
 
 function Header() {
 
@@ -17,25 +16,12 @@ function Header() {
     if (token) {
         try {
             const decodedTokenInfo = decodeJwt(token);
-            // console.log('Decoded token info:', decodedTokenInfo);
-            // memberRole = decodedTokenInfo.role;
-            // console.log('구성원의 role:',memberRole);
+
         } catch (error) {
             console.log('Error decoding JWT token:', error);
         }
     }
 
-    // const getProfilePic = () => {
-    //     setImageData(memberInfo.imageUrl);
-    //     console.log('imageData:', imageData);
-    // }
-
-    // useEffect(() => {
-    //     if (token && memberInfo && memberInfo.imageUrl) {
-    //         // Set the profile picture URL in state
-    //         setImageUrl(memberInfo.imageUrl);
-    //     }
-    // }, [token, memberInfo]);
 
     const onClickLogoutHandler = (event) => {
         event.preventDefault();
