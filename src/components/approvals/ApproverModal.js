@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllMemberAPI } from "../../apis/ApprovalAPI";
+import CancelModal from "./CancelModal";
 import styles from '../../css/approval/approverModal.css';
 
 const ApproverModal = ({ isOpen, onRequestClose, onSave }) => {
@@ -8,17 +9,20 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave }) => {
     const dispatch = useDispatch();
     const members = useSelector(state => state.approval.members) || [];
     const [selectedMembers, setSelectedMembers] = useState([]);
+    const [selectedMembersForRemove, setSelectedMembersForRemove] = useState([]);
     const [approverLine, setApproverLine] = useState([]);
     const [referencerLine, setReferencerLine] = useState([]);
     const [expandedDepartments, setExpandedDepartments] = useState([]);
+    const [isCancelMocalOpen, setIsCancelModalOpen] = useState(false);
+    const [initialApproverLine, setInitialApproverLine] = useState([]);
+    const [initialReferencerLine, setInitialReferencerLine] = useState([]);
 
     useEffect(() => {
         if (isOpen) {
             console.log("모달이 열려 있습니다. API 호출을 시작합니다.");
             dispatch(getAllMemberAPI());
-        }
-        else {
-            console.log("모달이 닫혀 있습니다.")
+            setInitialApproverLine([...approverLine]);
+            setInitialReferencerLine([...referencerLine]);
         }
     }, [isOpen, dispatch]);
 
@@ -28,7 +32,7 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave }) => {
 
 
     const handleSelectMember = (member) => {
-        if(!approverLine.includes(member) && !referencerLine.includes(member)){
+        if (!approverLine.includes(member) && !referencerLine.includes(member)) {
             setSelectedMembers(prev => {
                 if (prev.includes(member)) {
                     return prev.filter(m => m !== member);
@@ -37,14 +41,14 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave }) => {
                 }
             });
         }
-        
+
     };
 
     const handleSelectApprover = (member) => {
         setApproverLine(prev => {
-            if(prev.includes(member)){
+            if (prev.includes(member)) {
                 return prev.filter(m => m !== member);
-            }else{
+            } else {
                 return [...prev, member];
             }
         });
@@ -52,10 +56,10 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave }) => {
 
     const handleSelectReferencer = (member) => {
         setReferencerLine(prev => {
-            if(prev.includes(member)){
+            if (prev.includes(member)) {
                 return prev.filter(m => m !== member);
-            }else{
-                return [ ...prev, member];
+            } else {
+                return [...prev, member];
             }
         });
     };
@@ -70,6 +74,19 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave }) => {
         });
     };
 
+    const handlerMemberSElect = (member) => {
+        setSelectedMembers(member);
+    };
+
+    const handleMemberRemoveSelect = (member) => {
+        if(selectedMembersForRemove.includes(member)){
+            setSelectedMembersForRemove(selectedMembersForRemove.filter(m => m !== member));
+
+        }else{
+            setSelectedMembersForRemove([...selectedMembersForRemove, member])
+        }
+    }
+
     const addToApproverLine = () => {
         setApproverLine([...approverLine, ...selectedMembers.filter(member => !approverLine.includes(member))]);
         setSelectedMembers([]);
@@ -81,12 +98,12 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave }) => {
     };
 
     const removeFromApproverLine = () => {
-        setApproverLine(approverLine.filter(member => !selectedMembers.includes(member)));
+        setApproverLine(approverLine.filter(member => !selectedMembersForRemove.includes(member)));
         setSelectedMembers([]);
     };
 
     const removeFromReferencerLine = (member) => {
-        setReferencerLine(referencerLine.filter(member => !selectedMembers.includes(member)));
+        setReferencerLine(referencerLine.filter(member => !selectedMembersForRemove.includes(member)));
         setSelectedMembers([]);
     };
 
@@ -99,29 +116,68 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave }) => {
             onRequestClose();
         }
     };
-    
+
     const handleClose = () => {
+        const isApproverLineChanged = JSON.stringify(initialApproverLine) !== JSON.stringify(approverLine);
+        const isReferencerLineChanged = JSON.stringify(initialReferencerLine) !== JSON.stringify(referencerLine);
+
+        if(isApproverLineChanged || isReferencerLineChanged){
+            setIsCancelModalOpen(true);
+        }
+        else{
+            onRequestClose();
+        }
+        
+    }
+
+    const handleConfirmClose = () => {
         setSelectedMembers([]);
         setApproverLine([]);
         setReferencerLine([]);
         setExpandedDepartments([]);
+        setIsCancelModalOpen(false);
         onRequestClose();
-    }
+    } ;
+
+    const handleCancelClose = () => {
+        setIsCancelModalOpen(false);
+    };
 
     const departments = [...new Set(members.map(member => member.departName))];
 
+    const moveUp = (line, setLine, index) => {
+        if (index === 0) {
+            return;
+        }
+
+        const newLine = [...line];
+        [newLine[index], newLine[index - 1]] = [newLine[index - 1], newLine[index]];
+        setLine(newLine);
+    };
+
+    const moveDown = (line, setLine, index) => {
+        if (index === line.length -1) 
+        {
+            return;
+        }
+        const newLine = [...line];
+        [newLine[index], newLine[index + 1 ]] = [newLine[index + 1], newLine[index]];
+        setLine(newLine);
+    };
+
     return (
+        <>
         <div className={`modalOverlay ${isOpen ? 'show' : ''}`} style={{ display: isOpen ? 'flex' : 'none' }}>
             <div className="ApproverModalContent">
-                <div style={{fontWeight:'bold', fontSize:'23px'}}>결재자 선택</div>
+                <div style={{ fontWeight: 'bold', fontSize: '23px', marginBottom:'10px' }}>결재자 선택</div>
                 <div className="ApproverModalBody">
                     <div className="ApproverMemberList">
-                        <div style={{ fontSize: "20px", fontWeight:"bold" }}>사원 목록</div>
+                        <div style={{ fontSize: "20px", fontWeight: "bold" }}>사원 목록</div>
                         <div className="ApproverDepartmentList">
                             {departments.map(department => (
                                 <div key={department}>
                                     <div className="ApproverDepartmentHeader" onClick={() => toggleDepartment(department)}>
-                                        <span style={{color:"#5869F3"}}>{expandedDepartments.includes(department) ? '∧' : '∨'}</span>
+                                        <span style={{ color: "#5869F3" }}>{expandedDepartments.includes(department) ? '∧' : '∨'}</span>
                                         <span>{department}</span>
                                     </div>
                                     {expandedDepartments.includes(department) && (
@@ -130,12 +186,12 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave }) => {
                                                 <div key={member.memberId} className="ApproverMemberItem" onClick={() => handleSelectMember(member)} >
                                                     <input
                                                         type="checkbox"
-                                                        checked={selectedMembers.includes(member) || approverLine.includes(member) || referencerLine.includes(member)} 
+                                                        checked={selectedMembers.includes(member) || approverLine.includes(member) || referencerLine.includes(member)}
                                                         onChange={() => handleSelectMember(member)}
-                                                        disabled={approverLine.includes(member) || referencerLine.includes(member) }
+                                                        disabled={approverLine.includes(member) || referencerLine.includes(member)}
                                                         style={{
                                                             cursor: (approverLine.includes(member) || referencerLine.includes(member)) ? 'not-allowed' : 'pointer',
-                                                            color : (approverLine.includes(member) || referencerLine.includes(member)) ? 'gray' : 'black'
+                                                            color: (approverLine.includes(member) || referencerLine.includes(member)) ? 'gray' : 'black'
                                                         }}
                                                     />
                                                     {member.positionName}  {member.name}
@@ -159,36 +215,69 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave }) => {
                     </div>
                     <div className="SeletBox">
                         <div>
-                            <div style={{fontWeight:'bold'}}>결재선</div>
+                            <div style={{ fontWeight: 'bold' }}>결재선</div>
                             <div className="SelectBoxApproverLine">
-                                <ul>
-                                    {approverLine.map((approver, index) => (
-                                        <li key={approver.memberId} className="approvalItem">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedMembers.includes(approver)}
-                                                onChange={() => handleSelectApprover(approver)}
-                                            />
-                                            <span>{index + 1}. </span>
-                                            {approver.departName} - {approver.positionName} {approver.name}
-                                            
-                                        </li>
-                                    ))}
-                                </ul>
+                                <table className="SelectBoxApproverTable">
+                                    <tr>
+                                        <th style={{width: '70px', marginLeft: '10px'}}></th>
+                                        <th>순번</th>
+                                        <th>부서</th>
+                                        <th>직급명</th>
+                                        <th>이름</th>
+                                        <th></th>
+                                    </tr>
+                                        {approverLine.map((approver, index) => (
+                                            <tr key={approver.memberId} className="approvalItem">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedMembersForRemove.includes(approver)}
+                                                    onChange={() => handleMemberRemoveSelect(approver)}
+                                                />
+                                                <td>{index +1}</td>
+                                                <td>{approver.departName}</td>
+                                                <td>{approver.positionName}</td>
+                                                <td style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{approver.name}</td>
+                                                <td style={{width:'100px'}}> 
+                                                    <button className="moveButton" onClick={() => moveUp(approverLine, setApproverLine, index)}>↑</button>
+                                                    <button className="moveButton" onClick={() => moveDown(approverLine, setApproverLine, index)}>↓</button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                </table>
+                                
                             </div>
                         </div>
                         <div>
-                            <div style={{fontWeight:'bold'}}>참조선</div>
+                            <div style={{ fontWeight: 'bold' }}>참조선</div>
                             <div className="SelectBoxReferencerLine">
-
-                                <ul>
-                                    {referencerLine.map(referencer => (
-                                        <li key={referencer.memberId}>
-                                            {referencer.departName} - {referencer.positionName} {referencer.name}
-                                            <button onClick={() => removeFromReferencerLine(referencer)}>-</button>
-                                        </li>
-                                    ))}
-                                </ul>
+                            <table className="SelectBoxApproverTable">
+                                    <tr>
+                                        <th style={{width: '70px', marginLeft: '10px'}}></th>
+                                        <th>순번</th>
+                                        <th>부서</th>
+                                        <th>직급명</th>
+                                        <th>이름</th>
+                                        <th></th>
+                                    </tr>
+                                        {referencerLine.map((referencer, index) => (
+                                            <tr key={referencer.memberId} className="approvalItem">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedMembersForRemove.includes(referencer)}
+                                                    onChange={() => handleMemberRemoveSelect(referencer)}
+                                                />
+                                                <td>{index +1}</td>
+                                                <td>{referencer.departName}</td>
+                                                <td>{referencer.positionName}</td>
+                                                <td style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{referencer.name}</td>
+                                                <td style={{width:'100px'}}>
+                                                    <button className="moveButton" onClick={() => moveUp(referencerLine, setReferencerLine, index)}>↑</button>
+                                                    <button className="moveButton" onClick={() => moveDown(referencerLine, setReferencerLine, index)}>↓</button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                </table>
+                                
                             </div>
                         </div>
                     </div>
@@ -199,7 +288,16 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave }) => {
                     <button onClick={handleSave}>저장</button>
                 </div>
             </div>
+            
         </div>
+        <CancelModal
+            isOpen={isCancelMocalOpen}
+            message={<><div>취소하시겠습니까?</div>
+            <div>마지막 저장 후 수정된 내용은 저장되지 않습니다.</div></>}
+            onConfirm={handleCancelClose}
+            onCancel={handleCancelClose}
+        />
+        </>
     );
 
 };
