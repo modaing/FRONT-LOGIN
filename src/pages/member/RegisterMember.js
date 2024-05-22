@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
 import '../../css/common.css'
+import '../../css/member/registerMember.css';
 import RegisterMemberCSS from './RegistMember.module.css';
 import { callRegisterMemberAPI, callGetDepartmentListAPI, callGetPositionListAPI } from '../../apis/MemberAPICalls';
 
@@ -51,7 +52,7 @@ function RegisterMember() {
         try {
             const positionList = await callGetPositionListAPI();
             setPositionInformation(positionList);
-            console.log('positionInformation:', positionInformation);
+            // console.log('positionInformation:', positionInformation);
 
             if (Array.isArray(positionList)) {
                 setPositionInformation(positionList);
@@ -167,24 +168,34 @@ function RegisterMember() {
         }
     }
 
-    
     const handleFileUpload = (e) => {
         if (e.target.files && e.target.files[0])  {
             const uploadedImage = e.target.files[0];
+            console.log(typeof uploadedImage);
             setUploadedImage(uploadedImage);
             const imageUrl = URL.createObjectURL(uploadedImage);
+            console.log(typeof imageUrl);
             setImagePreviewUrl(imageUrl);
         }
     };
-    
 
+    const formatDateInCalendar = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+    
+    const today = formatDateInCalendar(new Date());
+    
     /* 구성원 등록할 때 보내줄 정보들 */
     const registerMember = async (e) => {
         e.preventDefault();
 
         const cleanedPhoneNo = inputtedPhoneNo.replace(/-/g, '');
 
-        console.log('휴대폰번호:', cleanedPhoneNo);
+        // console.log('휴대폰번호:', cleanedPhoneNo);
         if (cleanedPhoneNo.length !== 11) {
             alert('휴대폰 번호를 올바른 형식으로 입력하세요 (010-1234-5678)');
             return;
@@ -257,28 +268,28 @@ function RegisterMember() {
                                     <br />
                                     <br />
 
-                                    <div className="row mb-3">
-                                        <label htmlFor='name' className="col-sm-1 col-form-label">이름</label>
-                                        <input type='text' name='name' value={name} className={`col-sm-10 ${RegisterMemberCSS.shortInput}`} onChange={(e) => handleInputChange(e)}></input>
+                                    <div className="nameStyle">
+                                        <label htmlFor='name' className="name">이름</label>
+                                        <input type='text' name='name' value={name} className="inputStyle" onChange={(e) => handleInputChange(e)}></input>
                                     </div>
                                     <br />
 
-                                    <div className="row mb-3">
-                                        <label htmlFor="inputText" className="col-sm-1 col-form-label">주소</label>
-                                        <input type='text' name='address' value={address} className={`col-sm-10 ${RegisterMemberCSS.shortInput}`} onChange={(e) => handleInputChange(e)}></input>
+                                    <div className="addressStyle">
+                                        <label htmlFor="inputText" className="address">주소</label>
+                                        <input type='text' name='address' value={address} className="inputStyle" onChange={(e) => handleInputChange(e)}></input>
                                     </div>
                                     <br />
 
-                                    <div className="row mb-3">
-                                        <label htmlFor="inputText" className="col-sm-1 col-form-label">이메일</label>
-                                        <input type='text' name='email' value={email} className={`col-sm-10 ${RegisterMemberCSS.shortInput}`} onChange={(e) => handleInputChange(e)}></input>
+                                    <div className="emailStyle">
+                                        <label htmlFor="inputText" className="email">이메일</label>
+                                        <input type='text' name='email' value={email} className="inputStyle" onChange={(e) => handleInputChange(e)}></input>
                                     </div>
                                     <br />
 
-                                    <div className="row mb-3">
-                                        <label htmlFor="inputText" className="col-sm-1 col-form-label">휴대폰 번호</label>
+                                    <div className="phoneNoStyle">
+                                        <label htmlFor="inputText" className="phoneNo">전화번호</label>
                                         {/* <input type='text' name='phoneNo' value={phoneNo} className={`col-sm-10 ${RegisterMemberCSS.shortInput}`} onChange={(e) => handleInputChange(e)}></input> */}
-                                        <input type='text' name='phoneNo' value={inputtedPhoneNo} className={`col-sm-10 ${RegisterMemberCSS.shortInput}`} onChange={handlePhoneNoChange} placeholder='010-1234-5678'></input>
+                                        <input type='text' name='phoneNo' value={inputtedPhoneNo} className="inputStyle" onChange={handlePhoneNoChange} placeholder='010-1234-5678'></input>
                                     </div>
                                     <br />
 
@@ -289,21 +300,21 @@ function RegisterMember() {
                             <div className={RegisterMemberCSS.dividePage}>
                                 <div className={RegisterMemberCSS.rightSection}>
 
-                                    <div className="row mb-3" id={RegisterMemberCSS.inputBox}>
-                                        <label htmlFor="inputText" className="col-sm-1 col-form-label">사번</label>
-                                        <input type='text' name='memberId' value={memberId} className={`col-sm-10 ${RegisterMemberCSS.shortInput}`} readOnly></input>
+                                    <div className="memberIdStyle" id={RegisterMemberCSS.inputBox}>
+                                        <label htmlFor="inputText" className="memberId">사번</label>
+                                        <input type='text' name='memberId' value={memberId} className="inputStyle" readOnly></input>
                                     </div>
                                     <br />
 
-                                    <div className="row mb-3" id={RegisterMemberCSS.inputBox}>
-                                        <label htmlFor="inputText" className="col-sm-1 col-form-label">입사일</label>
-                                        <input type='date' name='employedDate' value={employedDate} className={`col-sm-10 ${RegisterMemberCSS.shortInput}`} onChange={(e) => handleInputChange(e)}></input>
+                                    <div className="employedDateStyle" id={RegisterMemberCSS.inputBox}>
+                                        <label htmlFor="inputText" className="employedDate">입사일</label>
+                                        <input type='date' max={today} name='employedDate' value={employedDate} className="inputStyle" onChange={(e) => handleInputChange(e)}></input>
                                     </div>
                                     <br />
 
-                                    <div className="row mb-3" id={RegisterMemberCSS.inputBox}>
-                                        <label htmlFor="inputText" className="col-sm-1 col-form-label">부서</label>
-                                        <select name='departDTO' value={departDTO.departNo} className={`col-sm-10 ${RegisterMemberCSS.shortInput}`} onChange={(e) => handleInputChange(e)}>
+                                    <div className="departStyle" id={RegisterMemberCSS.inputBox}>
+                                        <label htmlFor="inputText" className="departName">부서</label>
+                                        <select name='departDTO' value={departDTO.departNo} className="inputStyle" onChange={(e) => handleInputChange(e)}>
                                             <option value="">부서 선택</option>
                                             {departmentInformation.map((departments) => (
                                                 <option key={departments.departNo} value={departments.departNo}>{departments.departName}</option>
@@ -312,10 +323,10 @@ function RegisterMember() {
                                     </div>
                                     <br />
 
-                                    <div className="row mb-3" id={RegisterMemberCSS.inputBox}>
-                                        <label htmlFor="inputText" className="col-sm-1 col-form-label">직급</label>
+                                    <div className="positionStyle" id={RegisterMemberCSS.inputBox}>
+                                        <label htmlFor="inputText" className="positionName">직급</label>
                                         {/* <input type='text' name='departmentName' id='departmentName' required value={departmentName} className={`col-sm-10 ${RegisterMemberCSS.shortInput}`} onChange={(e) => handleInputChange(e)}></input> */}
-                                        <select name='positionDTO' value={positionDTO.positionLevel} className={`col-sm-10 ${RegisterMemberCSS.shortInput}`} onChange={(e) => handleInputChange(e)}>
+                                        <select name='positionDTO' value={positionDTO.positionLevel} className="inputStyle" onChange={(e) => handleInputChange(e)}>
                                             <option value="">직급 선택</option>
                                             {positionInformation.map((positions) => (
                                                 <option key={positions.positionName} value={positions.positionLevel}>{positions.positionName}</option>
@@ -324,9 +335,9 @@ function RegisterMember() {
                                     </div>
                                     <br />
 
-                                    <div className="row mb-3" id={RegisterMemberCSS.inputBox}>
-                                        <label htmlFor="inputText" className="col-sm-1 col-form-label">퍼미션</label>
-                                        <select type='text' name='role' value={role} className={`col-sm-10 ${RegisterMemberCSS.shortInput}`} onChange={(e) => handleInputChange(e)}>
+                                    <div className="memberStatusStyle" id={RegisterMemberCSS.inputBox}>
+                                        <label htmlFor="inputText" className="memberStatus">퍼미션</label>
+                                        <select type='text' name='role' value={role} className="inputStyle" onChange={(e) => handleInputChange(e)}>
                                             <option value="">권한 설정</option>
                                             <option value="ADMIN">관리자</option>
                                             <option value="MEMBER">구성원</option>

@@ -9,17 +9,36 @@
     height: 90%;
 }
 
+form {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+form input, form button, form select, form textarea {
+    font: inherit;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+    box-sizing: border-box;
+}
+
 .columnStyle {
     width: 90%;
     height: auto;
 }
 
 .rowStyle {
-    flex: 1; /* Let the row fill the remaining space */
+    /* flex: 1; Let the row fill the remaining space */
+    display: flex;
 }
 
 .cardOuterLine {
     height: auto; /* Make sure the card fills the parent height */
+    width: auto;
 }
 .cardOuterLine2 {
     height: auto; /* Make sure the card fills the parent height */
@@ -28,7 +47,7 @@
 .firstPage, .secondPage {
     display: flex;
     flex-direction: column; /* Ensure the children stack vertically */
-    min-height: 100vh; /* Set minimum height to full viewport height */
+    /* min-height: 100vh; Set minimum height to full viewport height */
     overflow: hidden;
 }
 
@@ -154,4 +173,8 @@
 
 .transferredDateStyle, .positionNameStyle, .departNameStyle {
     text-align: left;
+}
+
+.departNameStyle {
+    color: black;
 }
