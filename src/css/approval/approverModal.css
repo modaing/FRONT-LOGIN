@@ -5,22 +5,135 @@
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     z-index: 1000;
 }
+.modalOverlay.show {
+    display: flex;
+}
 
-.modalContent {
-    width: 510px;
-    height: 800px;
+.ApproverModalContent {
+    width: 1000px;
     background-color: white;
     padding: 20px;
     border-radius: 5px;
     border: 2px solid black;
     text-align: center;
     display: grid;
+    padding-top: 30px;
 }
+
+.ApproverModalBody {
+    display: flex;
+}
+
+.ApproverMemberList{
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 50px;
+}
+
+.ApproverDepartmentList{
+    text-align: left;
+    margin-top: 10px;
+    border : 1px solid gray;
+    height: 600px;
+    overflow-y: auto;
+    padding-left : 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-left: 30px;
+    border-radius: 5px;
+    padding-right: 15px;
+}
+
+.ApproverDepartmentHeader{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.ApproverDepartmentHeader span{
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 10px;
+    margin-bottom : 10px;
+    margin-right: 20px;
+}
+
+.ApproverMembers{
+    margin-left: 20px;
+    padding-bottom: 10px;
+}
+
+.ApproverMemberItem{
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.ApproverMemberItem input{
+    margin-right: 10px;
+}
+
+.ApproverButtons{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    gap: 260px;
+}
+
+.ApproverButtonsApprover, .ApproverButtonsReferencer{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.ApproverButtonsApprover button, .ApproverButtonsReferencer button{
+    border: 1px solid #D5D5D5;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 8px 15px;
+}
+
+.AppPlusBtn{
+    background-color: white;
+    color: red;
+}
+.AppMinusBtn{
+    background-color: white;
+    color: blue;
+}
+
+.SeletBox{
+    flex: 1;
+    overflow-y: auto;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+    gap: 10px;
+}
+
+.SelectBoxApproverLine{
+    border: 1px solid gray;
+    height: 300px;
+    border-radius: 5px;
+    overflow-y: auto;
+}
+
+.SelectBoxReferencerLine{
+    border : 1px solid gray;
+    height: 300px;
+    border-radius: 5px;
+    overflow-y: auto;
+}
+
 .modalConfirmMessage {
     align-self: center;
     margin-top: 20px;

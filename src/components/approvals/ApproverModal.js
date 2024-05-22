@@ -7,14 +7,18 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave }) => {
 
     const dispatch = useDispatch();
     const members = useSelector(state => state.approval.members) || [];
-    const [selectedMember, setSelectedMember] = useState(null);
+    const [selectedMembers, setSelectedMembers] = useState([]);
     const [approverLine, setApproverLine] = useState([]);
     const [referencerLine, setReferencerLine] = useState([]);
+    const [expandedDepartments, setExpandedDepartments] = useState([]);
 
     useEffect(() => {
         if (isOpen) {
             console.log("모달이 열려 있습니다. API 호출을 시작합니다.");
             dispatch(getAllMemberAPI());
+        }
+        else {
+            console.log("모달이 닫혀 있습니다.")
         }
     }, [isOpen, dispatch]);
 
@@ -22,24 +26,68 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave }) => {
         console.log("members 상태가 업데이트되었습니다:", members);
     }, [members]);
 
-    const addToApproverLine = () => {
-        if (selectedMember && !approverLine.includes(selectedMember)) {
-            setApproverLine([...approverLine, selectedMember]);
+
+    const handleSelectMember = (member) => {
+        if(!approverLine.includes(member) && !referencerLine.includes(member)){
+            setSelectedMembers(prev => {
+                if (prev.includes(member)) {
+                    return prev.filter(m => m !== member);
+                } else {
+                    return [...prev, member];
+                }
+            });
         }
+        
+    };
+
+    const handleSelectApprover = (member) => {
+        setApproverLine(prev => {
+            if(prev.includes(member)){
+                return prev.filter(m => m !== member);
+            }else{
+                return [...prev, member];
+            }
+        });
+    };
+
+    const handleSelectReferencer = (member) => {
+        setReferencerLine(prev => {
+            if(prev.includes(member)){
+                return prev.filter(m => m !== member);
+            }else{
+                return [ ...prev, member];
+            }
+        });
+    };
+
+    const toggleDepartment = (departmentName) => {
+        setExpandedDepartments(prev => {
+            if (prev.includes(departmentName)) {
+                return prev.filter(dep => dep !== departmentName)
+            } else {
+                return [...prev, departmentName];
+            }
+        });
+    };
+
+    const addToApproverLine = () => {
+        setApproverLine([...approverLine, ...selectedMembers.filter(member => !approverLine.includes(member))]);
+        setSelectedMembers([]);
     };
 
     const addToReferencerLine = () => {
-        if (selectedMember && !referencerLine.includes(selectedMember)) {
-            setReferencerLine([...referencerLine, selectedMember]);
-        }
+        setReferencerLine([...referencerLine, ...selectedMembers.filter(member => !referencerLine.includes(member))]);
+        setSelectedMembers([]);
     };
 
     const removeFromApproverLine = () => {
-        setApproverLine(approverLine.filter(member => member !== selectedMember));
+        setApproverLine(approverLine.filter(member => !selectedMembers.includes(member)));
+        setSelectedMembers([]);
     };
 
-    const removeFromReferencerLine = () => {
-        setReferencerLine(referencerLine.filter(member => member !== selectedMember));
+    const removeFromReferencerLine = (member) => {
+        setReferencerLine(referencerLine.filter(member => !selectedMembers.includes(member)));
+        setSelectedMembers([]);
     };
 
     const handleSave = () => {
@@ -51,49 +99,103 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave }) => {
             onRequestClose();
         }
     };
+    
+    const handleClose = () => {
+        setSelectedMembers([]);
+        setApproverLine([]);
+        setReferencerLine([]);
+        setExpandedDepartments([]);
+        onRequestClose();
+    }
+
+    const departments = [...new Set(members.map(member => member.departName))];
 
     return (
-        <div className={`modalOverlay ${isOpen ? 'show' : ''}`}>
-            <div className="modalContent">
-                <h3>결재자 선택</h3>
-                <div style={{ display: 'flex' }}>
-                    <div style={{ flex: 1 }}>
-                        <h3>사원 목록</h3>
-                        <ul>
-                            {Array.isArray(members) && members.length > 0 ? members.map(member => (
-                                <li key={member.memberId} onClick={() => setSelectedMember(member)}>
-                                    {member.name}
-                                </li>
-                            )) : <p>사원 목록이 존재하지 않습니다.</p>}
-                        </ul>
-                        <div>멤버목록 : {members}</div>
+        <div className={`modalOverlay ${isOpen ? 'show' : ''}`} style={{ display: isOpen ? 'flex' : 'none' }}>
+            <div className="ApproverModalContent">
+                <div style={{fontWeight:'bold', fontSize:'23px'}}>결재자 선택</div>
+                <div className="ApproverModalBody">
+                    <div className="ApproverMemberList">
+                        <div style={{ fontSize: "20px", fontWeight:"bold" }}>사원 목록</div>
+                        <div className="ApproverDepartmentList">
+                            {departments.map(department => (
+                                <div key={department}>
+                                    <div className="ApproverDepartmentHeader" onClick={() => toggleDepartment(department)}>
+                                        <span style={{color:"#5869F3"}}>{expandedDepartments.includes(department) ? '∧' : '∨'}</span>
+                                        <span>{department}</span>
+                                    </div>
+                                    {expandedDepartments.includes(department) && (
+                                        <div className="ApproverMembers">
+                                            {members.filter(member => member.departName === department).map(member => (
+                                                <div key={member.memberId} className="ApproverMemberItem" onClick={() => handleSelectMember(member)} >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedMembers.includes(member) || approverLine.includes(member) || referencerLine.includes(member)} 
+                                                        onChange={() => handleSelectMember(member)}
+                                                        disabled={approverLine.includes(member) || referencerLine.includes(member) }
+                                                        style={{
+                                                            cursor: (approverLine.includes(member) || referencerLine.includes(member)) ? 'not-allowed' : 'pointer',
+                                                            color : (approverLine.includes(member) || referencerLine.includes(member)) ? 'gray' : 'black'
+                                                        }}
+                                                    />
+                                                    {member.positionName}  {member.name}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                    <div style={{ flex: 1, textAlign: 'center' }}>
-                        <h3>결재선</h3>
-                        <button onClick={addToApproverLine}>+</button>
-                        <button onClick={removeFromApproverLine}>-</button>
-                        <ul>
-                            {approverLine.map(approver => (
-                                <li key={approver.memberId}>
-                                    {approver.name}
-                                </li>
-                            ))}
-                        </ul>
-                        <h3>참조선</h3>
-                        <button onClick={addToReferencerLine}>+</button>
-                        <button onClick={removeFromReferencerLine}>-</button>
-                        <ul>
-                            {referencerLine.map(referencer => (
-                                <li key={referencer.memberId}>
-                                    {referencer.name}
-                                </li>
-                            ))}
-                        </ul>
+                    <div className="ApproverButtons">
+                        <div className="ApproverButtonsApprover">
+                            <button className="AppPlusBtn" onClick={addToApproverLine}> +</button>
+                            <button className="AppMinusBtn" onClick={removeFromApproverLine}> -</button>
+                        </div>
+                        <div className="ApproverButtonsReferencer">
+                            <button className="AppPlusBtn" onClick={addToReferencerLine}> +</button>
+                            <button className="AppMinusBtn" onClick={removeFromReferencerLine}> -</button>
+                        </div>
+                    </div>
+                    <div className="SeletBox">
+                        <div>
+                            <div style={{fontWeight:'bold'}}>결재선</div>
+                            <div className="SelectBoxApproverLine">
+                                <ul>
+                                    {approverLine.map((approver, index) => (
+                                        <li key={approver.memberId} className="approvalItem">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedMembers.includes(approver)}
+                                                onChange={() => handleSelectApprover(approver)}
+                                            />
+                                            <span>{index + 1}. </span>
+                                            {approver.departName} - {approver.positionName} {approver.name}
+                                            
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <div style={{fontWeight:'bold'}}>참조선</div>
+                            <div className="SelectBoxReferencerLine">
+
+                                <ul>
+                                    {referencerLine.map(referencer => (
+                                        <li key={referencer.memberId}>
+                                            {referencer.departName} - {referencer.positionName} {referencer.name}
+                                            <button onClick={() => removeFromReferencerLine(referencer)}>-</button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
                 <div style={{ textAlign: 'right ' }}>
-                    <button onClick={onRequestClose}>취소</button>
+                    <button onClick={handleClose}>취소</button>
                     <button onClick={handleSave}>저장</button>
                 </div>
             </div>

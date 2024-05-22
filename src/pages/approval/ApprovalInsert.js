@@ -23,7 +23,7 @@ const ApprovalInsert = () => {
     const decodedToken = decodeJwt(window.localStorage.getItem('accessToken'));
     const memberId = decodedToken.memberId;
 
-    console.log('isModalOpen : ' + isModalOpen);
+    console.log('isModalOpen 초기값 : ' + isModalOpen);
 
     console.log("Decoded memberId: ", memberId);
 
@@ -136,11 +136,13 @@ const ApprovalInsert = () => {
     const openModal = () => {
         console.log('openModal 실행 ');
         setIsModalOpen(true);
+        console.log('isModalOpen : ' + isModalOpen);
     };
 
     const closeModal = () => {
         console.log('closeModal 실행');
         setIsModalOpen(false);
+        console.log('isModalOpen : ' + isModalOpen);
     };
 
     const handleSaveApprovers = (approverLine, referencerLine) => {
