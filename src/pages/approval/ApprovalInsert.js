@@ -12,11 +12,14 @@ const ApprovalInsert = () => {
 
     const [formContent, setFormContent] = useState('');
     const [selectedForm, setSelectedForm] = useState(null);
+    const [yearFormNo, setYearFormNo] = useState('');
     const [isRemovingBogusBr, setIsRemovingBogusBr] = useState(false);
     const editorRef = useRef(null);
 
     const decodedToken = decodeJwt(window.localStorage.getItem('accessToken'));
     const memberId = decodedToken.memberId;
+
+    console.log("Decoded memberId: ", memberId);
 
     const handleSelectForm = (selectedForm) => {
 
@@ -25,6 +28,11 @@ const ApprovalInsert = () => {
         if (selectedForm && selectedForm.formShape) {
             const htmlContent = selectedForm.formShape;
             setFormContent(htmlContent); // 선택된 폼의 내용을 설정
+
+            //결재 번호 생성
+            const currentYear = new Date().getFullYear();
+            const approvalNumber = `${currentYear}-${selectedForm.formNo}`; 
+            setYearFormNo(approvalNumber);
 
             if (editorRef.current) {
                 editorRef.current.setContent(htmlContent);
@@ -35,6 +43,8 @@ const ApprovalInsert = () => {
             }
         }
     };
+
+    console.log("YearFormNo : ", yearFormNo);
 
     const handleEditorChange = (content) => {
         setFormContent(content);                    //에디터 내용이 변경될 떄 상태 업데이트
@@ -124,23 +134,6 @@ const ApprovalInsert = () => {
         }
     }, []);
 
-    // const handleTabKey = (editor, e) => {
-    //     if (e.key === 'Tab') {
-    //         e.preventDefault();
-    //         const dom = editor.dom;
-    //         const currentNode = editor.selection.getNode();
-
-    //         let nextTd = dom.getNext(currentNode, 'td');
-    //         if (!nextTd) {
-    //             nextTd = dom.getNext(currentNode, 'input');
-    //         }
-
-    //         if (nextTd) {
-    //             editor.selection.setCursorLocation(nextTd, 0);
-    //             editor.focus();
-    //         }
-    //     }
-    // };
 
 
     return (
@@ -177,7 +170,7 @@ const ApprovalInsert = () => {
                             </div>
                         </div>
                         <div className="insertAppSide right">
-                            <UserInfoComponent memberId={memberId}/>
+                            <UserInfoComponent memberId={memberId} yearFormNo={yearFormNo}/>
                             <TinyEditor
                                 onInit={(evt, editor) => {
                                     editorRef.current = editor;

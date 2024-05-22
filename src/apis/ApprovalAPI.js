@@ -9,6 +9,7 @@ import {
     fetchFormsSuccess,
     fetchFormsFailure
 } from "../modules/ApprovalReducer";
+import { GET_MEMBER } from "../modules/MemberModule";
 
 const API_BASE_URL = "http://localhost:8080";
 
@@ -81,5 +82,15 @@ export const deleteApprovalAPI = approvalNo => {
         }finally{
             dispatch(setLoading(false));
         }
+    }
+};
+
+
+export const getMemberAPI = async (memberId) => {
+    try{
+        const response = await axios.get(`${API_BASE_URL}/approvals/members/${memberId}`, { headers });
+        return response.data;
+    }catch(error){
+        console.error('Failed to fetch member information : ', error);
     }
 };
