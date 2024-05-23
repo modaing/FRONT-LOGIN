@@ -79,89 +79,83 @@ function LeaveProcessing() {
         fetchData();
     }, [number, properties, direction]);
 
-    return (
-        <main id="main" className="main">
-            <div className="pagetitle">
-                <h1>휴가</h1>
-                <nav>
-                    <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><Link to="/">Home</Link></li>
-                        <li className="breadcrumb-item">휴가</li>
-                        <li className="breadcrumb-item active">휴가 신청 처리</li>
-                    </ol>
-                </nav>
-            </div>
-            <div className="col-lg-12">
-                <div className="card">
-                    <div className="LeaveProcessingListContent">
-                        <table className="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th onClick={() => handleSort('applicantName')}>
-                                        <span>사원명</span><i className="bx bxs-sort-alt"></i>
-                                    </th>
+    return <main id="main" className="main">
+        <div className="pagetitle">
+            <h1>휴가</h1>
+            <nav>
+                <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><Link to="/">Home</Link></li>
+                    <li className="breadcrumb-item">휴가</li>
+                    <li className="breadcrumb-item active">휴가 신청 처리</li>
+                </ol>
+            </nav>
+        </div>
+        <div className="col-lg-12">
+            <div className="card">
+                <div className="LeaveProcessingListContent">
+                    <table className="table table-hover">
+                        <thead>
+                            <tr>
+                                <th onClick={() => handleSort('applicantName')}>
+                                    <span>사원명</span><i className="bx bxs-sort-alt"></i>
+                                </th>
 
-                                    <th onClick={() => handleSort('leaveSubApplicant')}>
-                                        <span>사번</span><i className="bx bxs-sort-alt"></i>
-                                    </th>
+                                <th onClick={() => handleSort('leaveSubApplicant')}>
+                                    <span>사번</span><i className="bx bxs-sort-alt"></i>
+                                </th>
 
-                                    <th onClick={() => handleSort('leaveSubStartDate')}>
-                                        <span>휴가 시작일</span><i className="bx bxs-sort-alt"></i>
-                                    </th>
+                                <th onClick={() => handleSort('leaveSubStartDate')}>
+                                    <span>휴가 시작일</span><i className="bx bxs-sort-alt"></i>
+                                </th>
 
-                                    <th onClick={() => handleSort('leaveSubEndDate')}>
-                                        <span>휴가 종료일</span><i className="bx bxs-sort-alt"></i>
-                                    </th>
+                                <th onClick={() => handleSort('leaveSubEndDate')}>
+                                    <span>휴가 종료일</span><i className="bx bxs-sort-alt"></i>
+                                </th>
 
-                                    <th onClick={() => handleSort('leaveSubType')}>
-                                        <span>휴가 유형</span><i className="bx bxs-sort-alt"></i>
-                                    </th>
+                                <th onClick={() => handleSort('leaveSubType')}>
+                                    <span>휴가 유형</span><i className="bx bxs-sort-alt"></i>
+                                </th>
 
-                                    <th><span>차감 일수</span></th>
+                                <th><span>차감 일수</span></th>
 
-                                    <th><span>처리 상태</span></th>
+                                <th><span>처리 상태</span></th>
 
-                                    <th><span></span></th>
+                                <th><span></span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {isLoading
+                                // 로딩 중이면 로딩 메시지 표시
+                                ? <tr>
+                                    <td colSpan="8" className="loadingText" />
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {isLoading
-                                    // 로딩 중이면 로딩 메시지 표시
-                                    ? (
-                                        <tr>
-                                            <td colSpan="4" className="loadingText" />
-                                        </tr>
-                                    )
-                                    // 로딩 중이 아니면 실제 데이터 표시
-                                    : (
-                                        renderLeaveSubmit(content, null, null, setSelectedTime, setDetailInfo, handleOpenModal)
-                                    )
-                                }
-                            </tbody>
-                        </table>
-                        <nav>
-                            <ul className="pagination">
-                                <li className={`page-item ${number === 0 || number === undefined && 'disabled'}`}>
-                                    <button className="page-link" onClick={handlePrevPage}>◀</button>
+                                // 로딩 중이 아니면 실제 데이터 표시
+                                : renderLeaveSubmit(content, null, null, setSelectedTime, setDetailInfo, handleOpenModal)
+                            }
+                        </tbody>
+                    </table>
+                    <nav>
+                        <ul className="pagination">
+                            <li className={`page-item ${number === 0 || number === undefined && 'disabled'}`}>
+                                <button className="page-link" onClick={handlePrevPage}>◀</button>
+                            </li>
+                            {[...Array(totalPages).keys()].map(page => (
+                                <li key={page} className={`page-item ${number === page && 'active'}`}>
+                                    <button className="page-link" onClick={() => handlePageChange(page)}>
+                                        {page + 1}
+                                    </button>
                                 </li>
-                                {[...Array(totalPages).keys()].map(page => (
-                                    <li key={page} className={`page-item ${number === page && 'active'}`}>
-                                        <button className="page-link" onClick={() => handlePageChange(page)}>
-                                            {page + 1}
-                                        </button>
-                                    </li>
-                                ))}
-                                <li className={`page-item ${number === totalPages - 1 || number === undefined && 'disabled'}`}>
-                                    <button className="page-link" onClick={handleNextPage}>▶</button>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+                            ))}
+                            <li className={`page-item ${number === totalPages - 1 || number === undefined && 'disabled'}`}>
+                                <button className="page-link" onClick={handleNextPage}>▶</button>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
-            <LeaveProcessingModal isOpen={isModalOpen} onClose={handleCloseModal} onUpdate={handleUpdate} leaveSubNo={leaveSubNo} selectedTime={selectedTime} detailInfo={detailInfo} />
-        </main>
-    );
+        </div>
+        <LeaveProcessingModal isOpen={isModalOpen} onClose={handleCloseModal} onUpdate={handleUpdate} leaveSubNo={leaveSubNo} selectedTime={selectedTime} detailInfo={detailInfo} />
+    </main>
 }
 
 export default LeaveProcessing;
