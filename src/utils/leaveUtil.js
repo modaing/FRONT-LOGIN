@@ -11,19 +11,19 @@ export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelect
             const { formattedStartDate, formattedEndDate, leaveDaysCalc } = formattedLocalDate(submit);
             const isWithinOneDay = new Date(formattedStartDate) <= new Date(currentDate.getTime() + (1000 * 60 * 60 * 24));
             const buttonText = submit.leaveSubStatus === "대기"
-                ? '취소 신청'
+                ? '신청 삭제'
                 : isWithinOneDay
                     ? submit.leaveSubStatus
                     : submit.leaveSubStatus === "승인"
-                        ? '신청 삭제'
+                        ? '취소 신청'
                         : submit.leaveSubProcessDate
 
             const buttonClassName = submit.leaveSubStatus === "대기"
-                ? 'cancelRequest'
+                ? 'requestDelete'
                 : isWithinOneDay
                     ? ''
                     : submit.leaveSubStatus === "승인"
-                        ? 'requestDelete'
+                        ? 'cancelRequest'
                         : ''
 
             const onClickHandler = submit.leaveSubProcessDate ? () => {
