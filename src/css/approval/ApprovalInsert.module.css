@@ -26,7 +26,7 @@
     display:flex;
     justify-content: space-between;
     gap: 30px;
-    height: 1400px;
+    min-height: 1400px;
 }
 .insertAppSideLeft, .insertAppSideRight{
     background-color: white;
@@ -39,11 +39,16 @@
 .insertAppSideLeft {
     flex: 40%;
     height: 100%;
+    min-height: 1380px;
 }
 .insertAppSideRight{
     flex: 55%;
     height: 100%;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
 }
+
 .chooseApprover{
     margin-top: 50px;
 }
@@ -56,12 +61,14 @@
     color: black;
     border: 1px solid black;
     font-weight: bold;
-    /* font-size: 20px; */
+    font-size: 20px;
     margin-top: 30px;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 5px;
+    padding-left: 10px;
 }
 .LineTitle{
     font-size: 20px;
@@ -128,10 +135,99 @@
 .formAlert{
     color: #D5D5D5;
 }
+.approvalTitle{
+    margin-bottom : 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.approvalTitle input{
+    min-width : 350px;
+    text-align: center;
+    border:none;
+    border-bottom : 1px solid black;
+    height: 60px;
+    outline: none;
+}
 
 .insertAppButtons{
     margin-top: 30px;
     margin-bottom : 50px;
     display: flex;
     justify-content: flex-end;
+}
+.insertAppButtons button{
+    padding: 10px 18px;
+    border-radius: 5px;
+    border: none;
+    background-color: #3498db;
+    color: white;
+    cursor: pointer;
+    margin-left: 10px;
+}
+.insertAppButtons button:hover{
+    background-color: #005583;
+}
+.fileUpload {
+    margin-top: 20px;
+}
+.fileUploadLabel {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: white;
+    color: black;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #D5D5D5;
+    width: 150px;
+    text-align: center;
+}
+.fileUploadLabel:hover{
+    background-color: #005583;
+    color: #fff;
+}
+
+.fileUploadInput {
+    display: none;
+}
+
+.fileList {
+    margin-top: 10px;
+}
+
+.fileItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f4f4f4;
+    padding: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+    cursor:default;
+    max-width: 150px;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.fileUpload input{
+    margin-left: 10px;
+    overflow: hidden;
+    word-wrap: break-word;
+    -webkit-line-clamp: 1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    
+}
+.removeFileIcon {
+    margin-left : 10px;
+    margin-right: 5px;
+    cursor: pointer;
+    color: red;
+}
+.titleError{
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    
 }

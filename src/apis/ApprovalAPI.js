@@ -9,6 +9,8 @@ import {
     fetchFormsSuccess,
     fetchFormsFailure,
     getAllMembers,
+    submitApprovalSuccess,
+    submitApprovalFailure,
 } from "../modules/ApprovalReducer";
 import { GET_MEMBER } from "../modules/MemberModule";
 
@@ -104,6 +106,40 @@ export const getAllMemberAPI = () => {
             dispatch(getAllMembers(response.data.data));
         }catch(error){
             console.error('전 사원 정보 조회 실패 ', error);
+        }
+    };
+};
+
+export const submitApprovalAPI = (approvalData, files) => {
+    return async (dispatch) => {
+
+        dispatch(setLoading(true));
+        const formData = new FormData();
+
+        //결재 데이터 추가
+        formData.append('approvalData', new Blob([JSON.stringify(approvalData)], { type : 'application/json'}));
+
+        //파일 추가
+        files.forEach(file => {
+            formData.append("files", file);
+        });
+
+        try{
+            const response = await axios.post(`${API_BASE_URL}/approvals`, formData, {
+                headers : {
+                    'Content-Type' : 'multipart/form-data',
+                },
+            });
+            console.log('결재 제출 성공', response.data);
+
+            dispatch(submitApprovalSuccess(response.data));
+
+        }catch (error){
+
+            dispatch(submitApprovalFailure(error));
+            console.error('결재 제출 실패 : ', error);
+        }finally{
+            dispatch(setLoading(false));
         }
     };
 };

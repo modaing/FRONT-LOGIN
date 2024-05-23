@@ -7,6 +7,9 @@ const initialState = {
   approvals: [],
   members: [],
   forms: [],
+  files:[],
+  uploadStatus: null,
+  approvalStatus : null,
   loading: false,
   error: null,
 };
@@ -25,6 +28,8 @@ export const {
   fetchFormsSuccess,
   fetchFormsFailure,
   getAllMembers,
+  submitApprovalSuccess,
+  submitApprovalFailure,
 } = createActions({
   SET_FG: (fg) => fg,
   SET_TITLE: (title) => title,
@@ -38,6 +43,8 @@ export const {
   FETCH_FORMS_SUCCESS: (forms) => forms,
   FETCH_FORMS_FAILURE: (error) => error,
   GET_ALL_MEMBERS: (members) => members,
+  SUBMIT_APPROVAL_SUCCESS: () => {},
+  SUBMIT_APPROVAL_FAILURE: (error) => error,
 });
 
 // 리듀서 정의
@@ -99,6 +106,16 @@ const approvalReducer = handleActions(
     [getAllMembers]: (state, { payload }) => ({
       ...state, 
       members: payload,
+    }),
+    [submitApprovalSuccess]: (state) => ({
+      ...state,
+      approvalStatus: 'success',
+      error: null,
+    }),
+    [submitApprovalFailure]: (state, { payload }) => ({
+      ...state,
+      approvalStatus : 'failure',
+      error: payload,
     })
   },
   initialState
