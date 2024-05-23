@@ -37,6 +37,11 @@ function Leaves() {
     }
 
     useEffect(() => {
+        const resetNumber = async() => await dispatch({type: SET_PAGENUMBER, payload: 0})
+        resetNumber();
+    },[]);
+    
+    useEffect(() => {
         setIsLoading(true);
         const fetchData = async () => {
             try {
