@@ -5,7 +5,7 @@ import '../../css/leave/LeaveProcessingModal.css';
 
 
 const LeaveProcessingModal = ({ isOpen, onClose, onUpdate, leaveSubNo, selectedTime, detailInfo }) => {
-    const [decision, setDecision] = useState('승인');
+    const [decision, setDecision] = useState('');
     const [reason, setReason] = useState('');
 
     const handleUpdate = () => {
@@ -14,7 +14,8 @@ const LeaveProcessingModal = ({ isOpen, onClose, onUpdate, leaveSubNo, selectedT
     };
 
     const resetModal = () => {
-
+        setDecision('');
+        setReason('');
     };
 
     // 모달이 열릴 때 초기화

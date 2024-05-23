@@ -1,16 +1,16 @@
-.leaveProcessingListContent th {
+.LeaveProcessingListContent th {
     text-align: center;
     padding: 10px;
     border-radius: 10px;   
-    width: 12.5%;
+    width: 15%;
 }
 
-.leaveProcessingListContent th span,
-.leaveProcessingListContent th i {
+.LeaveProcessingListContent th span,
+.LeaveProcessingListContent th i {
     cursor: pointer;
 }
 
-.leaveProcessingListContent td {
+.LeaveProcessingListContent td {
     text-align: center;
     padding: 10px;
 
@@ -21,7 +21,7 @@
     color: #ffffff;
     border: solid #3F72AF;
     border-radius: 10px;
-    padding: 1% 1%;
+    padding: 1% 4%;
     cursor: pointer;
     text-decoration: none;
 }
