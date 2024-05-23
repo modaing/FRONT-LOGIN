@@ -89,6 +89,39 @@
     font-size: 16px;
     cursor: pointer;
 }
+
+.SelectBoxApproverLine, .SelectBoxReferencerLine{
+    border: 1px solid gray;
+    height: 300px;
+    border-radius: 5px;
+    overflow-y: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-right: 5px;
+}
+.SelectBoxApproverTable{
+    border : none;
+    align-items: center;
+    width: 100%;
+}
+.SelectBoxApproverTable tr input{
+    margin-left: 15px;
+    margin-right: 10px;
+    margin-top: 10px;
+    width: 20px;
+    height: 20px;
+}
+.SelectBoxApproverTable th,td{
+    max-width: 100px;
+    overflow: hidden;
+    padding: 5px;
+    word-wrap: break-word;
+    -webkit-line-clamp: 1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border : none;
+}
+
 .formAlert{
     color: #D5D5D5;
 }

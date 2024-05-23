@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { getFormsAPI } from '../../apis/ApprovalAPI';
-import '../../css/approval/insertApproval.css';
+import insertStyles from '../../css/approval/SelectFormComponent.module.css';
 
 const SelectFormComponent = ({ onSelectForm }) => {
 
@@ -61,8 +61,8 @@ const SelectFormComponent = ({ onSelectForm }) => {
     }
 
     return (
-        <div className="chooseForm">
-            <label htmlFor="formSelect " className="formSelectTitle">양식 선택</label>
+        <div className={insertStyles.chooseForm}>
+            <label htmlFor="formSelect " className={insertStyles.formSelectTitle}>양식 선택</label>
 
             <select id="formSelect" value={selectedForm} onChange={handleSelectChange}>
                 {forms.map((form) => (
@@ -71,7 +71,7 @@ const SelectFormComponent = ({ onSelectForm }) => {
                     </option>
                 ))}
             </select>
-            <div className="formAlert">미 선택시 기본 양식이 선택됩니다.</div>
+            <div className={insertStyles.formAlert} style={{marginTop:'5px', marginLeft:'5px'}}>미 선택시 기본 양식이 선택됩니다.</div>
 
         </div>
     );

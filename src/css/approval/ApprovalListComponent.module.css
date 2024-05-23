@@ -24,9 +24,11 @@
 }
 .table th, .table td{
     padding: 25px;
+    border : none;
     border-bottom: 1px solid #D5D5D5;
     font-weight:500;
     height: 100px;
+    
 }
 .table th{
     font-weight: 900;
