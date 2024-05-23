@@ -84,7 +84,6 @@ export const callSelectLeaveAccrual = (number, properties, direction) => {
 export const callSelectMemberList = name => {
     return async dispatch => {
         try {
-            console.log('name', name);
             const response = await axios.get(`${API_BASE_URL}/leaveAccruals/${name}`, { headers });
 
             dispatch({ type: GET_MEMBERLIST, payload: response.data.results });
@@ -114,7 +113,7 @@ export const callSelectLeavesAPI = (number, properties, direction) => {
             const page = number ? number : 0;
 
             const response = await axios.get(`${API_BASE_URL}/leaves?page=${page}&properties=${properties}&direction=${direction}`, { headers });
-console.log(response.data.results);
+            
             dispatch({ type: GET_PAGE, payload: response.data.results.page });
 
         } catch (error) {

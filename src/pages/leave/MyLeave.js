@@ -14,32 +14,32 @@ function MyLeave() {
     const { page, leaveInfo } = useSelector(state => state.leaveReducer);
     const { totalDays, consumedDays, remainingDays } = leaveInfo || {};
     const { number, content, totalPages } = page || {};
-    const [ properties, setProperties ] = useState('leaveSubNo')
-    const [ direction, setDirection ] = useState('DESC')
-    const [ isModalOpen, setIsModalOpen ] = useState(false);
-    const [ isLoading, setIsLoading ] = useState(false);
-    const [ leaveSubNo, setLeaveSubNo ] = useState('');
-    const [ selectedTime, setSelectedTime ] = useState('');
+    const [properties, setProperties] = useState('leaveSubNo');
+    const [direction, setDirection] = useState('DESC');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [leaveSubNo, setLeaveSubNo] = useState('');
+    const [selectedTime, setSelectedTime] = useState('');
     const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
     const dispatch = useDispatch();
 
     // 조회 관련 핸들러
     const handlePageChange = page => dispatch({ type: SET_PAGENUMBER, payload: page });
-    
+
     const handlePrevPage = () => {
         if (number > 0) {
             dispatch({ type: SET_PAGENUMBER, payload: number - 1 });
         }
     };
-    
+
     const handleNextPage = () => {
         if (number < totalPages - 1) {
             dispatch({ type: SET_PAGENUMBER, payload: number + 1 });
         }
     };
 
-    const handleSort = (propertie) => {
-        setProperties(propertie);
+    const handleSort = (property) => {
+        setProperties(property);
         setDirection(direction === 'DESC' ? 'ASC' : 'DESC');
     }
 
@@ -53,7 +53,7 @@ function MyLeave() {
         setLeaveSubNo('')
         setSelectedTime('');
     };
-    
+
     const handleInsert = ({ leaveSubNo, start, end, type, reason }) => {
         const requestData = {
             leaveSubNo,
@@ -64,26 +64,36 @@ function MyLeave() {
             leaveSubReason: reason
         };
         dispatch(callInsertLeaveSubmitAPI(requestData));
-        
+
     };
-    
+
     const handleDelete = id => {
         dispatch(callDeleteLeaveSubmitAPI(id))
     };
-    
+
     const handleCancle = id => {
         setLeaveSubNo(id);
         setIsModalOpen(true);
     };
+
+    useEffect(() => {
+        const resetNumber = async() => await dispatch({type: SET_PAGENUMBER, payload: 0})
+        resetNumber();
+    },[]);
     
     useEffect(() => {
         setIsLoading(true);
-        dispatch(callSelectLeaveSubmitAPI(number, properties, direction, memberId))
-            .finally(() => setIsLoading(false));
+        const fetchData = async () => {
+            try {
+                await dispatch(callSelectLeaveSubmitAPI(number, properties, direction, memberId));
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchData();
     }, [number, properties, direction]);
-    
 
-    return <>
+    return (
         <main id="main" className="main">
             <div className="pagetitle">
                 <h1>휴가</h1>
@@ -105,7 +115,7 @@ function MyLeave() {
             </div>
             <div className="col-lg-12">
                 <div className="card">
-                    <div className="myLeaveListContent" >
+                    <div className="myLeaveListContent">
                         <table className="table table-hover">
                             <thead>
                                 <tr>
@@ -137,34 +147,31 @@ function MyLeave() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {isLoading ? ( // 로딩 중이면 로딩 메시지 표시
-                                    <tr>
-                                        <td colSpan="8" className="loadingText"></td>
-                                    </tr>
-                                ) : (
-                                    renderLeaveSubmit(content, handleDelete, handleCancle, setSelectedTime) // 로딩 중이 아니면 실제 데이터 표시
-                                )}
+                                {
+                                    // 로딩 중이면 로딩 메시지 표시
+                                    isLoading ? (
+                                        <tr>
+                                            <td colSpan="8" className="loadingText"></td>
+                                        </tr>
+                                    ) : (
+                                        // 로딩 중이 아니면 실제 데이터 표시
+                                        renderLeaveSubmit(content, handleDelete, handleCancle, setSelectedTime)
+                                    )
+                                }
                             </tbody>
                         </table>
-
-                        <nav >
+                        <nav>
                             <ul className="pagination">
-
-                                <li className={`page-item ${number === 0 && 'disabled'}`}>
+                                <li className={`page-item ${number === 0  && 'disabled'}`}>
                                     <button className="page-link" onClick={handlePrevPage}>◀</button>
                                 </li>
-
-                                {[...Array(totalPages).keys()].map((page, index) => (
-                                    <li key={index} className={`page-item ${number === page && 'active'}`}>
-                                        <button className="page-link" onClick={() => {
-                                            console.log('[page]', page);
-                                            handlePageChange(page)
-                                        }}>
+                                {[...Array(totalPages).keys()].map(page => (
+                                    <li key={page} className={`page-item ${number === page && 'active'}`}>
+                                        <button className="page-link" onClick={() => handlePageChange(page)}>
                                             {page + 1}
                                         </button>
                                     </li>
                                 ))}
-
                                 <li className={`page-item ${number === totalPages - 1 && 'disabled'}`}>
                                     <button className="page-link" onClick={handleNextPage}>▶</button>
                                 </li>
@@ -173,10 +180,9 @@ function MyLeave() {
                     </div>
                 </div>
             </div>
+            <MyLeaveModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} leaveSubNo={leaveSubNo} selectedTime={selectedTime}/>
         </main>
-        <MyLeaveModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} leaveSubNo={leaveSubNo} selectedTime={selectedTime}/>
-    </>
-
+    );
 }
 
 export default MyLeave;

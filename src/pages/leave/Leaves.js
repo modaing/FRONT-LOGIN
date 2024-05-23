@@ -37,9 +37,20 @@ function Leaves() {
     }
 
     useEffect(() => {
+        const resetNumber = async() => await dispatch({type: SET_PAGENUMBER, payload: 0})
+        resetNumber();
+    },[]);
+    
+    useEffect(() => {
         setIsLoading(true);
-        dispatch(callSelectLeavesAPI(number, properties, direction))
-            .finally(() => setIsLoading(false));
+        const fetchData = async () => {
+            try {
+                await dispatch(callSelectLeavesAPI(number, properties, direction));
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchData()
     }, [number, properties, direction]);
 
     return <main id="main" className="main">
