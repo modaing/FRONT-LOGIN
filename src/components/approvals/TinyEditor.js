@@ -240,7 +240,7 @@ export default function TinyEditor(props) {
                   'table', 'visualblocks', 'visualchars', 'wordcount'
                 ],
                 toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-                height: 1200,
+                height: 1100,
                 menubar: false,
                 forced_root_block: 'div',     //기본 블록 요소 설정
                 branding: false,

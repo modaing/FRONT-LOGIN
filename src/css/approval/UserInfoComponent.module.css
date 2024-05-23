@@ -5,11 +5,9 @@
     margin-bottom : 40px;
     border : 1px solid black;
 }
-th, td{
-    border : 1px solid black;
-    padding: 8px;
-    text-align: center;
+.tableTr th, td {
+    
 }
-th{
+.table th{
     font-weight: bold;
 }

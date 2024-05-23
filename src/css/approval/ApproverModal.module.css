@@ -144,6 +144,9 @@
     width: 20px;
     height: 20px;
 }
+.approvalItem{
+    cursor: pointer;
+}
 .SelectBoxApproverTable th,td{
     max-width: 100px;
     overflow: hidden;
