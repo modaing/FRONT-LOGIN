@@ -55,14 +55,14 @@ function LeaveAccrual() {
             leaveAccrualDays: days,
             leaveAccrualReason: reason,
             grantorId: memberId
-        }; 
+        };
         dispatch(callInsertLeaveAccrualAPI(requestData));
     };
 
     useEffect(() => {
-        const resetNumber = async() => await dispatch({type: SET_PAGENUMBER, payload: 0})
+        const resetNumber = async () => await dispatch({ type: SET_PAGENUMBER, payload: 0 })
         resetNumber();
-    },[]);
+    }, []);
 
     useEffect(() => {
         setIsLoading(true);
@@ -116,14 +116,15 @@ function LeaveAccrual() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {
+                                {isLoading
                                     // 로딩 중이면 로딩 메시지 표시
-                                    isLoading ? (
+                                    ? (
                                         <tr>
-                                            <td colSpan="5" className="loadingText">Loading...</td>
+                                            <td colSpan="4" className="loadingText" />
                                         </tr>
-                                    ) : (
-                                        // 로딩 중이 아니면 실제 데이터 표시
+                                    )
+                                    // 로딩 중이 아니면 실제 데이터 표시
+                                    : (
                                         renderLeaveAccrual(content)
                                     )
                                 }

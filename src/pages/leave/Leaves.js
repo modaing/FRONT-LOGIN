@@ -92,13 +92,14 @@ function Leaves() {
                             </tr>
                         </thead>
                         <tbody>
-                            {
+                            {isLoading
                                 // 로딩 중이면 로딩 메시지 표시
-                                isLoading ? (
+                                ? (
                                     <tr>
                                         <td colSpan="8" className="loadingText"></td>
                                     </tr>
-                                ) : (
+                                )
+                                : (
                                     // 로딩 중이 아니면 실제 데이터 표시
                                     renderLeaves(content)
                                 )
