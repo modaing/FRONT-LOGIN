@@ -24,6 +24,7 @@ const UserInfoComponent = ({ memberId, yearFormNo }) => {
 
     const member =  useSelector((state) => state.memberReducer.data) || {};
 
+
     useEffect(() => {
         const fetchMemberInfo = async () => {
             const data = await getMemberAPI(memberId);
@@ -45,21 +46,21 @@ const UserInfoComponent = ({ memberId, yearFormNo }) => {
         <>
             <table className={styles.table}>
                 <tbody>
-                    <tr>
-                        <th>결재번호</th>
-                        <td>{yearFormNo}</td>
-                        <th>작성일자</th>
-                        <td>{new Date().toLocaleDateString()}</td>
-                        <th>기안부서</th>
-                        <td>{member.departName}</td>
+                    <tr className={styles.tableTr}>
+                        <th style={{border : '1px solid black'}}>결재번호</th>
+                        <td style={{border : '1px solid black'}}>{yearFormNo}</td>
+                        <th style={{border : '1px solid black'}}>작성일자</th>
+                        <td style={{border : '1px solid black'}}>{new Date().toLocaleDateString()}</td>
+                        <th style={{border : '1px solid black'}}>기안부서</th>
+                        <td style={{border : '1px solid black'}}>{member.departName}</td>
                     </tr>
-                    <tr>
-                        <th>사번</th>
-                        <td>{member.memberId}</td>
-                        <th>기안자</th>
-                        <td>{member.name}</td>
-                        <th>직위</th>
-                        <td>{member.positionName}</td>
+                    <tr className={styles.tableTr}>
+                        <th style={{border : '1px solid black'}}>사번</th>
+                        <td style={{border : '1px solid black'}}>{member.memberId}</td>
+                        <th style={{border : '1px solid black'}}>기안자</th>
+                        <td style={{border : '1px solid black'}}>{member.name}</td>
+                        <th style={{border : '1px solid black'}}>직위</th>
+                        <td style={{border : '1px solid black'}}>{member.positionName}</td>
                     </tr>
                 </tbody>
             </table>

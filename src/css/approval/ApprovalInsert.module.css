@@ -1,0 +1,137 @@
+.pageTop{
+    display: flex;
+    justify-content: space-between;
+    min-width: 1100px;
+}
+.tempSave{
+    
+    justify-content: flex-end;
+    margin-right: 50px;
+    margin-top : 50px;
+}
+
+.bigContent{
+    margin: 10px;
+    width : 100%;
+    max-width: 1800px;
+    min-width: 1200px;
+    padding-right: 50px;
+    font-size: 15px;
+    margin-top : 50px;
+    padding-left: 20px;
+    padding-top: 20px;
+    
+}
+.middleContent{
+    display:flex;
+    justify-content: space-between;
+    gap: 30px;
+    height: 1400px;
+}
+.insertAppSideLeft, .insertAppSideRight{
+    background-color: white;
+    padding : 40px;
+    height: 1800px;
+    max-height: 2500px;
+    border-radius: 15px;
+}
+
+.insertAppSideLeft {
+    flex: 40%;
+    height: 100%;
+}
+.insertAppSideRight{
+    flex: 55%;
+    height: 100%;
+}
+.chooseApprover{
+    margin-top: 50px;
+}
+.ApproversBtn{
+    width: 100%;
+    margin-right: 10px;
+    margin-left: 0px;
+    text-align: left;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    font-weight: bold;
+    /* font-size: 20px; */
+    margin-top: 30px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.LineTitle{
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 10px;
+    margin-bottom : 10px;
+}
+.LineBox{
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    margin-top : 120px;
+}
+
+.chooseForm{
+    margin-bottom: 20px;
+}
+.chooseForm label {
+    display: block;
+    margin-bottom : 10px;
+    font-size: 17px;
+    font-weight: bold;
+}
+.chooseForm select{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.SelectBoxApproverLine, .SelectBoxReferencerLine{
+    border: 1px solid gray;
+    height: 300px;
+    border-radius: 5px;
+    overflow-y: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-right: 5px;
+}
+.SelectBoxApproverTable{
+    border : none;
+    align-items: center;
+    width: 100%;
+}
+.SelectBoxApproverTable tr input{
+    margin-left: 15px;
+    margin-right: 10px;
+    margin-top: 10px;
+    width: 20px;
+    height: 20px;
+}
+.SelectBoxApproverTable th,td{
+    max-width: 100px;
+    overflow: hidden;
+    padding: 5px;
+    word-wrap: break-word;
+    -webkit-line-clamp: 1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.formAlert{
+    color: #D5D5D5;
+}
+
+.insertAppButtons{
+    margin-top: 30px;
+    margin-bottom : 50px;
+    display: flex;
+    justify-content: flex-end;
+}

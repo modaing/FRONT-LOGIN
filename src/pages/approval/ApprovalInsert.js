@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import insertStyles from '../../css/approval/insertApproval.css';
+import styles from '../../css/approval/ApprovalInsert.module.css';
 import { Editor } from '@tinymce/tinymce-react';
-import 'react-quill/dist/quill.snow.css';
 import SelectFormComponent from '../../components/approvals/SelectFormComponent';
 import TinyEditor from '../../components/approvals/TinyEditor';
 import UserInfoComponent from '../../components/approvals/UserInfoComponent';
@@ -9,7 +8,6 @@ import { decodeJwt } from '../../utils/tokenUtils';
 import ApproverModal from '../../components/approvals/ApproverModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
-import { textAlign } from '@mui/system';
 
 
 const ApprovalInsert = () => {
@@ -160,7 +158,7 @@ const ApprovalInsert = () => {
     return (
         <>
             <main id="main" className="main">
-                <div className="pageTop">
+                <div className={styles.pageTop}>
                     <div className="pagetitle">
                         <h1>결재 기안하기</h1>
                         <nav>
@@ -172,25 +170,25 @@ const ApprovalInsert = () => {
 
                         </nav>
                     </div>
-                    <div className="tempSave">
+                    <div className={styles.tempSave}>
                         <button>임시저장</button>
                     </div>
                 </div>
-                <div className="bigContent">
-                    <div className="middleContent">
-                        <div className="insertAppSide left" >
+                <div className={styles.bigContent}>
+                    <div className={styles.middleContent}>
+                        <div className={styles.insertAppSideLeft} >
                             <SelectFormComponent onSelectForm={handleSelectForm} />
-                            <div className="chooseApprover">
-                                <button className="ApproversBtn" onClick={openModal}>
+                            <div className={styles.chooseApprover}>
+                                <button className={styles.ApproversBtn} onClick={openModal}>
                                     결재선
                                     <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px'}}/>
                                     </button>
                             </div>
-                            <div className="LineBox">
-                                <div className="approvers">
-                                    <div className="LineTitle">결재선</div>
-                                    <div className="SelectBoxApproverLine" style={{ paddingLeft : '10px'}}>
-                                        <table className="SelectBoxApproverTable" style={{ textAlign : 'center'}}>
+                            <div className={styles.LineBox}>
+                                <div className={styles.approvers}>
+                                    <div className={styles.LineTitle}>결재선</div>
+                                    <div className={styles.SelectBoxApproverLine} style={{ paddingLeft : '10px'}}>
+                                        <table className={styles.SelectBoxApproverTable} style={{ textAlign : 'center'}}>
                                             <thead>
                                                 <tr>
                                                     <th>순번</th>
@@ -201,7 +199,7 @@ const ApprovalInsert = () => {
                                             </thead>
                                             <tbody>
                                                 {approverLine.map((approver, index) => (
-                                                    <tr key={approver.memberId} className="approvalItem">
+                                                    <tr key={approver.memberId} className={styles.approvalItem}>
                                                         <td style={{ width: '70px', marginLeft: '10px' }}>{index + 1}</td>
                                                         <td>{approver.departName}</td>
                                                         <td>{approver.positionName}</td>
@@ -213,10 +211,10 @@ const ApprovalInsert = () => {
 
                                     </div>
                                 </div>
-                                <div className="referencers">
-                                    <div className="LineTitle">참조선</div>
-                                    <div className="SelectBoxReferencerLine" style={{ paddingLeft : '10px'}}>
-                                        <table className="SelectBoxApproverTable" style={{ textAlign : 'center'}}>
+                                <div className={styles.referencers}>
+                                    <div className={styles.LineTitle}>참조선</div>
+                                    <div className={styles.SelectBoxReferencerLine} style={{ paddingLeft : '10px'}}>
+                                        <table className={styles.SelectBoxApproverTable} style={{ textAlign : 'center'}}>
                                             <thead>
                                                 <tr>
                                                     <th>순번</th>
@@ -227,7 +225,7 @@ const ApprovalInsert = () => {
                                             </thead>
                                             <tbody>
                                                 {referencerLine.map((referencer, index) => (
-                                                    <tr key={referencer.memberId} className="approvalItem">
+                                                    <tr key={referencer.memberId} className={styles.approvalItem}>
                                                         <td style={{ width: '70px', marginLeft: '10px' }}>{index + 1}</td>
                                                         <td>{referencer.departName}</td>
                                                         <td>{referencer.positionName}</td>
@@ -241,7 +239,7 @@ const ApprovalInsert = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="insertAppSide right">
+                        <div className={styles.insertAppSideRight}>
                             <UserInfoComponent memberId={memberId} yearFormNo={yearFormNo} />
                             <TinyEditor
                                 onInit={(evt, editor) => {
@@ -307,7 +305,7 @@ const ApprovalInsert = () => {
                             />
                         </div>
                     </div>
-                    <div className="insertAppButtons">
+                    <div className={styles.insertAppButtons}>
                         <button>취소</button>
                         <button onClick={handleSubmit}>등록</button>
                     </div>
@@ -315,6 +313,8 @@ const ApprovalInsert = () => {
                         isOpen={isModalOpen}
                         onRequestClose={closeModal}
                         onSave={handleSaveApprovers}
+                        selectedApproverLine={approverLine}
+                        selectedReferencerLine ={referencerLine}
                     />
                 </div>
             </main>
