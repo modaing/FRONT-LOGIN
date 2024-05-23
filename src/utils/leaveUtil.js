@@ -16,7 +16,7 @@ export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelect
                     ? submit.leaveSubStatus
                     : submit.leaveSubStatus === "승인"
                         ? '취소 신청'
-                        : submit.leaveSubProcessDate
+                        : submit.leaveSubStatus
 
             const buttonClassName = submit.leaveSubStatus === "대기"
                 ? 'requestDelete'
