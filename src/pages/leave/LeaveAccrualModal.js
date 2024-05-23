@@ -12,7 +12,7 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const dispatch = useDispatch();
-    
+
     const handleSave = () => {
         onSave({ id, days, reason });
         onClose();
@@ -33,7 +33,7 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
             setName(selectedMember.name);
         }
     };
-    
+
     useEffect(() => {
         if (name) {
             setIsLoading(true);
@@ -62,19 +62,26 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
 
                             <div className="leaveAccrual">
                                 <label>사번</label>
-                                <select value={id} onChange={handleSelectChange}  className="form-select">
-                                    {isLoading ? (
-                                        <option value="">로딩중...</option>
-                                    ) : (
-                                        <>
-                                        <option value="">사번 선택</option>
-                                            {memberList && memberList.map((member) => (
-                                                <option key={member.memberId} value={member.memberId}>
-                                                    {`${member.memberId} ${member.department} ${member.name}`}
-                                                </option>
-                                            ))}
-                                        </>
-                                    )}
+                                <select value={id} onChange={handleSelectChange} className="form-select">
+                                    {isLoading
+                                        // 로딩 중이면 로딩 메시지 표시
+                                        ? (
+                                            <tr>
+                                                <td colSpan="4" className="loadingText" />
+                                            </tr>
+                                        )
+                                        // 로딩 중이 아니면 실제 데이터 표시
+                                        : (
+                                            <>
+                                                <option value="">사번 선택</option>
+                                                {memberList && memberList.map((member) => (
+                                                    <option key={member.memberId} value={member.memberId}>
+                                                        {`${member.memberId} ${member.department} ${member.name}`}
+                                                    </option>
+                                                ))}
+                                            </>
+                                        )
+                                    }
                                 </select>
                             </div>
 

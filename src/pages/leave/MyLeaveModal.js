@@ -17,8 +17,8 @@ const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime }) => 
     };
 
     const resetModal = () => {
-        setStart(leaveSubNo ? new Date(selectedTime.start) : '');
-        setEnd(leaveSubNo ? new Date(selectedTime.end) : '');
+        setStart(leaveSubNo && new Date(selectedTime.start));
+        setEnd(leaveSubNo && new Date(selectedTime.end));
         setType(leaveSubNo ? '취소' : '연차');
         setReason('');
     };
@@ -41,23 +41,23 @@ const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime }) => 
                         <div className="modal-body">
                             <div className="form-group">
                                 <label>시작 일자</label>
-                                {leaveSubNo ?
-                                    <DatePicker selected={new Date(selectedTime.start)} dateFormat="yyyy-MM-dd" className="form-control" disabled />
+                                {leaveSubNo
+                                    ? <DatePicker selected={new Date(selectedTime.start)} dateFormat="yyyy-MM-dd" className="form-control" disabled />
                                     : <DatePicker selected={start} onChange={e => setStart(e)} dateFormat="yyyy-MM-dd" className="form-control" />
                                 }
                             </div>
 
                             <div className="form-group">
                                 <label>종료 일자</label>
-                                {leaveSubNo ?
-                                    <DatePicker selected={new Date(selectedTime.end)} dateFormat="yyyy-MM-dd" className="form-control" disabled />
+                                {leaveSubNo
+                                    ? <DatePicker selected={new Date(selectedTime.end)} dateFormat="yyyy-MM-dd" className="form-control" disabled />
                                     : <DatePicker selected={end} onChange={e => setEnd(e)} dateFormat="yyyy-MM-dd" className="form-control" />
                                 }
                             </div>
                             <div className="myLeave">
                                 <label>휴가 유형</label>
-                                {leaveSubNo ?
-                                    <select value={type} onChange={e => setType(e.target.value)} className="form-select" disabled >
+                                {leaveSubNo
+                                    ? <select value={type} onChange={e => setType(e.target.value)} className="form-select" disabled >
                                         <option value="취소">취소</option>
                                     </select>
                                     : <select value={type} onChange={e => setType(e.target.value)} className="form-select">
