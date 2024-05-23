@@ -32,7 +32,7 @@ export const callInsertLeaveSubmitAPI = requestData => {
         try {
             const response = await axios.post(`${API_BASE_URL}/leaveSubmits`, requestData, { headers });
 
-            dispatch({ type: POST_MESSAGE, payload: response.data.results });
+            dispatch({ type: POST_MESSAGE, payload: response.data });
 
         } catch (error) {
             console.log('휴가 신청에 문제 발생', error)
@@ -43,9 +43,9 @@ export const callInsertLeaveSubmitAPI = requestData => {
 export const callUpdateLeaveSubmitAPI = requestData => {
     return async dispatch => {
         try {
-            const response = await axios.put(`${API_BASE_URL}/leaveSubmits`, requestData,{ headers });
+            const response = await axios.put(`${API_BASE_URL}/leaveSubmits`, requestData, { headers });
 
-            dispatch({ type: PUT_MESSAGE, payload: response.data.results });
+            dispatch({ type: PUT_MESSAGE, payload: response.data });
         } catch {
             console.log('휴가 처리에 문제 발생', Error);
         }
@@ -57,7 +57,7 @@ export const callDeleteLeaveSubmitAPI = id => {
         try {
             const response = await axios.delete(`${API_BASE_URL}/leaveSubmits/${id}`, { headers });
 
-            dispatch({ type: DELETE_MESSAGE, payload: response.data.results });
+            dispatch({ type: DELETE_MESSAGE, payload: response.data });
 
         } catch (error) {
             console.log('휴가 신청 삭제에 문제 발생', error)
@@ -113,7 +113,7 @@ export const callSelectLeavesAPI = (number, properties, direction) => {
             const page = number ? number : 0;
 
             const response = await axios.get(`${API_BASE_URL}/leaves?page=${page}&properties=${properties}&direction=${direction}`, { headers });
-            
+
             dispatch({ type: GET_PAGE, payload: response.data.results.page });
 
         } catch (error) {

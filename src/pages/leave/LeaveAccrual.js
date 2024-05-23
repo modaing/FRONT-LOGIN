@@ -97,9 +97,7 @@ function LeaveAccrual() {
                     <table className="table table-hover">
                         <thead>
                             <tr>
-                                <th onClick={() => handleSort('recipientName')}>
-                                    <span>사원명</span><i className="bx bxs-sort-alt"></i>
-                                </th>
+                                <th><span>사원명</span></th>
 
                                 <th onClick={() => handleSort('recipientId')}>
                                     <span>사번</span><i className="bx bxs-sort-alt"></i>

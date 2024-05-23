@@ -11,7 +11,7 @@ import '../../css/common.css';
 import '../../css/leave/MyLeave.css';
 
 function MyLeave() {
-    const { page, leaveInfo } = useSelector(state => state.leaveReducer);
+    const { page, leaveInfo, insertMessage } = useSelector(state => state.leaveReducer);
     const { totalDays, consumedDays, remainingDays } = leaveInfo || {};
     const { number, content, totalPages } = page || {};
     const [properties, setProperties] = useState('leaveSubNo');
@@ -91,7 +91,7 @@ function MyLeave() {
             }
         };
         fetchData();
-    }, [number, properties, direction]);
+    }, [number, properties, direction, insertMessage]);
 
     return <main id="main" className="main">
         <div className="pagetitle">

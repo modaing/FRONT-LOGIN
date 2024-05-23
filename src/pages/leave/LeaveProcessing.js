@@ -96,9 +96,7 @@ function LeaveProcessing() {
                     <table className="table table-hover">
                         <thead>
                             <tr>
-                                <th onClick={() => handleSort('applicantName')}>
-                                    <span>사원명</span><i className="bx bxs-sort-alt"></i>
-                                </th>
+                                <th><span>사원명</span></th>
 
                                 <th onClick={() => handleSort('leaveSubApplicant')}>
                                     <span>사번</span><i className="bx bxs-sort-alt"></i>
@@ -112,15 +110,15 @@ function LeaveProcessing() {
                                     <span>휴가 종료일</span><i className="bx bxs-sort-alt"></i>
                                 </th>
 
-                                <th onClick={() => handleSort('leaveSubType')}>
+                                <th style={{ width: '10%' }} onClick={() => handleSort('leaveSubType')}>
                                     <span>휴가 유형</span><i className="bx bxs-sort-alt"></i>
                                 </th>
 
-                                <th><span>차감 일수</span></th>
+                                <th style={{ width: '10%' }}><span>차감 일수</span></th>
 
-                                <th><span>처리 상태</span></th>
+                                <th style={{ width: '10%' }}><span>처리 상태</span></th>
 
-                                <th><span></span></th>
+                                <th style={{ width: '10%' }}><span></span></th>
                             </tr>
                         </thead>
                         <tbody>
