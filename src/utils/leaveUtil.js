@@ -2,27 +2,45 @@ export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelect
     if (!content) {
         return null;
     }
+
+    const currentDate = new Date();
+
     if (handleDelete != null && handleCancle != null) {
 
-        return content.map((leaveSubmit, index) => {
-            const { formattedStartDate, formattedEndDate, leaveDaysCalc } = formattedLocalDate(leaveSubmit);
-            const buttonClassName = leaveSubmit.leaveSubProcessDate ? 'cancelRequest' : 'requestDelete';
-            const onClickHandler = leaveSubmit.leaveSubProcessDate ? () => {
+        return content.map((submit, index) => {
+            const { formattedStartDate, formattedEndDate, leaveDaysCalc } = formattedLocalDate(submit);
+            const isWithinOneDay = new Date(formattedStartDate) <= new Date(currentDate.getTime() + (1000 * 60 * 60 * 24));
+            const buttonText = submit.leaveSubStatus === "대기"
+                ? '신청 삭제'
+                : isWithinOneDay
+                    ? submit.leaveSubStatus
+                    : submit.leaveSubStatus === "승인"
+                        ? '취소 신청'
+                        : submit.leaveSubProcessDate
+
+            const buttonClassName = submit.leaveSubStatus === "대기"
+                ? 'requestDelete'
+                : isWithinOneDay
+                    ? ''
+                    : submit.leaveSubStatus === "승인"
+                        ? 'cancelRequest'
+                        : ''
+
+            const onClickHandler = submit.leaveSubProcessDate ? () => {
                 setSelectedTime({ start: formattedStartDate, end: formattedEndDate })
-                handleCancle(id)
-            } : () => handleDelete(id);
-            const buttonText = leaveSubmit.leaveSubProcessDate ? '취소 신청' : '신청 삭제';
-            const id = leaveSubmit.leaveSubNo;
+                handleCancle(submit.leaveSubNo)
+            }
+                : () => handleDelete(submit.leaveSubNo);
 
             return (
                 <tr key={index}>
                     <td>{formattedStartDate}</td>
                     <td>{formattedEndDate}</td>
-                    <td>{leaveSubmit.leaveSubType}</td>
+                    <td>{submit.leaveSubType}</td>
                     <td>{leaveDaysCalc}</td>
-                    <td>{leaveSubmit.leaveSubApplyDate}</td>
-                    <td>{leaveSubmit.approverName || "-"}</td>
-                    <td>{leaveSubmit.leaveSubProcessDate || "-"}</td>
+                    <td>{submit.leaveSubApplyDate}</td>
+                    <td>{submit.approverName || "-"}</td>
+                    <td>{submit.leaveSubProcessDate || "-"}</td>
                     <td>
                         <span className={`${buttonClassName}`} onClick={onClickHandler}>
                             {buttonText}
@@ -33,26 +51,25 @@ export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelect
         });
     } else {
 
-        return content.map((leaveSubmit, index) => {
-            const { formattedStartDate, formattedEndDate, leaveDaysCalc } = formattedLocalDate(leaveSubmit);
-            const id = leaveSubmit.leaveSubNo;
+        return content.map((submit, index) => {
+            const { formattedStartDate, formattedEndDate, leaveDaysCalc } = formattedLocalDate(submit);
 
             return (
                 <tr key={index}>
-                    <td>{leaveSubmit.applicantName}</td>
-                    <td>{leaveSubmit.leaveSubApplicant}</td>
+                    <td>{submit.applicantName}</td>
+                    <td>{submit.leaveSubApplicant}</td>
                     <td>{formattedStartDate}</td>
                     <td>{formattedEndDate}</td>
-                    <td>{leaveSubmit.leaveSubType}</td>
+                    <td>{submit.leaveSubType}</td>
                     <td>{leaveDaysCalc}</td>
-                    <td>{leaveSubmit.leaveSubStatus}</td>
-                    {leaveSubmit.leaveSubProcessDate ?
-                        <td></td>
+                    <td>{submit.leaveSubStatus}</td>
+                    {submit.leaveSubProcessDate
+                        ? <td></td>
                         : <td>
                             <span className="leaveDetail" onClick={() => {
                                 setSelectedTime({ start: formattedStartDate, end: formattedEndDate })
-                                setDetailInfo({ name: leaveSubmit.applicantName, memberId: leaveSubmit.leaveSubApplicant, type: leaveSubmit.leaveSubType, reason: leaveSubmit.leaveSubReason })
-                                handleOpenModal(id)
+                                setDetailInfo({ name: submit.applicantName, memberId: submit.leaveSubApplicant, type: submit.leaveSubType, reason: submit.leaveSubReason })
+                                handleOpenModal(submit.leaveSubNo)
                             }}>
                                 상세
                             </span>
@@ -64,11 +81,11 @@ export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelect
     }
 }
 
-function formattedLocalDate(leaveSubmit) {
+function formattedLocalDate(submit) {
 
     //포맷팅 하기 위해서 date 타입으로 변환
-    const startDate = new Date(leaveSubmit.leaveSubStartDate);
-    const endDate = new Date(leaveSubmit.leaveSubEndDate);
+    const startDate = new Date(submit.leaveSubStartDate);
+    const endDate = new Date(submit.leaveSubEndDate);
 
     // yyyy.MM.dd 형식으로 변환
     const formattedStartDate = `${startDate.getFullYear()}-${(startDate.getMonth() + 1).toString().padStart(2, '0')}-${startDate.getDate().toString().padStart(2, '0')}`;

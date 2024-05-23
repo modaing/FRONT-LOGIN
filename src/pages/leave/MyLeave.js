@@ -143,7 +143,7 @@ function MyLeave() {
                                         <span>승인 일자</span><i className="bx bxs-sort-alt"></i>
                                     </th>
 
-                                    <th><span></span></th>
+                                    <th><span>처리 상태</span></th>
                                 </tr>
                             </thead>
                             <tbody>
