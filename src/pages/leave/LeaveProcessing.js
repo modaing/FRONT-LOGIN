@@ -54,12 +54,12 @@ function LeaveProcessing() {
     };
 
     const handleUpdate = ({decision, reason}) => {
-        const requestDate = {
+        const requestData = {
             leaveSubNo,
             leaveSubStatus: decision,
             leaveSubReason: reason
         }
-        dispatch(callUpdateLeaveSubmitAPI(requestDate));
+        dispatch(callUpdateLeaveSubmitAPI(requestData));
     }
     
     useEffect(() => {
