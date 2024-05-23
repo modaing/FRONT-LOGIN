@@ -65,14 +65,14 @@ export default function TinyEditor(props) {
     const moveToNextEditableElement = (doc, currentElement) => {
         const allEditableElements = doc.querySelectorAll('input,  td[contenteditable="true"], div[contenteditable="true"]');
         const currentIndex = Array.prototype.indexOf.call(allEditableElements, currentElement);
-    
+
         if (currentIndex < allEditableElements.length - 1) {
 
             const nextElement = allEditableElements[currentIndex + 1];
 
             if (nextElement) {
-                    nextElement.focus();
-            }else{
+                nextElement.focus();
+            } else {
                 console.log('다음이 없다');
             }
         }
@@ -81,26 +81,19 @@ export default function TinyEditor(props) {
     return (
         <Editor
             init={{
-                
+
                 skin: false,
                 content_css: false,
                 content_style: [
-                    contentCss, 
+                    contentCss,
                     contentUiCss,
                     init.content_style || '',
-                `
+                    `
                 body {
                     contenteditable: false;
                     
                 }
-                #titleform {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    margin-top: 50px;
-                    margin-bottom: 80px;
-                    position: relative;
-                }
+                
                 /*  .input-container {
                     width: 100%;
                     display: flex;
@@ -110,16 +103,9 @@ export default function TinyEditor(props) {
                 .input-container:not(input){
                     pointer-events: none;
                 }  */
-                #titleform input {
-                    width: 400px;
-                    border: none;
-                    border-bottom: 2px solid black;
-                    height: 50px;
-                    font-size: 20px;
-                    text-align: center;
-                    outline: none;
-                    background: transparent;
-                }
+                    #wholeForm {
+                        margin-top: 50px;
+                    }
                     table {
                         border-collapse: collapse;
                         width: 100%;
@@ -228,86 +214,65 @@ export default function TinyEditor(props) {
                     #ovt_table td{
                     text-align: center;
                     }
+                    .nonContent{
+                        height:500px;
+                    }
                     .mce-content-body{
                         scrollbar-color : rgb(241, 255, 190) black;
                     }
                     `
                 ].join('\n'),
                 plugins: [
-                  'advlist', 'anchor', 'autolink', 'autosave', 'charmap', 'code', 'codesample', 'directionality',
-                  'emoticons', 'fullscreen', 'help', 'image', 'importcss', 'insertdatetime', 'link', 'lists',
-                  'media', 'nonbreaking', 'pagebreak', 'preview', 'quickbars', 'save', 'searchreplace',
-                  'table', 'visualblocks', 'visualchars', 'wordcount'
+                    'advlist', 'anchor', 'autolink', 'autosave', 'charmap', 'code', 'codesample', 'directionality',
+                    'emoticons', 'fullscreen', 'help', 'image', 'importcss', 'insertdatetime', 'link', 'lists',
+                    'media', 'nonbreaking', 'pagebreak', 'preview', 'quickbars', 'save', 'searchreplace',
+                    'table', 'visualblocks', 'visualchars', 'wordcount'
                 ],
                 toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-                height: 1100,
+                height: 1000,
                 menubar: false,
                 forced_root_block: 'div',     //기본 블록 요소 설정
                 branding: false,
                 elementpath: false,
                 statusbar: false,
-                apiKey:'rycrpdzecr2jsi6ynnzcievvp4toluceiawzt0dgpbuzkkpk',
-                 setup: (editor) => {
-                     editor.on('init', () => {
-                         const doc = editor.getDoc();
+                apiKey: 'rycrpdzecr2jsi6ynnzcievvp4toluceiawzt0dgpbuzkkpk',
+                setup: (editor) => {
+                    editor.on('init', () => {
+                        const doc = editor.getDoc();
 
-                         const dateDiv = doc.querySelector('#date div');
-                         if(dateDiv){
+                        const dateDiv = doc.querySelector('#date div');
+                        if (dateDiv) {
                             dateDiv.innerHTML = '';
                             const currentDate = new Date().toLocaleDateString();
                             dateDiv.textContent = currentDate;
                             console.log(`editor 1 date inserted : ${currentDate}`);
-                         }
+                        }
 
-                         
-                //         insertCurrentDate(doc);     //현재 날짜 삽입
-                //         // const titleForm = doc.querySelector('#titleform');
-                         const formElements = doc.querySelectorAll('input, td, div[contenteditable="true"]');
-                         const titleInput = doc.querySelector('#titleform input');
 
-                //         // if (titleForm) {
-                //         //     while (titleForm.firstChild) {
-                //         //         titleForm.removeChild(titleForm.firstChild);
-                //         //     }
-                //         //     titleForm.innerHTML = '<div class="input-container"><input type="text" id="title" placeholder="제목"></div>';
-                //         // }
+                        //         insertCurrentDate(doc);     //현재 날짜 삽입
+                        const formElements = doc.querySelectorAll('input, td, div[contenteditable="true"]');
+                       
 
-                         formElements.forEach(element => {
-                             element.setAttribute('contenteditable', 'true');
-                         });
+                        formElements.forEach(element => {
+                            element.setAttribute('contenteditable', 'true');
+                        });
 
                         doc.body.querySelectorAll('*:not(input):not(td):not(div[contenteditable="true"])').forEach(element => {
                             element.setAttribute('contenteditable', 'false');
                             console.log("contenteditable : false 로 만듬 ")
                         });
 
-                //         //제목 input 포커스 설정
-                        if(titleInput){
-                            titleInput.addEventListener('click', () => {
-                                titleInput.focus();
-                            });
-                            titleInput.setAttribute('contenteditable', 'true');
-                        }
-                     });
+                       
+                    });
 
-                     editor.on('keydown', (e) => {
-                        if(e.key === 'Tab'){
+                    editor.on('keydown', (e) => {
+                        if (e.key === 'Tab') {
                             e.preventDefault();
                             moveToNextEditableElement(editor.getDoc(), editor.selection.getNode());
                         }
-                     }
-                    )
                     }
-
-                //         editor.on('click', (e) => {
-                //             const target = e.target;
-                //             if (!target.matches('input, td, div[contenteditable="true"]')) {
-                //                 e.preventDefault();
-                //                 e.stopImmediatePropagation();
-                //             }
-                //         });
-                //     });
-                // }
+                    )
+                }
             }}
             {...rest}
         />

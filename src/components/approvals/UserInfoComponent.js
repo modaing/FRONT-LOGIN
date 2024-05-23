@@ -7,20 +7,13 @@ import styles from  "../../css/approval/UserInfoComponent.module.css";
 const UserInfoComponent = ({ memberId, yearFormNo }) => {
 
     const dispatch = useDispatch();
-    
-    // const memberInfo = decodeJwt(token);
-    // const [memberInformation, setMemberInformation] = useState('');
 
-    // const fetchMemberInfo = async () => {
-    //     try {
-    //       const memberInformation = await callGetMemberAPI(memberInfo.memberId);
-    //       setMemberInformation(memberInformation);
-    //       formatDate(memberInformation.employedDate);
-    //       console.log('구성원 정보:', memberInformation);
-    //     } catch (error) {
-    //       console.error('Failed in bringing member information:', error);
-    //     }
-    // };
+
+    const trStyle = {
+        border : '1px solid black' ,
+        padding: '8px',
+        textAlign: 'center'
+    }
 
     const member =  useSelector((state) => state.memberReducer.data) || {};
 
@@ -47,20 +40,20 @@ const UserInfoComponent = ({ memberId, yearFormNo }) => {
             <table className={styles.table}>
                 <tbody>
                     <tr className={styles.tableTr}>
-                        <th style={{border : '1px solid black'}}>결재번호</th>
-                        <td style={{border : '1px solid black'}}>{yearFormNo}</td>
-                        <th style={{border : '1px solid black'}}>작성일자</th>
-                        <td style={{border : '1px solid black'}}>{new Date().toLocaleDateString()}</td>
-                        <th style={{border : '1px solid black'}}>기안부서</th>
-                        <td style={{border : '1px solid black'}}>{member.departName}</td>
+                        <th style={trStyle}>결재번호</th>
+                        <td style={trStyle}>{yearFormNo}</td>
+                        <th style={trStyle}>작성일자</th>
+                        <td style={trStyle}>{new Date().toLocaleDateString()}</td>
+                        <th style={trStyle}>기안부서</th>
+                        <td style={trStyle}>{member.departName}</td>
                     </tr>
                     <tr className={styles.tableTr}>
-                        <th style={{border : '1px solid black'}}>사번</th>
-                        <td style={{border : '1px solid black'}}>{member.memberId}</td>
-                        <th style={{border : '1px solid black'}}>기안자</th>
-                        <td style={{border : '1px solid black'}}>{member.name}</td>
-                        <th style={{border : '1px solid black'}}>직위</th>
-                        <td style={{border : '1px solid black'}}>{member.positionName}</td>
+                        <th style={trStyle}>사번</th>
+                        <td style={trStyle}>{member.memberId}</td>
+                        <th style={trStyle}>기안자</th>
+                        <td style={trStyle}>{member.name}</td>
+                        <th style={trStyle}>직위</th>
+                        <td style={trStyle}>{member.positionName}</td>
                     </tr>
                 </tbody>
             </table>
@@ -68,4 +61,4 @@ const UserInfoComponent = ({ memberId, yearFormNo }) => {
     ); 
 }
 
-export default UserInfoComponent;
+export default React.memo(UserInfoComponent);

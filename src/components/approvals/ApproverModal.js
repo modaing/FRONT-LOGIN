@@ -18,6 +18,7 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave, selectedApproverLine, s
     // const [initialApproverLine, setInitialApproverLine] = useState([]);
     // const [initialReferencerLine, setInitialReferencerLine] = useState([]);
     const [currentUserId, setCurrentUserId] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         if (isOpen) {
@@ -43,27 +44,32 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave, selectedApproverLine, s
             console.log("이미 선택된 사원입니다. :" + member.name);
             return; // 이미 선택된 사원은 선택할 수 없게 함
         }
-        else{
-            console.log('선택되지 않은 사원입니다. : ' +  approverLine.some(appr => appr.memberId === member.memberId));
+        else {
+            console.log('선택되지 않은 사원입니다. : ' + approverLine.some(appr => appr.memberId === member.memberId));
         }
         //사원목록에서 사원을 선택하거나 선택 해제
         // if (!approverLine.includes(member) && !referencerLine.includes(member) && member.memberId !== currentUserId) {
-            setSelectedMembers(prev => {
-                if (prev.some(m => m.memberId === member.memberId)) {
-                    return prev.filter(m => m.memberId !== member.memberId);
-                } else {
-                    return [...prev, member];
-                }
-            });
+        setSelectedMembers(prev => {
+            if (prev.some(m => m.memberId === member.memberId)) {
+                return prev.filter(m => m.memberId !== member.memberId);
+            } else {
+                return [...prev, member];
+            }
+        });
         // }
 
     };
 
     useEffect(() => {
         console.log('현재 결재라인 : ' + JSON.stringify(approverLine));
-        
+
 
     }, [approverLine]);
+
+    useEffect(() => {
+        const departmentsWithResults = new Set(filteredMembers.map(member => member.departName));
+        setExpandedDepartments([...departmentsWithResults]);
+    }, [searchTerm]);
 
     const addToApproverLine = () => {
         //선택한 사원들을 결재선에 추가. 현재 사용자 제외
@@ -83,7 +89,7 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave, selectedApproverLine, s
 
     const addToReferencerLine = () => {
         //선택한 사원들을 참조선에 추가. 현재 사용자 제외
-        const newReferencerLine = selectedMembers.filter(member => member.memberId != currentUserId &&  !referencerLine.some(ref => ref.memberId === member.memberId) && !selectedReferencerLine.some(ref => ref.memberId === member.memberId));
+        const newReferencerLine = selectedMembers.filter(member => member.memberId != currentUserId && !referencerLine.some(ref => ref.memberId === member.memberId) && !selectedReferencerLine.some(ref => ref.memberId === member.memberId));
         setReferencerLine([...referencerLine, ...newReferencerLine]);
         setSelectedMembers([]);
         setSelectedMembersForRemove([]);    //추가 후 선택된 멤버 초기화
@@ -140,7 +146,7 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave, selectedApproverLine, s
             // setInitialApproverLine([...approverLine]);
             // setInitialReferencerLine([...referencerLine]);
             onSave(approverLine, referencerLine);
-
+            setSearchTerm('');
             onRequestClose();
         }
     };
@@ -163,6 +169,7 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave, selectedApproverLine, s
         setApproverLine([...selectedApproverLine]);
         setReferencerLine([...selectedReferencerLine]);
         setExpandedDepartments([]);
+        setSearchTerm('');
         setIsCancelModalOpen(false);
         onRequestClose();
     };
@@ -172,11 +179,11 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave, selectedApproverLine, s
 
     };
 
-    const handleSelectApproverLineMember = (member) =>{
+    const handleSelectApproverLineMember = (member) => {
         setSelectedMembersForRemove(prev => {
-            if(prev.some(m => m.memberId ===  member.memberId)){
+            if (prev.some(m => m.memberId === member.memberId)) {
                 return prev.filter(m => m.memberId !== member.memberId);
-            }else{
+            } else {
                 return [...prev, member];
             }
         });
@@ -184,15 +191,20 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave, selectedApproverLine, s
 
     const handleSelectReferencerLineMember = (member) => {
         setSelectedMembersForRemove(prev => {
-            if (prev.some(m => m.memberId ===  member.memberId)){
+            if (prev.some(m => m.memberId === member.memberId)) {
                 return prev.filter(m => m.memberId !== member.memberId);
-            }else{
+            } else {
                 return [...prev, member];
             }
         });
     };
 
     const departments = [...new Set(members.map(member => member.departName))];
+
+    const filteredMembers = members.filter(member =>
+        member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        member.departName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     const moveUp = (line, setLine, index) => {
         if (index === 0) {
@@ -220,7 +232,19 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave, selectedApproverLine, s
                     <div style={{ fontWeight: 'bold', fontSize: '23px', marginBottom: '10px' }}>결재자 선택</div>
                     <div className={modalStyles.ApproverModalBody}>
                         <div className={modalStyles.ApproverMemberList}>
-                            <div style={{ fontSize: "20px", fontWeight: "bold" }}>사원 목록</div>
+                            <div className={modalStyles.memberListTitle}>
+                                <div style={{ fontSize: "20px", fontWeight: "bold" }}>사원 목록</div>
+                                <div className={modalStyles.searchContainer}>
+                                    <input
+                                        type="text"
+                                        placeholder="검색"
+                                        value={searchTerm}
+                                        onChange={((e) => setSearchTerm(e.target.value))}
+                                        className={modalStyles.searchInput}
+                                    />
+                                    <button onClick={() => setSearchTerm('')} className={modalStyles.clearButton}>X</button>
+                                </div>
+                            </div>
                             <div className={modalStyles.ApproverDepartmentList}>
                                 {departments.map(department => (
                                     <div key={department}>
@@ -230,11 +254,11 @@ const ApproverModal = ({ isOpen, onRequestClose, onSave, selectedApproverLine, s
                                         </div>
                                         {expandedDepartments.includes(department) && (
                                             <div className={modalStyles.ApproverMembers}>
-                                                {members.filter(member => member.departName === department).map(member => (
-                                                    <div key={member.memberId} className={modalStyles.ApproverMemberItem} onClick={() => handleSelectMember(member)} >
-                                                         <input
+                                                {filteredMembers.filter(member => member.departName === department).map(member => (
+                                                    <div key={member.memberId} className={modalStyles.ApproverMemberItem} onClick={() => handleSelectMember(member)}>
+                                                        <input
                                                             type="checkbox"
-                                                            checked={selectedMembers.some(m => m.memberId === member.memberId) || approverLine.some(appr => appr.memberId === member.memberId) || referencerLine.some(ref => ref.memberId === member.memberId) || member.memberId === currentUserId}
+                                                            checked={approverLine.some(appr => appr.memberId === member.memberId) || referencerLine.some(ref => ref.memberId === member.memberId) || member.memberId === currentUserId || selectedMembers.some(m => m.memberId === member.memberId)}
                                                             onChange={() => handleSelectMember(member)}
                                                             disabled={approverLine.some(appr => appr.memberId === member.memberId) || referencerLine.some(ref => ref.memberId === member.memberId) || member.memberId === currentUserId}
                                                             style={{
