@@ -6,9 +6,7 @@
     border : 1px solid black;
 }
 .tableTr th, td {
-    border : 1px solid black;
-    padding: 8px;
-    text-align: center;
+    
 }
 .table th{
     font-weight: bold;
