@@ -7,8 +7,8 @@ import MyLeaveModal from './MyLeaveModal';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { renderLeaveSubmit } from '../../utils/leaveUtil';
 import { convertToUtc } from '../../utils/CommonUtil';
-import '../../css/common.css'
-import '../../css/leave/MyLeave.css'
+import '../../css/common.css';
+import '../../css/leave/MyLeave.css';
 
 function MyLeave() {
     const { page, leaveInfo } = useSelector(state => state.leaveReducer);
@@ -25,32 +25,32 @@ function MyLeave() {
 
     // 조회 관련 핸들러
     const handlePageChange = page => dispatch({ type: SET_PAGENUMBER, payload: page });
-
+    
     const handlePrevPage = () => {
         if (number > 0) {
             dispatch({ type: SET_PAGENUMBER, payload: number - 1 });
         }
     };
-
+    
     const handleNextPage = () => {
         if (number < totalPages - 1) {
             dispatch({ type: SET_PAGENUMBER, payload: number + 1 });
         }
     };
-
+    
     const handleSort = (property) => {
         setProperties(property);
         setDirection(direction === 'DESC' ? 'ASC' : 'DESC');
     }
-
+    
     // CUD 관련 핸들러
     const handleOpenModal = () => {
         setIsModalOpen(true);
     };
-
+    
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        setLeaveSubNo('')
+        setLeaveSubNo('');
         setSelectedTime('');
     };
 
@@ -64,23 +64,23 @@ function MyLeave() {
             leaveSubReason: reason
         };
         dispatch(callInsertLeaveSubmitAPI(requestData));
-
+        
     };
-
+    
     const handleDelete = id => {
-        dispatch(callDeleteLeaveSubmitAPI(id))
+        dispatch(callDeleteLeaveSubmitAPI(id));
     };
-
+    
     const handleCancle = id => {
         setLeaveSubNo(id);
         setIsModalOpen(true);
     };
-
+    
     useEffect(() => {
-        const resetNumber = async () => await dispatch({ type: SET_PAGENUMBER, payload: 0 })
+        const resetNumber = async () => await dispatch({ type: SET_PAGENUMBER, payload: 0 });
         resetNumber();
     }, []);
-
+    
     useEffect(() => {
         setIsLoading(true);
         const fetchData = async () => {
@@ -153,16 +153,20 @@ function MyLeave() {
                                         <tr>
                                             <td colSpan="8" className="loadingText"></td>
                                         </tr>
-                                    ) : (
-                                        // 로딩 중이 아니면 실제 데이터 표시
-                                        renderLeaveSubmit(content, handleDelete, handleCancle, setSelectedTime)
-                                    )
+                                    ) : content !== undefined
+                                        ? (
+                                            // 로딩 중이 아니면 실제 데이터 표시
+                                            renderLeaveSubmit(content, handleDelete, handleCancle, setSelectedTime)
+                                        )
+                                        : <tr>
+                                            <td colSpan="8">휴가 신청 내역이 존재하지 않습니다.</td>
+                                        </tr>
                                 }
                             </tbody>
                         </table>
                         <nav>
                             <ul className="pagination">
-                                <li className={`page-item ${number === 0 && 'disabled'}`}>
+                                <li className={`page-item ${number === 0 || number === undefined && 'disabled'}`}>
                                     <button className="page-link" onClick={handlePrevPage}>◀</button>
                                 </li>
                                 {[...Array(totalPages).keys()].map(page => (
@@ -172,7 +176,7 @@ function MyLeave() {
                                         </button>
                                     </li>
                                 ))}
-                                <li className={`page-item ${number === totalPages - 1 && 'disabled'}`}>
+                                <li className={`page-item ${number === totalPages - 1 || number === undefined && 'disabled'}`}>
                                     <button className="page-link" onClick={handleNextPage}>▶</button>
                                 </li>
                             </ul>

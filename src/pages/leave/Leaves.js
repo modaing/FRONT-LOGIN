@@ -106,26 +106,19 @@ function Leaves() {
                             }
                         </tbody>
                     </table>
-
-                    <nav >
+                    <nav>
                         <ul className="pagination">
-
-                            <li className={`page-item ${number === 0 && 'disabled'}`}>
+                            <li className={`page-item ${number === 0 || number === undefined && 'disabled'}`}>
                                 <button className="page-link" onClick={handlePrevPage}>◀</button>
                             </li>
-
-                            {[...Array(totalPages).keys()].map((page, index) => (
-                                <li key={index} className={`page-item ${number === page && 'active'}`}>
-                                    <button className="page-link" onClick={() => {
-                                        console.log('[page]', page);
-                                        handlePageChange(page)
-                                    }}>
+                            {[...Array(totalPages).keys()].map(page => (
+                                <li key={page} className={`page-item ${number === page && 'active'}`}>
+                                    <button className="page-link" onClick={() => handlePageChange(page)}>
                                         {page + 1}
                                     </button>
                                 </li>
                             ))}
-
-                            <li className={`page-item ${number === totalPages - 1 && 'disabled'}`}>
+                            <li className={`page-item ${number === totalPages - 1 || number === undefined && 'disabled'}`}>
                                 <button className="page-link" onClick={handleNextPage}>▶</button>
                             </li>
                         </ul>

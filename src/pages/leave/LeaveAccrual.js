@@ -132,8 +132,7 @@ function LeaveAccrual() {
                         </table>
                         <nav>
                             <ul className="pagination">
-
-                                <li className={`page-item ${number === 0 && 'disabled'}`}>
+                                <li className={`page-item ${number === 0 || number === undefined && 'disabled'}`}>
                                     <button className="page-link" onClick={handlePrevPage}>◀</button>
                                 </li>
                                 {[...Array(totalPages).keys()].map(page => (
@@ -143,8 +142,7 @@ function LeaveAccrual() {
                                         </button>
                                     </li>
                                 ))}
-
-                                <li className={`page-item ${number === totalPages - 1 && 'disabled'}`}>
+                                <li className={`page-item ${number === totalPages - 1 || number === undefined && 'disabled'}`}>
                                     <button className="page-link" onClick={handleNextPage}>▶</button>
                                 </li>
                             </ul>

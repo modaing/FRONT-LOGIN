@@ -14,7 +14,8 @@ const LeaveProcessingModal = ({ isOpen, onClose, onUpdate, leaveSubNo, selectedT
     };
 
     const resetModal = () => {
-        setDecision('')
+        setDecision('');
+        setReason('');
     };
 
     // 모달이 열릴 때 초기화
