@@ -10,27 +10,27 @@ export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelect
         return content.map((submit, index) => {
             const { formattedStartDate, formattedEndDate, leaveDaysCalc } = formattedLocalDate(submit);
             const isWithinOneDay = new Date(formattedStartDate) <= new Date(currentDate.getTime() + (1000 * 60 * 60 * 24));
-            const buttonText = isWithinOneDay
-                ? submit.leaveSubStatus
-                : submit.leaveSubStatus === "반려"
-                    ? "반려"
-                    : submit.leaveSubProcessDate
-                        ? '취소 신청'
-                        : '신청 삭제';
-            const buttonClassName = isWithinOneDay
-                ? ''
-                : submit.leaveSubStatus === "반려"
-                    ? ""
-                    : submit.leaveSubProcessDate
-                        ? 'cancelRequest'
-                        : 'requestDelete';
-            const id = submit.leaveSubNo;
+            const buttonText = submit.leaveSubStatus === "대기"
+                ? '취소 신청'
+                : isWithinOneDay
+                    ? submit.leaveSubStatus
+                    : submit.leaveSubStatus === "승인"
+                        ? '신청 삭제'
+                        : submit.leaveSubProcessDate
+
+            const buttonClassName = submit.leaveSubStatus === "대기"
+                ? 'cancelRequest'
+                : isWithinOneDay
+                    ? ''
+                    : submit.leaveSubStatus === "승인"
+                        ? 'requestDelete'
+                        : ''
 
             const onClickHandler = submit.leaveSubProcessDate ? () => {
                 setSelectedTime({ start: formattedStartDate, end: formattedEndDate })
-                handleCancle(id)
+                handleCancle(submit.leaveSubNo)
             }
-                : () => handleDelete(id);
+                : () => handleDelete(submit.leaveSubNo);
 
             return (
                 <tr key={index}>
@@ -53,7 +53,6 @@ export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelect
 
         return content.map((submit, index) => {
             const { formattedStartDate, formattedEndDate, leaveDaysCalc } = formattedLocalDate(submit);
-            const id = submit.leaveSubNo;
 
             return (
                 <tr key={index}>
@@ -64,13 +63,13 @@ export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelect
                     <td>{submit.leaveSubType}</td>
                     <td>{leaveDaysCalc}</td>
                     <td>{submit.leaveSubStatus}</td>
-                    {submit.leaveSubProcessDate ?
-                        <td></td>
+                    {submit.leaveSubProcessDate
+                        ? <td></td>
                         : <td>
                             <span className="leaveDetail" onClick={() => {
                                 setSelectedTime({ start: formattedStartDate, end: formattedEndDate })
                                 setDetailInfo({ name: submit.applicantName, memberId: submit.leaveSubApplicant, type: submit.leaveSubType, reason: submit.leaveSubReason })
-                                handleOpenModal(id)
+                                handleOpenModal(submit.leaveSubNo)
                             }}>
                                 상세
                             </span>
