@@ -63,7 +63,7 @@ function LeaveAccrual() {
         const resetNumber = async() => await dispatch({type: SET_PAGENUMBER, payload: 0})
         resetNumber();
     },[]);
-    
+
     useEffect(() => {
         setIsLoading(true);
         const fetchData = async () => {
@@ -132,7 +132,7 @@ function LeaveAccrual() {
                         <nav>
                             <ul className="pagination">
 
-                                <li className={`page-item ${number === 0 ? 'disabled' : ''}`}>
+                                <li className={`page-item ${number === 0 && 'disabled'}`}>
                                     <button className="page-link" onClick={handlePrevPage}>◀</button>
                                 </li>
                                 {[...Array(totalPages).keys()].map(page => (
