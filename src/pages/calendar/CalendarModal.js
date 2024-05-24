@@ -11,6 +11,16 @@ const CalendarModal = ({ isOpen, onClose, onSave }) => {
     const [detail, setDetail] = useState('');
 
     const handleImport = () => {
+        if (!start || !end) {
+            alert('시작 일시와 종료 일시가 선택되어야 합니다.');
+            return;
+        }
+        if (start > end) {
+            alert('시작 일시는 종료 일시 이후로 선택될 수 없습니다.');
+            setStart();
+            setEnd();
+            return;
+        }
         onSave({ title, start, end, color, detail });
         onClose();
     };

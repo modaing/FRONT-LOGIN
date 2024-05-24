@@ -19,7 +19,7 @@ const InsertCorrectionModal = ({ commute, isOpen, onClose, onSave, date, startWo
     // console.log('정정 요청 날짜 : ', date);
     // console.log('기존 출근 시간 : ', startWork);
     // console.log('기존 퇴근 시간 : ', endWork);
-    // console.log('commute : ', commute.commuteNo);
+    console.log('commute번호 : ', commute.commuteNo);
 
     const [corrStartWork, setCorrStartWork] = useState(null);
     const [corrEndWork, setCorrEndWork] = useState(null);
@@ -50,6 +50,7 @@ const InsertCorrectionModal = ({ commute, isOpen, onClose, onSave, date, startWo
         const koreaEndTime = corrEndWork ? parseTime(corrEndWork) : '';
 
         onSave({
+            commuteNo: commute.commuteNo,
             corrStartWork: koreaStartTime,
             corrEndWork: koreaEndTime,
             reason: reason

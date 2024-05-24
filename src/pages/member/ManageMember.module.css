@@ -15,15 +15,10 @@
     align-items: center;
 }
 
-.selectBox {
-    height: 40px;
-    width: 80px;
-    margin: 0 10px;
-    cursor: pointer;
-}
+
 
 .inputBox {
-    height: 40px;
+    height: 50px;
     width: 40%;
     margin: 0 10px;
     padding-left: 5px;
@@ -54,7 +49,7 @@
 }
 
 .innerStyle {
-    width: 30%;
+    width: 38%;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -172,13 +167,6 @@ th {
     cursor: pointer;
 }
 
-.noResult {
-    align-self: center;
-    border: none;
-    font-size: 50px;
-    margin: 15%;
-    outline: none;
-}
 
 .tableDecoration th {
     text-align: center;

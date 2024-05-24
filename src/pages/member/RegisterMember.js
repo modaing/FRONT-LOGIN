@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
-import '../../css/common.css'
+// import '../../css/common.css'
 import '../../css/member/registerMember.css';
 import RegisterMemberCSS from './RegistMember.module.css';
 import { callRegisterMemberAPI, callGetDepartmentListAPI, callGetPositionListAPI } from '../../apis/MemberAPICalls';
@@ -14,7 +14,7 @@ function RegisterMember() {
     const [departmentInformation, setDepartmentInformation] = useState([]);
     const [positionInformation, setPositionInformation] = useState([]);
     const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
-    const [inputtedPhoneNo, setInputtedPhoneNo] = useState('');
+    const [inputtedPhoneNo, setInputtedPhoneNo] = useState('010-');
     const [generatedMemberId, setGeneratedMemberId] = useState();
     const [member, setMember] = useState({
         name: '',
@@ -24,6 +24,8 @@ function RegisterMember() {
         memberId: '',
         employedDate: '',
         memberStatus: '',
+        birthday: { year: '', month: '', day: '' },
+        gender: '',
         departDTO: {
             departNo: '',
             departName: '',
@@ -35,7 +37,7 @@ function RegisterMember() {
         role: '',
         imageUrl: ''
     });
-    const {name, address, employedDate, phoneNo, memberStatus, departDTO, positionDTO, role, email, memberId, imageUrl} = member;
+    const {name, address, employedDate, phoneNo, memberStatus, birthday, gender, departDTO, positionDTO, role, email, memberId} = member;
 
     /* 부서 리스트 호출 */
     const fetchDepartments = async () => {
@@ -90,6 +92,7 @@ function RegisterMember() {
         return `${year}-${month}-${day}`;
     };
 
+
     useEffect(() => {
         const fetchData = async () => {
             // Set employedDate to the current date when the component mounts
@@ -117,17 +120,17 @@ function RegisterMember() {
             await Promise.all([fetchDepartments(), fetchPositions()]);
     
             // Set the image preview URL when imageUrl changes
-            if (imageUrl) {
-                if (typeof imageUrl === 'string' && imageUrl.startsWith('data:image')) {
+            if (uploadedImageUrl) {
+                if (typeof uploadedImageUrl === 'string' && uploadedImageUrl.startsWith('data:image')) {
                     // If imageUrl is already a data URL, set it directly as the preview URL
-                    setUploadedImageUrl(imageUrl);
+                    setUploadedImageUrl(uploadedImageUrl);
                 } else {
                     // Otherwise, read the file as a data URL and set it as the preview URL
                     const reader = new FileReader();
                     reader.onload = () => {
                         setUploadedImageUrl(reader.result);
                     };
-                    reader.readAsDataURL(imageUrl);
+                    reader.readAsDataURL(uploadedImageUrl);
                 }
             }
         };
@@ -135,11 +138,13 @@ function RegisterMember() {
         fetchData();
     }, []);
 
-    const handleInputChange = async (e) => {
-        if (e.target.name === 'departDTO') {
-            const selectedDepartNo = e.target.value;
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+
+        if (name === 'departDTO') {
+            const selectedDepartNo = value;
             const selectedDepartName = e.target.options[e.target.selectedIndex].text;
-    
+
             setMember(prevMember => ({
                 ...prevMember,
                 departDTO: {
@@ -148,11 +153,10 @@ function RegisterMember() {
                 },
                 memberId: generateMemberId(selectedDepartNo),
             }));
-        } else if (e.target.name === 'positionDTO') {
-            const [positionName, positionLevel] = e.target.value.split('|');
-            const selectedPositionLevel = e.target.value;
+        } else if (name === 'positionDTO') {
+            const selectedPositionLevel = value;
             const selectedPositionName = e.target.options[e.target.selectedIndex].text;
-    
+
             setMember(prevMember => ({
                 ...prevMember,
                 positionDTO: {
@@ -160,13 +164,18 @@ function RegisterMember() {
                     positionLevel: selectedPositionLevel
                 }
             }));
+        } else if (name === 'gender') {
+            setMember(prevMember => ({
+                ...prevMember,
+                gender: value
+            }));
         } else {
             setMember(prevMember => ({
                 ...prevMember,
-                [e.target.name]: e.target.value
+                [name]: value
             }));
         }
-    }
+    };
 
     const handleFileUpload = (e) => {
         if (e.target.files && e.target.files[0])  {
@@ -186,6 +195,43 @@ function RegisterMember() {
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
+
+    const years = [];
+    for (let i = 1900; i <= new Date().getFullYear(); i++) {
+        years.push(i);
+    }
+
+    const months = [
+        { value: '01', label: '1월' },
+        { value: '02', label: '2월' },
+        { value: '03', label: '3월' },
+        { value: '04', label: '4월' },
+        { value: '05', label: '5월' },
+        { value: '06', label: '6월' },
+        { value: '07', label: '7월' },
+        { value: '08', label: '8월' },
+        { value: '09', label: '9월' },
+        { value: '10', label: '10월' },
+        { value: '11', label: '11월' },
+        { value: '12', label: '12월' },
+    ];
+    
+
+    const days = Array.from({ length: 31 }, (_, i) => i + 1);
+
+    // JSX for populating the options
+    const yearOptions = years.map(year => (
+        <option key={year} value={year}>{year}년</option>
+    ));
+
+    const monthOptions = months.map(month => (
+        <option key={month.value} value={month.value}>{month.label}</option>
+    ));
+
+    const dayOptions = days.map(day => (
+        <option key={day} value={day}>{day}일</option>
+    ));
+
     
     const today = formatDateInCalendar(new Date());
     
@@ -201,12 +247,23 @@ function RegisterMember() {
             return;
         }
 
+        const { year, month, day } = birthday;
+        const formattedBirthday = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+
         const formData = new FormData();
 
         // formData.append('memberDTO', new Blob([JSON.stringify({name: name, address: address, email, email, memberId: memberId, memberStatus: "재직", employedDate: employedDate, password: '0000', role: role, phoneNo: inputtedPhoneNo, departmentDTO: {departNo: departDTO.departNo, departName: departDTO.departName}, positionDTO: {positionName: positionDTO.positionName, positionLevel: positionDTO.positionLevel}})], { type: 'application/json'}));
-        formData.append('memberDTO', new Blob([JSON.stringify({name: name, address: address, email, email, memberId: memberId, memberStatus: "재직", employedDate: employedDate, password: '0000', role: role, phoneNo: inputtedPhoneNo, departmentDTO: {departNo: departDTO.departNo, departName: departDTO.departName}, positionDTO: {positionName: positionDTO.positionName, positionLevel: positionDTO.positionLevel}})], { type: 'application/json'}));
+        formData.append('memberDTO', new Blob([JSON.stringify({name: name, address: address, email: email, birthday: formattedBirthday, gender: gender, memberId: memberId, memberStatus: "재직", employedDate: employedDate, password: '0000', role: role, phoneNo: inputtedPhoneNo, departmentDTO: {departNo: departDTO.departNo, departName: departDTO.departName}, positionDTO: {positionName: positionDTO.positionName, positionLevel: positionDTO.positionLevel}})], { type: 'application/json'}));
         formData.append('memberProfilePicture', uploadedImage);
 
+        const memberDTOFile = formData.get('memberDTO');
+        
+        const memberDTOString = await memberDTOFile.text();
+        const memberDTO = JSON.parse(memberDTOString);
+        console.log('memberDTO:',memberDTO);
+
+        
         try {
             await callRegisterMemberAPI(formData);
 
@@ -262,7 +319,12 @@ function RegisterMember() {
                                         <img className={RegisterMemberCSS.profilePic} src={imagePreviewUrl}/><br/>
                                         <label className={RegisterMemberCSS.uploadLabel}>
                                         <span>사진 등록</span>
-                                        <input accept='.jpg, .jpeg, .png, .gif' type="file" className={RegisterMemberCSS} onChange={handleFileUpload} />
+                                        <input
+                                            accept='.jpg, .jpeg, .png, .gif'
+                                            type="file"
+                                            className={RegisterMemberCSS}
+                                            onChange={handleFileUpload}
+                                        />
                                         </label>
                                     </div>
                                     <br />
@@ -270,26 +332,107 @@ function RegisterMember() {
 
                                     <div className="nameStyle">
                                         <label htmlFor='name' className="name">이름</label>
-                                        <input type='text' name='name' value={name} className="inputStyle" onChange={(e) => handleInputChange(e)}></input>
+                                        <input
+                                            type='text'
+                                            name='name'
+                                            value={name}
+                                            className="inputStyles"
+                                            onChange={(e) => handleInputChange(e)}
+                                        />
                                     </div>
                                     <br />
+                                    {/* <div className="nameStyle">
+                                        <label htmlFor="birthday" className="birthday">생일</label>
+                                        <input
+                                            type='date'
+                                            max={today}
+                                            name='birthday'
+                                            value={birthday}
+                                            className="inputStyles"
+                                            onChange={(e) => handleInputChange(e)}
+                                        />
+                                    </div> */}
+                                    <div className="birthdayStyle">
+                                        <label htmlFor="birthday" className="birthday">생일</label>
+                                        <div className="inputStyles">
+                                            <select
+                                                id="birth-year"
+                                                value={birthday.year}
+                                                onChange={(e) => setMember(prevMember => ({ ...prevMember, birthday: { ...prevMember.birthday, year: e.target.value }}))}
+                                                // className="box"
+                                            >
+                                                <option disabled selected>출생 연도</option>
+                                                {yearOptions}
+                                            </select>
+                                            <select
+                                                id="birth-month"
+                                                value={birthday.month}
+                                                onChange={(e) => setMember(prevMember => ({ ...prevMember, birthday: { ...prevMember.birthday, month: e.target.value }}))}
+                                                // className="box"
+                                            >
+                                                <option disabled selected>월</option>
+                                                {monthOptions}
+                                            </select>
+                                            <select
+                                                id="birth-day"
+                                                value={birthday.day}
+                                                onChange={(e) => setMember(prevMember => ({ ...prevMember, birthday: { ...prevMember.birthday, day: e.target.value }}))}
+                                                // className="box"
+                                            >
+                                                <option disabled selected>일</option>
+                                                {dayOptions}
+                                            </select>
+                                        </div>
+                                    </div>
 
+
+                                    <br />
+                                    <div className="genderStyle">
+                                        <label htmlFor="inputText" className="gender">성별</label>
+                                        <select type='text' name='gender' value={gender} className="inputStyles" onChange={(e) => handleInputChange(e)}>
+                                            <option value="">성별</option>
+                                            <option value="M">남자</option>
+                                            <option value="F">여자</option>
+                                            {/* <label htmlFor="male">남</label>
+                                            <input type="radio" id="male" name="gender" value="male" checked={gender === 'male'} onChange={handleInputChange} />
+                                            <label htmlFor="female">여</label>
+                                            <input type="radio" id="female" name="gender" value="female" checked={gender === 'female'} onChange={handleInputChange} /> */}
+                                        </select>
+                                    </div>
+                                    <br />
                                     <div className="addressStyle">
                                         <label htmlFor="inputText" className="address">주소</label>
-                                        <input type='text' name='address' value={address} className="inputStyle" onChange={(e) => handleInputChange(e)}></input>
+                                        <input
+                                            type='text'
+                                            name='address'
+                                            value={address}
+                                            className="inputStyles"
+                                            onChange={(e) => handleInputChange(e)}
+                                        />
                                     </div>
                                     <br />
-
                                     <div className="emailStyle">
                                         <label htmlFor="inputText" className="email">이메일</label>
-                                        <input type='text' name='email' value={email} className="inputStyle" onChange={(e) => handleInputChange(e)}></input>
+                                        <input
+                                            type='text'
+                                            name='email'
+                                            value={email}
+                                            className="inputStyles"
+                                            onChange={(e) => handleInputChange(e)}
+                                        />
                                     </div>
                                     <br />
 
                                     <div className="phoneNoStyle">
                                         <label htmlFor="inputText" className="phoneNo">전화번호</label>
                                         {/* <input type='text' name='phoneNo' value={phoneNo} className={`col-sm-10 ${RegisterMemberCSS.shortInput}`} onChange={(e) => handleInputChange(e)}></input> */}
-                                        <input type='text' name='phoneNo' value={inputtedPhoneNo} className="inputStyle" onChange={handlePhoneNoChange} placeholder='010-1234-5678'></input>
+                                        <input
+                                            type='text'
+                                            name='phoneNo'
+                                            value={inputtedPhoneNo}
+                                            className="inputStyles"
+                                            onChange={handlePhoneNoChange} placeholder='010-1234-5678'
+                                        />
                                     </div>
                                     <br />
 
@@ -302,19 +445,32 @@ function RegisterMember() {
 
                                     <div className="memberIdStyle" id={RegisterMemberCSS.inputBox}>
                                         <label htmlFor="inputText" className="memberId">사번</label>
-                                        <input type='text' name='memberId' value={memberId} className="inputStyle" readOnly></input>
+                                        <input
+                                            type='text'
+                                            name='memberId'
+                                            value={memberId}
+                                            className="inputStyles"
+                                            readOnly 
+                                        />
                                     </div>
                                     <br />
 
                                     <div className="employedDateStyle" id={RegisterMemberCSS.inputBox}>
                                         <label htmlFor="inputText" className="employedDate">입사일</label>
-                                        <input type='date' max={today} name='employedDate' value={employedDate} className="inputStyle" onChange={(e) => handleInputChange(e)}></input>
+                                        <input
+                                            type='date'
+                                            max={today}
+                                            name='employedDate'
+                                            value={employedDate}
+                                            className="inputStyles"
+                                            onChange={(e) => handleInputChange(e)}
+                                        />
                                     </div>
                                     <br />
 
-                                    <div className="departStyle" id={RegisterMemberCSS.inputBox}>
-                                        <label htmlFor="inputText" className="departName">부서</label>
-                                        <select name='departDTO' value={departDTO.departNo} className="inputStyle" onChange={(e) => handleInputChange(e)}>
+                                    <div className="departStyle">
+                                        <label htmlFor="inputText" className="employedDate">부서</label>
+                                        <select name='departDTO' value={departDTO.departNo} className="inputStyles" onChange={(e) => handleInputChange(e)}>
                                             <option value="">부서 선택</option>
                                             {departmentInformation.map((departments) => (
                                                 <option key={departments.departNo} value={departments.departNo}>{departments.departName}</option>
@@ -324,9 +480,9 @@ function RegisterMember() {
                                     <br />
 
                                     <div className="positionStyle" id={RegisterMemberCSS.inputBox}>
-                                        <label htmlFor="inputText" className="positionName">직급</label>
+                                        <label htmlFor="inputText" className="employedDate">직급</label>
                                         {/* <input type='text' name='departmentName' id='departmentName' required value={departmentName} className={`col-sm-10 ${RegisterMemberCSS.shortInput}`} onChange={(e) => handleInputChange(e)}></input> */}
-                                        <select name='positionDTO' value={positionDTO.positionLevel} className="inputStyle" onChange={(e) => handleInputChange(e)}>
+                                        <select name='positionDTO' value={positionDTO.positionLevel} className="inputStyles" onChange={(e) => handleInputChange(e)}>
                                             <option value="">직급 선택</option>
                                             {positionInformation.map((positions) => (
                                                 <option key={positions.positionName} value={positions.positionLevel}>{positions.positionName}</option>
@@ -336,8 +492,8 @@ function RegisterMember() {
                                     <br />
 
                                     <div className="memberStatusStyle" id={RegisterMemberCSS.inputBox}>
-                                        <label htmlFor="inputText" className="memberStatus">퍼미션</label>
-                                        <select type='text' name='role' value={role} className="inputStyle" onChange={(e) => handleInputChange(e)}>
+                                        <label htmlFor="inputText" className="memberStatus">권한</label>
+                                        <select type='text' name='role' value={role} className="inputStyles" onChange={(e) => handleInputChange(e)}>
                                             <option value="">권한 설정</option>
                                             <option value="ADMIN">관리자</option>
                                             <option value="MEMBER">구성원</option>

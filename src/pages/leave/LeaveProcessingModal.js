@@ -5,7 +5,7 @@ import '../../css/leave/LeaveProcessingModal.css';
 
 
 const LeaveProcessingModal = ({ isOpen, onClose, onUpdate, leaveSubNo, selectedTime, detailInfo }) => {
-    const [decision, setDecision] = useState('승인');
+    const [decision, setDecision] = useState('');
     const [reason, setReason] = useState('');
 
     const handleUpdate = () => {
@@ -14,7 +14,8 @@ const LeaveProcessingModal = ({ isOpen, onClose, onUpdate, leaveSubNo, selectedT
     };
 
     const resetModal = () => {
-      
+        setDecision('');
+        setReason('');
     };
 
     // 모달이 열릴 때 초기화
@@ -60,12 +61,12 @@ const LeaveProcessingModal = ({ isOpen, onClose, onUpdate, leaveSubNo, selectedT
                                     <input type="radio" id="reject" name="decision" value="반려" checked={decision === '반려'} onChange={e => setDecision(e.target.value)} />
                                     <label htmlFor="reject">반려</label>
                                 </div>
-                                {decision === '반려' ?
-                                    <>
+                                {decision === '반려'
+                                    && <>
                                         <label>반려 사유</label>
                                         <textarea type="text" value={reason} onChange={e => setReason(e.target.value)} className="form-control" rows="3" />
                                     </>
-                                    : ''}
+                                }
                             </div>
                         </div>
                         <div className="modal-footer">

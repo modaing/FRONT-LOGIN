@@ -1,40 +1,26 @@
-import { decodeJwt } from "../../utils/tokenUtils";
-import manageMemberCSS from './ManageMember.module.css';
 import { useNavigate, Link, useParams } from 'react-router-dom';
 import { callChangePasswordAPI, callGetMemberAPI, callGetTransferredHistory, callUpdateMemberAPI, callGetDepartmentListAPI, callGetPositionListAPI } from "../../apis/MemberAPICalls";
 import { callDepartmentDetailListAPI } from "../../apis/DepartmentAPICalls";
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import '../../css/member/setMember.css';
+import '../../css/member/memberPage.css';
 
 function MemberPage() {
     
     const { memberId } = useParams();
     const [memberInfo, setMemberInfo] = useState(null);
-    const [memberInformation, setMemberInformation] = useState(null);
     const [loading, setLoading] = useState(true);
     const [formattedEmployedDate, setFormattedEmployedDate] = useState('');
     const [transferredHistoryInformation, setTransferredHistoryInformation] = useState([]);
-    const [department, setDepartment] = useState(null);
-    const [departmentNumber, setDepartmentNumber] = useState('');
     const [filteredDepartInfo, setFilteredDepartInfo] = useState('');
     const navigate = useNavigate();
-    const [email, setEmail] = useState('');
-    const [address, setAddress] = useState('');
-    const [phoneNo, setPhoneNo] = useState('');
     const [inputtedPhoneNo, setInputtedPhoneNo] = useState('');
-    const [name, setName] =useState('');
-    const [positionName, setPositionName] = useState('');
-    const [departName, setDepartName] = useState('');
-    const [employedDate, setEmployedDate] = useState('');
-    const [memberStatus, setMemberStatus] = useState('');
-    const [role, setRole] = useState('');
     const [departmentInformation, setDepartmentInformation] = useState([]);
     const [positionInformation, setPositionInformation] = useState([]);
-    const [positionDTO, setPositionDTO] = useState(null);
-    const [departDTO, setDepartDTO] = useState(null);
     const [uploadedImage, setUploadedImage] = useState();
     const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
+    const [inputChangedd, setInputChangedd] = useState(false);
+
     const [member, setMember] = useState({
         name: '',
         address: '',
@@ -43,7 +29,7 @@ function MemberPage() {
         memberId: memberId,
         employedDate: '',
         memberStatus: '',
-        departDTO: {
+        departmentDTO: {
             departNo: '',
             departName: '',
         },
@@ -52,15 +38,16 @@ function MemberPage() {
             positionLevel: ''
         },
         role: '',
-        // imageUrl: ''
+        imageUrl: ''
     });
 
+    /* 구성원 정보 호출 */
     const fetchMemberInfo = async (e) => {
         try {
             const memberInformation = await callGetMemberAPI(memberId);
             // console.log('response:', memberInformation);
             setMemberInfo(memberInformation);
-            // console.log('memberInfo:', memberInfo);
+            console.log('memberInformation:',memberInformation);
             formatDate(memberInformation.employedDate);
             setLoading(false);
         } catch (error) {
@@ -68,6 +55,34 @@ function MemberPage() {
         }
     }
 
+    /* 부서 호출 */
+    const fetchDepartments = async () => {
+        try {
+            const departmentList = await callGetDepartmentListAPI();
+            setDepartmentInformation(departmentList);
+
+        } catch (error) {
+            console.error('부서 리스트 불러 오는데 오류 발생:', error); 
+        }
+    }
+
+    /* 직급 호출 */
+    const fetchPositions = async () => {
+        try {
+            const positionList = await callGetPositionListAPI();
+            setPositionInformation(positionList);
+
+            if (Array.isArray(positionList)) {
+                setPositionInformation(positionList);
+            } else {
+                console.error('Position list is not an array:', positionList);
+            }
+        } catch (error) {
+            console.error('직급 리스트 불러 오는데 오류 발생:', error)
+        }
+    }
+
+    /* 부서명 호출 */
     const fetchDepartNameByDepartNo = async () => {
         try {
             const getDepartmentList = await callDepartmentDetailListAPI();
@@ -76,7 +91,7 @@ function MemberPage() {
                     ...department
                 }));
                 // setDepartment(departmentInfo);
-                setFilteredDepartInfo(departmentInfo);
+                // setFilteredDepartInfo(departmentInfo);
             } else {
                 console.error ('department details is not an array:', getDepartmentList);
             }
@@ -85,6 +100,7 @@ function MemberPage() {
         }
     }
 
+    /* 프로필 이미지 */
     const profilePic = () => {
         const image = memberInfo.imageUrl;
         const imageUrl = `/img/${image}`;
@@ -95,6 +111,7 @@ function MemberPage() {
         }
     }
 
+    /* 날짜 포맷 */
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         const options = { year: 'numeric', month: 'long', day: 'numeric'};
@@ -103,6 +120,7 @@ function MemberPage() {
         // console.log('Formatted date:', formattedEmployedDate);
     }
 
+    /* 캘린더에 날짜 포맷 */
     const formatDateInCalendar = (dateString) => {
         const date = new Date(dateString);
         const year = date.getFullYear();
@@ -113,6 +131,7 @@ function MemberPage() {
     
     const today = formatDateInCalendar(new Date());
 
+    /* 인사 발령 내역 호출 */
     const fetchTransferredHistory = async() => {
         try {
             const transferredHistory = await callGetTransferredHistory(memberId);
@@ -129,19 +148,27 @@ function MemberPage() {
         }
     }
     
-    const handleResetPassword = async (memberId) => {
+    /* 비밀번호 초기화 */
+    const handleResetPassword = async (memberId, e) => {
+        e.preventDefault();
+
         const confirmed = window.confirm("비밀번호를 초기화 하시겠습니끼?");
 
         if (confirmed){
-            const response = await callChangePasswordAPI(memberId);
-            // console.log('response:',response);
-            if (response == "Password reset successfully") {
-                alert('비밀번호를 초기화했습니다');
-                window.location.reload();
+            try {
+                const response = await callChangePasswordAPI(memberId);
+                // console.log('response:',response);
+                if (response == "Password reset successfully") {
+                    alert('비밀번호를 초기화했습니다');
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.error('Failed to reset password:', error);
             }
         }
     }
 
+    /* 이미지 upload */
     const handleFileUpload = (e) => {
         if (e.target.files && e.target.files[0])  {
             const uploadedImage = e.target.files[0];
@@ -155,16 +182,10 @@ function MemberPage() {
         }
     };    
 
+    /* 구성원 정보 수정 */
     const handleUpdateMember = async (e) => {
         e.preventDefault();
-        /* 아무른 정보를 입력을 하지 않았으면  */
-        // if (!member.name || !member.address || !member.email || !member.phoneNo || !member.memberStatus || !member.role || !member.employedDate || !member.departDTO.departNo || !member.positionDTO.positionName) {
-        //     alert('수정한 정보가 없습니다');
-        //     return;
-        // }
-        // console.log(uploadedImage);
-        // console.log('member:',member);
-    
+
         const changedValues = {
             name: member.name || memberInfo.name,  // Use existing member name as default if available
             address: member.address || memberInfo.address, // Use existing member address as default if available
@@ -175,8 +196,8 @@ function MemberPage() {
             role: member.role || memberInfo.role, // Use existing member role as default if available
             phoneNo: member.phoneNo || memberInfo.phoneNo, // Use inputted phone number or empty string as default
             departmentDTO: {
-                departNo: member.departDTO.departNo || memberInfo.departmentDTO.departNo, // Use existing department number as default if available
-                departName: member.departDTO.departName || memberInfo.departmentDTO.departName, // Use selected department name as default if available
+                departNo: member.departmentDTO.departNo || memberInfo.departmentDTO.departNo, // Use existing department number as default if available
+                departName: member.departmentDTO.departName || memberInfo.departmentDTO.departName, // Use selected department name as default if available
             },
             positionDTO: {
                 positionName: member.positionDTO.positionName || memberInfo.positionDTO.positionName, // Use selected position name as default if available
@@ -198,6 +219,11 @@ function MemberPage() {
         
         const hasChanges = Object.keys(changedValues).some(key => changedValues[key] !== memberInfo[key]);
 
+        if (!hasChanges) {
+            alert('수정한 정보가 없습니다');
+            return;
+        }
+
         if (hasChanges) {
             formData.append('memberDTO', new Blob([JSON.stringify(changedValues)], { type: 'application/json' }));
         } else {
@@ -208,6 +234,9 @@ function MemberPage() {
         try {
             const response = await callUpdateMemberAPI(formData);
             console.log('response:',response);
+            if (response === '구성원 정보가 업데이트되었습니다') {
+                window.location.reload();
+            }
             fetchMemberInfo();
         } catch (error) {
             console.error('Failed to update member information:', error);
@@ -222,34 +251,39 @@ function MemberPage() {
         setTransferredHistoryInformation(updatedTransferredHistory);
     }
 
-    const fetchDepartments = async () => {
-        try {
-            const departmentList = await callGetDepartmentListAPI();
-            setDepartmentInformation(departmentList);
-            setDepartDTO(departmentList[0].departDTO);
-        } catch (error) {
-            console.error('부서 리스트 불러 오는데 오류 발생:', error); 
+    /* 변경된 내용 반영 */
+    const handleInputChange = async (e) => {
+        if (e.target.name === 'departmentDTO') {
+            const selectedDepartNo = e.target.value;
+            const selectedDepartName = e.target.options[e.target.selectedIndex].text;
+
+            setMember(prevState => ({
+                ...prevState,
+                departmentDTO: {
+                    departNo: selectedDepartNo,
+                    departName: selectedDepartName
+                }
+            }));
+        } else if (e.target.name === 'positionDTO') {
+            const selectedPositionLevel = e.target.value;
+            const selectedPositionName = e.target.options[e.target.selectedIndex].text;
+
+            setMember(prevState => ({
+                ...prevState,
+                positionDTO: {
+                    positionName: selectedPositionName,
+                    positionLevel: selectedPositionLevel
+                }
+            }));
+        } else {
+            setMember(prevState => ({
+                ...prevState,
+                [e.target.name]: e.target.value
+            }));
         }
     }
 
-    /* 직급 호출 */
-    const fetchPositions = async () => {
-        try {
-            const positionList = await callGetPositionListAPI();
-            setPositionInformation(positionList);
-            setPositionDTO(positionList[0].positionDTO);
-            // console.log('positionInformation:', positionInformation);
-
-            if (Array.isArray(positionList)) {
-                setPositionInformation(positionList);
-            } else {
-                console.error('Position list is not an array:', positionList);
-            }
-        } catch (error) {
-            console.error('직급 리스트 불러 오는데 오류 발생:', error)
-        }
-    }
-
+    /* 휴대폰 번호 */
     const handlePhoneNoChange = (e) => {
         const rawPhoneNumber = e.target.value.replace(/[^\d]/g, ''); // Remove non-numeric characters
         let formattedPhoneNumber = '';
@@ -290,8 +324,8 @@ function MemberPage() {
     }
     
     return (
-        <main id="main" className="main main2Pages">
-            <div className='firstPage'>
+        <main id="main" className="main2Pages123">
+            <div className='firstPage123'>
                 <div className="pagetitle">
                     <h1>구성원 관리</h1>
                     <nav>
@@ -308,24 +342,24 @@ function MemberPage() {
                     <div className="rowStyle card columnStyle">
                         <div className="content1 contentStyle1">
                             <div className='imageBox'>
-                                {/* <img src={profilePic()} className='profilePic' alt="Profile" /> */}
                                 <div className="uploadContainer">
                                     <img className="profilePic" src={profilePic()} /><br/>
-                                    <label className="uploadLabel" htmlFor="fileInput">사진 등록</label>
-                                    <input
-                                        id="fileInput"
-                                        className="uploadLabel1"
-                                        accept=".jpg, .jpeg, .png, .gif"
-                                        type="file"
-                                        onChange={(e) => handleFileUpload(e)}
-                                        placeholder="사진 등록"
-                                    />
+                                    <label className="uploadButton">
+                                        <span>사진 등록
+                                        <input
+                                            className="uploadInput"
+                                            accept=".jpg, .jpeg, .png, .gif"
+                                            type="file"
+                                            onChange={(e) => handleFileUpload(e)}
+                                        />
+                                        </span>
+                                    </label>
                                 </div>
                                 {/* <div className='nameBox'>{memberInfo.name}</div> */}
                             </div>
                             {/* <h1>hi</h1> */}
                             <div className="alignButton">
-                                <button className='changePassword' onClick={handleResetPassword}>비밀번호 초기화</button>
+                                <button className='changePassword' onClick={(e) => handleResetPassword(memberId,e)}>비밀번호 초기화</button>
                             </div>
                         </div>
                         <div className='content1 contentStyle2 titleStyle'>
@@ -342,38 +376,53 @@ function MemberPage() {
                                     onChange={(e) => setName(e.target.value)}
                                 /> */}
                                 <input
+                                    name="name"
+                                    className={`inputStyle ${member.name && member.name !== memberInfo.name ? 'changed' : ''}`}
+                                    defaultValue={memberInfo.name}
+                                    onChange={(e) => handleInputChange(e)}
+                                />
+                            </div>
+                            <div className='nameStyle'>
+                                <label className='name'>생일</label>
+                                {/* <input
+                                    className={`inputStyle ${member.employedDate && member.employedDate !== memberInfo.employedDate ? 'changed' : ''}`}
+                                    name="employedDate"
+                                    type="date"
+                                    defaultValue={formatDateInCalendar(memberInfo.employedDate)}
+                                    max={today}
+                                    onChange={(e) => handleInputChange(e)}
+                                /> */}
+                                {/* <input
                                     className='inputStyle'
                                     defaultValue={memberInfo.name}
-                                    onChange={(e) => setMember(prevState => ({
-                                        ...prevState,
-                                        name: e.target.value
-                                    }))}
+                                    onChange={(e) => setName(e.target.value)}
+                                /> */}
+                                <input
+                                    className={`inputStyle ${member.birthday && member.birthday !== memberInfo.birthday ? 'changed' : ''}`}
+                                    name="birthday"
+                                    type='date'
+                                    defaultValue={formatDateInCalendar(memberInfo.birthday)}
+                                    onChange={(e) => handleInputChange(e)}
                                 />
                             </div>
                             <div className='memberIdStyle'>
                                 <label className='memberId'>사번</label>
                                 <input
-                                    className='inputStyleConfirmed'
+                                    name="memberId"
+                                    className='inputStyle confirmed'
                                     value={memberInfo.memberId}
                                     readOnly
                                 />
                             </div>
-                            <div className="positionStyle">
+                            <div className="departStyle">
                                 <label className='memberId'>부서</label>
-                                {/* <input type='text' name='departmentName' id='departmentName' required value={departmentName} className={`col-sm-10 ${RegisterMemberCSS.shortInput}`} onChange={(e) => handleInputChange(e)}></input> */}
                                 <select
-                                    name='positionDTO'
-                                    defaultValue={memberInfo.departmentDTO.departName}
-                                    className="inputStyle"
-                                    onChange={(e) => setMember(prevState => ({
-                                        ...prevState,
-                                        departDTO: {
-                                            departNo: e.target.value,
-                                            departName: e.target.options[e.target.selectedIndex].text
-                                        }
-                                    }))}
+                                    className={`inputStyle ${member.departmentDTO.departName && member.departmentDTO.departName !== memberInfo.departmentDTO.departName ? 'changed' : ''}`}
+                                    name='departmentDTO'
+                                    key={memberInfo.departmentDTO.departName}
+                                    defaultValue={memberInfo.departmentDTO.departName} // Set default value based on departName
+                                    onChange={(e) => handleInputChange(e)}
                                 >
-                                    <option disabled value="">부서 선택</option>
                                     {departmentInformation.map((department) => (
                                         <option key={department.departName} value={department.departNo}>{department.departName}</option>
                                     ))}
@@ -381,65 +430,58 @@ function MemberPage() {
                             </div>
                             <div className="positionStyle">
                                 <label className='position'>직급</label>
-                                {/* <input type='text' name='departmentName' id='departmentName' required value={departmentName} className={`col-sm-10 ${RegisterMemberCSS.shortInput}`} onChange={(e) => handleInputChange(e)}></input> */}
                                 <select
+                                    className={`inputStyle ${member.positionDTO.positionName && member.positionDTO.positionName !== memberInfo.positionDTO.positionName ? 'changed' : ''}`}
                                     name='positionDTO'
+                                    value={memberInfo.positionDTO.positionName}
                                     defaultValue={memberInfo.positionDTO.positionName}
-                                    className="inputStyle"
-                                    onChange={(e) => setMember(prevState => ({
-                                        ...prevState,
-                                        positionDTO: {
-                                            positionName: e.target.value,
-                                            positionLevel: e.target.value
-                                        }
-                                    }))}
+                                    onChange={(e) => handleInputChange(e)}
                                 >
-                                    <option disabled value="">직급 선택</option>
+                                    <option value="default" onChange={(e) => handleInputChange(e)} disabled>
+                                        직급 선택
+                                    </option>
                                     {positionInformation.map((position) => (
-                                        <option key={position.positionName} value={position.positionLevel}>{position.positionName}</option>
+                                        <option key={position.positionName} value={position.positionLevel}>
+                                            {position.positionName}
+                                        </option>
                                     ))}
                                 </select>
                             </div>
                             <div className='employedDateStyle'>
-                                <label className='memberId'>입사일</label>
+                                <label className='email'>입사일</label>
                                 <input
+                                    className={`inputStyle ${member.employedDate && member.employedDate !== memberInfo.employedDate ? 'changed' : ''}`}
+                                    name="employedDate"
                                     type="date"
-                                    className='inputStyle'
                                     defaultValue={formatDateInCalendar(memberInfo.employedDate)}
                                     max={today}
-                                    onChange={(e) => setMember(prevState => ({
-                                        ...prevState,
-                                        employedDate: e.target.value
-                                    }))}
+                                    onChange={(e) => handleInputChange(e)}
                                 />
                             </div>
                             <div className='emailStyle'>
                                 <label className='email'>이메일</label>
                                 <input
-                                    className='inputStyle'
+                                    className={`inputStyle ${member.email && member.email !== memberInfo.email ? 'changed' : ''}`}
+                                    name="email"
                                     defaultValue={memberInfo.email}
-                                    onChange={(e) => setMember(prevState => ({
-                                        ...prevState,
-                                        email: e.target.value
-                                    }))}
+                                    onChange={(e) => handleInputChange(e)}
                                 />
                             </div>
                             <div className='addressStyle'>
                                 <label className='address'>주소</label>
                                 <input
-                                    className='inputStyle'
+                                    className={`inputStyle ${member.address && member.address !== memberInfo.address ? 'changed' : ''}`}
+                                    name="address"
                                     defaultValue={memberInfo.address}
-                                    onChange={(e) => setMember(prevState => ({
-                                        ...prevState,
-                                        address: e.target.value
-                                    }))}
+                                    onChange={(e) => handleInputChange(e)}
                                 />
                             </div>
                             <div className='phoneNoStyle'>
                                 <label className='phoneNo'>휴대폰 번호</label>
                                 <input
+                                    className={`inputStyle ${member.phoneNo && member.phoneNo !== memberInfo.phoneNo ? 'changed' : ''}`}
+                                    name="phoneNo"
                                     type="tel"
-                                    className='inputStyle'
                                     defaultValue={memberInfo.phoneNo}
                                     // value={inputtedPhoneNo}
                                     onChange={(e) => handlePhoneNoChange(e)}
@@ -450,24 +492,19 @@ function MemberPage() {
                             <div className='memberStatusStyle'>
                                 <label className='memberStatus'>상태</label>
                                 <input
-                                    className='inputStyle'
+                                    className={`inputStyle ${member.memberStatus && member.memberStatus !== memberInfo.memberStatus ? 'changed' : ''}`}
+                                    name="memberStatus"
                                     defaultValue={memberInfo.memberStatus}
-                                    onChange={(e) => setMember(prevState => ({
-                                        ...prevState,
-                                        memberStatus: e.target.value
-                                    }))}
+                                    onChange={(e) => handleInputChange(e)}
                                 />
                             </div>
                             <div className="memberStatusStyle">
-                                <label htmlFor="inputText" className="memberStatus">퍼미션</label>
+                                <label htmlFor="inputText" className="memberStatus">권한</label>
                                 <select
+                                    className={`inputStyle ${member.role && member.role !== memberInfo.role ? 'changed' : ''}`}
                                     name='role'
                                     defaultValue={memberInfo.role}
-                                    className="inputStyle"
-                                    onChange={(e) => setMember(prevState => ({
-                                        ...prevState,
-                                        role: e.target.value
-                                    }))}
+                                    onChange={(e) => handleInputChange(e)}
                                 >
                                     <option value="ADMIN">관리자</option>
                                     <option value="MEMBER">구성원</option>
@@ -478,7 +515,7 @@ function MemberPage() {
                 </form>
             </div>
 
-            <div className='secondPage'>
+            <div className='secondPage123'>
                 {/* <div className="pagetitle pageTitleStyle" >
                     <h1>인사 정보</h1>
                 </div> */}
@@ -494,39 +531,40 @@ function MemberPage() {
                     </nav>
                 </div>
                 <div className="rowStyle columnStyle1">
-                    {/* <div className="col-lg-6 columnStyle"> */}
-                        <div className="card cardOuterLine2">
-                            <div className='content1 contentStyle3 titleStyle'>
-                                <div className="pagetitle pageTitleStyle" >
-                                    <h1>인사 발령 내역</h1>
-                                </div>
-                                {/* Mapping through transferredHistoryInformation to display new_position_name and transferred_date */}
-                                    {transferredHistoryInformation.map((history, index) => (
-                                        <div key={index} className='transferredHistory'>
-                                            {/* <span className='transferredDate'>{history.transferredDate.join('.')}</span> */}
-                                            <span className='transferredDateStyle'>
-                                                {index === transferredHistoryInformation.length - 1 
-                                                    ? `${history.transferredDate.join('.')} ~`
-                                                    : history.transferredDate.join('.')}
-                                            </span>
-                                            <br/><br />
-                                            <span id="departName" className='departNameStyle'>{history.newDepartName}</span> {/* Render department name */}
-                                            <br /><br />
-                                            <span className='positionNameStyle'>{history.newPositionName}</span>
-                                            <br /><br />
-                                            <hr />
-                                            <br />
-                                        </div>
-                                    ))}
+                    <div className="card cardOuterLine2">
+                        <div className='content1 contentStyle3 titleStyle'>
+                            <div className="pagetitle pageTitleStyle" >
+                                <h1>인사 발령 내역</h1>
                             </div>
+                            {/* Mapping through transferredHistoryInformation to display new_position_name and transferred_date */}
+                            {transferredHistoryInformation.map((history, index) => {
+                                const startDate = history.transferredDate.map(d => d.toString().padStart(2, '0')).join('.'); // Format start date
+                                const endDate = index === transferredHistoryInformation.length - 1 ? '현재' : history.transferredDate.map(d => d.toString().padStart(2, '0')).join('.'); // Format end date or mark as '현재'
+                                const dateRange = `${startDate} ~ ${endDate}`; // Combine start and end dates
+                                return (
+                                    <div key={index} className='transferredHistory'>
+                                        <div className="transferredDateStyleOuter">
+                                            <span className='transferredDateStyle'>{dateRange}</span>
+                                        </div>
+                                        <div className="departNameStyleOuter">
+                                            <div className="departNameDiv">부서명 : </div>
+                                            <span className='departNameStyle'>{history.newDepartName}</span>
+                                        </div>
+                                        <div className="positionNameStyleOuter">
+                                            <div className="positionNameDiv">직급명 :</div>
+                                            <span className='positionNameStyle'>{history.newPositionName}</span>
+                                        </div>
+                                        <hr className="divider"/>
+                                    </div>
+                                );
+                            })}
                         </div>
-                        <div className="buttonClass">
-                            <button className="notice-cancel-button" type='button' onClick={() => navigate('/manageMember')}>취소</button>
-                            <button className="notice-confirm-button" onClick={handleUpdateMember}>저장</button>
-                        </div>
-                    {/* </div> */}
+                    </div>
+                    <div className="buttonClass">
+                        <button className="notice-cancel-button" type='button' onClick={() => navigate('/manageMember')}>취소</button>
+                        <button className="notice-confirm-button" onClick={handleUpdateMember}>저장</button>
+                    </div>
                 </div>
-                {/* <button></button> */}
             </div>
         </main>
     );

@@ -37,9 +37,20 @@ function Leaves() {
     }
 
     useEffect(() => {
+        const resetNumber = async () => await dispatch({ type: SET_PAGENUMBER, payload: 0 })
+        resetNumber();
+    }, []);
+
+    useEffect(() => {
         setIsLoading(true);
-        dispatch(callSelectLeavesAPI(number, properties, direction))
-            .finally(() => setIsLoading(false));
+        const fetchData = async () => {
+            try {
+                await dispatch(callSelectLeavesAPI(number, properties, direction));
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchData()
     }, [number, properties, direction]);
 
     return <main id="main" className="main">
@@ -69,10 +80,6 @@ function Leaves() {
 
                                 <th><span>연차</span></th>
 
-                                <th><span>공가</span></th>
-
-                                <th><span>경조사</span></th>
-
                                 <th><span>특별 휴가</span></th>
 
                                 <th><span>소진 일수</span></th>
@@ -81,35 +88,29 @@ function Leaves() {
                             </tr>
                         </thead>
                         <tbody>
-                            {isLoading ? ( // 로딩 중이면 로딩 메시지 표시
-                                <tr>
+                            {isLoading
+                                // 로딩 중이면 로딩 메시지 표시
+                                ? <tr>
                                     <td colSpan="8" className="loadingText"></td>
                                 </tr>
-                            ) : (
-                                renderLeaves(content) // 로딩 중이 아니면 실제 데이터 표시
-                            )}
+                                // 로딩 중이 아니면 실제 데이터 표시
+                                : renderLeaves(content)
+                            }
                         </tbody>
                     </table>
-
-                    <nav >
+                    <nav>
                         <ul className="pagination">
-
-                            <li className={`page-item ${number === 0 && 'disabled'}`}>
+                            <li className={`page-item ${number === 0 || number === undefined && 'disabled'}`}>
                                 <button className="page-link" onClick={handlePrevPage}>◀</button>
                             </li>
-
-                            {[...Array(totalPages).keys()].map((page, index) => (
-                                <li key={index} className={`page-item ${number === page && 'active'}`}>
-                                    <button className="page-link" onClick={() => {
-                                        console.log('[page]', page);
-                                        handlePageChange(page)
-                                    }}>
+                            {[...Array(totalPages).keys()].map(page => (
+                                <li key={page} className={`page-item ${number === page && 'active'}`}>
+                                    <button className="page-link" onClick={() => handlePageChange(page)}>
                                         {page + 1}
                                     </button>
                                 </li>
                             ))}
-
-                            <li className={`page-item ${number === totalPages - 1 && 'disabled'}`}>
+                            <li className={`page-item ${number === totalPages - 1 || number === undefined && 'disabled'}`}>
                                 <button className="page-link" onClick={handleNextPage}>▶</button>
                             </li>
                         </ul>

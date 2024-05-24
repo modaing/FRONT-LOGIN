@@ -11,6 +11,7 @@ import { handleAction } from 'redux-actions';
 import ClockInModal from '../../components/commutes/ClockInModal';
 import 'react-datepicker/dist/react-datepicker.css';
 import RecordCorrectionOfCommute from './RecordCorrectionOfCommute';
+import useClockInModal from '../../utils/CommuteUtil';
 
 function RecordCommute() {
 
@@ -91,8 +92,9 @@ function RecordCommute() {
     const [isClocked, setIsClocked] = useState(false);
     const [lastCommuteNo, setLastCommuteNo] = useState(null);
     const [todaysCommute, setTodaysCommute] = useState(null);
-    const [showModal, setShowModal] = useState(false);
+    // const [showModal, setShowModal] = useState(false);
     const [chooseMonth, setChooseMonth] = useState(null);
+    const { showModal, handleClockInModalOpen, handleClockInModalClose } = useClockInModal();
 
     const dispatch = useDispatch();
 
@@ -127,9 +129,10 @@ function RecordCommute() {
 
     /* 출퇴근 내역 API 호출 */
     useEffect(() => {
-        dispatch(callSelectCommuteListAPI(target, targetValue, parsingDateOffset));
+        (dispatch(callSelectCommuteListAPI(target, targetValue, parsingDateOffset)));
     }, [dispatch, target, targetValue, date, postCommute, putCommute, parsingDateOffset, todaysCommute]);
 
+    // console.log(callSelectCommuteList);
     /* 한 주 전으로 이동 */
     const handlePreviousClick = () => {
         setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7));
@@ -154,8 +157,9 @@ function RecordCommute() {
     const handleClockIn = () => {
         try {
             if (todaysCommute === parsingDateOffset) {
-                setShowModal(true);
+                // setShowModal(true);
                 console.log('모달오픈!!!!!!!!!!', showModal);
+                handleClockInModalOpen();
 
             } else {
                 let newCommute = {
@@ -169,7 +173,7 @@ function RecordCommute() {
 
                 dispatch(callInsertCommuteAPI(newCommute));
                 setIsClocked(true);
-                
+
                 const parsedDate = new Date((result.commutelist[result.commutelist.length - 1].workingDate));
                 const formattedDate = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
 
@@ -190,15 +194,15 @@ function RecordCommute() {
     };
 
     /* 오늘 출근 제한 모달 핸들러 */
-    const handleClockInModalClose = () => {
-        setShowModal(false);
-        console.log('모달 닫기!!!!!!!!!', showModal);
-    };
+    // const handleClockInModalClose = () => {
+    //     setShowModal(false);
+    //     console.log('모달 닫기!!!!!!!!!', showModal);
+    // };
 
     /* 퇴근하기 API 호출 */
     const handleClockOut = async () => {
         try {
-            
+
             if (todaysCommute == null) {
                 setTodaysCommute(parsingDateOffset);
             };
@@ -222,41 +226,41 @@ function RecordCommute() {
     };
 
     return <>
-            <main id="main" className="main">
-                <div className="pagetitle">
-                    <h1>출퇴근</h1>
-                    <nav>
-                        <ol className="breadcrumb">
-                            <li className="breadcrumb-item"><a href="/">Home</a></li>
-                            <li className="breadcrumb-item">출퇴근</li>
-                            <li className="breadcrumb-item active">출퇴근 내역</li>
-                            {!isClocked ? (
-                                <Link to="/recordCommute" className="notice-insert-button" style={insertButton} onClick={handleClockIn}>
-                                    출근하기
-                                </Link>
-                            ) : (
-                                <Link to="/recordCommute" className="notice-insert-button" style={updateButton} onClick={handleClockOut}>
-                                    퇴근하기
-                                </Link>
-                            )}
-                            <SelectBox options={OPTIONS} defaultValue={date} onChange={handleAction}></SelectBox>
-                        </ol>
-                    </nav>
-                </div>
-                <div>
-                    {commuteList && (
-                        <CommuteTime key={commuteList.commuteNo} commute={commuteList} date={date} handlePreviousClick={handlePreviousClick} handleNextClick={handleNextClick} />
-                    )}
-                </div>
-                <div>
-                    {commuteList && (
-                        <CommuteListByMember key={commuteList.commuteNo} commute={commuteList} date={date} parsingDateOffset={parsingDateOffset}/>
-                    )}
-                </div>
-            </main>
-            <ClockInModal isOpen={showModal} onClose={handleClockInModalClose} date={todaysCommute} />
-        </>
-    
+        <main id="main" className="main">
+            <div className="pagetitle">
+                <h1>출퇴근</h1>
+                <nav>
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item"><a href="/">Home</a></li>
+                        <li className="breadcrumb-item">출퇴근</li>
+                        <li className="breadcrumb-item active">출퇴근 내역</li>
+                        {(!isClocked ? (
+                            <Link to="/recordCommute" className="notice-insert-button" style={insertButton} onClick={handleClockIn}>
+                                출근하기
+                            </Link>
+                        ) : (
+                            <Link to="/recordCommute" className="notice-insert-button" style={updateButton} onClick={handleClockOut}>
+                                퇴근하기
+                            </Link>
+                        ))}
+                        <SelectBox options={OPTIONS} defaultValue={date} onChange={handleAction}></SelectBox>
+                    </ol>
+                </nav>
+            </div>
+            <div>
+                {commuteList && (
+                    <CommuteTime key={commuteList.commuteNo} commute={commuteList} date={date} handlePreviousClick={handlePreviousClick} handleNextClick={handleNextClick} />
+                )}
+            </div>
+            <div>
+                {commuteList && (
+                    <CommuteListByMember key={commuteList.commuteNo} commute={commuteList} date={date} parsingDateOffset={parsingDateOffset} memberId={memberId} />
+                )}
+            </div>
+        </main>
+        <ClockInModal isOpen={showModal} onClose={handleClockInModalClose} date={todaysCommute} />
+    </>
+
 }
 
 export default RecordCommute;

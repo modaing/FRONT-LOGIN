@@ -38,6 +38,7 @@ function SendNoteForm({ closeForm, isFormOpen }) {
         };
         dispatch(callPostNoteAPI(noteDTO));
         closeForm();
+        navigate('/receiveNoteList')
     };
 
     const handleReceiverChange = (event) => {

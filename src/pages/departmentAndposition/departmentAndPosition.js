@@ -11,16 +11,18 @@ import PositionRegisterModal from './PositionRegisterModal';
 import PositionNameModal from './PositionNameModal';
 import DepartDeleteModal from './DepartDeleteModal';
 import PositionDeleteModal from './PositionDeleteModal';
+import DepartPeopleModal from './DepartPeopleModal';
+import PositionPeopleModal from './PositionPeopleModal';
 
 function DepartmentAndPosition() {
     // const { leaveInfo, submitPage } = useSelector(state => state.leaveReducer);
     // const { number, content, totalPages } = submitPage || {};
     const [filteredDepartInfo, setFilteredDepartInfo] = useState([]);
     const [filteredPositionInfo, setFilteredPositionInfo] = useState([]);
+    const [position, setPosition] = useState([]);
     const navigate = useNavigate();
     const [departmentSortConfig, setDepartmentSortConfig] = useState({ key: null, direction: 'ascending' });
     const [positionSortConfig, setPositionSortConfig] = useState({ key: null, direction: 'ascending' });
-    const [position, setPosition] = useState([]);
     const [department, setDepartment] = useState([]);
     const searchButtonRef1 = useRef(null);
     const searchButtonRef2 = useRef(null);
@@ -30,8 +32,10 @@ function DepartmentAndPosition() {
     const [registerPositionModalVisible, setRegisterPositionModalVisible] = useState(false);
     const [deleteDepartmentModalVisible, setDeleteDepartmentModalVisible] = useState(false);
     const [deletePositionModalVisible, setDeletePositionModalVisible] = useState(false);
-    const [departmentInfos, setDepartmentInfos] = useState('');
-    const [positionInfos, setPositionInfos] = useState('');
+    const [departPeopleModalVisible, setDepartPeopleModalVisible] = useState(false);
+    const [positionPeopleModalVisible, setPositionPeopleModalVisible] = useState(false);
+    const [departmentInfos, setDepartmentInfos] = useState([]);
+    const [positionInfos, setPositionInfos] = useState([]);
     // const [currentPositionName, setCurrentPositionName] = useState('');
     // const [search, setSearch] = useState('');
     const [positionSearch, setPositionSearch] = useState('');
@@ -223,7 +227,20 @@ function DepartmentAndPosition() {
         setRegisterPositionModalVisible(true);
     }
 
+    const handleShowPosition = (position) => {
+        setPositionInfos(position);
+        setPositionPeopleModalVisible(true);
+    }
 
+    const handleShowDepartment = (department) => {
+        // console.log('department:',department);
+        setDepartmentInfos(department);
+        // console.log('departinfo:',departmentInfos);
+        setDepartPeopleModalVisible(true);
+        // window.history.replaceState(null, '', `/departmentAndPosition/${department.departName}`)
+    }
+    
+    
 
     const handleCloseModal = () => {
         setDeletePositionModalVisible(false);
@@ -232,6 +249,8 @@ function DepartmentAndPosition() {
         setChangePositionNameModalVisible(false);
         setRegisterDepartmentModalVisible(false);
         setRegisterPositionModalVisible(false);
+        setDepartPeopleModalVisible(false);
+        setPositionPeopleModalVisible(false);
     }
 
     return (
@@ -252,7 +271,7 @@ function DepartmentAndPosition() {
                         <div className={departmentAndPositionCSS.innerBox}>
                             <div className={departmentAndPositionCSS.searchDepart}>부서명 겁색</div>
                             <input 
-                                className={departmentAndPositionCSS.inputBox}
+                                className={`inputStyle ${departmentAndPositionCSS.inputBox}`}
                                 placeholder=" 부서명"
                                 type="text" 
                                 value={departSearch} 
@@ -266,7 +285,13 @@ function DepartmentAndPosition() {
                         </div>
                     </div>
                     {filteredDepartInfo.length === 0 ? (
-                        <div className={departmentAndPositionCSS.noResult}>결과 없는데요... 돌아가</div>
+                        <div className="noResult">
+                        <i class="bi exclamation-circle"></i>
+                        <div className="noResultBox">
+                            <div className="noResultText1">검색결과 없음</div><br />
+                            <div className="noResultText2">모든 단어의 맞춤법이 정확한지 확인하거나 다른 검색어로 검색해 보세요</div>
+                        </div>
+                    </div>
                     ): (
                     <table className="table table-hover">
                         <thead>
@@ -287,7 +312,7 @@ function DepartmentAndPosition() {
                             {sortedDepartment.map((department,index) => (
                             <tr key={index}>
                                 <td className={departmentAndPositionCSS.alignCenter}>
-                                    <div className={departmentAndPositionCSS.memberProfile}>
+                                    <div className={departmentAndPositionCSS.memberProfile} style={{cursor: 'pointer'}} onClick={() => handleShowDepartment(department)}>
                                         {department.departName}
                                     </div>
                                 </td>
@@ -297,7 +322,7 @@ function DepartmentAndPosition() {
                                     </div>
                                 </td>
                                 <td>
-                                    <button onClick={() => handleDepartmentNameChange(department)}>변경</button>
+                                    <button className={departmentAndPositionCSS.changeButton} onClick={() => handleDepartmentNameChange(department)}>변경</button>
                                 </td>
                             </tr>
                             ))}
@@ -311,7 +336,7 @@ function DepartmentAndPosition() {
                         <div className={departmentAndPositionCSS.innerBox}>
                             <div className={departmentAndPositionCSS.searchDepart}>직급명 겁색</div>
                             <input 
-                                className={departmentAndPositionCSS.inputBox}
+                                className={`inputStyle ${departmentAndPositionCSS.inputBox}`}
                                 placeholder=" 직급명"
                                 type="text"
                                 value={positionSearch} 
@@ -325,7 +350,13 @@ function DepartmentAndPosition() {
                         </div>
                     </div>
                     {filteredPositionInfo.length === 0 ? (
-                        <div className={departmentAndPositionCSS.noResult}>결과 없는데요... 돌아가</div>
+                        <div className="noResult">
+                        <i class="bi exclamation-circle"></i>
+                        <div className="noResultBox">
+                            <div className="noResultText1">검색결과 없음</div><br />
+                            <div className="noResultText2">모든 단어의 맞춤법이 정확한지 확인하거나 다른 검색어로 검색해 보세요</div>
+                        </div>
+                    </div>
                     ): (
                     <table className="table table-hover">
                         <thead>
@@ -335,6 +366,9 @@ function DepartmentAndPosition() {
                                 </th>
                                 <th onClick={() => sortData2('positionLevel')}>
                                     <span>직급 레벨</span><i className="bx bxs-sort-alt" />
+                                </th>
+                                <th onClick={() => sortData2('noOfPeople')}>
+                                    <span>인원수</span><i className="bx bxs-sort-alt" />
                                 </th>
                                 <th>
                                     <span>직급명 변경</span>
@@ -346,7 +380,7 @@ function DepartmentAndPosition() {
                             {sortedPosition.map((position,index) => (
                             <tr key={index}>
                                 <td>
-                                    <div className={departmentAndPositionCSS.memberProfile}>
+                                    <div className={departmentAndPositionCSS.memberProfile} style={{cursor: 'pointer'}} onClick={() => handleShowPosition(position)}>
                                         {position.positionName}
                                     </div>
                                 </td>
@@ -356,7 +390,12 @@ function DepartmentAndPosition() {
                                     </div>
                                 </td>
                                 <td>
-                                    <button onClick={() => handlePositionNameChange(position)}>변경</button>
+                                    <div className={departmentAndPositionCSS.memberProfile}>
+                                        {position.noOfPeople}
+                                    </div>
+                                </td>
+                                <td>
+                                    <button className={departmentAndPositionCSS.changeButton} onClick={() => handlePositionNameChange(position)}>변경</button>
                                 </td>
                             </tr>
                             ))}
@@ -371,6 +410,9 @@ function DepartmentAndPosition() {
             <PositionNameModal visible={changePositionNameModalVisible} onClose={handleCloseModal} positionInformation={positionInfos} />
             <DepartRegistModal visible={registerDepartmentModalVisible} onClose={handleCloseModal} departmentInformation={departmentInfos} />
             <DepartNameModal visible={changeDepartmentNameModalVisible} onClose={handleCloseModal} departmentInformation={departmentInfos} />
+            {/* <DepartPeopleModal visible={departPeopleModalVisible} onClose={handleCloseModal} departmentInformation={departmentInfos} /> */}
+            <DepartPeopleModal visible={departPeopleModalVisible} onClose={handleCloseModal} departmentInformation={departmentInfos} />
+            <PositionPeopleModal visible={positionPeopleModalVisible} onClose={handleCloseModal} positionInformation={positionInfos} />
         </main>
     );
 }
