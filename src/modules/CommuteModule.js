@@ -3,7 +3,7 @@ import { callSelectCommuteDetailAPI, callSelectCommuteListAPI } from "../apis/Co
 
 /* 초기값 */
 const initialState = {
-    // commutelist: [],
+    commutelist: [],
     // correctionlist: {
     //     correctionlist: [],
     //     currentPage: 0,
