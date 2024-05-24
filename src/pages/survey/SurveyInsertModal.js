@@ -10,6 +10,16 @@ function SurveyInsertModal({ isOpen, onClose, onSave, name }) {
     const [answers, setAnswer] = useState([]);
 
     const handleSurveyInsert = () => {
+        if (!start || !end) {
+            alert('시작일자와 종료일자가 선택되어야 합니다.');
+            return;
+        }
+        if (start > end) {
+            alert('시작일자는 종료일자 이후로 선택될 수 없습니다.');
+            setStart();
+            setEnd();
+            return;
+        }
         // 배열 안에 있는 모든 빈문자열을 제거
         const answerFilter = answers.filter(answer => answer !== '');
         onSave({ title, start, end, answerFilter })
