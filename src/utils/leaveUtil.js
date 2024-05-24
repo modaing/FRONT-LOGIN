@@ -26,11 +26,17 @@ export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelect
                         ? 'cancelRequest'
                         : ''
 
-            const onClickHandler = submit.leaveSubProcessDate ? () => {
-                setSelectedTime({ start: formattedStartDate, end: formattedEndDate })
-                handleCancle(submit.leaveSubNo)
-            }
-                : () => handleDelete(submit.leaveSubNo);
+            const onClickHandler = submit.leaveSubStatus === "대기" && submit.refLeaveSubNo === 0
+                ? () => handleDelete(submit.leaveSubNo)
+                : isWithinOneDay
+                    ? null
+                    : submit.leaveSubStatus === "승인" && submit.refLeaveSubNo === 0
+                        ? () => {
+                            setSelectedTime({ start: formattedStartDate, end: formattedEndDate })
+                            handleCancle(submit.leaveSubNo)
+                        }
+                        : null;
+
 
             return (
                 <tr key={index}>
