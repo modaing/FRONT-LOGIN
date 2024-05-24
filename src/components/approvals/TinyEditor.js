@@ -54,22 +54,12 @@ import contentUiCss from '!!raw-loader!tinymce/skins/ui/oxide/content.min.css';
 export default function TinyEditor(props) {
     const { init, ...rest } = props;
 
-    // const insertCurrentDate = (doc) => {
-    //     const dateDiv = doc.querySelector('#date div');
-    //     if(dateDiv){
-    //         const currentDate = new Date().toLocaleDateString();
-    //         dateDiv.textContent = currentDate;
-    //     }
-    // };
-
     const moveToNextEditableElement = (doc, currentElement) => {
-        const allEditableElements = doc.querySelectorAll('input,  td[contenteditable="true"], div[contenteditable="true"]');
+        const allEditableElements = doc.querySelectorAll('input, td[contenteditable="true"], div[contenteditable="true"]');
         const currentIndex = Array.prototype.indexOf.call(allEditableElements, currentElement);
 
         if (currentIndex < allEditableElements.length - 1) {
-
             const nextElement = allEditableElements[currentIndex + 1];
-
             if (nextElement) {
                 nextElement.focus();
             } else {
@@ -94,133 +84,124 @@ export default function TinyEditor(props) {
                     
                 }
                 
-                /*  .input-container {
-                    width: 100%;
-                    display: flex;
-                    justify-content: center;
-                    position: relative;
+                #wholeForm {
+                    margin-top: 50px;
                 }
-                .input-container:not(input){
-                    pointer-events: none;
-                }  */
-                    #wholeForm {
-                        margin-top: 50px;
-                    }
-                    table {
-                        border-collapse: collapse;
-                        width: 100%;
-                        border: 1px solid black;
-                    }
-                
-                    tr{
-                        height: 70px;
-                    }
-                
-                    #sup_table {
-                        height: 400px;
-                    }
-                
-                    #sideTable {
-                        margin-bottom: 50px;
-                    }
-                
-                    th,
-                    td {
-                        border: 1px solid #dddddd;
-                        text-align: left;
-                        padding: 8px;
-                        border: 1px solid black;
-                        box-sizing: border-box;
-                        white-space: normal;
-                    }
-                    td{
-                        word-break: break-all;
-                    }
-                
-                    th {
-                        background-color: #e7e6e6;
-                        width: 150px;
-                        text-align: center;
-                    }
-                
-                
-                    .exp_date {
-                        text-align: left;
-                    }
-                
-                    th:first-child,
-                    td:first-child:not(.exp_date):not(.sup_itemname):not(.sup_price) {
-                        text-align: center;
-                    }
-                
-                    td {
-                
-                        padding-left: 10px;
-                        padding-right: 10px;
-                    }
-                
-                    #rei_content {
-                        height: 200px;
-                    }
-                
-                    #abs_reason {
-                        height: 200px;
-                    }
-                
-                    #orders {
-                        height: 150px;
-                    }
-                
-                    #date {
-                        margin-top: 80px;
-                        margin-bottom : 80px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-weight: bold;
-                        height: 50px;
-                    }
-                
-                    #useDetail {
-                        width: calc(20% * 1.6);
-                    }
-                
-                    #usePrice {
-                        width: calc(20% * 1.2);
-                    }
-                    #sup_table #sup_header{
-                        height: 35px;
-                    }
-                    .purchasePrice{
-                        height : 35px;
-                    }
-                    #purchasePricetr{
-                        height: 35px;
-                    }
-                    .sup_itemname{
-                        text-align : left;
-                    }
-                    .sup_price{
-                        text-align: right;
-                    }
-                    .sup_itemAmount{
-                        text-align: right;
-                    }
-                
-                    #ovt_warning{
-                    color: red;
-                    font-weight: 1000;
-                    }
-                    #ovt_table td{
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    border: 1px solid black;
+                    table-layout:fixed
+                }
+            
+                tr{
+                    height: 70px;
+                }
+            
+                #sup_table {
+                    height: 400px;
+                }
+            
+                #sideTable {
+                    margin-bottom: 50px;
+                }
+            
+                th,
+                td {
+                    border: 1px solid #dddddd;
+                    text-align: left;
+                    padding: 8px;
+                    border: 1px solid black;
+                    box-sizing: border-box;
+                    white-space: normal;
+                }
+                td{
+                    word-break: break-all;
+                }
+            
+                th {
+                    background-color: #e7e6e6;
+                    width: 150px;
                     text-align: center;
-                    }
-                    .nonContent{
-                        height:500px;
-                    }
-                    .mce-content-body{
-                        scrollbar-color : rgb(241, 255, 190) black;
-                    }
-                    `
+                }
+            
+            
+                .exp_date {
+                    text-align: left;
+                }
+            
+                th:first-child,
+                td:first-child:not(.exp_date):not(.sup_itemname):not(.sup_price) {
+                    text-align: center;
+                }
+            
+                td {
+                    padding-left: 10px;
+                    padding-right: 10px;
+                }
+            
+                #rei_content {
+                    height: 200px;
+                }
+            
+                #abs_reason {
+                    height: 200px;
+                }
+            
+                #orders {
+                    height: 150px;
+                }
+            
+                #date {
+                    margin-top: 80px;
+                    margin-bottom : 80px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    height: 50px;
+                }
+            
+                #useDetail {
+                    width: calc(20% * 1.6);
+                }
+            
+                #usePrice {
+                    width: calc(20% * 1.2);
+                }
+                #sup_table #sup_header{
+                    height: 35px;
+                }
+                .purchasePrice{
+                    height : 35px;
+                }
+                #purchasePricetr{
+                    height: 35px;
+                }
+                .sup_itemname{
+                    text-align : left;
+                }
+                .sup_price{
+                    text-align: right;
+                }
+                .sup_itemAmount{
+                    text-align: right;
+                }
+            
+                #ovt_warning{
+                color: red;
+                font-weight: 1000;
+                }
+                #ovt_table td{
+                text-align: center;
+                }
+                .nonContent{
+                    height:500px;
+                }
+                .mce-content-body{
+                    scrollbar-color : rgb(241, 255, 190) black;
+                }
+                `
                 ].join('\n'),
                 plugins: [
                     'advlist', 'anchor', 'autolink', 'autosave', 'charmap', 'code', 'codesample', 'directionality',
@@ -248,30 +229,72 @@ export default function TinyEditor(props) {
                             console.log(`editor 1 date inserted : ${currentDate}`);
                         }
 
-
-                        //         insertCurrentDate(doc);     //현재 날짜 삽입
-                        const formElements = doc.querySelectorAll('input, td, div[contenteditable="true"]');
-                       
-
+                        const formElements = doc.querySelectorAll('input, td div[contenteditable="true"], div[contenteditable="true"]');
                         formElements.forEach(element => {
                             element.setAttribute('contenteditable', 'true');
                         });
 
-                        doc.body.querySelectorAll('*:not(input):not(td):not(div[contenteditable="true"])').forEach(element => {
+                        doc.body.querySelectorAll('*:not(input):not(td div[contenteditable="true"]):not(div[contenteditable="true"])').forEach(element => {
                             element.setAttribute('contenteditable', 'false');
-                            console.log("contenteditable : false 로 만듬 ")
                         });
-
-                       
                     });
 
                     editor.on('keydown', (e) => {
+                        if ((e.key === 'Backspace' || e.key === 'Delete') && editor.selection) {
+                            const selectedNode = editor.selection.getNode();
+                            
+                            if (selectedNode.nodeName === 'TD') {
+                                e.preventDefault();
+                                console.log('Prevented deletion of TD');
+                    
+                                const range = editor.selection.getRng();
+                                const startOffset = range.startOffset;
+                                const endOffset = range.endOffset;
+                                const isCollapsed = range.collapsed;
+                    
+                                if (isCollapsed && startOffset === 0 && e.key === 'Backspace') {
+                                    // If at the start of the TD and Backspace is pressed
+                                    editor.selection.setContent('');
+                                } else if (isCollapsed && endOffset === selectedNode.textContent.length && e.key === 'Delete') {
+                                    // If at the end of the TD and Delete is pressed
+                                    editor.selection.setContent('');
+                                } else {
+                                    // Default behavior for other cases
+                                    editor.selection.setContent('');
+                                }
+                            }
+                        }
                         if (e.key === 'Tab') {
                             e.preventDefault();
                             moveToNextEditableElement(editor.getDoc(), editor.selection.getNode());
                         }
-                    }
-                    )
+                    });
+
+                    editor.on('BeforeExecCommand', (e) => {
+                        if ((e.command === 'Delete' || e.command === 'Backspace') && editor.selection) {
+                            const selectedNode = editor.selection.getNode();
+                            if (selectedNode.nodeName === 'TD') {
+                                e.preventDefault();
+                                console.log('Prevented deletion of TD on command');
+                    
+                                const range = editor.selection.getRng();
+                                const startOffset = range.startOffset;
+                                const endOffset = range.endOffset;
+                                const isCollapsed = range.collapsed;
+                    
+                                if (isCollapsed && startOffset === 0 && e.command === 'Delete') {
+                                    // If at the start of the TD and Delete command is executed
+                                    editor.selection.setContent('');
+                                } else if (isCollapsed && endOffset === selectedNode.textContent.length && e.command === 'Backspace') {
+                                    // If at the end of the TD and Backspace command is executed
+                                    editor.selection.setContent('');
+                                } else {
+                                    // Default behavior for other cases
+                                    editor.selection.setContent('');
+                                }
+                            }
+                        }
+                    });
                 }
             }}
             {...rest}

@@ -110,24 +110,21 @@ export const getAllMemberAPI = () => {
     };
 };
 
-export const submitApprovalAPI = (approvalData, files) => {
+export const submitApprovalAPI = (formData) => {
     return async (dispatch) => {
 
         dispatch(setLoading(true));
-        const formData = new FormData();
+        // const formData = new FormData();
 
-        //결재 데이터 추가
-        formData.append('approvalData', new Blob([JSON.stringify(approvalData)], { type : 'application/json'}));
-
-        //파일 추가
-        files.forEach(file => {
-            formData.append("files", file);
-        });
+        // //결재 데이터 추가
+        // formData.append('approvalData', new Blob([JSON.stringify(approvalData)], { type : 'application/json'}));
 
         try{
             const response = await axios.post(`${API_BASE_URL}/approvals`, formData, {
                 headers : {
                     'Content-Type' : 'multipart/form-data',
+                    Accept: '*/*',
+                    Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
                 },
             });
             console.log('결재 제출 성공', response.data);
