@@ -128,8 +128,6 @@ export function renderLeaves(content) {
                 <td>{leaves.name}</td>
                 <td>{leaves.memberId}</td>
                 <td>{leaves.annualLeave}</td>
-                <td>{leaves.vacationLeave}</td>
-                <td>{leaves.familyEventLeave}</td>
                 <td>{leaves.specialLeave}</td>
                 <td className="consumedDays">{leaves.consumedDays}</td>
                 <td className="remainingDays">{leaves.remainingDays}</td>
