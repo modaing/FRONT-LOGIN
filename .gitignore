@@ -1,3 +1,4 @@
 node_modules
 src/css/common.css
 src/pages/other/announce/Announces.js
+.env

@@ -181,16 +181,18 @@ export const callUpdateMemberAPI = async (formData) => {
     const memberDTOString = await memberDTOFile.text();
     const memberDTO = JSON.parse(memberDTOString);
     const memberId = memberDTO.memberId;
+    console.log('memberDTO:', memberDTO);
 
     try {
         const response = await axios.put(`${API_BASE_URL}/members/updateProfile/${memberId}`,
         formData,
-        {
-            headers: {
-                Authorization: `Bearer ${window.localStorage.getItem('accessToken')}`
+            {
+                headers: {
+                    Authorization: `Bearer ${window.localStorage.getItem('accessToken')}`
+                }
             }
-        }
         );
+        
     return response.data
     } catch (error) {
         console.log('Error updating member:', error);

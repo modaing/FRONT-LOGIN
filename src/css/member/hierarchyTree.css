@@ -1,0 +1,170 @@
+.main2Pages {
+    margin: 20px;
+    width: 100%;
+}
+
+.pagetitle {
+    margin-bottom: 20px;
+}
+
+.department {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 200px;
+    margin: 0px 20px;
+}
+
+.branchItem {
+    margin: 0px 20px;
+    align-items: center;
+}
+
+.positionWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.flexedMembers {
+    display: flex;
+}
+
+.zoomInIcon {
+    size: 40;
+}
+
+.positionLevel {
+    margin-bottom: 20px;
+}
+
+.flexedUpperPositions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.flexedUpperPositions .department {
+    margin-bottom: 20px;
+}
+
+.flexedUpperPositions .branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: center;
+}
+
+/* Main container for departments */
+.departmentsContainer {
+    display: flex;
+    overflow-x: auto; /* Enable horizontal scroll */
+    white-space: nowrap; /* Prevent items from wrapping to the next line */
+    /* Add more spacing or other styling as needed */
+}
+
+.box {
+    background-color: white;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 30px;
+    padding: 10px;
+    width: 200px;
+    min-height: 100px; /* Adjusted min-height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    /* margin-right: 10px;  */
+    box-sizing: border-box; /* Include padding and border in the width calculation */
+}
+
+
+.departBox {
+    margin-bottom: 10px;
+    border: 1px solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 200px;
+    background-color: #3F72AF;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.departBox:hover {
+    background-color: #365f9b;
+}
+
+.departBox h2 {
+    margin: 0;
+}
+
+.departTitle {
+    text-align: center;
+    border: 1px solid;
+    padding: auto;
+}
+
+.positionTitle {
+    font-size: 18px;
+    color: #AAAAAA;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.positionTitle--representative {
+    color: #3F72AF; /* Adjust color as needed */
+}
+
+.positionTitle--head {
+    color: #3F72AF; /* Adjust color as needed */
+}
+
+.positionTitle--viceHead {
+    color: #3F72AF; /* Adjust color as needed */
+}
+
+.positionTitle--manager {
+    color: #3F72AF; /* Adjust color as needed */
+}
+
+
+.memberName {
+    font-size: 25px;
+}
+
+.box-content {
+    cursor: pointer;
+    width: 100%; /* Adjusted width */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color 0.3s ease;
+}
+
+.box:hover {
+    background-color: #f0f0f0;
+}
+
+.box-content span {
+    display: block;
+}
+
+.chartContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center horizontally */
+}

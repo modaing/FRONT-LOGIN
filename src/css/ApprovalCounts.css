@@ -1,0 +1,56 @@
+.approval-counts-container {
+    width: 90%;
+}
+
+.approval-counts-body {
+    display: flex;
+    flex-direction: column; /* 요소들을 세로로 배치 */
+    align-items: flex-start; /* 왼쪽 정렬 */
+}
+
+.approval-counts-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px; /* 제목과 내용 사이 간격 추가 */
+}
+
+.content-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%; /* 부모 요소에 맞추기 위해 너비를 100%로 설정 */
+}
+
+.icon-container {
+    background-color: #e3eafb;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-container i {
+    font-size: 40px;
+}
+
+.text-container {
+    display: flex;
+    flex-direction: column;
+}
+
+h6 {
+    margin: 0;
+}
+
+.percentage {
+    font-size: 40px;
+    font-weight: bold;
+    color: #333333;
+}
+
+.status {
+    font-size: 16px;
+    color: #333333;
+}

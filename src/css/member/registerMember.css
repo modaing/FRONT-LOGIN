@@ -1,11 +1,31 @@
-.memberIdStyle, .emailStyle, .addressStyle, .phoneNoStyle, .employedDateStyle, .departStyle, .positionStyle, .memberStatusStyle, .nameStyle {
+/* .memberIdStyle, .emailStyle, .addressStyle, .phoneNoStyle, .employedDateStyle, .departStyle, .positionStyle, .memberStatusStyle, .nameStyle {
     display: flex;
     align-items: center;
-    /* justify-content: space-between; */
+    justify-content: space-between;
     margin-bottom: 20px;
+} */
+
+/* .memberId, .email, .address, .phoneNo, .employedDate, .departName, .positionName, .name, .memberStatus {
+    margin-right: 20px;
+    width: 100px;
+} */
+
+.inputStyles, .inputStyleConfirmed {
+    width: 300px;
+    /* padding-left: 10px; */
+    padding: 10px; /* Add padding for better visual appearance */
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 5px; /* Add rounded corners */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+    margin-left: -50px;
 }
 
-.memberId, .email, .address, .phoneNo, .employedDate, .departName, .positionName, .name, .memberStatus {
-    margin-right: 20px;
-    width: 70px;
+.inputStyles.inputStyles:focus, .inputStyleConfirmed:focus {
+    outline: none; /* Remove the default focus outline */
+    border-color: #007bff; /* Change border color on focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add a box shadow on focus */
+}
+
+.inputStyleConfirmed {
+    background-color: #D5D5D5;
 }
