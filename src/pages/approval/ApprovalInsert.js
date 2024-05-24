@@ -15,6 +15,7 @@ import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { submitApprovalAPI } from '../../apis/ApprovalAPI';
 import WarningModal from '../../components/approvals/WarningModal';
+import TempSaveModal from '../../components/approvals/TempSaveModal';
 
 const ApprovalInsert = () => {
 
@@ -33,6 +34,7 @@ const ApprovalInsert = () => {
     const [isInsertSuccessModalOpen, setIsInsertSuccessModalOpen] = useState(false);
     const [isInsertFailModalOpen, setIsInsertFailModalOpen] = useState(false);
     const [isWarningModalOpen, setIsWarrningModalOpen] = useState(false);
+    const [isTempSaveModalOpen, setIsTempSaveModalOpen] = useState(false);
     const [warningMessage, setWarningMessage] = useState('');
     const editorRef = useRef(null);
     const dispatch = useDispatch();
@@ -109,7 +111,7 @@ const ApprovalInsert = () => {
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = html;
         const dateElement = tempDiv.querySelector('#date');
-        if(dateElement){
+        if (dateElement) {
             dateElement.remove();
         }
 
@@ -117,8 +119,8 @@ const ApprovalInsert = () => {
     }
 
 
-
-    const handleSubmit = async () => {
+    /* 결재 등록 */
+    const handleSubmit = async (status) => {
 
         if (title.trim() === '') {
             setWarningMessage('제목이 입력되지 않았습니다');
@@ -134,8 +136,8 @@ const ApprovalInsert = () => {
             setIsWarrningModalOpen(true);
             return;
         }
-        
-        if(!approverLine.length > 0 ){
+
+        if (!approverLine.length > 0) {
             setWarningMessage('결재선이 선택되지 않았습니다.');
             setIsWarrningModalOpen(true);
             return;
@@ -157,7 +159,7 @@ const ApprovalInsert = () => {
             approvalTitle: title,
             approvalContent: editorContent,
             formNo: selectedForm.formNo,
-            approvalStatus: '처리 중',
+            approvalStatus: status,
             approver: approverLine.map(approver => ({ memberId: approver.memberId })),
             referencer: referencerLine.map(referencer => ({ memberId: referencer.memberId }))
         };
@@ -175,7 +177,11 @@ const ApprovalInsert = () => {
 
         try {
             await dispatch(submitApprovalAPI(formData));
-            setIsInsertSuccessModalOpen(true);
+            if(status === '임시저장'){
+                setIsTempSaveModalOpen(true);
+            }else{
+                setIsInsertSuccessModalOpen(true);
+            }
         } catch (error) {
             openFailModal('');
             console.error(error);
@@ -266,7 +272,7 @@ const ApprovalInsert = () => {
 
     const confirmSubmit = () => {
         closeConfirmModal();
-        handleSubmit();
+        handleSubmit('처리 중');
     };
 
     const closeSuccessModal = () => {
@@ -276,6 +282,10 @@ const ApprovalInsert = () => {
 
     const closeWarningModal = () => {
         setIsWarrningModalOpen(false);
+    };
+
+    const closeTempSaveModal = () => {
+        setIsTempSaveModalOpen(false);
     };
 
     useEffect(() => {
@@ -305,7 +315,7 @@ const ApprovalInsert = () => {
                         </nav>
                     </div>
                     <div className={styles.tempSave}>
-                        <button>임시저장</button>
+                        <button type="button" onClick={() => handleSubmit('임시저장')}>임시저장</button>
                     </div>
                 </div>
                 <div className={styles.bigContent}>
@@ -319,9 +329,12 @@ const ApprovalInsert = () => {
                                         <div className={styles.LineTitle}>결재선
                                             <div className={styles.chooseApprover}>
                                                 <button type="button" className={styles.ApproversBtn} onClick={openModal}>
-                                                    <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px' }} />
+                                                    <FontAwesomeIcon icon={faUser} />
+                                                    <p>결재선 선택하기</p>
                                                 </button>
-                                            </div></div>
+                                                
+                                            </div>
+                                        </div>
                                         <div className={styles.SelectBoxApproverLine} style={{ paddingLeft: '10px' }}>
                                             <table className={styles.SelectBoxApproverTable} style={{ textAlign: 'center' }}>
                                                 <thead>
@@ -350,7 +363,8 @@ const ApprovalInsert = () => {
                                         <div className={styles.LineTitle}>참조선
                                             <div className={styles.chooseApprover}>
                                                 <button type="button" className={styles.ApproversBtn} onClick={openModal}>
-                                                    <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px' }} />
+                                                    <FontAwesomeIcon icon={faUser} />
+                                                    <p>참조선 선택하기</p>
                                                 </button>
                                             </div>
                                         </div>
@@ -502,6 +516,10 @@ const ApprovalInsert = () => {
                         isOpen={isWarningModalOpen}
                         onClose={closeWarningModal}
                         message={warningMessage}
+                    />
+                    <TempSaveModal
+                        isOpen={isTempSaveModalOpen}
+                        onClose={closeTempSaveModal}
                     />
                 </div>
             </main>
