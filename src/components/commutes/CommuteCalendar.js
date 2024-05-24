@@ -1,6 +1,6 @@
 import CommuteMonth from "./CommuteMonth";
 
-function CommuteCalendar({ date, year, month, commuteList, dates, tableStyle, tableStyles, getDayOfWeek }) {
+function CommuteCalendar({ date, year, month, commuteList, dates, tableStyle, tableStyles }) {
 
     console.log('commuteList : ', commuteList);
 
@@ -13,7 +13,6 @@ function CommuteCalendar({ date, year, month, commuteList, dates, tableStyle, ta
                         date={date}
                         year={year}
                         month={month}
-                        getDayOfWeek={getDayOfWeek}
                         commuteList={item}
                         tableStyle={tableStyle}
                         tableStyles={tableStyles}
@@ -21,7 +20,7 @@ function CommuteCalendar({ date, year, month, commuteList, dates, tableStyle, ta
                 ))
             ) : (
                 <tr>
-                    <td colSpan={7}>출퇴근 내역이 없습니다.</td>
+                    <td colSpan={30}>출퇴근 내역이 없습니다.</td>
                 </tr>
             )}
         </tr>
