@@ -1,4 +1,4 @@
-.main2Pages {
+.main2Pages12 {
     font-size: 20px;
     display: flex;
     width: 85%;
@@ -21,7 +21,7 @@
     flex-direction: column;
     overflow: hidden;
     box-sizing: border-box;
-    width: 42.5%;
+    /* width: 42.5%; */
 }
 
 .secondPage {

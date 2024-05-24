@@ -132,9 +132,10 @@ function HierarchyTree() {
         return chart;
     };
     
+    /* Update the renderBranch function in your HierarchyTree component */
     const renderBranch = (members) => {
         if (!Array.isArray(members)) return null;
-    
+
         return members.map((member, index) => (
             <div key={index} className="branchItem">
                 <div className="box">
@@ -146,6 +147,7 @@ function HierarchyTree() {
             </div>
         ));
     };
+
     
     const getPositionClass = (positionName) => {
         // Define CSS classes based on position names

@@ -155,6 +155,20 @@
     transition: background-color 0.3s ease;
 }
 
+/* Add this CSS to your hierarchyTree.css file */
+
+/* Define the style for the connecting lines */
+.box-content::after {
+    content: '';
+    position: absolute;
+    top: calc(100% + 10px); /* Adjust the vertical position as needed */
+    left: 50%; /* Position the line in the center of the box */
+    border-left: 2px solid #000; /* Adjust line color and thickness */
+    transform: translateX(-50%); /* Center the line horizontally */
+    z-index: -1; /* Ensure lines are behind the boxes */
+}
+
+
 .box:hover {
     background-color: #f0f0f0;
 }

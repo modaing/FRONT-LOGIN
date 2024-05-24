@@ -22,7 +22,7 @@ import SendNoteList from './pages/note/SendNoteList';
 import MyLeave from './pages/leave/MyLeave';
 import RoomList from './pages/chatting/RoomList';
 import Room from './pages/chatting/Room';
-import DepartmentAndPosition from './pages/department&position/departmentAndPosition';
+import DepartmentAndPosition from './pages/departmentAndposition/departmentAndPosition';
 import ApprovalPage from './pages/approval/ApprovalPage';
 import LeaveAccrual from './pages/leave/LeaveAccrual';
 import LeaveProcessing from './pages/leave/LeaveProcessing';

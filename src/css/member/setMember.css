@@ -113,14 +113,14 @@ form input, form button, form select, form textarea {
     cursor: #112d4e;
 }
 
-.memberIdStyle, .emailStyle, .addressStyle, .phoneNoStyle, .employedDateStyle, .departStyle, .positionStyle, .memberStatusStyle, .nameStyle {
+.memberIdStyle, .emailStyle, .addressStyle, .phoneNoStyle, .employedDateStyle, .departStyle, .positionStyle, .memberStatusStyle, .nameStyle, .birthdayStyle, .genderStyle {
     display: flex;
     align-items: center;
     /* justify-content: space-between; */
     margin-bottom: 20px;
 }
 
-.memberId, .email, .address, .phoneNo, .employedDate, .depart, .position, .name, .memberStatus {
+.memberId, .email, .address, .phoneNo, .employedDate, .depart, .position, .name, .memberStatus, .gender, .birthday {
     margin-right: 50px;
     width: 100px;
 }

@@ -28,15 +28,14 @@ function DepartRegistModal(props) {
             } else if (confirmDepartName !== newDepartName) {
                 alert('부서명이 일치하지 않습니다. 다시 입력해주세요');
                 setNewDepartName('');
-                setConfirmDepartName('');
             } else {
                 alert('오류가 발생했습니다. 잠시만 기달려주세요..');
                 setNewDepartName('');
-                setConfirmDepartName('');
             }
         } catch (error) {
             if (error.response.data === "Department name already exists") {
-                alert("부서명이 이미 존재합니다")
+                alert("부서명이 이미 존재합니다");
+                setNewDepartName('');
             }
             console.error('부서명 수정하는데 오류가 발생했습니다:', error);
         }
@@ -62,10 +61,6 @@ function DepartRegistModal(props) {
                         <div className='contentBox1'>
                             <label className='pStyle'>부서명</label>
                             <input type="text" name="newPassword1" value={newDepartName} placeholder="부서명 입력" className='inputStyle123' onChange={(e) => setNewDepartName(e.target.value)}/>
-                        </div>
-                        <div className='contentBox1'>
-                            <label className='pStyle'>새부서명</label>
-                            <input type="text" name="newPassword2" value={confirmDepartName} placeholder="새부서명 입력" className='inputStyle123' onChange={(e) => setConfirmDepartName(e.target.value)}/>
                         </div>
                     </div>
                     <br/>

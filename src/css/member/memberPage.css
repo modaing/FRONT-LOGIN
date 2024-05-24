@@ -2,7 +2,7 @@
     overflow: hidden;
 } */
 
-.main2Pages {
+.main2Pages123 {
     font-size: 20px;
     display: flex;
     width: 85%;
@@ -45,7 +45,7 @@
     height: 100%; /* Make sure the card fills the parent height */
 }
 
-.firstPage {
+.firstPage123 {
     flex: 1; /* Make both pages take equal space */
     display: flex;
     flex-direction: column;
@@ -53,7 +53,7 @@
     box-sizing: border-box;
 }
 
-.secondPage {
+.secondPage123 {
     flex: 1; /* Make both pages take equal space */
     height: auto;
     display: flex;
