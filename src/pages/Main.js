@@ -12,7 +12,6 @@ import { callSelectCalendarAPI } from '../apis/CalendarAPICalls';
 import AnnounceList from './announce/AnnouceList';
 import ClockContainer from '../common/ClockContainer';
 import Weather from '../common/Weather';
-import Profile from '../common/profile';
 import ApprovalCounts from '../common/ApprovalCounts';
 import ApproverCounts from '../common/ApproverCounts';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
