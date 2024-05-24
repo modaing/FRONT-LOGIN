@@ -6,7 +6,6 @@ import { callRegisterPositionAPI } from '../../apis/PositionAPICalls';
 function PositionRegisterModal(props) {
  
     const [newPositionName, setNewPositionName] = useState('');
-    const [confirmPositionName, setConfirmPositionName] = useState('');
     const [positionLevel, setPositionLevel] = useState('');
     const { visible, onClose, positionInformation } = props;
     const navigate = useNavigate();
@@ -15,7 +14,7 @@ function PositionRegisterModal(props) {
 
     const registerPosition = async () => {
         try {
-            if (newPositionName === confirmPositionName) {
+            if (newPositionName) {
                 const response = await callRegisterPositionAPI({
                     newPositionName: newPositionName,
                     positionLevel: positionLevel
@@ -26,13 +25,8 @@ function PositionRegisterModal(props) {
                     navigate('/departmentAndPosition');
                     window.location.reload();
                 }
-            } else if (newPositionName !== confirmPositionName) {
-                alert('직급명이 일치하지 않습니다. 다시 입력해주세요');
-                setNewPositionName('');
-                setConfirmPositionName('');
             } else {
                 alert('오류가 발생했습니다. 잠시만 기달려주세여..');
-                setConfirmPositionName('');
                 setNewPositionName('');
             }
         } catch (error) {
@@ -59,22 +53,18 @@ function PositionRegisterModal(props) {
             <div className="modalContentStyle">
                 <h2 className='changePasswordStyle'>직급 등록</h2>
                 <form onSubmit={handleSubmit}> {/* Form format */}
-                    <div className='content'>
+                    <div className='content123'>
                         <div className='contentBox1'>
                             <label className='pStyle'>직급명</label>
-                            <input type="text" name="newPassword1" value={newPositionName} placeholder="직급명 입력" className='inputStyle1' onChange={(e) => setNewPositionName(e.target.value)}/>
-                        </div>
-                        <div className='contentBox2'>
-                            <label className='pStyle'>새직급명</label>
-                            <input type="text" name="newPassword2" value={confirmPositionName} placeholder="새직급명 입력" className='inputStyle2' onChange={(e) => setConfirmPositionName(e.target.value)}/>
+                            <input type="text" name="newPassword1" value={newPositionName} placeholder="직급명 입력" className='inputStyle123' onChange={(e) => setNewPositionName(e.target.value)}/>
                         </div>
                         <div className='contentBox2'>
                             <label className='pStyle'>직급 레벨</label>
-                            <input type="number" name="positionLevel" value={positionLevel} placeholder="직급 레벨 입력" className='inputStyle2' onChange={(e) => setPositionLevel(e.target.value)}/>
+                            <input type="number" name="positionLevel" value={positionLevel} placeholder="직급 레벨 입력" className='inputStyle123' onChange={(e) => setPositionLevel(e.target.value)}/>
                         </div>
                     </div>
                     <br/>
-                    <div className='buttonContainerStyle'>
+                    <div className='buttonContainerStyle123'>
                         <button type="button" className='closeButtonStyle' onClick={handleClose}>취소</button>
                         <button type="submit" className='confirmationButtonStyle'>등록</button>
                     </div>

@@ -5,7 +5,7 @@ import React, { useEffect, useState, useMemo, useRef } from "react";
 import ChangePasswordModal from './ChangePasswordModal';
 import { useSelector, useDispatch } from "react-redux";
 import { decodeJwt } from '../../utils/tokenUtils';
-import '../../css/member/memberPage.css';
+import '../../css/member/profile.css';
 
 function MyProfile() {
     
@@ -115,115 +115,109 @@ function MyProfile() {
     }
     
     return (
-        <main id="main" className="main main2Pages">
-            {/* <form onSubmit={handleSubmit}> */}
-                <div className='firstPage'>
+        <main id="main" className="main2Pages">
+            <div className='firstPage'>
                 <div className="pagetitle">
-                    <h1>구성원 관리</h1>
+                    <h1>마이 프로필</h1>
                     <nav>
                         <ol className="breadcrumb">
-                            <li className="breadcrumb-item"><a href="/">Home</a></li>
+                            {/* <li className="breadcrumb-item"><a href="/">Home</a></li>
                             <li className="breadcrumb-item">조직</li>
-                            <li className="breadcrumb-item">구성원 관리</li>
-                            <li className="breadcrumb-item active">{memberInfo.name}'s 프로필</li>
+                            <li className="breadcrumb-item">구성원 관리</li> */}
+                            {/* <li className="breadcrumb-item active">{memberInfo.name}</li> */}
                         </ol>
                     </nav>
                 </div>
-                    <div className="row rowStyle">
-                        <div className="col-lg-6 columnStyle">
-                            <div className="card cardOuterLine">
-                            <div className="content1 contentStyle1">
-                                <div className='imageBox'>
-                                    <img src={imageUrl} className='profilePic' alt="Profile" />
-                                    <div className='nameBox '>{memberInfo.name}</div>
+                <div className="rowStyle card columnStyle">
+                    <div className="content1 contentStyle1">
+                        <div className='imageBox'>
+                            <img src={imageUrl} className='profilePic' alt="Profile" />
+                            <div className='nameBox '>{memberInfo.name}</div>
+                        </div>
+                        <div className='topRightContainer'>
+                            <button className='changePassword' onClick={handleChangePassword}>비밀번호 변경</button>
+                        </div>
+                        {/* <h1>hi</h1> */}
+                    </div>
+                    <div className='content1 contentStyle2 titleStyle'>
+                        <div className="pagetitle pageTitleStyle" >
+                            <h1>기본 정보</h1>
+                        </div>
+                    </div>
+                    <div className='content1 contentStyle3 titleStyle'>
+                    <div className='memberIdStyle'>
+                        <label className='memberId'>사번</label>
+                        <input className='inputStyle' value={memberInfo.memberId} />
+                    </div>
+                    <div className='emailStyle'>
+                        <label className='email'>이메일</label>
+                        <input className='inputStyle' value={memberInfo.email} />
+                    </div>
+                    <div className='addressStyle'>
+                        <label className='memberId'>주소</label>
+                        <input className='inputStyle' value={memberInfo.address} />
+                    </div>
+                    <div className='phoneNoStyle'>
+                        <label className='memberId'>휴대폰 번호</label>
+                        <input className='inputStyle' value={memberInfo.phoneNo} />
+                    </div>
+                    <div className='employedDateStyle'>
+                        <label className='memberId'>입사일</label>
+                        <input className='inputStyle' value={formattedEmployedDate} />
+                    </div>
+                    <div className='departStyle'>
+                        <label className='memberId'>부서</label>
+                        <input className='inputStyle' value={memberInfo.departmentDTO.departName} />
+                    </div>
+                    <div className='positionStyle'>
+                        <label className='position'>직급</label>
+                        <input className='inputStyle' value={memberInfo.positionDTO.positionName} />
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className='secondPage'>
+                {/* <div className="pagetitle pageTitleStyle" >
+                    <h1>인사 정보</h1>
+                </div> */}
+                <div className="pagetitle">
+                    <h1>인사 정보</h1>
+                    <nav>
+                        <ol className="breadcrumb">
+                            {/* <li className="breadcrumb-item"><a href="/">Home</a></li>
+                            <li className="breadcrumb-item">조직</li>
+                            <li className="breadcrumb-item">구성원 관리</li>
+                            <li className="breadcrumb-item active">{memberInfo.name}'s 프로필</li> */}
+                        </ol>
+                    </nav>
+                </div>
+                <div className="rowStyle columnStyle1">
+                    <div className="card cardOuterLine2">
+                        <div className='content1 contentStyle3 titleStyle'>
+                            <div className="pagetitle pageTitleStyle" >
+                                <h1>인사 발령 내역</h1>
+                            </div>
+                            {/* Mapping through transferredHistoryInformation to display new_position_name and transferred_date */}
+                            {transferredHistoryInformation.map((history, index) => (
+                                <div key={index} className='transferredHistory'>
+                                    {/* <span className='transferredDate'>{history.transferredDate.join('.')}</span> */}
+                                    <span className='transferredDateStyle'>
+                                        {index === transferredHistoryInformation.length - 1 
+                                            ? `${history.transferredDate.join('.')} ~`
+                                            : history.transferredDate.join('.')}
+                                    </span>
+                                    <br/><br />
+                                    <span id="departName" className='departNameStyle'>{history.newDepartName}</span> {/* Render department name */}
+                                    <br /><br />
+                                    <span className='positionNameStyle'>{history.newPositionName}</span>
+                                    <br />
                                 </div>
-                                <div className='topRightContainer'>
-                                    <button className='changePassword' onClick={handleChangePassword}>비밀번호 변경</button>
-                                </div>
-                                {/* <h1>hi</h1> */}
-                            </div>
-                            <div className='content1 contentStyle2 titleStyle'>
-                                <div className="pagetitle pageTitleStyle" >
-                                    <h1>기본 정보</h1>
-                                </div>
-                            </div>
-                            <div className='content1 contentStyle3 titleStyle'>
-                            <div className='memberIdStyle'>
-                                <label className='memberId'>사번</label>
-                                <input className='inputStyle' value={memberInfo.memberId} />
-                            </div>
-                            <div className='emailStyle'>
-                                <label className='email'>이메일</label>
-                                <input className='inputStyle' value={memberInfo.email} />
-                            </div>
-                            <div className='addressStyle'>
-                                <label className='memberId'>주소</label>
-                                <input className='inputStyle' value={memberInfo.address} />
-                            </div>
-                            <div className='phoneNoStyle'>
-                                <label className='memberId'>휴대폰 번호</label>
-                                <input className='inputStyle' value={memberInfo.phoneNo} />
-                            </div>
-                            <div className='employedDateStyle'>
-                                <label className='memberId'>입사일</label>
-                                <input className='inputStyle' value={formattedEmployedDate} />
-                            </div>
-                            <div className='departStyle'>
-                                <label className='memberId'>부서</label>
-                                <input className='inputStyle' value={memberInfo.departmentDTO.departName} />
-                            </div>
-                            <div className='positionStyle'>
-                                <label className='position'>직급</label>
-                                <input className='inputStyle' value={memberInfo.positionDTO.positionName} />
-                            </div>
-                            </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
                 </div>
-                <div className='secondPage'>
-                    {/* <div className="pagetitle pageTitleStyle" >
-                        <h1>인사 정보</h1>
-                    </div> */}
-                    <div className="pagetitle">
-                        <h1>인사 정보</h1>
-                        <nav>
-                            <ol className="breadcrumb">
-                                <li className="breadcrumb-item"><a href="/">Home</a></li>
-                                <li className="breadcrumb-item">조직</li>
-                                <li className="breadcrumb-item">구성원 관리</li>
-                                <li className="breadcrumb-item active">{memberInfo.name}'s 프로필</li>
-                            </ol>
-                        </nav>
-                    </div>
-                    <div className="row rowStyle">
-                        <div className="col-lg-6 columnStyle">
-                            <div className="card cardOuterLine2">
-                                <div className='content1 contentStyle3 titleStyle'>
-                                    <div className="pagetitle pageTitleStyle" >
-                                        <h1>인사 발령 내역</h1>
-                                    </div>
-                                    {/* Mapping through transferredHistoryInformation to display new_position_name and transferred_date */}
-                                    {transferredHistoryInformation.map((history, index) => (
-                                        <div key={index} className='transferredHistory'>
-                                            {/* <span className='transferredDate'>{history.transferredDate.join('.')}</span> */}
-                                            <span className='transferredDateStyle'>
-                                                {index === transferredHistoryInformation.length - 1 
-                                                    ? `${history.transferredDate.join('.')} ~`
-                                                    : history.transferredDate.join('.')}
-                                            </span>
-                                            <br/><br />
-                                            <span id="departName" className='departNameStyle'>{history.newDepartName}</span> {/* Render department name */}
-                                            <br /><br />
-                                            <span className='positionNameStyle'>{history.newPositionName}</span>
-                                            <br />
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            </div>
             {/* </form> */}
             <ChangePasswordModal visible={changePasswordModalVisible} onClose={handleCloseModal} />
         </main>

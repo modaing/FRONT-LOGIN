@@ -266,7 +266,13 @@ function DepartmentAndPosition() {
                         </div>
                     </div>
                     {filteredDepartInfo.length === 0 ? (
-                        <div className={departmentAndPositionCSS.noResult}>결과 없는데요... 돌아가</div>
+                        <div className="noResult">
+                        <i class="bi exclamation-circle"></i>
+                        <div className="noResultBox">
+                            <div className="noResultText1">검색결과 없음</div><br />
+                            <div className="noResultText2">모든 단어의 맞춤법이 정확한지 확인하거나 다른 검색어로 검색해 보세요</div>
+                        </div>
+                    </div>
                     ): (
                     <table className="table table-hover">
                         <thead>
@@ -297,7 +303,7 @@ function DepartmentAndPosition() {
                                     </div>
                                 </td>
                                 <td>
-                                    <button onClick={() => handleDepartmentNameChange(department)}>변경</button>
+                                    <button className={departmentAndPositionCSS.changeButton} onClick={() => handleDepartmentNameChange(department)}>변경</button>
                                 </td>
                             </tr>
                             ))}
@@ -325,7 +331,13 @@ function DepartmentAndPosition() {
                         </div>
                     </div>
                     {filteredPositionInfo.length === 0 ? (
-                        <div className={departmentAndPositionCSS.noResult}>결과 없는데요... 돌아가</div>
+                        <div className="noResult">
+                        <i class="bi exclamation-circle"></i>
+                        <div className="noResultBox">
+                            <div className="noResultText1">검색결과 없음</div><br />
+                            <div className="noResultText2">모든 단어의 맞춤법이 정확한지 확인하거나 다른 검색어로 검색해 보세요</div>
+                        </div>
+                    </div>
                     ): (
                     <table className="table table-hover">
                         <thead>
@@ -356,7 +368,7 @@ function DepartmentAndPosition() {
                                     </div>
                                 </td>
                                 <td>
-                                    <button onClick={() => handlePositionNameChange(position)}>변경</button>
+                                    <button className={departmentAndPositionCSS.changeButton} onClick={() => handlePositionNameChange(position)}>변경</button>
                                 </td>
                             </tr>
                             ))}
