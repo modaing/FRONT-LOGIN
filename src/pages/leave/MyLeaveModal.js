@@ -2,18 +2,41 @@ import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../css/leave/MyLeaveModal.css';
+import { formattedLocalDate } from '../../utils/leaveUtil';
 
 
-const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime }) => {
-    const [start, setStart] = useState('');
-    const [end, setEnd] = useState('');
+const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime, remainingDays }) => {
+    const [start, setStart] = useState();
+    const [end, setEnd] = useState();
     const [type, setType] = useState(leaveSubNo ? '취소' : '연차');
     const [reason, setReason] = useState('');
+    const [errors, setErrors] = useState({});
     const isCancle = leaveSubNo ? '취소 신청' : '휴가 신청';
 
     const handleSave = () => {
-        onSave({ leaveSubNo, start, end, type, reason });
-        onClose();
+        const { leaveDaysCalc } = formattedLocalDate({leaveSubStartDate: start, leaveSubEndDate: end})
+
+        const newErrors = {};
+
+        if (!start) {
+            newErrors.start = '휴가 시작일을 선택하세요.';
+        }
+        if (!end) {
+            newErrors.end = '휴가 종료일을 선택하세요.';
+        }
+        if (start && end && start > end) {
+            newErrors.date = '휴가 시작일은 휴가 종료일 이후로 선택될 수 없습니다.';
+        }
+        if (start && end && leaveDaysCalc > remainingDays) {
+            newErrors.days = `잔여 휴가 일수 ${remainingDays}일을 초과하여 신청하실 수 없습니다.`;
+        }
+
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length === 0) {
+            onSave({ leaveSubNo, start, end, type, reason });
+            onClose();
+        }
     };
 
     const resetModal = () => {
@@ -21,6 +44,7 @@ const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime }) => 
         setEnd(leaveSubNo && new Date(selectedTime.end));
         setType(leaveSubNo ? '취소' : '연차');
         setReason('');
+        setErrors({});
     };
 
     // 모달이 열릴 때 초기화
@@ -45,6 +69,7 @@ const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime }) => 
                                     ? <DatePicker selected={new Date(selectedTime.start)} dateFormat="yyyy-MM-dd" className="form-control" disabled />
                                     : <DatePicker selected={start} onChange={e => setStart(e)} dateFormat="yyyy-MM-dd" className="form-control" />
                                 }
+                                {errors.start && <div className="errorMessage">{errors.start}</div>}
                             </div>
 
                             <div className="form-group">
@@ -53,6 +78,9 @@ const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime }) => 
                                     ? <DatePicker selected={new Date(selectedTime.end)} dateFormat="yyyy-MM-dd" className="form-control" disabled />
                                     : <DatePicker selected={end} onChange={e => setEnd(e)} dateFormat="yyyy-MM-dd" className="form-control" />
                                 }
+                                {errors.end && <div className="errorMessage">{errors.end}</div>}
+                                {errors.date && <div className="errorMessage">{errors.date}</div>}
+                                {errors.days && <div className="errorMessage">{errors.days}</div>}
                             </div>
                             <div className="myLeave">
                                 <label>휴가 유형</label>

@@ -81,7 +81,7 @@ export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelect
     }
 }
 
-function formattedLocalDate(submit) {
+export function formattedLocalDate(submit) {
 
     //포맷팅 하기 위해서 date 타입으로 변환
     const startDate = new Date(submit.leaveSubStartDate);
