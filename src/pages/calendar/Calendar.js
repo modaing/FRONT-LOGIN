@@ -7,6 +7,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import koLocale from '@fullcalendar/core/locales/ko';
 import { callDeleteCalendarAPI, callInsertCalendarAPI, callSelectCalendarAPI, callUpdateCalendarAPI } from '../../apis/CalendarAPICalls';
+import { callDepartmentDetailListAPI } from '../../apis/DepartmentAPICalls';
 import CalendarModal from './CalendarModal';
 import CalendarUpdateModal from './CalendarUpdateModal';
 import { calendarPopover, updateEvents } from '../../utils/CalendarUtil';
@@ -18,13 +19,18 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 
 function Calendar() {
+    const token = decodeJwt(window.localStorage.getItem("accessToken"));
+    console.log('토큰확인', token);
     const { calendarList, insertMessage, updateMessage, deleteMessage } = useSelector(state => state.calendarReducer)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [events, setEvents] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState();
+    const [selectedDepartment, setSelectedDepartment] = useState(token.departName);
+    console.log('삽입확인', selectedDepartment);
     const dispatch = useDispatch();
-    const token = decodeJwt(window.localStorage.getItem("accessToken"));
-
+    const [departments, setDepartments] = useState([]);
+    console.log('[departments]', departments);
+    console.log('[selectedDepartment]', selectedDepartment);
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -46,7 +52,7 @@ function Calendar() {
             calendarEnd: convertToUtc(end),
             calendarName: title,
             color,
-            department: "개발팀", // TODO: 나중에 부서 선택해서 추가하는 기능넣어야 함
+            department: 'all',
             detail,
             registrantId: token.memberId
         };
@@ -67,9 +73,17 @@ function Calendar() {
 
     const handleDelete = id => dispatch(callDeleteCalendarAPI(id));
 
-    // TODO: 나중에 부서 선택해서 추가하는 기능넣어야 함
-    useEffect(() => {dispatch(callSelectCalendarAPI("개발팀"))} , [insertMessage, updateMessage, deleteMessage]);
-    
+    useEffect(() => {
+        const fetchData = async () => {
+            const result = await callDepartmentDetailListAPI();
+            setDepartments(result);
+        };
+
+        fetchData();
+    }, [])
+
+    useEffect(() => { dispatch(callSelectCalendarAPI(selectedDepartment)) }, [insertMessage, updateMessage, deleteMessage, selectedDepartment]);
+
     useEffect(() => updateEvents(calendarList, setEvents), [calendarList]);
 
 
@@ -83,6 +97,15 @@ function Calendar() {
                         <li className="breadcrumb-item">캘린더</li>
                     </ol>
                 </nav>
+            </div>
+            <div className="calendarDepartment">
+            <select value={selectedDepartment} onChange={(e) => setSelectedDepartment(e.target.value)} className="form-select">
+                    {departments && departments.map(dept => (
+                        <option key={dept.departNo} value={dept.departName}>
+                            {dept.departName}
+                        </option>
+                    ))}
+                </select>
             </div>
             <Fullcalendar
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}

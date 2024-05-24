@@ -60,9 +60,9 @@ export function mapJSONToEvent(calendarList) {
 }
 
 export function calendarPopover(info) {
-    let content = `<p>시작일시: ${info.event.start.toLocaleString()}</p>`;
+    let content = `<p>시작 일시: ${info.event.start.toLocaleString()}</p>`;
     if (info.event.end) {
-        content += `<p>종료일시: ${info.event.end.toLocaleString()}</p>`;
+        content += `<p>종료 일시: ${info.event.end.toLocaleString()}</p>`;
     } else {
         content += '<p>종료일: 당일'
     }

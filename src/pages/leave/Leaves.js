@@ -80,10 +80,6 @@ function Leaves() {
 
                                 <th><span>연차</span></th>
 
-                                <th><span>공가</span></th>
-
-                                <th><span>경조사</span></th>
-
                                 <th><span>특별 휴가</span></th>
 
                                 <th><span>소진 일수</span></th>
