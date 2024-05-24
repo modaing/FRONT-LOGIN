@@ -1,4 +1,4 @@
-import { GET_LEAVE_MEMBER, GET_MEMBER_DEPART, GET_COMMUTE_MEMBER } from '../modules/InsiteModule';
+import { GET_LEAVE_MEMBER, GET_MEMBER_DEPART, GET_COMMUTE_MEMBER, GET_APPROVAL_COUNTS, GET_APPROVER_COUNTS, GET_MY_LEAVES_COUNT } from '../modules/InsiteModule';
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8080';
@@ -30,8 +30,8 @@ export const callMemberDepartSelectAPI = () => {
 export const callLeaveMemberSelectAPI = () => {
     return async (dispatch) => {
         try {
-            const leaveMemberResponse = await axios.get(`${API_BASE_URL}/insites/leaves`, {headers});
-            dispatch ({ type: GET_LEAVE_MEMBER, payload: leaveMemberResponse.data});
+            const leaveMemberResponse = await axios.get(`${API_BASE_URL}/insites/leaves`, { headers });
+            dispatch({ type: GET_LEAVE_MEMBER, payload: leaveMemberResponse.data });
             console.log('leaveMemberResponse', leaveMemberResponse);
             return leaveMemberResponse;
         } catch (error) {
@@ -43,7 +43,7 @@ export const callLeaveMemberSelectAPI = () => {
 export const callCommuteMemberSelectAPI = () => {
     return async (dispatch) => {
         try {
-            const commuteMemberResponse = await axios.get(`${API_BASE_URL}/insites/commutes`, {headers});
+            const commuteMemberResponse = await axios.get(`${API_BASE_URL}/insites/commutes`, { headers });
             dispatch({ type: GET_COMMUTE_MEMBER, payload: commuteMemberResponse.data });
             console.log('commuteMemberResponse', commuteMemberResponse);
             return commuteMemberResponse;
@@ -52,3 +52,43 @@ export const callCommuteMemberSelectAPI = () => {
         }
     }
 }
+
+export const callApprovalCountsAPI = () => {
+    return async (dispatch) => {
+        try {
+            const approvvalCountsResponse = await axios.get(`${API_BASE_URL}/insites/approvals`, { headers });
+            dispatch({ type: GET_APPROVAL_COUNTS, payload: approvvalCountsResponse.data });
+            console.log('approvvalCountsResponse', approvvalCountsResponse);
+            return approvvalCountsResponse;
+        } catch (error) {
+            throw error;
+        }
+    }
+}
+
+export const callApproverCountsAPI = () => {
+    return async (dispatch) => {
+        try {
+            const approverCountsResponse = await axios.get(`${API_BASE_URL}/insites/approvers`, { headers });
+            dispatch({ type: GET_APPROVER_COUNTS, payload: approverCountsResponse.data });
+            console.log('approverCountsResponse', approverCountsResponse);
+            return approverCountsResponse;
+        } catch (error) {
+            throw error;
+        }
+    }
+}
+
+export const callMyLeaveCountsAPI = (memberId) => {
+    return async (dispatch) => {
+        try {
+            const myLeaveCountsResponse = await axios.get(`${API_BASE_URL}/insites/leaves/${memberId}`, { headers });
+            dispatch({ type: GET_MY_LEAVES_COUNT, payload: myLeaveCountsResponse.data });
+            console.log('approverCountsResponse', myLeaveCountsResponse);
+            return myLeaveCountsResponse;
+        } catch (error) {
+            throw error;
+        }
+    }
+}
+

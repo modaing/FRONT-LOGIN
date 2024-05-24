@@ -1,0 +1,36 @@
+/* App.css 또는 해당 스타일 시트 파일 */
+.main-first {
+  display: flex;
+  flex-direction: row;
+  /* 가로로 정렬 */
+  flex-wrap: nowrap;
+  /* 한 줄에 유지 */
+  justify-content: space-between;
+  /* 카드 간의 공간을 균등하게 분배 */
+  align-items: center;
+  /* 수직 중앙 정렬 */
+}
+
+.main-card {
+  width: 300px;
+  height: 150px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  margin-bottom: 40px;
+  margin-top: 20px;
+  position: relative;
+}
+
+.slide-toggle-button {
+  position: absolute;
+  top: 10px; /* 상단 여백 조정 */
+  right: 10px; /* 우측 여백 조정 */
+  background-color: none;
+  color: none;
+}
