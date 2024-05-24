@@ -14,7 +14,7 @@ function DepartRegistModal(props) {
 
     const registerDepartment = async () => {
         try {
-            if (confirmDepartName === newDepartName) {
+            if (newDepartName.trim()) {
                 const response = await callRegisterDepartmentAPI({
                     newDepartName: newDepartName
                 });
@@ -25,11 +25,8 @@ function DepartRegistModal(props) {
                     navigate('/departmentAndPosition');
                     window.location.reload();
                 }
-            } else if (confirmDepartName !== newDepartName) {
-                alert('부서명이 일치하지 않습니다. 다시 입력해주세요');
-                setNewDepartName('');
             } else {
-                alert('오류가 발생했습니다. 잠시만 기달려주세요..');
+                alert('부서명을 입력해주세요');
                 setNewDepartName('');
             }
         } catch (error) {

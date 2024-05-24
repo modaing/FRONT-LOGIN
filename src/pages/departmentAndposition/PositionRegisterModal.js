@@ -95,13 +95,14 @@ function PositionRegisterModal(props) {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (newPositionName.trim()) {
-            alert('새 직급명을 올바르게 입력하세요.');
-        } else if (parseInt(positionLevel) < 0) {
+        if (parseInt(positionLevel) < 0) {
             alert('올바른 직급레벨이 아닙니다. 다시 입력해주세요');
+        } else if (newPositionName.trim()) {
+            await registerPosition();
+        } else {
+            alert('등록할 부서명을 입력하세요')
         }
 
-        await registerPosition();
     }
 
     const handleClose = () => {
