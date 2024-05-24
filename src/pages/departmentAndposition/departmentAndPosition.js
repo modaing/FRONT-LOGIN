@@ -11,6 +11,8 @@ import PositionRegisterModal from './PositionRegisterModal';
 import PositionNameModal from './PositionNameModal';
 import DepartDeleteModal from './DepartDeleteModal';
 import PositionDeleteModal from './PositionDeleteModal';
+import DepartPeopleModal from './DepartPeopleModal';
+import PositionPeopleModal from './PositionPeopleModal';
 
 function DepartmentAndPosition() {
     // const { leaveInfo, submitPage } = useSelector(state => state.leaveReducer);
@@ -30,8 +32,10 @@ function DepartmentAndPosition() {
     const [registerPositionModalVisible, setRegisterPositionModalVisible] = useState(false);
     const [deleteDepartmentModalVisible, setDeleteDepartmentModalVisible] = useState(false);
     const [deletePositionModalVisible, setDeletePositionModalVisible] = useState(false);
-    const [departmentInfos, setDepartmentInfos] = useState('');
-    const [positionInfos, setPositionInfos] = useState('');
+    const [departPeopleModalVisible, setDepartPeopleModalVisible] = useState(false);
+    const [positionPeopleModalVisible, setPositionPeopleModalVisible] = useState(false);
+    const [departmentInfos, setDepartmentInfos] = useState([]);
+    const [positionInfos, setPositionInfos] = useState([]);
     // const [currentPositionName, setCurrentPositionName] = useState('');
     // const [search, setSearch] = useState('');
     const [positionSearch, setPositionSearch] = useState('');
@@ -223,7 +227,20 @@ function DepartmentAndPosition() {
         setRegisterPositionModalVisible(true);
     }
 
+    const handleShowPosition = (position) => {
+        setPositionInfos(position);
+        setPositionPeopleModalVisible(true);
+    }
 
+    const handleShowDepartment = (department) => {
+        // console.log('department:',department);
+        setDepartmentInfos(department);
+        // console.log('departinfo:',departmentInfos);
+        setDepartPeopleModalVisible(true);
+        // window.history.replaceState(null, '', `/departmentAndPosition/${department.departName}`)
+    }
+    
+    
 
     const handleCloseModal = () => {
         setDeletePositionModalVisible(false);
@@ -232,6 +249,8 @@ function DepartmentAndPosition() {
         setChangePositionNameModalVisible(false);
         setRegisterDepartmentModalVisible(false);
         setRegisterPositionModalVisible(false);
+        setDepartPeopleModalVisible(false);
+        setPositionPeopleModalVisible(false);
     }
 
     return (
@@ -252,7 +271,7 @@ function DepartmentAndPosition() {
                         <div className={departmentAndPositionCSS.innerBox}>
                             <div className={departmentAndPositionCSS.searchDepart}>부서명 겁색</div>
                             <input 
-                                className={departmentAndPositionCSS.inputBox}
+                                className={`inputStyle ${departmentAndPositionCSS.inputBox}`}
                                 placeholder=" 부서명"
                                 type="text" 
                                 value={departSearch} 
@@ -293,7 +312,7 @@ function DepartmentAndPosition() {
                             {sortedDepartment.map((department,index) => (
                             <tr key={index}>
                                 <td className={departmentAndPositionCSS.alignCenter}>
-                                    <div className={departmentAndPositionCSS.memberProfile}>
+                                    <div className={departmentAndPositionCSS.memberProfile} style={{cursor: 'pointer'}} onClick={() => handleShowDepartment(department)}>
                                         {department.departName}
                                     </div>
                                 </td>
@@ -317,7 +336,7 @@ function DepartmentAndPosition() {
                         <div className={departmentAndPositionCSS.innerBox}>
                             <div className={departmentAndPositionCSS.searchDepart}>직급명 겁색</div>
                             <input 
-                                className={departmentAndPositionCSS.inputBox}
+                                className={`inputStyle ${departmentAndPositionCSS.inputBox}`}
                                 placeholder=" 직급명"
                                 type="text"
                                 value={positionSearch} 
@@ -348,6 +367,9 @@ function DepartmentAndPosition() {
                                 <th onClick={() => sortData2('positionLevel')}>
                                     <span>직급 레벨</span><i className="bx bxs-sort-alt" />
                                 </th>
+                                <th onClick={() => sortData2('noOfPeople')}>
+                                    <span>인원수</span><i className="bx bxs-sort-alt" />
+                                </th>
                                 <th>
                                     <span>직급명 변경</span>
                                 </th>
@@ -358,13 +380,18 @@ function DepartmentAndPosition() {
                             {sortedPosition.map((position,index) => (
                             <tr key={index}>
                                 <td>
-                                    <div className={departmentAndPositionCSS.memberProfile}>
+                                    <div className={departmentAndPositionCSS.memberProfile} style={{cursor: 'pointer'}} onClick={() => handleShowPosition(position)}>
                                         {position.positionName}
                                     </div>
                                 </td>
                                 <td>
                                     <div className={departmentAndPositionCSS.memberProfile}>
                                         {position.positionLevel}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div className={departmentAndPositionCSS.memberProfile}>
+                                        {position.noOfPeople}
                                     </div>
                                 </td>
                                 <td>
@@ -383,6 +410,9 @@ function DepartmentAndPosition() {
             <PositionNameModal visible={changePositionNameModalVisible} onClose={handleCloseModal} positionInformation={positionInfos} />
             <DepartRegistModal visible={registerDepartmentModalVisible} onClose={handleCloseModal} departmentInformation={departmentInfos} />
             <DepartNameModal visible={changeDepartmentNameModalVisible} onClose={handleCloseModal} departmentInformation={departmentInfos} />
+            {/* <DepartPeopleModal visible={departPeopleModalVisible} onClose={handleCloseModal} departmentInformation={departmentInfos} /> */}
+            <DepartPeopleModal visible={departPeopleModalVisible} onClose={handleCloseModal} departmentInformation={departmentInfos} />
+            <PositionPeopleModal visible={positionPeopleModalVisible} onClose={handleCloseModal} positionInformation={positionInfos} />
         </main>
     );
 }
