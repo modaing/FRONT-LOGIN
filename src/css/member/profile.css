@@ -1,16 +1,13 @@
 .main2Pages {
     font-size: 20px;
     display: flex;
-    /* width: 100%; */
+    width: 85%;
+    height: auto;
+    /* flex-wrap: nowrap; */
 }
 
 .columnStyle {
     width: 90%;
-}
-
-.rowStyle {
-    /* display: flex;
-    justify-content: center; */
 }
 
 .cardOuterLine {
@@ -18,8 +15,22 @@
     height: 100%;
 }
 
-.firstPage, .secondPage {
-    width: 100%;
+.firstPage {
+    flex: 1; /* Make both pages take equal space */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+    width: 42.5%;
+}
+
+.secondPage {
+    flex: 1; /* Make both pages take equal space */
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 .pageTitleStyle {
@@ -108,3 +119,4 @@
 .transferredDateStyle, .departNameStyle, .positionNameStyle {
     margin:20px;
 }
+

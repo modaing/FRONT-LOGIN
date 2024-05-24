@@ -3,7 +3,7 @@ import manageMemberCSS from './ManageMember.module.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { callShowAllMemberListAPI, callDownloadExcelFileAPI } from "../../apis/MemberAPICalls";
 import React, { useEffect, useState, useMemo, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import '../../css/member/manageMember.css';
 
 const ManageMember = () => {
     const navigate = useNavigate();
@@ -75,15 +75,11 @@ const ManageMember = () => {
 
     const getValueForSorting = (value) => {
         if (sortConfig.key === 'periodOfWork') {
-            // Split the value into components (years, months, days)
             const components = value.split(' ');
-    
-            // Initialize variables to hold the values of years, months, and days
             let years = 0;
             let months = 0;
             let days = 0;
-    
-            // Loop through the components and extract the values for years, months, and days
+
             components.forEach(component => {
                 if (component.includes('년')) {
                     years = parseInt(component);
@@ -93,26 +89,21 @@ const ManageMember = () => {
                     days = parseInt(component);
                 }
             });
-    
-            // Calculate the total number of days for sorting
+
             const totalDays = years * 365 + months * 30 + days;
-    
-            // Return the sortable value
             return totalDays;
         }
         return value;
     };
-    
-
 
     const sortedMembers = useMemo(() => {
         let sortableMembers = [...filteredMemberInfo];
-    
+
         if (sortConfig.key !== null) {
             sortableMembers.sort((a, b) => {
-                const valueA = getValueForSorting(a[sortConfig.key]);
-                const valueB = getValueForSorting(b[sortConfig.key]);
-    
+                const valueA = getValueForSorting(a[sortConfig.key] ?? '');
+                const valueB = getValueForSorting(b[sortConfig.key] ?? '');
+
                 if (valueA < valueB) {
                     return sortConfig.direction === 'ascending' ? -1 : 1;
                 }
@@ -122,11 +113,9 @@ const ManageMember = () => {
                 return 0;
             });
         }
-    
+
         return sortableMembers;
     }, [filteredMemberInfo, sortConfig]);
-    
-    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -193,12 +182,12 @@ const ManageMember = () => {
 
             <div className={`row ${manageMemberCSS.flexedBox}`}>
                 <div className={`col-lg-6 ${manageMemberCSS.cardStyle}`}>
-                    <div className={`card ${manageMemberCSS.innerStyle}`}>
+                    <div className="card innerStyle">
                         <div className={manageMemberCSS.contentStyle1}>
-                            <div className={manageMemberCSS.firstBox}>
+                            <div className="firstBox">
                                 <div>검색어</div>
                                 <select 
-                                    className={manageMemberCSS.selectBox} 
+                                    className="inputStyle inputStyle1" 
                                     value={searchField} 
                                     onChange={(e) => setSearchField(e.target.value)}
                                 >   
@@ -206,8 +195,8 @@ const ManageMember = () => {
                                     <option value="name">이름</option>
                                     <option value="memberId">사번</option>
                                 </select>
-                                <input 
-                                    className={manageMemberCSS.inputBox}
+                                <input
+                                    className="inputStyle"
                                     placeholder="검색어를 입력해주세요"
                                     type="text" 
                                     value={search} 
@@ -233,7 +222,13 @@ const ManageMember = () => {
                         </div>
                         <div className={manageMemberCSS.tableDecoration}>
                             {filteredMemberInfo.length === 0 ? (
-                                <div className={manageMemberCSS.noResult}>결과 없는데요... 돌아가</div>
+                                <div className="noResult">
+                                    <i className="bi exclamation-circle"></i>
+                                    <div className="noResultBox">
+                                        <div className="noResultText1">검색결과 없음</div><br />
+                                        <div className="noResultText2">모든 단어의 맞춤법이 정확한지 확인하거나 다른 검색어로 검색해 보세요</div>
+                                    </div>
+                                </div>
                             ) : (
                             <table className={`table table-hover`}>
                                 <thead>
@@ -262,12 +257,7 @@ const ManageMember = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {/* {sortedMembers.map((member, index) => ( */}
-                                    {/* {allMemberInfo.filter((member) => {
-                                        return search.toLowerCase() === '' ? member : member.name.toLowerCase().includes(search) ||
-                                        search.toLowerCase() === '' ? member : member.memberId.toLowerCase().includes(search);
-                                    }).map((member, index) => ( */}
-                                    {sortedMembers.map((member,index) => (
+                                    {sortedMembers.map((member, index) => (
                                         <tr key={index}>
                                             <td>
                                                 <div className={manageMemberCSS.memberProfile} onClick={() => handleNameClick(member)}>
@@ -279,8 +269,8 @@ const ManageMember = () => {
                                                     {member.name}
                                                 </div>
                                             </td>
-                                            <td>{member.departmentDTO.departName}</td>
-                                            <td>{member.positionDTO.positionName}</td>
+                                            <td>{member.departmentDTO?.departName ?? 'N/A'}</td>
+                                            <td>{member.positionDTO?.positionName ?? 'N/A'}</td>
                                             <td>{member.employedDate}</td>
                                             <td>{member.periodOfWork}</td>
                                             <td>{member.memberStatus}</td>

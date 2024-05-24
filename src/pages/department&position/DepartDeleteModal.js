@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import '../../css/department/department.css'
+import '../../css/department/departmentDelete.css'
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useHistory hook
 import { callDeleteDepartmentAPI, callDepartmentDetailListAPI } from '../../apis/DepartmentAPICalls';
@@ -84,14 +84,14 @@ function DepartDeleteModal(props) {
             <div className="modalContentStyle">
                 <h2 className='changePasswordStyle'>부서명 삭제</h2>
                 <form onSubmit={handleSubmit}> {/* Form format */}
-                    <div className='content'>
+                    <div className='content123'>
                         <div className='contentBox1'>
-                            <label className='pStyle'>삭제할 부서명</label>
-                            <input type="text" name="newPassword1" placeholder="삭제할 부서명" value={departName} className='inputStyle1' onChange={(e) => setDepartName(e.target.value)}/>
+                            <label className='pStyleDeleteDepart'>삭제할 부서명</label>
+                            <input type="text" name="newPassword1" placeholder="삭제할 부서명" value={departName} className='inputStyle123' onChange={(e) => setDepartName(e.target.value)}/>
                         </div>
                     </div>
                     <br/>
-                    <div className='buttonContainerStyle'>
+                    <div className='buttonContainerStyle123'>
                         <button type="button" className='closeButtonStyle' onClick={handleClose}>취소</button>
                         <button type="submit" className='confirmationButtonStyle'>삭제</button>
                     </div>

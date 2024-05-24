@@ -114,7 +114,7 @@ function Sidebar() {
                     </Link>
                     <ul id="icons-nav" className="nav-content collapse" data-bs-parent="#sidebar-nav">
                         <li>
-                            <Link to="/" style={underLineStyle}>
+                            <Link to="/hierarchyTree" style={underLineStyle}>
                                 <i className="bi bi-circle"></i><span>조직도 조회</span>
                             </Link>
                         </li>
@@ -128,11 +128,11 @@ function Sidebar() {
                                 <i className="bi bi-circle"></i><span>부서 및 직급 관리</span>
                             </Link>
                         </li>
-                        <li>
+                        {/* <li>
                             <Link to="/" style={underLineStyle}>
                                 <i className="bi bi-circle"></i><span>건의함</span>
                             </Link>
-                        </li>
+                        </li> */}
                     </ul>
                 </li>
                 <li className={`nav-item ${location.pathname === '/insite' ? 'active' : ''}`}>

@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import '../../css/department/department.css'
+import '../../css/department/departmentRegistModal.css'
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { callRegisterDepartmentAPI } from '../../apis/DepartmentAPICalls';
@@ -58,18 +58,18 @@ function DepartRegistModal(props) {
             <div className="modalContentStyle">
                 <h2 className='changePasswordStyle'>부서 등록</h2>
                 <form onSubmit={handleSubmit}> {/* Form format */}
-                    <div className='content'>
+                    <div className='content123'>
                         <div className='contentBox1'>
                             <label className='pStyle'>부서명</label>
-                            <input type="text" name="newPassword1" value={newDepartName} placeholder="부서명 입력" className='inputStyle1' onChange={(e) => setNewDepartName(e.target.value)}/>
+                            <input type="text" name="newPassword1" value={newDepartName} placeholder="부서명 입력" className='inputStyle123' onChange={(e) => setNewDepartName(e.target.value)}/>
                         </div>
-                        <div className='contentBox2'>
+                        <div className='contentBox1'>
                             <label className='pStyle'>새부서명</label>
-                            <input type="text" name="newPassword2" value={confirmDepartName} placeholder="새부서명 입력" className='inputStyle2' onChange={(e) => setConfirmDepartName(e.target.value)}/>
+                            <input type="text" name="newPassword2" value={confirmDepartName} placeholder="새부서명 입력" className='inputStyle123' onChange={(e) => setConfirmDepartName(e.target.value)}/>
                         </div>
                     </div>
                     <br/>
-                    <div className='buttonContainerStyle'>
+                    <div className='buttonContainerStyle123'>
                         <button type="button" className='closeButtonStyle' onClick={handleClose}>취소</button>
                         <button type="submit" className='confirmationButtonStyle'>등록</button>
                     </div>
