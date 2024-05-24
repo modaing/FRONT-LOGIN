@@ -48,8 +48,6 @@ function MemberPage() {
             // console.log('response:', memberInformation);
             setMemberInfo(memberInformation);
             console.log('memberInformation:',memberInformation);
-            console.log(`memberInfo's departName:`, memberInfo.departmentDTO.departName);
-            console.log(`member's positionName:`, memberInfo.positionDTO.positionName);
             formatDate(memberInformation.employedDate);
             setLoading(false);
         } catch (error) {
@@ -326,8 +324,8 @@ function MemberPage() {
     }
     
     return (
-        <main id="main" className="main2Pages">
-            <div className='firstPage'>
+        <main id="main" className="main2Pages123">
+            <div className='firstPage123'>
                 <div className="pagetitle">
                     <h1>구성원 관리</h1>
                     <nav>
@@ -384,6 +382,29 @@ function MemberPage() {
                                     onChange={(e) => handleInputChange(e)}
                                 />
                             </div>
+                            <div className='nameStyle'>
+                                <label className='name'>생일</label>
+                                {/* <input
+                                    className={`inputStyle ${member.employedDate && member.employedDate !== memberInfo.employedDate ? 'changed' : ''}`}
+                                    name="employedDate"
+                                    type="date"
+                                    defaultValue={formatDateInCalendar(memberInfo.employedDate)}
+                                    max={today}
+                                    onChange={(e) => handleInputChange(e)}
+                                /> */}
+                                {/* <input
+                                    className='inputStyle'
+                                    defaultValue={memberInfo.name}
+                                    onChange={(e) => setName(e.target.value)}
+                                /> */}
+                                <input
+                                    className={`inputStyle ${member.birthday && member.birthday !== memberInfo.birthday ? 'changed' : ''}`}
+                                    name="birthday"
+                                    type='date'
+                                    defaultValue={formatDateInCalendar(memberInfo.birthday)}
+                                    onChange={(e) => handleInputChange(e)}
+                                />
+                            </div>
                             <div className='memberIdStyle'>
                                 <label className='memberId'>사번</label>
                                 <input
@@ -398,6 +419,7 @@ function MemberPage() {
                                 <select
                                     className={`inputStyle ${member.departmentDTO.departName && member.departmentDTO.departName !== memberInfo.departmentDTO.departName ? 'changed' : ''}`}
                                     name='departmentDTO'
+                                    key={memberInfo.departmentDTO.departName}
                                     defaultValue={memberInfo.departmentDTO.departName} // Set default value based on departName
                                     onChange={(e) => handleInputChange(e)}
                                 >
@@ -411,11 +433,17 @@ function MemberPage() {
                                 <select
                                     className={`inputStyle ${member.positionDTO.positionName && member.positionDTO.positionName !== memberInfo.positionDTO.positionName ? 'changed' : ''}`}
                                     name='positionDTO'
+                                    value={memberInfo.positionDTO.positionName}
                                     defaultValue={memberInfo.positionDTO.positionName}
                                     onChange={(e) => handleInputChange(e)}
                                 >
+                                    <option value="default" onChange={(e) => handleInputChange(e)} disabled>
+                                        직급 선택
+                                    </option>
                                     {positionInformation.map((position) => (
-                                        <option key={position.positionName} value={position.positionLevel}>{position.positionName}</option>
+                                        <option key={position.positionName} value={position.positionLevel}>
+                                            {position.positionName}
+                                        </option>
                                     ))}
                                 </select>
                             </div>
@@ -487,7 +515,7 @@ function MemberPage() {
                 </form>
             </div>
 
-            <div className='secondPage'>
+            <div className='secondPage123'>
                 {/* <div className="pagetitle pageTitleStyle" >
                     <h1>인사 정보</h1>
                 </div> */}

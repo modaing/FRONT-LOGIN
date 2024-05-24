@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import '../../css/department/department.css'
+import '../../css/department/departmentNameModal.css'
 import { callChangeDepartmentNameAPI } from '../../apis/DepartmentAPICalls';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -50,18 +50,18 @@ function DepartNameModal(props) {
             <div className="modalContentStyle">
                 <h2 className='changePasswordStyle'>부서명 변경</h2>
                 <form onSubmit={handleSubmit}> {/* Form format */}
-                    <div className='content'>
+                    <div className='content123'>
                         <div className='contentBox1'>
                             <label className='pStyle'>현재 부서명</label>
-                            <input type="text" name="newPassword1" placeholder={departmentInformation.departName} className='inputStyle1' readOnly />
+                            <input type="text" name="newPassword1" placeholder={departmentInformation.departName} className='inputStyle123' readOnly />
                         </div>
                         <div className='contentBox2'>
                             <label className='pStyle'>새부서명</label>
-                            <input type="text" name="newPassword2" value={departName} placeholder="새부서명 입력" className='inputStyle2' onChange={(e) => setDepartName(e.target.value)}/>
+                            <input type="text" name="newPassword2" value={departName} placeholder="새부서명 입력" className='inputStyle123' onChange={(e) => setDepartName(e.target.value)}/>
                         </div>
                     </div>
                     <br/>
-                    <div className='buttonContainerStyle'>
+                    <div className='buttonContainerStyle123'>
                         <button type="button" className='closeButtonStyle' onClick={handleClose}>취소</button>
                         <button type="submit" className='confirmationButtonStyle'>변경</button>
                     </div>

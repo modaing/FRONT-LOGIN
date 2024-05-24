@@ -14,6 +14,7 @@ function MyProfile() {
     const [memberInformation, setMemberInformation] = useState(null);
     const [loading, setLoading] = useState(true);
     const [formattedEmployedDate, setFormattedEmployedDate] = useState('');
+    const [formattedBirthday, setFormattedBirthday] = useState('');
     const [transferredHistoryInformation, setTransferredHistoryInformation] = useState([]);
     const [departmentName, setDepartmentNames] = useState(null);
     const [changePasswordModalVisible, setChangePasswordModalVisible] = useState(false);
@@ -29,6 +30,7 @@ function MyProfile() {
             // console.log('response:', memberInformation);
             setMemberInfo(memberInformation);
             formatDate(memberInformation.employedDate);
+            formatBirthDate(memberInformation.birthday);
             setLoading(false);
         } catch (error) {
             console.error('Failed to fetch member:', error);
@@ -45,6 +47,13 @@ function MyProfile() {
             console.error('부서이름을 불러오는데 오류가 발생했습니다:', error);
         }
     };
+
+    const formatBirthDate = (dateString) => {
+        const date = new Date(dateString);
+        const options = { year: 'numeric', month: 'long', day: 'numeric'};
+        const formattedDate = date.toLocaleDateString('ko-KR', options);
+        setFormattedBirthday(formattedDate);
+    }
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -115,7 +124,7 @@ function MyProfile() {
     }
     
     return (
-        <main id="main" className="main2Pages">
+        <main id="main" className="main2Pages12">
             <div className='firstPage'>
                 <div className="pagetitle">
                     <h1>마이 프로필</h1>
@@ -148,6 +157,10 @@ function MyProfile() {
                     <div className='memberIdStyle'>
                         <label className='memberId'>사번</label>
                         <input className='inputStyle' value={memberInfo.memberId} />
+                    </div>
+                    <div className='memberIdStyle'>
+                        <label className='memberId'>생일</label>
+                        <input className='inputStyle' value={formattedBirthday} />
                     </div>
                     <div className='emailStyle'>
                         <label className='email'>이메일</label>

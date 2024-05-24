@@ -17,10 +17,10 @@ function DepartmentAndPosition() {
     // const { number, content, totalPages } = submitPage || {};
     const [filteredDepartInfo, setFilteredDepartInfo] = useState([]);
     const [filteredPositionInfo, setFilteredPositionInfo] = useState([]);
+    const [position, setPosition] = useState([]);
     const navigate = useNavigate();
     const [departmentSortConfig, setDepartmentSortConfig] = useState({ key: null, direction: 'ascending' });
     const [positionSortConfig, setPositionSortConfig] = useState({ key: null, direction: 'ascending' });
-    const [position, setPosition] = useState([]);
     const [department, setDepartment] = useState([]);
     const searchButtonRef1 = useRef(null);
     const searchButtonRef2 = useRef(null);
