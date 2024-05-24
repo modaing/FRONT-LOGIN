@@ -20,17 +20,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 function Calendar() {
     const token = decodeJwt(window.localStorage.getItem("accessToken"));
-    console.log('토큰확인', token);
     const { calendarList, insertMessage, updateMessage, deleteMessage } = useSelector(state => state.calendarReducer)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [events, setEvents] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState();
     const [selectedDepartment, setSelectedDepartment] = useState(token.departName);
-    console.log('삽입확인', selectedDepartment);
     const dispatch = useDispatch();
     const [departments, setDepartments] = useState([]);
-    console.log('[departments]', departments);
-    console.log('[selectedDepartment]', selectedDepartment);
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
