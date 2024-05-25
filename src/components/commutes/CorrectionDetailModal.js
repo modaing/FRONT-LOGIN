@@ -1,9 +1,7 @@
 import '../../css/commute/commute.css';
 import '../../css/common.css';
 
-function CorrectionDetailModal({ isOpen, onClose, correction, commute }) {
-
-    // console.log('[CorrectionDetailModal] commute ', commute);
+function CorrectionDetailModal({ isOpen, onClose, correction }) {
 
     /* 근무 일자 형식 변경 */
     const formatWorkingDate = (workingDate) => {
@@ -42,23 +40,23 @@ function CorrectionDetailModal({ isOpen, onClose, correction, commute }) {
                         <div className="modal-body" style={{ paddingTop: '30px', paddingBottom: '20px' }}>
                             <div style={{ display: 'flex' }}>
                                 <h6 style={{ fontWeight: 'bold', marginRight: '215px' }}>정정 대상 일자</h6>
-                                <h6>{commute.map((item, index) => (formatWorkingDate(item.workingDate)))}</h6>
+                                <h6>{formatWorkingDate(correction.workingDate)}</h6>
                             </div>
                             <div style={{ display: 'flex' }}>
                                 <h6 style={{ fontWeight: 'bold', marginRight: '235px' }}>기존 출근 시간</h6>
-                                <h6>{commute.map((item, index) => (formatWorkingTime(item.startWork)))}</h6>
+                                <h6>{formatWorkingTime(correction?.startWork)}</h6>
                             </div>
                             <div style={{ display: 'flex' }}>
                                 <h6 style={{ fontWeight: 'bold', marginRight: '235px' }}>기존 퇴근 시간</h6>
-                                <h6>{commute.map((item, index) => (formatWorkingTime(item.endWork)))}</h6>
+                                <h6>{formatWorkingTime(correction?.endWork)}</h6>
                             </div>
                             <div style={{ display: 'flex' }}>
                                 <h6 style={{ fontWeight: 'bold', marginRight: '200px' }}>정정 요청 출근 시간</h6>
-                                <h6>{correction.reqStartWork}</h6>
+                                <h6>{correction?.reqStartWork}</h6>
                             </div>
                             <div style={{ display: 'flex' }}>
                                 <h6 style={{ fontWeight: 'bold', marginRight: '200px' }}>정정 요청 퇴근 시간</h6>
-                                <h6>{correction.reqEndWork}</h6>
+                                <h6>{correction?.reqEndWork}</h6>
                             </div>
                             <div>
                                 <h6 style={{ fontWeight: 'bold', marginRight: '200px', textAlign: 'left', paddingBottom: '12px' }}>정정 사유</h6>
@@ -75,7 +73,9 @@ function CorrectionDetailModal({ isOpen, onClose, correction, commute }) {
                             </div>
                             <div>
                                 <h6 style={{ fontWeight: 'bold', marginRight: '200px', textAlign: 'left', paddingBottom: '12px' }}>반려 사유</h6>
-                                <h6 style={{ textAlign: 'left', paddingBottom: '8px' }}>{correction.reasonForRejection}</h6>
+                                <h6 style={{ textAlign: 'left', paddingBottom: '8px' }}>
+                                    {correction.reasonForRejection ? correction.reasonForRejection : ''}
+                                </h6>
                             </div>
                             <div style={{ display: 'flex' }}>
                                 <h6 style={{ fontWeight: 'bold', marginRight: '220px' }}>정정 처리 일자</h6>

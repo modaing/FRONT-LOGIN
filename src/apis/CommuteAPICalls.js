@@ -106,9 +106,9 @@ export const callSelectCorrectionListAPI = (memberId, page, size, sort, directio
             // let url;
 
             if (memberId === null) {
-                console.log('출퇴근 정정 내역 API 멤버 널 :', memberId);
+                // console.log('출퇴근 정정 내역 API 멤버 널 :', memberId);
                 const url = `/corrections?page=${page}&size=${size}&sort=${sort}&direction=${direction}&date=${date}`;
-                console.log('멤버 널 url', url);
+                // console.log('멤버 널 url', url);
 
                 const response = await request('GET', url);
 
@@ -117,7 +117,7 @@ export const callSelectCorrectionListAPI = (memberId, page, size, sort, directio
                 dispatch(getCorrectionlist(response));
 
             } else if (memberId !== null) {
-                console.log('출퇴근 정정 내역 API 멤버 낫널 :', memberId);
+                // console.log('출퇴근 정정 내역 API 멤버 낫널 :', memberId);
                 const url = `/corrections?memberId=${memberId}&page=${page}&size=${size}&sort=${sort}&direction=${direction}&date=${date}`;
                 console.log('멤버 낫널 url', url);
 
