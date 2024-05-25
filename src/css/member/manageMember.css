@@ -1,0 +1,329 @@
+.noResult {
+    align-self: center;
+    border: none;
+    /* font-size: 50px; */
+    margin: 15%;
+    outline: none;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+.noResultImage {
+    height: 100px;
+    width: auto;
+    background-color: white;
+}
+
+.noResultBox {
+    display: flex;
+    flex-direction: column;
+}
+
+.noResultText1 {
+    font-weight: bold;
+}
+
+/* .noResultText2 {
+    color: #D5D5D5;
+} */
+.noResultText1, .noResultText2 {
+    color: #D5D5D5;
+    font-size: 25px;
+}
+
+.firstBox {
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 650px;
+    padding: 0px 20px;
+}
+
+.inputStyle1 {
+    width: 30px;
+    height: 50px;
+}
+
+.inputStyle {
+    /* width: 70px; */
+}
+
+/* body {
+    overflow: hidden;
+} */
+
+.main2Pages {
+    font-size: 20px;
+    display: flex;
+    width: 85%;
+    height: auto;
+    /* flex-wrap: nowrap; */
+}
+.columnStyle {
+    width: 100%;
+    height: auto;
+}
+
+.columnStyle1 {
+    display: flex;
+    flex-direction: column;
+}
+
+.changed {
+    color: red;
+}
+
+.changePassword {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center align the text horizontally */
+    width: 180px;
+    height: 50px;
+    align-self: center;
+    background-color: #3f72af;
+}
+
+.rowStyle {
+    flex: 1;
+    justify-content: flex-start;
+}
+
+.cardOuterLine {
+    height: 100%; /* Make sure the card fills the parent height */
+}
+.cardOuterLine2 {
+    height: 100%; /* Make sure the card fills the parent height */
+}
+
+.firstPage {
+    flex: 1; /* Make both pages take equal space */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.secondPage {
+    flex: 1; /* Make both pages take equal space */
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.pageTitleStyle {
+    margin: 20px 0px;
+    font-size: 20px;
+}
+
+.profilePic {
+    height: 270px;
+    width: 230px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+
+.contentStyle1 {
+    /* text-align: center; */
+    display: flex;
+    justify-content: space-between;
+    margin: 50px 50px 0px 50px;
+}
+
+.contentStyle2 {
+    /* display: flex; */
+    justify-content: space-between;
+    margin: 50px 0px 0px 50px;
+    display: flex;
+    align-items: center;
+}
+
+.changePassword {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.nameBox {
+    height: auto;
+    width: auto;
+    font-size: 30px;
+    text-align: center;
+    font-style: ;
+}
+
+.button onClick {
+    background-color: transparent;
+    height: 40px;
+    width: 80px;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    font-weight: 900;
+}
+
+.insertCorrection {
+    background-color: #3f72af;
+    cursor: pointer;
+    color: #FFFFFF;
+    border-radius: 4px;
+    border: 1px solid #3f72af;
+}
+
+.insertCorrection :hover {
+    cursor: #112d4e;
+}
+
+.memberIdStyle, .emailStyle, .addressStyle, .phoneNoStyle, .employedDateStyle, .departStyle, .positionStyle, .memberStatusStyle, .nameStyle {
+    display: flex;
+    align-items: center;
+    /* justify-content: space-between; */
+    margin-bottom: 20px;
+}
+
+.memberId, .email, .address, .phoneNo, .employedDate, .depart, .position, .name, .memberStatus {
+    margin-right: 50px;
+    width: 100px;
+}
+
+.inputStyle, .inputStyleConfirmed {
+    /* width: 250px; */
+    /* padding-left: 10px; */
+    padding: 10px; /* Add padding for better visual appearance */
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 5px; /* Add rounded corners */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+}
+
+.inputStyle:focus, .inputStyleConfirmed:focus {
+    outline: none; /* Remove the default focus outline */
+    border-color: #007bff; /* Change border color on focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add a box shadow on focus */
+}
+
+.confirmed {
+    background-color: #D5D5D5;
+}
+
+.contentStyle3 {
+    /* display: flex; */
+    justify-content: space-between;
+    margin: 20px 50px 50px 50px;
+}
+
+.notice-cancel-button {
+    background-color: #ffffff;
+    color: black;
+    border: 1px solid #D5D5D5;
+    border-radius: 15px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.buttonClass {
+    margin-top: 50px;
+    /* margin-bottom: 40px; */
+    /* margin-right: 100px; */
+    text-align: right;
+}
+
+.transferredDateStyle, .positionNameStyle {
+    color: #D5D5D5;
+}
+
+.notice-confirm-button {
+    background-color: #3f72af;
+    border-radius: 15px;
+    height: 52.22px;
+    width: 76.82px;
+}
+
+.uploadContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative; /* Make the container a positioned parent */
+}
+
+.uploadButton {
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    border: 2px solid #3F72AF;
+    border-radius: 5px;
+    background-color: #3F72AF;
+    color: white;
+    cursor: pointer;
+    /* transition: background-color 0.3s ease; */
+}
+
+.uploadButton span {
+    cursor: pointer;
+}
+
+.uploadButton:hover {
+    background-color: #112d4e;
+}
+
+.uploadInput {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.uploadLabel {
+    position: relative;
+    display: inline-block;
+    padding: 7px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #3F72AF;
+    border: 1px solid #D5D5D5;
+    color: white;
+    margin-bottom: 10px; /* Add margin bottom to create space between label and input */
+}
+
+.uploadLabel input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1; /* Ensure the input is above the label */
+}
+
+.uploadLabel:hover {
+    background-color: #e0e0e0;
+}
+
+.departNameStyleOuter, .positionNameStyleOuter {
+    display: flex;
+}
+
+
+.departNameDiv, .positionNameDiv {
+    margin-right: 20px;
+}
+
+.inputStyle1 {
+    width: 100px;
+    height: 50px;
+    font-size: 20px;
+}
+
+.inputStyle2 {
+    width: 100px;
+    height: 50px;
+    font-size: 20px;
+}

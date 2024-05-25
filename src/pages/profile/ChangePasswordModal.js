@@ -3,6 +3,7 @@ import LoginCSS from '../member/Login.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPassword1Action, setPassword2Action } from '../../modules/PasswordReducer';
 import { callChangePasswordAPI } from '../../apis/MemberAPICalls';
+import '../../css/member/changePasswordModal.css';
 
 function ChangePasswordModal(props) {
     const dispatch = useDispatch();
@@ -59,11 +60,13 @@ function ChangePasswordModal(props) {
                 <h2 className={LoginCSS.changePasswordStyle}>비밀번호 변경</h2>
                 <form onSubmit={handleConfirmationButtonClick}> {/* Form format */}
                 <p className={LoginCSS.pStyle}>기존 비밀번호</p>
-                    <input type="password" name="currentPassword" placeholder="기존 비밀번호 입력" className={LoginCSS.inputStyle1} onChange={(e) => setCurrentPassword(e.target.value)}/>
+                    <input type="password" name="currentPassword" placeholder="기존 비밀번호 입력" className="inputStyle" onChange={(e) => setCurrentPassword(e.target.value)}/>
+                    <br /><br />
                     <p className={LoginCSS.pStyle}>새 비밀번호</p>
-                    <input type="password" name="newPassword1" placeholder="새 비밀번호 입력" className={LoginCSS.inputStyle1} onChange={handlePasswordChange}/>
+                    <input type="password" name="newPassword1" placeholder="새 비밀번호 입력" className="inputStyle" onChange={handlePasswordChange}/>
+                    <br /><br />
                     <p className={LoginCSS.pStyle}>새 비밀번호 (확인)</p>
-                    <input type="password" name="newPassword2" placeholder="새 비밀번호 (확인)" className={LoginCSS.inputStyle2} onChange={handlePasswordChange}/>
+                    <input type="password" name="newPassword2" placeholder="새 비밀번호 (확인)" className="inputStyle" onChange={handlePasswordChange}/>
                     <br/>
                     <div className={LoginCSS.buttonContainerStyle}>
                         <button type="button" className={LoginCSS.closeButtonStyle} onClick={props.onClose}>취소</button>

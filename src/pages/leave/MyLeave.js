@@ -181,7 +181,7 @@ function MyLeave() {
                 </div>
             </div>
         </div>
-        <MyLeaveModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} leaveSubNo={leaveSubNo} selectedTime={selectedTime} />
+        <MyLeaveModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} leaveSubNo={leaveSubNo} selectedTime={selectedTime} remainingDays={remainingDays}/>
     </main>
 }
 

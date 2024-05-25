@@ -1,10 +1,11 @@
 import CommuteItem from "./CommuteItem";
 
-function CommuteListByMember({ commute, date, parsingDateOffset }) {
+function CommuteListByMember({ commute, date, parsingDateOffset, memberId }) {
 
     console.log('[CommuteListByMember] commute : ', commute);
     console.log('[CommuteListByMember] date : ', date);
     console.log('[CommuteListByMember] parsingDateOffset : ', parsingDateOffset);
+    console.log('[CommuteListByMember] memberId : ', memberId);
 
     const content2 = {
         marginLeft: '25px'
@@ -101,18 +102,18 @@ function CommuteListByMember({ commute, date, parsingDateOffset }) {
                                 <th style={tableStyles.tableHeaderCell} scope="col">정정 요청</th>
                             </tr>
                         </thead>
-                        {/* <tbody>
+                        <tbody>
                             {commute && commute.length > 0 ? (
                                 commute.map((item, index) => (
-                                    <CommuteItem key={item.commuteNo} commute={item} tableStyles={tableStyles} evenRow={index % 2 === 0} date={date} />
+                                    <CommuteItem key={item.commuteNo} commute={item} tableStyles={tableStyles} evenRow={index % 2 === 0} date={date} corrRegistrationDate={item.correction?.corrRegistrationDate} memberId={memberId}/>
                                 ))
                             ) : (
                                 <tr>
                                     <td colSpan={7}>출퇴근 내역이 없습니다.</td>
                                 </tr>
                             )}
-                        </tbody> */}
-                        <tbody>
+                        </tbody>
+                        {/* <tbody>
                             {generateDates().map((dateItem, index) => {
                                 const matchingCommute = commute.find(
                                     (item) => formatWorkingDate(item.workingDate) === dateItem
@@ -127,7 +128,7 @@ function CommuteListByMember({ commute, date, parsingDateOffset }) {
                                     />
                                 );
                             })}
-                        </tbody>
+                        </tbody> */}
                     </table>
                 </div>
             </div>

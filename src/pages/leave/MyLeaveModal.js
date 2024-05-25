@@ -2,16 +2,32 @@ import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../css/leave/MyLeaveModal.css';
+import { formattedLocalDate } from '../../utils/leaveUtil';
 
 
-const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime }) => {
-    const [start, setStart] = useState('');
-    const [end, setEnd] = useState('');
+const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime, remainingDays }) => {
+    const [start, setStart] = useState();
+    const [end, setEnd] = useState();
     const [type, setType] = useState(leaveSubNo ? '취소' : '연차');
     const [reason, setReason] = useState('');
     const isCancle = leaveSubNo ? '취소 신청' : '휴가 신청';
-
+    
     const handleSave = () => {
+        const { leaveDaysCalc } = formattedLocalDate({leaveSubStartDate: start, leaveSubEndDate: end})
+        if (!start || !end) {
+            alert('휴가 시작일과 종료일이 선택되어야 합니다.');
+            return;
+        }
+        if (start > end) {
+            alert('휴가 시작일은 휴가 종료일 이후로 선택될 수 없습니다.');
+            setStart();
+            setEnd();
+            return;
+        }
+        if (leaveDaysCalc > remainingDays) {
+            alert(`잔여 휴가 일수 ${remainingDays}일을 초과하여 신청하실 수 없습니다.`);
+            return;
+        }
         onSave({ leaveSubNo, start, end, type, reason });
         onClose();
     };

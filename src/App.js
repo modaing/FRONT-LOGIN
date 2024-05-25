@@ -22,13 +22,14 @@ import SendNoteList from './pages/note/SendNoteList';
 import MyLeave from './pages/leave/MyLeave';
 import RoomList from './pages/chatting/RoomList';
 import Room from './pages/chatting/Room';
-import DepartmentAndPosition from './pages/department&position/departmentAndPosition';
+import DepartmentAndPosition from './pages/departmentAndposition/departmentAndPosition';
 import ApprovalPage from './pages/approval/ApprovalPage';
 import LeaveAccrual from './pages/leave/LeaveAccrual';
 import LeaveProcessing from './pages/leave/LeaveProcessing';
 import Leaves from './pages/leave/Leaves';
 import SurveyList from './pages/survey/SurveyList';
 import MemberPage from './pages/member/MemberPage';
+import HierarchyTree from './pages/member/HierarchyTree';
 
 function App() {
   const isLoggedIn = !!window.localStorage.getItem("accessToken");
@@ -69,6 +70,7 @@ function App() {
             <Route path='/departmentAndPosition' element={<DepartmentAndPosition />} />
             <Route path='approvals' element={<ApprovalPage />} />
             <Route path="/manageMember/:memberId" element={<MemberPage />} />
+            <Route path='/hierarchyTree' element={<HierarchyTree />} />
           </Route>
         ) : (
           <Route path="/" element={<Navigate to="/login" replace />} />

@@ -157,7 +157,7 @@ function RecordCorrectionOfCommute() {
         console.log('[useEffect] page : ', currentPage);
         console.log('[useEffect] parsingDateOffset : ', parsingDateOffset);
         dispatch(callSelectCorrectionListAPI(memberId, page, size, sort, direction, parsingDateOffset));
-    }, [memberId, parsingDateOffset]);
+    }, [memberId, parsingDateOffset, page]);
 
     /* 페이징 핸들러 */
     const handlePageChange = (page) => {

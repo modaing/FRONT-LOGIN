@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from '../../css/approval/cancelModal.css';
+import '../../css/approval/cancelModal.css';
 
 const CancelModal = ({ isOpen, message, onConfirm, onCancel }) => {
     if (!isOpen) {

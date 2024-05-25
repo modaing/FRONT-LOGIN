@@ -66,12 +66,12 @@ function CorrectionManageItem({ correction, commute, member, depart, tableStyles
                 <td style={tableStyles.tableCell4}>
                     {/* {correction && correction.map((item, index) => (item.reasonForCorr))} */}
                     {/* {correction?.reasonForCorr} */}
-                    {correction[0].reasonForCorr}
+                    {correction && correction.reasonForCorr}
                 </td>
                 <td style={tableStyles.tableCell5}>
                     {/* {correction && correction.map((item, index) => (item.corrStatus))} */}
                     {/* {correction?.corrStatus} */}
-                    {correction[0].corrStatus}
+                    {correction && correction[0].corrStatus}
                 </td>
             </tr>
             {/* <CorrectionUpdateModal

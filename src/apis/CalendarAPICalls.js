@@ -11,7 +11,7 @@ const headers = {
 
 
 export const callSelectCalendarAPI = (department) => {
-    return async (dispatch) => {
+    return async dispatch => {
         try {
             const response = await axios.get(`${API_BASE_URL}/calendars?department=${department}`, { headers });
 
@@ -24,7 +24,7 @@ export const callSelectCalendarAPI = (department) => {
 };
 
 export const callInsertCalendarAPI = (requestData) => {
-    return async (dispatch) => {
+    return async dispatch => {
         try {
             const response = await axios.post(`${API_BASE_URL}/calendars`, requestData, { headers })
 
@@ -37,7 +37,7 @@ export const callInsertCalendarAPI = (requestData) => {
 };
 
 export const callUpdateCalendarAPI = (requestData) => {
-    return async (dispatch) => {
+    return async dispatch => {
         try {
             const response = await axios.put(`${API_BASE_URL}/calendars`, requestData, { headers })
 
@@ -49,8 +49,8 @@ export const callUpdateCalendarAPI = (requestData) => {
     };
 };
 
-export const callDeleteCalendarAPI = (id) => { 
-    return async (dispatch) => {
+export const callDeleteCalendarAPI = (id) => {
+    return async dispatch => {
         try {
             const response = await axios.delete(`${API_BASE_URL}/calendars/${id}`, { headers })
 

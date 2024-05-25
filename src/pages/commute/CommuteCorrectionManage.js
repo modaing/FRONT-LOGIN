@@ -210,7 +210,7 @@ function CommuteCorrectionManage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {correctionList.length > 0 ? (
+                                {correctionList && correctionList.length > 0 ? (
                                     correctionList.map((item, index) => (
                                         <CorrectionManageItem
                                             key={item.corrNo}
@@ -227,7 +227,7 @@ function CommuteCorrectionManage() {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan={7}>출퇴근 정정 관리 내역이 없습니다.</td>
+                                        <td colSpan={5}>출퇴근 정정 관리 내역이 없습니다.</td>
                                     </tr>
                                 )}
                             </tbody>

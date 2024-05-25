@@ -310,13 +310,13 @@ import * as echarts from 'echarts';
 
 })();
 
-document.addEventListener('DOMContentLoaded', function() {
-  var collapsibleElements = document.querySelectorAll('[data-bs-toggle="collapse"]');
+// document.addEventListener('DOMContentLoaded', function() {
+//   var collapsibleElements = document.querySelectorAll('[data-bs-toggle="collapse"]');
 
-  collapsibleElements.forEach(function(element) {
-    element.addEventListener('hide.bs.collapse', function(event) {
-      // 토글이 닫힐 때 실행되는 코드
-      document.body.classList.remove('toggle-sidebar');
-    });
-  });
-});
+//   collapsibleElements.forEach(function(element) {
+//     element.addEventListener('hide.bs.collapse', function(event) {
+//       // 토글이 닫힐 때 실행되는 코드
+//       document.body.classList.remove('toggle-sidebar');
+//     });
+//   });
+// });

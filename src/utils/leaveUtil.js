@@ -26,11 +26,17 @@ export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelect
                         ? 'cancelRequest'
                         : ''
 
-            const onClickHandler = submit.leaveSubProcessDate ? () => {
-                setSelectedTime({ start: formattedStartDate, end: formattedEndDate })
-                handleCancle(submit.leaveSubNo)
-            }
-                : () => handleDelete(submit.leaveSubNo);
+            const onClickHandler = submit.leaveSubStatus === "대기" && submit.refLeaveSubNo === 0
+                ? () => handleDelete(submit.leaveSubNo)
+                : isWithinOneDay
+                    ? null
+                    : submit.leaveSubStatus === "승인" && submit.refLeaveSubNo === 0
+                        ? () => {
+                            setSelectedTime({ start: formattedStartDate, end: formattedEndDate })
+                            handleCancle(submit.leaveSubNo)
+                        }
+                        : null;
+
 
             return (
                 <tr key={index}>
@@ -81,7 +87,7 @@ export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelect
     }
 }
 
-function formattedLocalDate(submit) {
+export function formattedLocalDate(submit) {
 
     //포맷팅 하기 위해서 date 타입으로 변환
     const startDate = new Date(submit.leaveSubStartDate);
@@ -128,8 +134,6 @@ export function renderLeaves(content) {
                 <td>{leaves.name}</td>
                 <td>{leaves.memberId}</td>
                 <td>{leaves.annualLeave}</td>
-                <td>{leaves.vacationLeave}</td>
-                <td>{leaves.familyEventLeave}</td>
                 <td>{leaves.specialLeave}</td>
                 <td className="consumedDays">{leaves.consumedDays}</td>
                 <td className="remainingDays">{leaves.remainingDays}</td>
