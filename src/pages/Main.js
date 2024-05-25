@@ -12,7 +12,6 @@ import { callSelectCalendarAPI } from '../apis/CalendarAPICalls';
 import AnnounceList from './announce/AnnouceList';
 import ClockContainer from '../common/ClockContainer';
 import Weather from '../common/Weather';
-import Profile from '../common/profile';
 import ApprovalCounts from '../common/ApprovalCounts';
 import ApproverCounts from '../common/ApproverCounts';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
@@ -41,13 +40,13 @@ function Main() {
                     <ClockContainer />
                 </div>
                 <div className="main-card">
-                     {/* <Weather />   */}
+                     { <Weather />   }
                     {/* API 횟수 제한이 있어서, 주석 해놓겠습니다 */}
                 </div>
                 <div className="main-card">
                     <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
                         <button className='slide-toggle-button' onClick={toggleComponent} style={{ background: 'none', border: 'none' }}>
-                            {showApprovalCounts ? <FaAngleRight style={{ color: '#ec76a2', marginTop: '-40px', marginRight: '-30px' }}/> : <FaAngleLeft style={{ color: '#ec76a2', marginTop: '-40px', marginRight: '-30px' }}/>}
+                            {showApprovalCounts ? <FaAngleRight style={{ color: '#3F72AF', marginTop: '-40px', marginRight: '-30px' }}/> : <FaAngleLeft style={{ color: '#ec76a2', marginTop: '-40px', marginRight: '-30px' }}/>}
                         </button>
                     </div>
                     {showApprovalCounts ? <ApprovalCounts /> : <ApproverCounts />}
