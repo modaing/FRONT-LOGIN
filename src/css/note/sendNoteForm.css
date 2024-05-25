@@ -1,82 +1,95 @@
 .send-note-modal-card-body {
-    padding: 20px;
-  }
-  
-  .note-input,
-  .note-textarea {
-    width: calc(100% - 40px); /* 20px padding on both sides */
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-  }
-
-  .note-textarea {
-    width: calc(100% - 40px); /* 20px padding on both sides */
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    height: 200px; /* Increase height */
-    resize: none; /* Disable resizing */
-  }
-  
-  .send-note-modal-card-text {
-    margin-bottom: 5px;
-  }
-  
-  .send-note-modal-close {
-    background-color: #ffffff; /* Red color for cancel button */
-    color: rgb(0, 0, 0);
-    border: 1px solid #3F72AF; 
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    float: right; /* Align right */
-  }
-  
-  .send-note-modal-submit {
-    background-color: #112D4E; /* Navy blue color for submit button */
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    float: right; /* Align right */
-    margin-right: 10px; /* Add some margin between buttons */
-  }
-  
-  .send-note-modal-submit:hover,
-  .send-note-modal-close:hover {
-    opacity: 0.8; /* Reduce opacity on hover */
-  }
-  
-  .select-wrapper {
-    position: relative;
-    width: calc(100% - 40px); /* 20px padding on both sides */
-    margin-bottom: 10px;
-  }
-  
-  .select-wrapper select {
-    width: calc(100% - 40px); /* 20px padding on both sides */
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    appearance: none; /* Remove default dropdown arrow */
-    background-color: white; /* Set background color */
-    cursor: pointer;
+  padding: 20px;
 }
-  
-  .select-wrapper::after {
-    content: '\25BC'; /* Unicode character for down arrow */
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    pointer-events: none;
-  }
-  
-  
+
+.note-input,
+.note-textarea {
+  width: calc(100% - 40px);
+  /* 20px padding on both sides */
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.note-textarea {
+  width: calc(100% - 40px);
+  /* 20px padding on both sides */
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  height: 200px;
+  /* Increase height */
+  resize: none;
+  /* Disable resizing */
+}
+
+.send-note-modal-card-text {
+  margin-bottom: 5px;
+}
+
+.send-note-modal-close {
+  background-color: #ffffff;
+  /* Red color for cancel button */
+  color: rgb(0, 0, 0);
+  border: 1px solid #3F72AF;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  float: right;
+  /* Align right */
+}
+
+.send-note-modal-submit {
+  background-color: #112D4E;
+  /* Navy blue color for submit button */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  float: right;
+  /* Align right */
+  margin-right: 10px;
+  /* Add some margin between buttons */
+}
+
+.send-note-modal-submit:hover,
+.send-note-modal-close:hover {
+  opacity: 0.8;
+  /* Reduce opacity on hover */
+}
+
+.select-wrapper {
+  position: relative;
+  width: calc(100% - 40px);
+  /* 20px padding on both sides */
+  margin-bottom: 10px;
+}
+
+.select-wrapper select {
+  width: calc(100% - 40px);
+  /* 20px padding on both sides */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  appearance: none;
+  /* Remove default dropdown arrow */
+  background-color: white;
+  /* Set background color */
+  cursor: pointer;
+}
+
+.select-wrapper::after {
+  content: '\25BC';
+  /* Unicode character for down arrow */
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}

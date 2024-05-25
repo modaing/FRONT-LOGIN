@@ -45,7 +45,9 @@ function Main() {
                 <div className="main-card">
                     <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
                         <button className='slide-toggle-button' onClick={toggleComponent} style={{ background: 'none', border: 'none' }}>
-                            {showApprovalCounts ? <FaAngleRight style={{ color: '#ec76a2', marginTop: '-40px', marginRight: '-30px' }} /> : <FaAngleLeft style={{ color: '#ec76a2', marginTop: '-40px', marginRight: '-30px' }} />}
+
+                            {showApprovalCounts ? <FaAngleRight style={{ color: '#3F72AF', marginTop: '-40px', marginRight: '-30px' }}/> : <FaAngleLeft style={{ color: '#ec76a2', marginTop: '-40px', marginRight: '-30px' }}/>}
+
                         </button>
                     </div>
                     {showApprovalCounts ? <ApprovalCounts /> : <ApproverCounts />}

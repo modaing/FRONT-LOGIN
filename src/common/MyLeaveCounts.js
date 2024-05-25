@@ -41,7 +41,7 @@ function MyLeaveCounts() {
                         <span className="leave-percentage">{remainingDays}<span>일</span></span>
                     </div>
                     <div className="leave-icon-container">
-                        <i className="bi bi-menu-up"></i>
+                        <i className="bi bi-joystick"></i>
                     </div>
                 </div>
             </div>
