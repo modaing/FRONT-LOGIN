@@ -10,7 +10,6 @@ function CommuteMonth({ date, year, month, commuteList, dates, tableStyle, table
                 date={date}
                 year={year}
                 month={month}
-                getDayOfWeek={getDayOfWeek}
                 name={commuteList.name}
                 commute={commuteList.commuteList}
                 dates={dates}

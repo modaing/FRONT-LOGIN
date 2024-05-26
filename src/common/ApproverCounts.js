@@ -31,7 +31,7 @@ function ApproverCounts() {
     return (
         <div className="approver-counts-container">
             <div className="approver-counts-body">
-                <h7 className="approver-counts-title">미처리 전자결재</h7>
+                <h7 className="approver-counts-title">수신 미처리 전자결재</h7>
 
                 <div className="approver-content-container">
                     <div className="approver-text-container">

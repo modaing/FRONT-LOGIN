@@ -4,6 +4,7 @@ import CommuteCalendar from "../../components/commutes/CommuteCalendar";
 import { useDispatch, useSelector } from "react-redux";
 import { callSelectCommuteListAPI } from "../../apis/CommuteAPICalls";
 import { textAlign } from "@mui/system";
+import '../../css/commute/commute.css';
 
 function CommuteManage() {
     const contentStyle = {
@@ -144,6 +145,31 @@ function CommuteManage() {
         { value: "2024-06", name: "2024-06" }
     ];
 
+    // item.workingDate 배열과 date 값을 비교하여 동일한지 확인
+    const isSameDate = (workingDateArray, date) => {
+        if (!date) {
+            return false; // date 값이 undefined인 경우 false 반환
+        }
+
+        const [year, month, day] = workingDateArray;
+        const [selectedYear, selectedMonth, selectedDay] = date.split('-').map(Number);
+
+        return year === selectedYear && month === selectedMonth && day === selectedDay;
+    };
+
+    const convertTime = (timeArray) => {
+        if (timeArray.length !== 2) {
+            return ''; // 배열 길이가 2가 아닌 경우 빈 문자열 반환
+        }
+
+        const hour = timeArray[0];
+        const minute = timeArray[1];
+
+        return `${hour}:${minute}`;
+    };
+
+    const emptyCellClass = !commuteList.commuteList || !commuteList.commuteList.find(item => isSameDate(item.workingDate, date)) ? {backgroundColor: '#D5D5D5'} : {backgroundColor: '#ffffff'};
+
     return (
         <>
             <main id="main" className="main">
@@ -160,38 +186,167 @@ function CommuteManage() {
                     </nav>
                 </div>
                 <div className="col-lg-12">
-                    <div className="card">
-                        <div className="content2" style={contentStyle}>
-                            <table className="table table-hover" style={tableStyle}>
-                                <thead>
-                                    <tr>
-                                        <th>이름</th>
-                                        <th style={{ padding: 0}}>
-                                            {/* 월별 날짜와 요일 렌더링 */}
-                                            {dates.map(date => (
-                                                <th key={date} style={{ ...tableStyles.tableHeaderCell, ...(isWeekend(getDayOfWeek(year, month, date)) && tableStyles.weekendCell) }}>
-                                                    {date}/{getDayOfWeek(year, month, date)}
-                                                </th>
-                                            ))}
-                                        </th>
-                                        <th style={tableStyles.tableHeaderCell}>합계</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <CommuteCalendar
-                                        date={date}
-                                        year={year}
-                                        month={month}
-                                        getDayOfWeek={getDayOfWeek}
-                                        commuteList={commuteList}
-                                        dates={dates}
-                                        tableStyle={tableStyle}
-                                        tableStyles={tableStyles}
-                                    />
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    {/* <div className="card"> */}
+                    {/* <div className="c" style={contentStyle}> */}
+                    <table className="table table-hover" style={{ width: '100%', position: 'relative', overflow: 'auto' }}>
+                        <thead style={{ position: 'sticky', top: 0, zIndex: 999 }}>
+                            <tr>
+                                <th rowSpan={2} scope='col' style={{ width: '40px', border: '1px solid #D5D5D5', verticalAlign: 'middle', textAlign: 'center' }}>이름</th>
+                                {dates.map(date => (
+                                    <th
+                                        key={date}
+                                        style={{ ...tableStyles.tableHeaderCell, ...(isWeekend(getDayOfWeek(year, month, date)) && tableStyles.weekendCell), border: '1px solid #D5D5D5' }}
+                                    >
+                                        {date}/{getDayOfWeek(year, month, date)}
+                                    </th>
+                                ))}
+                                <th rowSpan={1} scope='col' style={{ border: '1px solid #D5D5D5' }}>합계</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {commuteList && commuteList.map((member, index) => (
+                                <tr key={index}>
+                                    <td style={{ border: '1px solid #D5D5D5' }}>{member.name}</td>
+                                    {dates && dates.map(date => (
+                                        <td key={date} style={{ border: '1px solid #D5D5D5' }} className={emptyCellClass}>
+                                            {member.commuteList && member.commuteList.find(item => isSameDate(item.workingDate)) ? (
+                                                <>
+                                                    <span>{convertTime(member.commuteList.find(item => isSameDate(item.workingDate)).startWork)}</span>
+                                                    {member.commuteList && member.commuteList.find(item => isSameDate(item.workingDate, date)).endWork && (
+                                                        <span>{convertTime(member.commuteList.find(item => isSameDate(item.workingDate, date)).endWork)}</span>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                ' '
+                                            )}
+                                        </td>
+                                    ))}
+                                    <td style={{ border: '1px solid #D5D5D5' }}>+++</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                        <tfoot>
+                            <tr style={{ border: '1px solid #D5D5D5' }}>
+                                <td style={{ fontWeight: '800' }}>근무인원</td>
+                                {dates.map(date => (
+                                    <td key={date} style={{ border: '1px solid #D5D5D5' }}>
+                                        {/* 여기에 각 날짜에 대한 일별 근무 시간을 표시하는 로직을 추가하면 됩니다 */}
+                                    </td>
+                                ))}
+                                {/* <td style={{ border: '1px solid #D5D5D5' }}>합계</td> */}
+                            </tr>
+                        </tfoot>
+                        {/* <tbody>
+                            <CommuteCalendar
+                                date={date}
+                                year={year}
+                                month={month}
+                                commuteList={commuteList}
+                                dates={dates}
+                                tableStyle={tableStyle}
+                                tableStyles={tableStyles}
+                            />
+                            <tr>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                                <th>
+                                    <td>김정희</td>
+                                </th>
+                            </tr> 
+                            
+                        </tbody> */}
+                    </table>
                 </div>
             </main>
         </>

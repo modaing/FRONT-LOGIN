@@ -2,67 +2,10 @@ import CommuteItem from "./CommuteItem";
 
 function CommuteListByMember({ commute, date, parsingDateOffset, memberId }) {
 
-    console.log('[CommuteListByMember] commute : ', commute);
-    console.log('[CommuteListByMember] date : ', date);
-    console.log('[CommuteListByMember] parsingDateOffset : ', parsingDateOffset);
-    console.log('[CommuteListByMember] memberId : ', memberId);
-
-    const content2 = {
-        marginLeft: '25px'
-
-    };
-
-    const tableStyle = {
-        width: '97%',
-        borderCollapse: 'collapse',
-        textAlign: 'center',
-    };
-
-    const tableStyles = {
-        tableHeaderCell: {
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            padding: '15px'
-        },
-        tableCell1: {
-            width: '15%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell2: {
-            width: '13%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell3: {
-            width: '13%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell4: {
-            width: '13%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell5: {
-            width: '22%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell6: {
-            width: '13%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell7: {
-            width: '15%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        evenRow: {
-            backgroundColor: '#f9f9f9'
-        }
-    };
+    // console.log('[CommuteListByMember] commute : ', commute);
+    // console.log('[CommuteListByMember] date : ', date);
+    // console.log('[CommuteListByMember] parsingDateOffset : ', parsingDateOffset);
+    // console.log('[CommuteListByMember] memberId : ', memberId);
 
     const formatWorkingDate = (workingDate) => {
         const dateObj = new Date(workingDate);
@@ -105,7 +48,15 @@ function CommuteListByMember({ commute, date, parsingDateOffset, memberId }) {
                         <tbody>
                             {commute && commute.length > 0 ? (
                                 commute.map((item, index) => (
-                                    <CommuteItem key={item.commuteNo} commute={item} tableStyles={tableStyles} evenRow={index % 2 === 0} date={date} corrRegistrationDate={item.correction?.corrRegistrationDate} memberId={memberId}/>
+                                    <CommuteItem 
+                                    key={item.commuteNo} 
+                                    commute={item} 
+                                    tableStyles={tableStyles} 
+                                    evenRow={index % 2 === 0} 
+                                    date={date} 
+                                    corrRegistrationDate={item.correction?.corrRegistrationDate} 
+                                    memberId={memberId} 
+                                    />
                                 ))
                             ) : (
                                 <tr>
@@ -137,3 +88,60 @@ function CommuteListByMember({ commute, date, parsingDateOffset, memberId }) {
 }
 
 export default CommuteListByMember;
+
+const content2 = {
+    marginLeft: '25px'
+
+};
+
+const tableStyle = {
+    width: '97%',
+    borderCollapse: 'collapse',
+    textAlign: 'center',
+};
+
+const tableStyles = {
+    tableHeaderCell: {
+        cursor: 'pointer',
+        fontWeight: 'bold',
+        padding: '15px'
+    },
+    tableCell1: {
+        width: '15%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell2: {
+        width: '13%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell3: {
+        width: '13%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell4: {
+        width: '13%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell5: {
+        width: '22%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell6: {
+        width: '13%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell7: {
+        width: '15%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    evenRow: {
+        backgroundColor: '#f9f9f9'
+    }
+};

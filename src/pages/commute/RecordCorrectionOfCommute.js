@@ -5,7 +5,7 @@ import { decodeJwt } from '../../utils/tokenUtils';
 import { useEffect, useState } from 'react';
 import { callSelectCorrectionListAPI } from '../../apis/CommuteAPICalls';
 import CorrectionItem from '../../components/commutes/CorrectionItem';
-import { SET_PAGENUMBER, fetchCommuteListAsync } from '../../modules/CommuteModule';
+import { SET_PAGENUMBER } from '../../modules/CommuteModule';
 
 function RecordCorrectionOfCommute() {
 
@@ -77,20 +77,48 @@ function RecordCorrectionOfCommute() {
         }
     };
 
-    const OPTIONS = [
-        { value: "2024-03", name: "2024-03" },
-        { value: "2024-04", name: "2024-04" },
-        { value: "2024-05", name: "2024-05" }
-    ];
+    /* UTC 기준 날짜 반환으로 한국 표준시보다 9시간 빠른 날짜가 표시 되는 문제 해결 */
+    const [date, setDate] = useState(new Date());
+    let offset = date.getTimezoneOffset() * 60000;      // ms 단위이기 때문에 60000 곱해야함
+    let dateOffset = new Date(date.getTime() - offset); // 한국 시간으로 파싱
+    let parsingDateOffset = dateOffset.toISOString().slice(0, 10);
+    const [month, setMonth] = useState(parsingDateOffset);
+
+    console.log('utc 변환 ', parsingDateOffset);
+
+    const currentDate = new Date(parsingDateOffset);
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+    
+    const DATEOPTIONS = [];
+    
+    for (let i = 0; i < 12; i++) {
+        let month = currentMonth - i;
+        let year = currentYear;
+    
+        if (month <= 0) {
+            month += 12;
+            year -= 1;
+        }
+    
+        const monthString = `${year}-${String(month).padStart(2, '0')}`;
+        DATEOPTIONS.push({
+            value: `${year}-${String(month).padStart(2, '0')}-01`,
+            name: monthString,
+        });
+    }
+    
+    const handleMonthChange = (e) => {
+        setMonth(e.target.value);
+    };
 
     const SelectBox = (props) => {
         return (
-            <Select>
+            <Select value={props.value} onChange={props.onChange}>
                 {props.options.map((option) => (
                     <option
                         key={option.value}
                         value={option.value}
-                        defaultValue={props.defaultValue === option.value}
                     >
                         {option.name}
                     </option>
@@ -101,48 +129,21 @@ function RecordCorrectionOfCommute() {
 
     /* 로그인한 유저의 토큰 복호화 */
     const decodedToken = decodeJwt(window.localStorage.getItem('accessToken'));
-    // console.log('[RecordCommute] decodedToken : ', decodedToken);
     const memberId = decodedToken.memberId;
-    // console.log('[RecordCommute] memberId : ', memberId);
-
-    const [date, setDate] = useState(new Date());
-
-    /* UTC 기준 날짜 반환으로 한국 표준시보다 9시간 빠른 날짜가 표시 되는 문제 해결 */
-    let offset = date.getTimezoneOffset() * 60000;      // ms 단위이기 때문에 60000 곱해야함
-    let dateOffset = new Date(date.getTime() - offset); // 한국 시간으로 파싱
-    let parsingDateOffset = dateOffset.toISOString().slice(0, 10);
-
-    console.log('utc 변환 ', parsingDateOffset);
 
     /* 출퇴근 정정 내역 액션 */
     const result = useSelector(state => state.commuteReducer);
-    console.log('[RecordCorrectionOfCommute] result : ', result);
-
-    // const { commute, correction } = result || {};
-    const correctionlist = result.correctionlist;
-    console.log('[RecordCorrectionOfCommute] correctionlist : ', correctionlist);
-
-    const correctionList = correctionlist?.correctionlist.response.data.results.correction || [];
-    const commuteList = correctionlist?.correctionlist.response.data.results.commute || [];
-    console.log('[RecordCorrectionOfCommute] correctionList : ', correctionList);
-    console.log('[RecordCorrectionOfCommute] commuteList : ', commuteList);
-
-    const pageInfo = correctionlist?.correctionlist.response.data.results || [];
-    console.log('[RecordCorrectionOfCommute]  pageInfo : ', pageInfo);
-    const { currentPage, totalItems, totalPages } = pageInfo || {};
-
-    // const { submitPage } = useSelector(state => state.commuteReducer.correctionlist);
-    // const { currentPage, totalItems, totalPages } = submitPage || {};
-    // console.log('[출퇴근 정정 내역] submitPage : ', submitPage);
+    // console.log('[RecordCorrectionOfCommute] result : ', result);
+    const correctionlist = result?.correctionlist?.correctionlist || [];
+    // console.log('[RecordCorrectionOfCommute] correctionlist : ', correctionlist);
+    const correctionList = correctionlist?.response?.data?.results?.result || [];
+    // console.log('[RecordCorrectionOfCommute] correctionList : ', correctionList.result);
+    const { currentPage, totalItems, totalPages } = correctionList || {};
 
     const page = 0;
     const size = 10;
     const sort = 'corrNo';
     const direction = 'DESC';
-
-    // const target = memberId;
-    // const targetValue = 'member';
-
     const dispatch = useDispatch();
 
     /* 근무 일자 형식 변경 */
@@ -155,9 +156,9 @@ function RecordCorrectionOfCommute() {
     useEffect(() => {
         console.log('[useEffect] memberId : ', memberId);
         console.log('[useEffect] page : ', currentPage);
-        console.log('[useEffect] parsingDateOffset : ', parsingDateOffset);
-        dispatch(callSelectCorrectionListAPI(memberId, page, size, sort, direction, parsingDateOffset));
-    }, [memberId, parsingDateOffset, page]);
+        console.log('[useEffect] month : ', month);
+        dispatch(callSelectCorrectionListAPI(memberId, page, size, sort, direction, month));
+    }, [memberId, month, page, dispatch]);
 
     /* 페이징 핸들러 */
     const handlePageChange = (page) => {
@@ -185,7 +186,7 @@ function RecordCorrectionOfCommute() {
                         <li className="breadcrumb-item"><a href="/">Home</a></li>
                         <li className="breadcrumb-item">출퇴근</li>
                         <li className="breadcrumb-item active">출퇴근 정정 내역</li>
-                        <SelectBox options={OPTIONS} defaultValue="2024-05"></SelectBox>
+                        <SelectBox options={DATEOPTIONS} value={month} onChange={handleMonthChange} style={{float: 'right'}}></SelectBox>
                     </ol>
                 </nav>
             </div>
@@ -206,12 +207,10 @@ function RecordCorrectionOfCommute() {
                                 {correctionList.length > 0 ? (
                                     correctionList.map((item, index) => (
                                         <CorrectionItem
-                                            key={item.corrNo}
+                                            key={item.corrRegistrationDate}
                                             correction={item}
-                                            commute={commuteList}
                                             tableStyles={tableStyles}
                                             evenRow={index % 2 === 0}
-                                            date={parsingDateOffset}
                                             style={{ zIndex: '1' }}
                                         />
                                     ))
