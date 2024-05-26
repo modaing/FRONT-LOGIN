@@ -8,6 +8,8 @@ export const GET_COMMUTE_MEMBER = 'insite/GET/COMMUTE/MEMBER';
 export const GET_APPROVAL_COUNTS = 'insite/GET/APPROVAL_COUNTS';
 export const GET_APPROVER_COUNTS = 'insite/GET/APPROVER_COUNTS';
 export const GET_MY_LEAVES_COUNT = 'insite/GET/MY_LEAVE_COUNTS';
+export const GET_LEAVE_COMMUTE_COUNT = 'insite/GET/LEAVE_COMMUTE_COUNTS'
+export const GET_MEMBER_BIRTHDAY_COUNT = 'insite/GET/MEMBER_BRITHDAY_COUNTS';
 
 
 
@@ -19,7 +21,9 @@ const actions = createActions({
     [GET_COMMUTE_MEMBER]: () => {},
     [GET_APPROVAL_COUNTS]: () => {},
     [GET_APPROVER_COUNTS]: () => {},
-    [GET_MY_LEAVES_COUNT]: () => {}
+    [GET_MY_LEAVES_COUNT]: () => {},
+    [GET_LEAVE_COMMUTE_COUNT]: () => {},
+    [GET_MEMBER_BIRTHDAY_COUNT]: () => {}
 
 });
 
@@ -31,7 +35,9 @@ const insiteReducer = handleActions(
         [GET_COMMUTE_MEMBER]: (state, { payload }) => ( {commuteMember: payload } ),
         [GET_APPROVAL_COUNTS]: (state, { payload }) => ( {approvalCounts: payload} ),
         [GET_APPROVER_COUNTS]: (state, { payload }) => ( {approverCounts: payload} ),
-        [GET_MY_LEAVES_COUNT]: (state, { payload }) => ( {myleaveCounts: payload})
+        [GET_MY_LEAVES_COUNT]: (state, { payload }) => ( {myleaveCounts: payload}),
+        [GET_LEAVE_COMMUTE_COUNT]: (state, { payload }) => ( {leaveCommuteCounts: payload}),
+        [GET_MEMBER_BIRTHDAY_COUNT]: (state, { payload }) => ( {memberBirthdayCounts: payload} )
     },
     initialState
 );
