@@ -162,7 +162,7 @@
 .approvalItem{
     cursor: pointer;
 }
-.SelectBoxApproverTable th,td{
+.SelectBoxApproverTable th, .SelectBoxApproverTable td{
     max-width: 100px;
     overflow: hidden;
     padding: 5px;

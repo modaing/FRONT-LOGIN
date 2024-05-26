@@ -10,12 +10,14 @@ import ApproverModal from '../../components/approvals/ApproverModal';
 import InsertConfirmModal from '../../components/approvals/InsertConfirmModal';
 import InsertSuccessModal from '../../components/approvals/InsertSuccessModal';
 import InsertFailModal from '../../components/approvals/InsertFailModal';
+import WarningModal from '../../components/approvals/WarningModal';
+import TempSaveModal from '../../components/approvals/TempSaveModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { submitApprovalAPI } from '../../apis/ApprovalAPI';
-import WarningModal from '../../components/approvals/WarningModal';
-import TempSaveModal from '../../components/approvals/TempSaveModal';
+import { submitApprovalAPI, updateApprovalAPI } from '../../apis/ApprovalAPI';
+import { submitApproval, updateApproval } from '../../modules/ApprovalReducer';
+
 
 const ApprovalInsert = () => {
 
@@ -30,6 +32,7 @@ const ApprovalInsert = () => {
     const [title, setTitle] = useState('');
     const [titleError, setTitleError] = useState('');
     const [files, setFiles] = useState([]);
+    const [approvalNo, setApprovalNo] = useState(null);
     const [isInsertConfirmModalOpen, setIsInsertConfirmModalOpen] = useState(false);
     const [isInsertSuccessModalOpen, setIsInsertSuccessModalOpen] = useState(false);
     const [isInsertFailModalOpen, setIsInsertFailModalOpen] = useState(false);
@@ -120,41 +123,126 @@ const ApprovalInsert = () => {
 
 
     /* 결재 등록 */
-    const handleSubmit = async (status) => {
+    // const handleSubmit = async (status) => {
 
+    //     if (title.trim() === '') {
+    //         setWarningMessage('제목이 입력되지 않았습니다');
+    //         setIsWarrningModalOpen(true);
+    //         return;
+    //     }
+
+    //     const strippedFormContent = stripHtmlExceptDate(formContent).trim(/\s+/g, '');
+    //     const strippedInitialFormContent = stripHtmlExceptDate(initialFormContent).replace(/\s+/g, '');
+
+    //     if (title.length > 50) {
+    //         setWarningMessage('제목은 50자를 초과할 수 없습니다.');
+    //         setIsWarrningModalOpen(true);
+    //         return;
+    //     }
+
+    //     if (!approverLine.length > 0) {
+    //         setWarningMessage('결재선이 선택되지 않았습니다.');
+    //         setIsWarrningModalOpen(true);
+    //         return;
+    //     }
+
+    //     if (strippedFormContent === '' || strippedFormContent === strippedInitialFormContent) {
+    //         setWarningMessage('결재 내용이 입력되지 않았습니다');
+    //         setIsWarrningModalOpen(true);
+    //         return;
+    //     }
+
+
+    //     const formData = new FormData();
+
+    //     //에디터 내용을 포함한 폼 데이터를 가져오기
+    //     const editorContent = editorRef.current.getContent();
+
+    //     const approvalDTO = {
+    //         approvalTitle: title,
+    //         approvalContent: editorContent,
+    //         formNo: selectedForm.formNo,
+    //         approvalStatus: status,
+    //         approver: approverLine.map(approver => ({ memberId: approver.memberId })),
+    //         referencer: referencerLine.map(referencer => ({ memberId: referencer.memberId }))
+    //     };
+
+    //     formData.append('approvalDTO', new Blob([JSON.stringify(approvalDTO)], { type: 'application/json' }));
+
+    //     //파일 추가
+    //     if (files && files.length > 0) {
+    //         files.forEach(file => formData.append('multipartFile', file));
+    //     }
+
+    //     formData.forEach((value, key) => {
+    //         console.log(key, value);
+    //     });
+
+    //     try {
+    //         let response;
+
+    //         if(approvalNo){
+
+    //             //수정 API 호출
+    //             response = await dispatch(updateApprovalAPI(approvalNo, formData));
+
+    //         } else {
+
+    //             //저장된 approvalNo가 없다면 등록 API 호출 
+    //             response = await dispatch(submitApprovalAPI(formData));
+    //             // console.log('등록된 전자결재 번호 : ' + response.payload);
+    //             const responseData = response.data?.data;
+    //             console.log('등록된 전자결재 번호 : ' + responseData);
+    
+    //             if(responseData?.approvalNo){                //전자결재가 저장되었다면
+    //                 setApprovalNo(responseData.approvalNo); //전자결재 번호 저장
+    //             }
+    //         }
+         
+    //         if(status === '임시저장'){
+    //             setIsTempSaveModalOpen(true);
+    //         }else{
+    //             setIsInsertSuccessModalOpen(true);
+    //         }
+    //     } catch (error) {
+    //         openFailModal('');
+    //         console.error(error);
+    //     }
+
+    // }
+    const handleSubmit = async (status) => {
         if (title.trim() === '') {
             setWarningMessage('제목이 입력되지 않았습니다');
             setIsWarrningModalOpen(true);
             return;
         }
-
+    
         const strippedFormContent = stripHtmlExceptDate(formContent).trim(/\s+/g, '');
         const strippedInitialFormContent = stripHtmlExceptDate(initialFormContent).replace(/\s+/g, '');
-
+    
         if (title.length > 50) {
             setWarningMessage('제목은 50자를 초과할 수 없습니다.');
             setIsWarrningModalOpen(true);
             return;
         }
-
+    
         if (!approverLine.length > 0) {
             setWarningMessage('결재선이 선택되지 않았습니다.');
             setIsWarrningModalOpen(true);
             return;
         }
-
+    
         if (strippedFormContent === '' || strippedFormContent === strippedInitialFormContent) {
             setWarningMessage('결재 내용이 입력되지 않았습니다');
             setIsWarrningModalOpen(true);
             return;
         }
-
-
+    
         const formData = new FormData();
-
+    
         //에디터 내용을 포함한 폼 데이터를 가져오기
         const editorContent = editorRef.current.getContent();
-
+    
         const approvalDTO = {
             approvalTitle: title,
             approvalContent: editorContent,
@@ -163,31 +251,51 @@ const ApprovalInsert = () => {
             approver: approverLine.map(approver => ({ memberId: approver.memberId })),
             referencer: referencerLine.map(referencer => ({ memberId: referencer.memberId }))
         };
-
+    
         formData.append('approvalDTO', new Blob([JSON.stringify(approvalDTO)], { type: 'application/json' }));
-
+    
         //파일 추가
         if (files && files.length > 0) {
             files.forEach(file => formData.append('multipartFile', file));
         }
-
+    
         formData.forEach((value, key) => {
             console.log(key, value);
         });
 
-        try {
-            await dispatch(submitApprovalAPI(formData));
+        try{
+            let response;
+
+            if(approvalNo){
+                console.log('수정할 전자결재 번호 ' + approvalNo);
+                response = await dispatch(updateApproval({ approvalNo, formData })).unwrap();
+                console.log('수정된 전자결재 정보 : ' + JSON.stringify(response));
+            } else {
+                response = await dispatch(submitApproval(formData)).unwrap();
+                console.log('등록된 전자결재 번호 : ' + JSON.stringify(response));
+                if(response && response.data && response.data.approvalNo){
+                    console.log('response.data.approvalNo 가 있다네 : ' + response.data.approvalNo);
+                    setApprovalNo(response.data.approvalNo);
+                }
+            }
+
+            // const result = unwrapResult(response);
+
+            // if(result?.approvalNo){
+            //     setApprovalNo(result.approvalNo);
+            // }
+
             if(status === '임시저장'){
                 setIsTempSaveModalOpen(true);
-            }else{
+            } else { 
                 setIsInsertSuccessModalOpen(true);
             }
-        } catch (error) {
+        } catch(error){
+            console.error('결재 제출 실패 : ' + error);
             openFailModal('');
-            console.error(error);
+            
         }
-
-    }
+    };
 
     const setEditableElements = (doc) => {
         const formElements = doc.querySelectorAll('input, td, div[contenteditable="true"]');
