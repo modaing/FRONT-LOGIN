@@ -9,13 +9,19 @@ import { Link } from 'react-router-dom';
 import styled from "styled-components";
 import { handleAction } from 'redux-actions';
 import ClockInModal from '../../components/commutes/ClockInModal';
+import dayjs from "dayjs";
+
 import 'react-datepicker/dist/react-datepicker.css';
 import RecordCorrectionOfCommute from './RecordCorrectionOfCommute';
-import useClockInModal from '../../utils/CommuteUtil';
+import ClockOutModal from '../../components/commutes/ClockOutModal';
+import ClockLimitModal from '../../components/commutes/ClockLimitModal';
+import { textAlign, width } from '@mui/system';
 
 function RecordCommute() {
 
     const insertButton = {
+        width: '100px',
+        float: 'right',
         backgroundColor: '#112D4E',
         color: 'white',
         borderRadius: '5px',
@@ -23,10 +29,15 @@ function RecordCommute() {
         cursor: 'pointer',
         marginLeft: '60%',
         height: '45px',
-        textDecoration: 'none'
-    };
-
-    const updateButton = {
+        textDecoration: 'none',
+        textAlign: 'center',
+        display: 'inline-block',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      };
+      
+      const updateButton = {
         backgroundColor: '#ffffff',
         color: '#112D4E',
         border: '#112D4E 1px solid',
@@ -35,8 +46,13 @@ function RecordCommute() {
         cursor: 'pointer',
         marginLeft: '60%',
         height: '45px',
-        textDecoration: 'none'
-    };
+        textDecoration: 'none',
+        textAlign: 'center',
+        display: 'inline-block',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      };
 
     const OPTIONS = [
         { value: "2024-03", name: "2024-03" },
@@ -92,9 +108,12 @@ function RecordCommute() {
     const [isClocked, setIsClocked] = useState(false);
     const [lastCommuteNo, setLastCommuteNo] = useState(null);
     const [todaysCommute, setTodaysCommute] = useState(null);
-    // const [showModal, setShowModal] = useState(false);
-    const [chooseMonth, setChooseMonth] = useState(null);
-    const { showModal, handleClockInModalOpen, handleClockInModalClose } = useClockInModal();
+    const [showModal, setShowModal] = useState(false);
+    const [isInsert, setIsInsert] = useState(false);
+
+    const [showClockInModal, setShowClockInModal] = useState(false);
+    const [showClockOutModal, setShowClockOutModal] = useState(false);
+    const [showClockLimitModal, setShowClockLimitModal] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -102,37 +121,17 @@ function RecordCommute() {
     const result = useSelector(state => state.commuteReducer);
     console.log('[RecordCommute] result : ', result);
     const commuteList = result.commutelist;
-    // const correctionList = result.correctionlist;
-    // console.log('[RecordCommute] correctionList : ', correctionList);
-
-
-    /* 출근 시간 액션 */
-    const postCommute = result.postcommute;
-    console.log('[RecordCommute] postCommute : ', postCommute);
-
-    /* 퇴근 시간 액션 */
-    const putCommute = result.putcommute;
-    console.log('[RecordCommute] putCommute : ', putCommute);
 
     /* UTC 기준 날짜 반환으로 한국 표준시보다 9시간 빠른 날짜가 표시 되는 문제 해결 */
     let offset = date.getTimezoneOffset() * 60000;      // ms 단위이기 때문에 60000 곱해야함
     let dateOffset = new Date(date.getTime() - offset); // 한국 시간으로 파싱
     let parsingDateOffset = dateOffset.toISOString().slice(0, 10);
 
-    // console.log('[RecordCommute] date : ', date);
-    // console.log('[RecordCommute] date.toISOString().slice(0, 10) : ', date.toISOString().slice(0, 10));
-    // console.log('[RecordCommute] date.toISOString() : ', date.toISOString());
-    // console.log('[RecordCommute] offset : ', offset);
-    // console.log('[RecordCommute] dateOffset : ', dateOffset);
-    // console.log('[RecordCommute] dateOffset.toISOString() : ', dateOffset.toISOString());
-    // console.log('[RecordCommute] parsingDateOffset : ', parsingDateOffset);
-
     /* 출퇴근 내역 API 호출 */
     useEffect(() => {
         (dispatch(callSelectCommuteListAPI(target, targetValue, parsingDateOffset)));
-    }, [dispatch, target, targetValue, date, postCommute, putCommute, parsingDateOffset, todaysCommute]);
+    }, [dispatch, target, targetValue, date, parsingDateOffset, todaysCommute, showClockInModal, showClockOutModal, showClockLimitModal]);
 
-    // console.log(callSelectCommuteList);
     /* 한 주 전으로 이동 */
     const handlePreviousClick = () => {
         setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7));
@@ -143,86 +142,65 @@ function RecordCommute() {
         setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7));
     };
 
-    /* 현재 시간 포맷 */
-    let today = new Date();
-    let hours = ('0' + today.getHours()).slice(-2);
-    let minutes = ('0' + today.getMinutes()).slice(-2);
-
-    let timeString = hours + ':' + minutes;
-
-    /* 총 근무 시간 계산 */
-
-
-    /* 출근하기 API 호출 */
-    const handleClockIn = () => {
-        try {
-            if (todaysCommute === parsingDateOffset) {
-                // setShowModal(true);
-                console.log('모달오픈!!!!!!!!!!', showModal);
-                handleClockInModalOpen();
-
-            } else {
-                let newCommute = {
-                    memberId: memberId,
-                    workingDate: new Date().toISOString().slice(0, 10),
-                    startWork: timeString,
-                    workingStatus: "근무중",
-                    totalWorkingHours: 0
-                };
-                console.log('출근 api 호출 : ', newCommute);
-
-                dispatch(callInsertCommuteAPI(newCommute));
-                setIsClocked(true);
-
-                const parsedDate = new Date((result.commutelist[result.commutelist.length - 1].workingDate));
-                const formattedDate = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')}`;
-
-                console.log('todaysCommute', todaysCommute);
-                console.log('parsedDate 마지막 내역의 날짜 : ', parsedDate);
-                console.log('formattedDate : ', formattedDate);
-                console.log('parsingDateOffset 오늘 날짜 : ', parsingDateOffset);
-
-                if (result.commutelist.length > 0) {
-                    setLastCommuteNo(result.commutelist[result.commutelist.length - 1].commuteNo);
-                    setTodaysCommute(formattedDate);
-                };
-            }
-
-        } catch (error) {
-            console.error('Error inserting commute:', error);
+    /* 날짜 데이터 파싱 */
+    const parseDate = (dateData) => {
+        if (Array.isArray(dateData)) {
+            return dayjs(new Date(dateData[0], dateData[1] - 1, dateData[2])).format('YYYY-MM-DD');
+        } else {
+            return dateData;
         }
     };
 
-    /* 오늘 출근 제한 모달 핸들러 */
-    // const handleClockInModalClose = () => {
-    //     setShowModal(false);
-    //     console.log('모달 닫기!!!!!!!!!', showModal);
-    // };
+    /* 출퇴근 내역에서 오늘 날짜의 출퇴근 내역 찾기 */
+    const todayCommute = commuteList.find(
+        (commute) => parseDate(commute.workingDate) === parsingDateOffset
+    );
 
-    /* 퇴근하기 API 호출 */
-    const handleClockOut = async () => {
+    /* 오늘이 포함된 주인지 확인 */
+    const isCurrentWeek = () => {
+        const today = new Date(parsingDateOffset);
+        const mondayDate = new Date(today.setDate(today.getDate() - today.getDay()));
+        const sundayDate = new Date(mondayDate.getFullYear(), mondayDate.getMonth(), mondayDate.getDate() + 6);
+        return (
+            parsingDateOffset >= mondayDate.toISOString().slice(0, 10) &&
+            parsingDateOffset <= sundayDate.toISOString().slice(0, 10)
+        );
+    };
+
+    const handleClockIn = () => {
         try {
+            
+            console.log('오늘출퇴근기록 쳌 ', todayCommute);
+            console.log('현재 날짜 쳌 (parsingDateOffset)', parsingDateOffset);
 
-            if (todaysCommute == null) {
-                setTodaysCommute(parsingDateOffset);
-            };
-
-            console.log('[퇴근하기 api] lastCommuteNo + 1 : ', lastCommuteNo + 1);
-            console.log('퇴근할때 todaysCommute 확인!!!!!!!!', todaysCommute);
-
-            let updateCommute = {
-                commuteNo: lastCommuteNo + 1,
-                endWork: timeString,
-                workingStatus: "퇴근",
-                totalWorkingHours: 480
-            };
-
-            dispatch(callUpdateCommuteAPI(updateCommute));
-            setIsClocked(false);
-
+            if (todayCommute != null) {
+                if (todayCommute.endWork == null) {
+                    setShowClockOutModal(true);
+                    setTodaysCommute(todayCommute);
+                } else {
+                    setShowClockLimitModal(true);
+                }
+            } else {
+                setShowClockInModal(true);
+                setTodaysCommute(todayCommute);
+            }
         } catch (error) {
-            console.error('Error inserting commute:', error);
+            console.error('Error checking commute:', error);
         }
+    };
+
+    const handleClockInModalClose = () => {
+        setShowClockInModal(false);
+        setIsClocked((prevState) => !prevState); // 버튼 상태 변경
+    };
+
+    const handleClockOutModalClose = () => {
+        setShowClockOutModal(false);
+        setIsClocked((prevState) => !prevState); // 버튼 상태 변경
+    };
+
+    const handleClockLimitModalClose = () => {
+        setShowClockLimitModal(false);
     };
 
     return <>
@@ -234,15 +212,57 @@ function RecordCommute() {
                         <li className="breadcrumb-item"><a href="/">Home</a></li>
                         <li className="breadcrumb-item">출퇴근</li>
                         <li className="breadcrumb-item active">출퇴근 내역</li>
-                        {(!isClocked ? (
-                            <Link to="/recordCommute" className="notice-insert-button" style={insertButton} onClick={handleClockIn}>
-                                출근하기
-                            </Link>
-                        ) : (
-                            <Link to="/recordCommute" className="notice-insert-button" style={updateButton} onClick={handleClockOut}>
-                                퇴근하기
-                            </Link>
-                        ))}
+                        <Link
+                            to="/recordCommute"
+                            className="notice-insert-button"
+                            // style={!todayCommute ? insertButton : (todayCommute ? updateButton : insertButton)}
+                            style={
+                                isCurrentWeek()
+                                    ? todayCommute
+                                        ? todayCommute.endWork == null
+                                            ? updateButton
+                                            : { display: 'none' }
+                                        : insertButton
+                                    : { display: 'none' }
+                            }
+                            onClick={handleClockIn}
+                        >
+                            {/* {!todayCommute ? '출근하기' : (todayCommute ? '퇴근하기' : '출근하기')} */}
+                            {isCurrentWeek()
+                                ? todayCommute
+                                    ? todayCommute.endWork == null
+                                        ? '퇴근하기'
+                                        : ''
+                                    : '출근하기'
+                                : ''}
+                        </Link>
+                        {showClockInModal && (
+                            <ClockInModal
+                                isOpen={showClockInModal}
+                                onClose={handleClockInModalClose}
+                                parsingDateOffset={parsingDateOffset}
+                                memberId={memberId}
+                                commuteList={commuteList}
+                            // handleClockIn={handleClockIn}
+                            />
+                        )}
+                        {showClockOutModal && (
+                            <ClockOutModal
+                                isOpen={showClockOutModal}
+                                onClose={handleClockOutModalClose}
+                                parsingDateOffset={parsingDateOffset}
+                                memberId={memberId}
+                                commuteList={commuteList}
+                            // handleClockOut={handleClockOut}
+                            />
+                        )}
+                        {showClockLimitModal && (
+                            <ClockLimitModal
+                                isOpen={showClockLimitModal}
+                                onClose={handleClockLimitModalClose}
+                                parsingDateOffset={parsingDateOffset}
+                            />
+                        )}
                         <SelectBox options={OPTIONS} defaultValue={date} onChange={handleAction}></SelectBox>
                     </ol>
                 </nav>
@@ -258,7 +278,7 @@ function RecordCommute() {
                 )}
             </div>
         </main>
-        <ClockInModal isOpen={showModal} onClose={handleClockInModalClose} date={todaysCommute} />
+        {/* <ClockInModal isOpen={showModal} onClose={() => setShowModal(false)} isInsert={isInsert} memberId={memberId} parsingDateOffset={parsingDateOffset} /> */}
     </>
 
 }

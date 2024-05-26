@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import '../../css/commute/commute.css';
+import { margin } from '@mui/system';
 
 function CommuteTime({ commute, date, handlePreviousClick, handleNextClick }) {
 
@@ -15,18 +16,17 @@ function CommuteTime({ commute, date, handlePreviousClick, handleNextClick }) {
 
     const red = {
         color: '#AF3131',
-        fontWeight: 900
+        fontWeight: 900,
     };
 
     const blue = {
         color: '#3F72AF',
-        fontWeight: 900
-
+        fontWeight: 900,
     };
 
     const black = {
         color: '#00000',
-        fontWeight: 900
+        fontWeight: 900,
     };
 
     const dateWeek = {
@@ -236,9 +236,9 @@ function CommuteTime({ commute, date, handlePreviousClick, handleNextClick }) {
                         <h6>{getWeekRange(date)}</h6>
                         {/* <h6>{getWeekRange(new Date(date.getFullYear(), date.getMonth(), date.getDate()))}</h6> */}
                         <ProgressBar progress={progressPercentage} style={{ width: '40%', margin: '20px auto' }} />
-                        <h6>최대 근로시간 <span className="black" style={black}>52시간</span></h6>
-                        <h6>실제 근로시간 <span className="blue" style={blue}>{formattedTotalWorkingHours}</span></h6>
-                        <h6>잔여 근로시간 <span className="red" style={red}>{formattedRemainingWorkingHours}</span></h6>
+                        <h6 style={{ padding: '5px' }}>최대 근로시간 <span className="black" style={black}>52시간</span></h6>
+                        <h6 style={{ padding: '5px' }}>실제 근로시간 <span className="blue" style={blue}>{formattedTotalWorkingHours}</span></h6>
+                        <h6 style={{ padding: '5px' }}>잔여 근로시간 <span className="red" style={red}>{formattedRemainingWorkingHours}</span></h6>
                     </div>
                 </div>
             </div>

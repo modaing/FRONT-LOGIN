@@ -46,8 +46,8 @@ const InsertCorrectionModal = ({ commute, isOpen, onClose, onSave, date, startWo
             return;
         };
 
-        const koreaStartTime = corrStartWork ? parseTime(corrStartWork) : '';
-        const koreaEndTime = corrEndWork ? parseTime(corrEndWork) : '';
+        const koreaStartTime = corrStartWork ? parseTime(corrStartWork) : null;
+        const koreaEndTime = corrEndWork ? parseTime(corrEndWork) : null;
 
         onSave({
             commuteNo: commute.commuteNo,
@@ -117,7 +117,7 @@ const InsertCorrectionModal = ({ commute, isOpen, onClose, onSave, date, startWo
                             </div>
                             {showTimeErrorMessage && (
                                 <h6 style={{ color: 'red', marginTop: '10px', fontSize: '15px', marginBottom: '14px', textAlign: 'left' }}>
-                                    정정 요청할 출근 시간 혹은 퇴근 시간을 입력해주세요!
+                                    정정 요청할 시간을 입력해주세요!
                                 </h6>
                             )}
                             {/* {(!corrStartWork && !corrEndWork) && (
@@ -126,7 +126,7 @@ const InsertCorrectionModal = ({ commute, isOpen, onClose, onSave, date, startWo
                                 </h6>
                             )} */}
                             <div style={{ display: 'flex', marginBottom: '0px' }}>
-                                <h6 style={{ fontWeight: 'bold', marginRight: '60px', marginBottom: '0px' }}>정정 요청 출근 시간</h6>
+                                <h6 style={{ fontWeight: 'bold', marginRight: '20px', marginBottom: '0px', width: '150px' }}>정정 요청 출근 시간</h6>
                                 <div className="form-group" style={{ marginBottom: '0px' }}>
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                                         <TimePicker
@@ -141,11 +141,28 @@ const InsertCorrectionModal = ({ commute, isOpen, onClose, onSave, date, startWo
                                     </LocalizationProvider>
                                 </div>
                             </div>
-                            <div style={{ display: 'flex', marginBottom: '0px' }}>
-                                <h6 style={{ fontWeight: 'bold', marginRight: '60px', marginBottom: '0px' }}>정정 요청 퇴근 시간</h6>
+                            {endWork &&
+                                <div style={{ display: 'flex', marginBottom: '0px' }}>
+                                    <h6 style={{ fontWeight: 'bold', marginRight: '20px', marginBottom: '0px', width: '150px' }}>정정 요청 퇴근 시간</h6>
+                                    <div className="form-group" style={{ marginBottom: '0px' }}>
+                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            <TimePicker
+                                                label="정정 요청 퇴근 시간"
+                                                onChange={(e) => {
+                                                    setCorrEndWork(e);
+                                                    setShowTimeErrorMessage(false);
+                                                }}
+                                                format="HH:mm"
+                                                TimePicker={corrEndWork}
+                                            />
+                                        </LocalizationProvider>
+                                    </div>
+                                </div>
+                            }
+                            {/* <div style={{ display: 'flex', marginBottom: '0px' }}>
+                                <h6 style={{ fontWeight: 'bold', marginRight: '20px', marginBottom: '0px', width: '150px' }}>정정 요청 퇴근 시간</h6>
                                 <div className="form-group" style={{ marginBottom: '0px' }}>
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        {/* <DemoContainer components={['TimePicker']}> */}
                                         <TimePicker
                                             label="정정 요청 퇴근 시간"
                                             onChange={(e) => {
@@ -156,10 +173,9 @@ const InsertCorrectionModal = ({ commute, isOpen, onClose, onSave, date, startWo
                                             TimePicker={corrEndWork}
                                             onBlur={e => this.focusOut(e.target.value)}
                                         />
-                                        {/* </DemoContainer> */}
                                     </LocalizationProvider>
                                 </div>
-                            </div>
+                            </div> */}
                             <div>
                                 <h6 style={{ fontWeight: 'bold', textAlign: 'left', paddingBottom: '10px' }}>정정 사유
                                     {showReasonErrorMessage && (
