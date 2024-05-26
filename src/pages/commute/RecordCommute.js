@@ -19,47 +19,6 @@ import { textAlign, width } from '@mui/system';
 
 function RecordCommute() {
 
-    const insertButton = {
-        width: '100px',
-        float: 'right',
-        backgroundColor: '#112D4E',
-        color: 'white',
-        borderRadius: '5px',
-        padding: '1% 1.5%',
-        cursor: 'pointer',
-        marginLeft: '60%',
-        height: '45px',
-        textDecoration: 'none',
-        textAlign: 'center',
-        display: 'inline-block',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      };
-      
-      const updateButton = {
-        backgroundColor: '#ffffff',
-        color: '#112D4E',
-        border: '#112D4E 1px solid',
-        borderRadius: '5px',
-        padding: '1% 1.5%',
-        cursor: 'pointer',
-        marginLeft: '60%',
-        height: '45px',
-        textDecoration: 'none',
-        textAlign: 'center',
-        display: 'inline-block',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      };
-
-    const OPTIONS = [
-        { value: "2024-03", name: "2024-03" },
-        { value: "2024-04", name: "2024-04" },
-        { value: "2024-05", name: "2024-05" }
-    ];
-
     const Select = styled.select`
         margin-left: 20px;
         webkit-appearance: none;
@@ -73,26 +32,60 @@ function RecordCommute() {
         border-color: #D5D5D5;
     `;
 
+    /* UTC 기준 날짜 반환으로 한국 표준시보다 9시간 빠른 날짜가 표시 되는 문제 해결 */
+    const [date, setDate] = useState(new Date());
+    let offset = date.getTimezoneOffset() * 60000;      // ms 단위이기 때문에 60000 곱해야함
+    let dateOffset = new Date(date.getTime() - offset); // 한국 시간으로 파싱
+    let parsingDateOffset = dateOffset.toISOString().slice(0, 10);
+
+    const currentDate = new Date(parsingDateOffset);
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+    const [month, setMonth] = useState(parsingDateOffset);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [shouldRefresh, setShouldRefresh] = useState(false);
+
+    const DATEOPTIONS = [];
+
+    for (let i = 0; i < 12; i++) {
+        let month = currentMonth - i;
+        let year = currentYear;
+
+        if (month <= 0) {
+            month += 12;
+            year -= 1;
+        }
+
+        const monthString = `${year}-${String(month).padStart(2, '0')}`;
+        DATEOPTIONS.push({
+            value: `${year}-${String(month).padStart(2, '0')}-01`,
+            name: monthString,
+        });
+    }
+
+    const handleMonthChange = (e) => {
+        const selectedYear = parseInt(e.target.value.slice(0, 4));
+        const selectedMonth = parseInt(e.target.value.slice(5, 7));
+        setSelectedDate(new Date(selectedYear, selectedMonth - 1, 1));
+    };
+
+    const handleCorrectionRegistered = () => {
+        setShouldRefresh((prevState) => !prevState);
+    };
+
     const SelectBox = (props) => {
         return (
-            <Select>
+            <Select value={props.value} onChange={props.onChange}>
                 {props.options.map((option) => (
                     <option
                         key={option.value}
                         value={option.value}
-                        defaultValue={props.defaultValue === option.value}
                     >
                         {option.name}
                     </option>
                 ))}
             </Select>
         );
-    };
-
-    const handleAction = () => {
-        // 날짜 선택 시 value 적용하는 로직
-        <option>
-        </option>
     };
 
     /* 로그인한 유저의 토큰 복호화 */
@@ -104,12 +97,8 @@ function RecordCommute() {
     const [target, setTarget] = useState('member');
     const [targetValue, setTargetValue] = useState(memberId);
 
-    const [date, setDate] = useState(new Date());
     const [isClocked, setIsClocked] = useState(false);
-    const [lastCommuteNo, setLastCommuteNo] = useState(null);
     const [todaysCommute, setTodaysCommute] = useState(null);
-    const [showModal, setShowModal] = useState(false);
-    const [isInsert, setIsInsert] = useState(false);
 
     const [showClockInModal, setShowClockInModal] = useState(false);
     const [showClockOutModal, setShowClockOutModal] = useState(false);
@@ -122,15 +111,12 @@ function RecordCommute() {
     console.log('[RecordCommute] result : ', result);
     const commuteList = result.commutelist;
 
-    /* UTC 기준 날짜 반환으로 한국 표준시보다 9시간 빠른 날짜가 표시 되는 문제 해결 */
-    let offset = date.getTimezoneOffset() * 60000;      // ms 단위이기 때문에 60000 곱해야함
-    let dateOffset = new Date(date.getTime() - offset); // 한국 시간으로 파싱
-    let parsingDateOffset = dateOffset.toISOString().slice(0, 10);
-
     /* 출퇴근 내역 API 호출 */
     useEffect(() => {
         (dispatch(callSelectCommuteListAPI(target, targetValue, parsingDateOffset)));
-    }, [dispatch, target, targetValue, date, parsingDateOffset, todaysCommute, showClockInModal, showClockOutModal, showClockLimitModal]);
+    }, [dispatch, todaysCommute, target, targetValue, date,
+         parsingDateOffset, showClockInModal, showClockOutModal, showClockLimitModal,
+          selectedDate, commuteList.correction, shouldRefresh]);
 
     /* 한 주 전으로 이동 */
     const handlePreviousClick = () => {
@@ -169,9 +155,6 @@ function RecordCommute() {
 
     const handleClockIn = () => {
         try {
-            
-            console.log('오늘출퇴근기록 쳌 ', todayCommute);
-            console.log('현재 날짜 쳌 (parsingDateOffset)', parsingDateOffset);
 
             if (todayCommute != null) {
                 if (todayCommute.endWork == null) {
@@ -215,26 +198,39 @@ function RecordCommute() {
                         <Link
                             to="/recordCommute"
                             className="notice-insert-button"
-                            // style={!todayCommute ? insertButton : (todayCommute ? updateButton : insertButton)}
+                            // style={!todayCommute ? todayCommute.endWork == null ? updateButton : insertButton : insertButton}
                             style={
-                                isCurrentWeek()
-                                    ? todayCommute
-                                        ? todayCommute.endWork == null
-                                            ? updateButton
-                                            : { display: 'none' }
+                                !todayCommute
+                                    ? insertButton
+                                    : todayCommute
+                                        ? updateButton
                                         : insertButton
-                                    : { display: 'none' }
                             }
+                            // style={
+                            //     isCurrentWeek()
+                            //         ? todayCommute
+                            //             ? todayCommute.endWork == null
+                            //                 ? updateButton
+                            //                 : { display: 'none' }
+                            //             : insertButton
+                            //         : { display: 'none' }
+                            // }
                             onClick={handleClockIn}
                         >
-                            {/* {!todayCommute ? '출근하기' : (todayCommute ? '퇴근하기' : '출근하기')} */}
-                            {isCurrentWeek()
+                            {/* {!todayCommute ? todayCommute.endWork == null ? '퇴근하기' : '출근하기' : '출근하기'} */}
+                            {!todayCommute
+                                ? '출근하기'
+                                : todayCommute
+                                    ? '퇴근하기'
+                                    : '출근하기'
+                            }
+                            {/* {isCurrentWeek()
                                 ? todayCommute
                                     ? todayCommute.endWork == null
                                         ? '퇴근하기'
                                         : ''
                                     : '출근하기'
-                                : ''}
+                                : ''} */}
                         </Link>
                         {showClockInModal && (
                             <ClockInModal
@@ -263,7 +259,7 @@ function RecordCommute() {
                                 parsingDateOffset={parsingDateOffset}
                             />
                         )}
-                        <SelectBox options={OPTIONS} defaultValue={date} onChange={handleAction}></SelectBox>
+                        <SelectBox options={DATEOPTIONS} value={month} onChange={handleMonthChange} style={{ float: 'right' }}></SelectBox>
                     </ol>
                 </nav>
             </div>
@@ -274,7 +270,7 @@ function RecordCommute() {
             </div>
             <div>
                 {commuteList && (
-                    <CommuteListByMember key={commuteList.commuteNo} commute={commuteList} date={date} parsingDateOffset={parsingDateOffset} memberId={memberId} />
+                    <CommuteListByMember key={commuteList.commuteNo} commute={commuteList} date={date} parsingDateOffset={parsingDateOffset} memberId={memberId} correction={commuteList.correction} />
                 )}
             </div>
         </main>
@@ -284,3 +280,38 @@ function RecordCommute() {
 }
 
 export default RecordCommute;
+
+const insertButton = {
+    width: '100px',
+    float: 'right',
+    backgroundColor: '#112D4E',
+    color: 'white',
+    borderRadius: '5px',
+    padding: '1% 1.5%',
+    cursor: 'pointer',
+    marginLeft: '60%',
+    height: '45px',
+    textDecoration: 'none',
+    textAlign: 'center',
+    display: 'inline-block',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+};
+
+const updateButton = {
+    backgroundColor: '#ffffff',
+    color: '#112D4E',
+    border: '#112D4E 1px solid',
+    borderRadius: '5px',
+    padding: '1% 1.5%',
+    cursor: 'pointer',
+    marginLeft: '60%',
+    height: '45px',
+    textDecoration: 'none',
+    textAlign: 'center',
+    display: 'inline-block',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+};

@@ -46,12 +46,14 @@ const ClockOutModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteLi
     // /* 총 근무 시간 */
     const calculateTotalWorkingHours = (workingDate, startWork) => {
         // 출근 시간과 현재 시간의 차이 계산하여 총 근무 시간 반환
-        const startTime = new Date(`${workingDate}T${startWork}:00`);
+        const [startHours, startMinutes] = startWork.split(':');
+        const startTime = new Date(`${workingDate}T${startHours}:${startMinutes}:00`);
         const endTime = new Date();
         const totalWorkingSeconds = (endTime - startTime) / 1000;
         const totalWorkingHours = Math.floor(totalWorkingSeconds / 3600);
-        return totalWorkingHours;
-    };
+        const totalWorkingMinutes = Math.floor((totalWorkingSeconds % 3600) / 60);
+        return totalWorkingHours * 60 + totalWorkingMinutes;
+      };
 
     const handleUpdateCommute = () => {
         try {
@@ -72,7 +74,7 @@ const ClockOutModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteLi
 
                 dispatch(callUpdateCommuteAPI(updateCommute));
                 onClose();
-                
+
         } catch (error) {
             console.error('Error updating commute:', error);
         }
