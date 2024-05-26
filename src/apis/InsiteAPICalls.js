@@ -1,4 +1,4 @@
-import { GET_LEAVE_MEMBER, GET_MEMBER_DEPART, GET_COMMUTE_MEMBER, GET_APPROVAL_COUNTS, GET_APPROVER_COUNTS, GET_MY_LEAVES_COUNT } from '../modules/InsiteModule';
+import { GET_LEAVE_MEMBER, GET_MEMBER_DEPART, GET_COMMUTE_MEMBER, GET_APPROVAL_COUNTS, GET_APPROVER_COUNTS, GET_MY_LEAVES_COUNT, GET_LEAVE_COMMUTE_COUNT, GET_MEMBER_BIRTHDAY_COUNT } from '../modules/InsiteModule';
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8080';
@@ -92,3 +92,28 @@ export const callMyLeaveCountsAPI = (memberId) => {
     }
 }
 
+export const callLeaveCommuteCountsAPI = () => {
+    return async (dispatch) => {
+        try {
+            const leaveCommuteCountsResponse = await axios.get(`${API_BASE_URL}/insites/leaves/commutes`, { headers })
+            dispatch( {type: GET_LEAVE_COMMUTE_COUNT, payload: leaveCommuteCountsResponse.data});
+            console.log('leaveCommuteCountsResponse', leaveCommuteCountsResponse)
+            return leaveCommuteCountsResponse;
+        } catch (error) {
+            throw error;
+        }
+    }
+}
+
+export const callMemberBirthdayCountsAPI = () => {
+    return async (dispatch) => {
+        try { 
+            const memberBirthdayCountsResponse = await axios.get(`${API_BASE_URL}/insites/members`, { headers });
+            dispatch({type: GET_MEMBER_BIRTHDAY_COUNT, payload: memberBirthdayCountsResponse.data});
+            console.log('memberBirthdayCountsResponse', memberBirthdayCountsResponse)
+            return memberBirthdayCountsResponse;
+        } catch (error) {
+            throw error;
+        }
+    }
+};
