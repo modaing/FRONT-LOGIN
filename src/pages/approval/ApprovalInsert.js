@@ -10,12 +10,14 @@ import ApproverModal from '../../components/approvals/ApproverModal';
 import InsertConfirmModal from '../../components/approvals/InsertConfirmModal';
 import InsertSuccessModal from '../../components/approvals/InsertSuccessModal';
 import InsertFailModal from '../../components/approvals/InsertFailModal';
+import WarningModal from '../../components/approvals/WarningModal';
+import TempSaveModal from '../../components/approvals/TempSaveModal';
+import CancelInsertModal from '../../components/approvals/CancelInsertModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { submitApprovalAPI, updateApprovalAPI } from '../../apis/ApprovalAPI';
-import WarningModal from '../../components/approvals/WarningModal';
-import TempSaveModal from '../../components/approvals/TempSaveModal';
+
 
 const ApprovalInsert = () => {
 
@@ -36,6 +38,7 @@ const ApprovalInsert = () => {
     const [isInsertFailModalOpen, setIsInsertFailModalOpen] = useState(false);
     const [isWarningModalOpen, setIsWarrningModalOpen] = useState(false);
     const [isTempSaveModalOpen, setIsTempSaveModalOpen] = useState(false);
+    const [isCancelInsertModalOpen, setIsCancelInsertModalOpen] = useState(false);
     const [warningMessage, setWarningMessage] = useState('');
     const editorRef = useRef(null);
     const dispatch = useDispatch();
@@ -119,18 +122,12 @@ const ApprovalInsert = () => {
         return tempDiv.textContent || tempDiv.innerHTML || '';
     }
 
-
-
-    const handleSubmit = async (status) => {
-
-        console.log('status: ' + status);
-
+    const validateForm = (status) => {
         if(status === '처리 중' && title.trim() === ''){
             console.log('status === 처리 중, title.trim() === "" ');
             setWarningMessage('제목이 입력되지 않았습니다');
             setIsWarrningModalOpen(true);
-            setIsInsertConfirmModalOpen(false);
-            return;
+            return false;
         }
 
         const strippedFormContent = stripHtmlExceptDate(formContent).trim(/\s+/g, '');
@@ -139,23 +136,33 @@ const ApprovalInsert = () => {
         if (title.length > 50) {
             setWarningMessage('제목은 50자를 초과할 수 없습니다.');
             setIsWarrningModalOpen(true);
-            setIsInsertConfirmModalOpen(false);
-            return;
+            return false;
         }
 
         if (status === '처리 중' && !approverLine.length > 0) {
             setWarningMessage('결재선이 선택되지 않았습니다.');
             setIsWarrningModalOpen(true);
-            setIsInsertConfirmModalOpen(false);
-            return;
+            return false;
         }
 
         if (status === '처리 중' && strippedFormContent === '' || strippedFormContent === strippedInitialFormContent) {
             setWarningMessage('결재 내용이 입력되지 않았습니다');
             setIsWarrningModalOpen(true);
-            setIsInsertConfirmModalOpen(false);
-            return;
+            return false;
         }
+
+        return true;
+    };
+
+
+
+    const handleSubmit = async (status) => {
+
+        console.log('status: ' + status);
+
+       if(!validateForm(status)) {
+            return;
+       }
 
 
         const formData = new FormData();
@@ -301,7 +308,10 @@ const ApprovalInsert = () => {
     }
 
     const openConfirmModal = () => {
-        setIsInsertConfirmModalOpen(true);
+        if(validateForm('처리 중')){
+
+            setIsInsertConfirmModalOpen(true);
+        }
     };
 
     const closeConfirmModal = () => {
@@ -333,6 +343,19 @@ const ApprovalInsert = () => {
 
     const closeTempSaveModal = () => {
         setIsTempSaveModalOpen(false);
+    }
+
+    const openCancelInsertModal = () => {
+        setIsCancelInsertModalOpen(true);
+    }
+
+    const closeCancelInserstModal = () => {
+        setIsCancelInsertModalOpen(false);
+    }
+
+    const insertCancel = () => {
+        setIsCancelInsertModalOpen(false);
+        navigate('/approvals?fg=given&page=0title=&direction=DESC');
     }
 
     
@@ -531,7 +554,7 @@ const ApprovalInsert = () => {
                             </div>
                         </div>
                         <div className={styles.insertAppButtons}>
-                            <button type='button'>취소</button>
+                            <button type='button' onClick={openCancelInsertModal}>취소</button>
                             <button type="submit" onClick={() => handleSubmit('처리 중')}>등록</button>
                         </div>
                     </form>
@@ -564,6 +587,11 @@ const ApprovalInsert = () => {
                     <TempSaveModal
                         isOpen={isTempSaveModalOpen}
                         onClose={closeTempSaveModal}
+                    />
+                    <CancelInsertModal
+                        isOpen={isCancelInsertModalOpen}
+                        onClose={closeCancelInserstModal}
+                        onConfirm={insertCancel}
                     />
                 </div>
             </main>
