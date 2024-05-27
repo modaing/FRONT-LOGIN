@@ -1,6 +1,6 @@
 import CommuteItem from "./CommuteItem";
 
-function CommuteListByMember({ commute, date, parsingDateOffset, memberId }) {
+function CommuteListByMember({ commute, date, parsingDateOffset, memberId, handleCorrectionRegistered, onClose }) {
 
     // console.log('[CommuteListByMember] commute : ', commute);
     // console.log('[CommuteListByMember] date : ', date);
@@ -57,6 +57,8 @@ function CommuteListByMember({ commute, date, parsingDateOffset, memberId }) {
                                     corrRegistrationDate={item.correction?.corrRegistrationDate} 
                                     memberId={memberId}
                                     parsingDateOffset={parsingDateOffset} 
+                                    handleCorrectionRegistered={handleCorrectionRegistered}
+                                    onClose={onClose}
                                     />
                                 ))
                             ) : (

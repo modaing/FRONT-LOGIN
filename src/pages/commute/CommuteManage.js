@@ -159,9 +159,19 @@ function CommuteManage() {
                             <li className="breadcrumb-item"><a href="/">Home</a></li>
                             <li className="breadcrumb-item">출퇴근</li>
                             <li className="breadcrumb-item active">출퇴근 관리</li>
-                            <SelectBox options={DEPARTOPTIONS} defaultValue={depart} onChange={handleAction}></SelectBox>
-                            <SelectBox options={DATEOPTIONS} defaultValue={date} onChange={handleMonthChange}></SelectBox>
+                            <div className="form-check form-switch" style={{ display: 'flex' }} >
+                                <h6 className="form-check-label" for="flexSwitchCheckDefault" style={{ display: 'flex', color: '#112D4E', marginLeft: '10px', marginRight: '50px'}}>근무 시간 조회</h6>
+                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" />
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
+                                <SelectBox options={DEPARTOPTIONS} defaultValue={depart} onChange={handleAction}></SelectBox>
+                                <SelectBox options={DATEOPTIONS} defaultValue={date} onChange={handleMonthChange}></SelectBox>
+                            </div>
                         </ol>
+                        {/* <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" />
+                            <h1 class="form-check-label" for="flexSwitchCheckDefault">근무 시간 조회</h1>
+                        </div> */}
                     </nav>
                 </div>
                 <div className="col-lg-12">
@@ -188,9 +198,9 @@ function CommuteManage() {
                                         <td key={`${index}-${date}`} style={{ border: '1px solid #D5D5D5', padding: '0px', backgroundColor: '#112D4E', color: '#ffffff' }} className={emptyCellClass}>
                                             {member.commuteList && member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])) ? (
                                                 <>
-                                                    <span style={{textAlign: 'center', padding: '11px'}}>{convertTime(member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).startWork)}</span><br/>
+                                                    <span style={{ textAlign: 'center', padding: '11px' }}>{convertTime(member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).startWork)}</span><br />
                                                     {member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).endWork && (
-                                                        <span style={{textAlign: 'center', padding: '11px'}}>{convertTime(member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).endWork)}</span>
+                                                        <span style={{ textAlign: 'center', padding: '11px' }}>{convertTime(member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).endWork)}</span>
                                                     )}
                                                 </>
                                             ) : (
@@ -199,24 +209,31 @@ function CommuteManage() {
                                         </td>
                                     ))}
                                     <td style={{ border: '1px solid #D5D5D5' }}>
-                                        {member.commuteList && member.commuteList.filter(item => isSameDate(item.workingDate, [year, month])).reduce((total, item) => total + item.totalWorkingHours, 0)}
+                                        {member.commuteList && member.commuteList.filter(item => isSameDate(item.workingDate, [year, month, date])).reduce((total, item) => total + item.workingDate, 0)}
                                     </td>
+                                    <td style={{ border: '1px solid #D5D5D5' }}>
+                                        {member.commuteList && member.commuteList.filter(item => isSameDate(item.workingDate, [year, month, date])).length}
+                                    </td>
+
                                 </tr>
                             ))}
                         </tbody>
                         <tfoot>
                             <tr style={{ border: '1px solid #D5D5D5' }}>
                                 <td style={{ fontWeight: '800' }}>근무인원</td>
-                                {dates.map(date => (
+                                {dates && dates.map(date => (
                                     <td key={date} style={{ border: '1px solid #D5D5D5' }}>
-                                        {commuteList && commuteList.filter(member => member.commuteList && member.commuteList.some(item => isSameDate(new Date(item.workingDate), new Date(year, month - 1, date)))).length}
+                                        {commuteList
+                                            .flatMap((member) => member.commuteList || [])
+                                            .filter((commute) => isSameDate(commute.workingDate, [year, month, date]))
+                                            .length}
                                     </td>
                                 ))}
                             </tr>
                         </tfoot>
                     </table>
                 </div>
-            </main>
+            </main >
         </>
     );
 };
