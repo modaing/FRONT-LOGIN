@@ -50,7 +50,8 @@ function Leaves() {
                 setIsLoading(false);
             }
         };
-        fetchData()
+        number !== undefined 
+            && fetchData();
     }, [number, properties, direction]);
 
     return <main id="main" className="main">

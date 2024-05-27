@@ -90,7 +90,8 @@ function MyLeave() {
                 setIsLoading(false);
             }
         };
-        fetchData();
+        number !== undefined 
+            && fetchData();
     }, [number, properties, direction, insertMessage]);
 
     return <main id="main" className="main">

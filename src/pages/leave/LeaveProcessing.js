@@ -63,20 +63,25 @@ function LeaveProcessing() {
     }
 
     useEffect(() => {
+        console.log('빈배열 유즈이펙트');
         const resetNumber = async () => await dispatch({ type: SET_PAGENUMBER, payload: 0 })
         resetNumber();
     }, []);
 
     useEffect(() => {
+        console.log(number);
+        console.log('유즈이펙트 진입');
         setIsLoading(true);
         const fetchData = async () => {
             try {
+                console.log('디스패치 실행');
                 await dispatch(callSelectLeaveSubmitAPI(number, properties, direction));
             } finally {
                 setIsLoading(false);
             }
         };
-        fetchData();
+        number !== undefined 
+            && fetchData();
     }, [number, properties, direction]);
 
     return <main id="main" className="main">
