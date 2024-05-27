@@ -55,7 +55,8 @@ function CommuteListByMember({ commute, date, parsingDateOffset, memberId }) {
                                     evenRow={index % 2 === 0} 
                                     date={date} 
                                     corrRegistrationDate={item.correction?.corrRegistrationDate} 
-                                    memberId={memberId} 
+                                    memberId={memberId}
+                                    parsingDateOffset={parsingDateOffset} 
                                     />
                                 ))
                             ) : (

@@ -98,13 +98,6 @@ function CommuteManage() {
     let dateOffset = new Date(today.getTime() - offset); // 한국 시간으로 파싱
     let parsingDateOffset = dateOffset.toISOString().slice(0, 10);
 
-    // const target = 'depart';
-    // const targetValue = department;
-
-    // useEffect(() => {
-    //     dispatch(callSelectCommuteListAPI(target, department, parsingDateOffset));
-    // }, [parsingDateOffset]);
-
     const DEPARTOPTIONS = [
         { value: 1, name: "인사팀" },
         { value: 2, name: "개발팀" },
@@ -153,27 +146,6 @@ function CommuteManage() {
     };
 
     const [dateState, setDateState] = useState(new Date(date));
-
-    // const generateDates = () => {
-    //     const dates = [];
-    //     const startDate = new Date(dateState.getFullYear(), dateState.getMonth(), dateState.getDate() - (dateState.getDay() ? dateState.getDay() - 1 : 6));  // 이번 주 월요일
-    //     const endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 6);                           // 이번 주 일요일
-
-    //     console.log('시작 날짜 : ', startDate);
-    //     console.log('종료 날짜 : ', endDate);
-
-    //     while (startDate <= endDate) {
-    //         const formattedDate = formatWorkingDate(startDate);
-    //         dates.push(formattedDate);
-    //         startDate.setDate(startDate.getDate() + 1);
-    //     }
-
-    //     return dates;
-    // };
-
-    // const formatWorkingDate = (workingDate) => {
-    //     return `${workingDate.getFullYear()}-${String(workingDate.getMonth() + 1).padStart(2, '0')}-${String(workingDate.getDate()).padStart(2, '0')}`;
-    // };
 
     const emptyCellClass = !commuteList.commuteList || !commuteList.commuteList.find(item => isSameDate(item.workingDate, date)) ? { backgroundColor: '#D5D5D5' } : { backgroundColor: '#ffffff' };
 
