@@ -1,39 +1,13 @@
+import React, { Fragment } from 'react';
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import CommuteCalendar from "../../components/commutes/CommuteCalendar";
 import { useDispatch, useSelector } from "react-redux";
 import { callSelectCommuteListAPI } from "../../apis/CommuteAPICalls";
 import { textAlign } from "@mui/system";
 import '../../css/commute/commute.css';
+import { decodeJwt } from '../../utils/tokenUtils';
 
 function CommuteManage() {
-    const contentStyle = {
-        marginLeft: '25px'
-    };
-
-    const tableStyle = {
-        width: '97%',
-        borderCollapse: 'collapse',
-        textAlign: 'center',
-    };
-
-    const tableStyles = {
-        tableHeaderCell: {
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            padding: '15px',
-            textAlign: 'center'
-        },
-        evenRow: {
-            backgroundColor: '#f9f9f9'
-        },
-        weekendCell: {
-            color: 'red'
-        },
-        tr: {
-            border: 1,
-        }
-    };
 
     const Select = styled.select`
         margin-left: 20px;
@@ -48,7 +22,7 @@ function CommuteManage() {
         border-color: #D5D5D5;
     `;
 
-    const [date, setDate] = useState("2024-06");
+    const [date, setDate] = useState("2024-05-01"); // 발표 전 6월로 바꾸기 
     const [depart, setDepart] = useState(1);
 
     const SelectBox = (props) => {
@@ -71,11 +45,15 @@ function CommuteManage() {
         const selectedDepartNo = e.target.value;
         setDepart(selectedDepartNo);
 
-        // 선택한 월에 따라 날짜 렌더링
-        const selectedDate = date;
-        setDate(selectedDate);
-        dispatch(callSelectCommuteListAPI(target, selectedDepartNo, parsingDateOffset));
+        // // 선택한 월에 따라 날짜 렌더링
+        // const selectedDate = date;
+        // setDate(selectedDate);
+        // dispatch(callSelectCommuteListAPI(target, selectedDepartNo, parsingDateOffset));
     };
+
+    useEffect(() => {
+        dispatch(callSelectCommuteListAPI(target, depart, date));
+    }, [date, depart]);
 
     const getDaysInMonth = (year, month) => {
         return new Date(year, month, 0).getDate();
@@ -105,6 +83,10 @@ function CommuteManage() {
 
     const dates = Array.from({ length: daysInMonth }, (_, index) => index + 1);
 
+    /* 로그인한 유저의 토큰 복호화 */
+    const decodedToken = decodeJwt(window.localStorage.getItem('accessToken'));
+    const memberId = decodedToken.memberId;
+
     /* 액션 */
     const result = useSelector(state => state.commuteReducer);
     console.log('출퇴근 캘린더 result', result);
@@ -116,13 +98,6 @@ function CommuteManage() {
     let dateOffset = new Date(today.getTime() - offset); // 한국 시간으로 파싱
     let parsingDateOffset = dateOffset.toISOString().slice(0, 10);
 
-    // const target = 'depart';
-    // const targetValue = department;
-
-    // useEffect(() => {
-    //     dispatch(callSelectCommuteListAPI(target, department, parsingDateOffset));
-    // }, [parsingDateOffset]);
-
     const DEPARTOPTIONS = [
         { value: 1, name: "인사팀" },
         { value: 2, name: "개발팀" },
@@ -130,33 +105,35 @@ function CommuteManage() {
     ];
 
     const DATEOPTIONS = [
-        { value: "2023-06", name: "2023-06" },
-        { value: "2023-07", name: "2023-07" },
-        { value: "2023-08", name: "2023-08" },
-        { value: "2023-09", name: "2023-09" },
-        { value: "2023-10", name: "2023-10" },
-        { value: "2023-11", name: "2023-11" },
-        { value: "2023-12", name: "2023-12" },
-        { value: "2024-01", name: "2024-01" },
-        { value: "2024-02", name: "2024-02" },
-        { value: "2024-03", name: "2024-03" },
-        { value: "2024-04", name: "2024-04" },
-        { value: "2024-05", name: "2024-05" },
-        { value: "2024-06", name: "2024-06" }
+        // { value: "2024-06-01", name: "2024-06" },    // 발표 전 주석 해제하기 
+        { value: "2024-05-01", name: "2024-05" },
+        { value: "2024-04-01", name: "2024-04" },
+        { value: "2024-03-01", name: "2024-03" },
+        { value: "2024-02-01", name: "2024-02" },
+        { value: "2024-01-01", name: "2024-01" },
+        { value: "2023-12-01", name: "2023-12" },
+        { value: "2023-11-01", name: "2023-11" },
+        { value: "2023-10-01", name: "2023-10" },
+        { value: "2023-09-01", name: "2023-09" },
+        { value: "2023-08-01", name: "2023-08" },
+        { value: "2023-07-01", name: "2023-07" },
+        { value: "2023-06-01", name: "2023-06" }
     ];
 
-    // item.workingDate 배열과 date 값을 비교하여 동일한지 확인
-    const isSameDate = (workingDateArray, date) => {
-        if (!date) {
-            return false; // date 값이 undefined인 경우 false 반환
+    const isSameDate = (workingDateArray, selectedDateArray) => {
+        if (!workingDateArray || workingDateArray.length !== 3) {
+            return false; // workingDateArray 값이 undefined이거나 배열의 길이가 3이 아닌 경우 false 반환
         }
 
-        const [year, month, day] = workingDateArray;
-        const [selectedYear, selectedMonth, selectedDay] = date.split('-').map(Number);
+        if (!selectedDateArray || selectedDateArray.length !== 3) {
+            return false; // selectedDateArray 값이 undefined이거나 배열의 길이가 3이 아닌 경우 false 반환
+        }
 
-        return year === selectedYear && month === selectedMonth && day === selectedDay;
+        const [workingYear, workingMonth, workingDay] = workingDateArray;
+        const [selectedYear, selectedMonth, selectedDay] = selectedDateArray;
+
+        return workingYear === selectedYear && workingMonth === selectedMonth && workingDay === selectedDay;
     };
-
     const convertTime = (timeArray) => {
         if (timeArray.length !== 2) {
             return ''; // 배열 길이가 2가 아닌 경우 빈 문자열 반환
@@ -168,7 +145,9 @@ function CommuteManage() {
         return `${hour}:${minute}`;
     };
 
-    const emptyCellClass = !commuteList.commuteList || !commuteList.commuteList.find(item => isSameDate(item.workingDate, date)) ? {backgroundColor: '#D5D5D5'} : {backgroundColor: '#ffffff'};
+    const [dateState, setDateState] = useState(new Date(date));
+
+    const emptyCellClass = !commuteList.commuteList || !commuteList.commuteList.find(item => isSameDate(item.workingDate, date)) ? { backgroundColor: '#D5D5D5' } : { backgroundColor: '#ffffff' };
 
     return (
         <>
@@ -186,10 +165,8 @@ function CommuteManage() {
                     </nav>
                 </div>
                 <div className="col-lg-12">
-                    {/* <div className="card"> */}
-                    {/* <div className="c" style={contentStyle}> */}
                     <table className="table table-hover" style={{ width: '100%', position: 'relative', overflow: 'auto' }}>
-                        <thead style={{ position: 'sticky', top: 0, zIndex: 999 }}>
+                        <thead >
                             <tr>
                                 <th rowSpan={2} scope='col' style={{ width: '40px', border: '1px solid #D5D5D5', verticalAlign: 'middle', textAlign: 'center' }}>이름</th>
                                 {dates.map(date => (
@@ -204,24 +181,26 @@ function CommuteManage() {
                             </tr>
                         </thead>
                         <tbody>
-                            {commuteList && commuteList.map((member, index) => (
+                            {commuteList.map((member, index) => (
                                 <tr key={index}>
                                     <td style={{ border: '1px solid #D5D5D5' }}>{member.name}</td>
-                                    {dates && dates.map(date => (
-                                        <td key={date} style={{ border: '1px solid #D5D5D5' }} className={emptyCellClass}>
-                                            {member.commuteList && member.commuteList.find(item => isSameDate(item.workingDate)) ? (
+                                    {dates.map(date => (
+                                        <td key={`${index}-${date}`} style={{ border: '1px solid #D5D5D5', padding: '0px', backgroundColor: '#112D4E', color: '#ffffff' }} className={emptyCellClass}>
+                                            {member.commuteList && member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])) ? (
                                                 <>
-                                                    <span>{convertTime(member.commuteList.find(item => isSameDate(item.workingDate)).startWork)}</span>
-                                                    {member.commuteList && member.commuteList.find(item => isSameDate(item.workingDate, date)).endWork && (
-                                                        <span>{convertTime(member.commuteList.find(item => isSameDate(item.workingDate, date)).endWork)}</span>
+                                                    <span style={{textAlign: 'center', padding: '11px'}}>{convertTime(member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).startWork)}</span><br/>
+                                                    {member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).endWork && (
+                                                        <span style={{textAlign: 'center', padding: '11px'}}>{convertTime(member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).endWork)}</span>
                                                     )}
                                                 </>
                                             ) : (
-                                                ' '
+                                                <td style={{ backgroundColor: '#F6F5F5', width: '61px', height: '65px' }}></td>
                                             )}
                                         </td>
                                     ))}
-                                    <td style={{ border: '1px solid #D5D5D5' }}>+++</td>
+                                    <td style={{ border: '1px solid #D5D5D5' }}>
+                                        {member.commuteList && member.commuteList.filter(item => isSameDate(item.workingDate, [year, month])).reduce((total, item) => total + item.totalWorkingHours, 0)}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -230,122 +209,11 @@ function CommuteManage() {
                                 <td style={{ fontWeight: '800' }}>근무인원</td>
                                 {dates.map(date => (
                                     <td key={date} style={{ border: '1px solid #D5D5D5' }}>
-                                        {/* 여기에 각 날짜에 대한 일별 근무 시간을 표시하는 로직을 추가하면 됩니다 */}
+                                        {commuteList && commuteList.filter(member => member.commuteList && member.commuteList.some(item => isSameDate(new Date(item.workingDate), new Date(year, month - 1, date)))).length}
                                     </td>
                                 ))}
-                                {/* <td style={{ border: '1px solid #D5D5D5' }}>합계</td> */}
                             </tr>
                         </tfoot>
-                        {/* <tbody>
-                            <CommuteCalendar
-                                date={date}
-                                year={year}
-                                month={month}
-                                commuteList={commuteList}
-                                dates={dates}
-                                tableStyle={tableStyle}
-                                tableStyles={tableStyles}
-                            />
-                            <tr>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                                <th>
-                                    <td>김정희</td>
-                                </th>
-                            </tr> 
-                            
-                        </tbody> */}
                     </table>
                 </div>
             </main>
@@ -354,3 +222,31 @@ function CommuteManage() {
 };
 
 export default CommuteManage;
+
+const contentStyle = {
+    marginLeft: '25px'
+};
+
+const tableStyle = {
+    width: '97%',
+    borderCollapse: 'collapse',
+    textAlign: 'center',
+};
+
+const tableStyles = {
+    tableHeaderCell: {
+        cursor: 'pointer',
+        fontWeight: 'bold',
+        padding: '15px',
+        textAlign: 'center'
+    },
+    evenRow: {
+        backgroundColor: '#f9f9f9'
+    },
+    weekendCell: {
+        color: 'red'
+    },
+    tr: {
+        border: 1,
+    }
+};

@@ -9,12 +9,6 @@ import { SET_PAGENUMBER } from '../../modules/CommuteModule';
 
 function RecordCorrectionOfCommute() {
 
-
-    const pageTitleStyle = {
-        marginBottom: '20px',
-        marginTop: '20px'
-    };
-
     const Select = styled.select`
         margin-left: 20px;
         -webkit-appearance: none;
@@ -30,52 +24,6 @@ function RecordCorrectionOfCommute() {
         cursor: 'pointer',
         margin-left: '750px',
     `;
-
-    const contentStyle = {
-        marginLeft: '25px'
-    };
-
-    const tableStyle = {
-        width: '97%',
-        borderCollapse: 'collapse',
-        textAlign: 'center',
-    };
-
-    const tableStyles = {
-        tableHeaderCell: {
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            padding: '15px'
-        },
-        tableCell1: {
-            width: '20%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell2: {
-            width: '20%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell3: {
-            width: '20%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell4: {
-            width: '20%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell5: {
-            width: '20%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        evenRow: {
-            backgroundColor: '#f9f9f9'
-        }
-    };
 
     /* UTC 기준 날짜 반환으로 한국 표준시보다 9시간 빠른 날짜가 표시 되는 문제 해결 */
     const [date, setDate] = useState(new Date());
@@ -250,3 +198,54 @@ function RecordCorrectionOfCommute() {
 }
 
 export default RecordCorrectionOfCommute;
+
+const pageTitleStyle = {
+    marginBottom: '20px',
+    marginTop: '20px'
+};
+
+const contentStyle = {
+    marginLeft: '25px'
+};
+
+const tableStyle = {
+    width: '97%',
+    borderCollapse: 'collapse',
+    textAlign: 'center',
+};
+
+const tableStyles = {
+    tableHeaderCell: {
+        cursor: 'pointer',
+        fontWeight: 'bold',
+        padding: '15px'
+    },
+    tableCell1: {
+        width: '20%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell2: {
+        width: '20%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell3: {
+        width: '20%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell4: {
+        width: '20%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell5: {
+        width: '20%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    evenRow: {
+        backgroundColor: '#f9f9f9'
+    }
+};

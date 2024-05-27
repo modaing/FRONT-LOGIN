@@ -100,7 +100,7 @@ const InsertCorrectionModal = ({ commute, isOpen, onClose, onSave, date, startWo
                             <h5 className="modal-title">출퇴근 정정 등록</h5>
                             <button type="button" onClick={resetModal} style={{ background: '#ffffff', color: '#000000', paddingLeft: '20px', cursor: 'pointer' }}><i className="bi bi-arrow-counterclockwise"></i></button>
                             <button type="button" className="btn-close" onClick={onClose} style={{ backgroundColor: '#ffffff', cursor: 'pointer' }}></button>
-                            {/* 시간 새로고침 안됨! 추후 해결해야 할 것 */}
+                            {/* 시간 새로고침은 되는데 화면에 반영안됨!! */}
                         </div>
                         <div className="modal-body" style={{ paddingTop: '30px', paddingBottom: '20px' }}>
                             <div style={{ display: 'flex' }}>
@@ -159,28 +159,11 @@ const InsertCorrectionModal = ({ commute, isOpen, onClose, onSave, date, startWo
                                     </div>
                                 </div>
                             }
-                            {/* <div style={{ display: 'flex', marginBottom: '0px' }}>
-                                <h6 style={{ fontWeight: 'bold', marginRight: '20px', marginBottom: '0px', width: '150px' }}>정정 요청 퇴근 시간</h6>
-                                <div className="form-group" style={{ marginBottom: '0px' }}>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <TimePicker
-                                            label="정정 요청 퇴근 시간"
-                                            onChange={(e) => {
-                                                setCorrEndWork(e);
-                                                setShowTimeErrorMessage(false);
-                                            }}
-                                            format="HH:mm"
-                                            TimePicker={corrEndWork}
-                                            onBlur={e => this.focusOut(e.target.value)}
-                                        />
-                                    </LocalizationProvider>
-                                </div>
-                            </div> */}
                             <div>
                                 <h6 style={{ fontWeight: 'bold', textAlign: 'left', paddingBottom: '10px' }}>정정 사유
                                     {showReasonErrorMessage && (
                                         <h6 style={{ color: 'red', marginTop: '10px', fontSize: '15px', marginBottom: '0px' }}>
-                                            정정 사유를 입력해주세요!
+                                            정정 사유를 반드시 입력해주세요!
                                         </h6>
                                     )}
                                     {/* {!reason && (

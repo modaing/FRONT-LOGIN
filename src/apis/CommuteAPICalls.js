@@ -25,23 +25,6 @@ export const callSelectCommuteListAPI = (target, targetValue, date) => {
     }
 };
 
-// /* 출퇴근 상세 조회 API */
-// export const callSelectCommuteDetailAPI = (commuteNo) => {
-//     return async (dispatch) => {
-//         try {
-//             const url = `/commutes/${commuteNo}`;
-//             const response = await request('GET', url);
-
-//             console.log('[callSelectCommuteDetailAPI] response : ', response);
-
-//             dispatch(getCommute(response));
-
-//         } catch (error) {
-//             console.log('[] Error : ', error);
-//         }
-//     }
-// };
-
 /* 출근 시간 등록 API */
 export const callInsertCommuteAPI = (newCommute) => {
     return async (dispatch) => {
@@ -138,8 +121,9 @@ export const callSelectCorrectionListAPI = (memberId, page, size, sort, directio
 export const callUpdateCorrectionAPI = (updateCorrection) => {
     return async (dispatch) => {
         try {
+            console.log('api 에욥 corrNo: ', updateCorrection.corrNo);
             const url = `/corrections/${updateCorrection.corrNo}`;
-            const response = await request('PUT', url);
+            const response = await request('PUT', url, updateCorrection);
 
             console.log('[callUpdateCorrectionAPI] response : ', response);
 

@@ -20,6 +20,7 @@ function MyLeave() {
     const [isLoading, setIsLoading] = useState(false);
     const [leaveSubNo, setLeaveSubNo] = useState('');
     const [selectedTime, setSelectedTime] = useState('');
+    const [isReset, setIsReset] = useState(false);
     const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
     const dispatch = useDispatch();
 
@@ -77,7 +78,13 @@ function MyLeave() {
     };
 
     useEffect(() => {
-        const resetNumber = async () => await dispatch({ type: SET_PAGENUMBER, payload: 0 });
+        const resetNumber = async () => {
+            try {
+                await dispatch({ type: SET_PAGENUMBER, payload: 0 })
+            } finally {
+                setIsReset(true);
+            }
+        }
         resetNumber();
     }, []);
 
@@ -90,8 +97,9 @@ function MyLeave() {
                 setIsLoading(false);
             }
         };
-        fetchData();
-    }, [number, properties, direction, insertMessage]);
+        isReset
+            && fetchData();
+    }, [number, properties, direction, isReset]);
 
     return <main id="main" className="main">
         <div className="pagetitle">

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { decodeJwt } from './../utils/tokenUtils';
-import { POST_ROOM, DELETE_ROOM } from '../modules/CahttingModules';
+import { POST_ROOM, DELETE_ROOM, POST_MESSAGES, GET_MESSAGES } from '../modules/CahttingModules';
 
 
 const API_BASE_URL = 'http://localhost:8080';
@@ -53,7 +53,6 @@ export const leaveRoom = (memberId, roomId) => {
 };
 
 
-
 export const callDeleteRoomAPI = (enteredRoomId) => {
   return async (dispatch) => {
     try {
@@ -62,7 +61,7 @@ export const callDeleteRoomAPI = (enteredRoomId) => {
         'Authorization': `Bearer ${token}`, // Bearer 토큰 형식으로 전달
         'Content-Type': 'application/json'
       };
-      
+
       const deleteRoomResponse = await axios.delete(
         `${API_BASE_URL}/api/rooms/${enteredRoomId}`, { headers });
 
@@ -70,6 +69,32 @@ export const callDeleteRoomAPI = (enteredRoomId) => {
       dispatch({ type: DELETE_ROOM, payload: enteredRoomId });
     } catch (error) {
       console.error("Error deleting room:", error);
+    }
+  }
+};
+
+export const callPostMessages = (messageDTO) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/messages/`, messageDTO, { headers });
+      dispatch({ type: POST_MESSAGES, payload: response.data });
+      console.log(response);
+      return response;
+    } catch (error) {
+      throw error
+    }
+  };
+}
+
+export const callGetMessages = (enteredRoomId) => {
+  return async (dispatch) => {
+    try {
+      const getMessagesResponse = await axios.get(`${API_BASE_URL}/api/messages/${enteredRoomId}`, { headers });
+      dispatch( {type: GET_MESSAGES, payload: getMessagesResponse.data} );
+      console.log('getMessagesResponse', getMessagesResponse);
+      return getMessagesResponse;
+    } catch (error) {
+      throw error;
     }
   }
 }
