@@ -13,6 +13,7 @@ function Leaves() {
     const [properties, setProperties] = useState('memberId')
     const [direction, setDirection] = useState('DESC')
     const [isLoading, setIsLoading] = useState(false);
+    const [isReset, setIsReset] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -37,7 +38,13 @@ function Leaves() {
     }
 
     useEffect(() => {
-        const resetNumber = async () => await dispatch({ type: SET_PAGENUMBER, payload: 0 })
+        const resetNumber = async () => {
+            try {
+                await dispatch({ type: SET_PAGENUMBER, payload: 0 })
+            } finally {
+                setIsReset(true);
+            }
+        }
         resetNumber();
     }, []);
 
@@ -50,9 +57,9 @@ function Leaves() {
                 setIsLoading(false);
             }
         };
-        number !== undefined 
+        isReset
             && fetchData();
-    }, [number, properties, direction]);
+    }, [number, properties, direction, isReset]);
 
     return <main id="main" className="main">
         <div className="pagetitle">

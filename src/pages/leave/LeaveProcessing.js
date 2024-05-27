@@ -18,6 +18,7 @@ function LeaveProcessing() {
     const [leaveSubNo, setLeaveSubNo] = useState('');
     const [selectedTime, setSelectedTime] = useState('');
     const [detailInfo, setDetailInfo] = useState('');
+    const [isReset, setIsReset] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -63,26 +64,28 @@ function LeaveProcessing() {
     }
 
     useEffect(() => {
-        console.log('빈배열 유즈이펙트');
-        const resetNumber = async () => await dispatch({ type: SET_PAGENUMBER, payload: 0 })
+        const resetNumber = async () => {
+            try {
+                await dispatch({ type: SET_PAGENUMBER, payload: 0 })
+            } finally {
+                setIsReset(true);
+            }
+        }
         resetNumber();
     }, []);
 
     useEffect(() => {
-        console.log(number);
-        console.log('유즈이펙트 진입');
         setIsLoading(true);
         const fetchData = async () => {
             try {
-                console.log('디스패치 실행');
                 await dispatch(callSelectLeaveSubmitAPI(number, properties, direction));
             } finally {
                 setIsLoading(false);
             }
         };
-        number !== undefined 
+        isReset
             && fetchData();
-    }, [number, properties, direction]);
+    }, [number, properties, direction, isReset]);
 
     return <main id="main" className="main">
         <div className="pagetitle">
