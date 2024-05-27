@@ -2,14 +2,17 @@ import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../css/leave/LeaveProcessingModal.css';
+import LeaveCheckModal from './LeaveCheckModal';
 
 
 const LeaveProcessingModal = ({ isOpen, onClose, onUpdate, leaveSubNo, selectedTime, detailInfo }) => {
     const [decision, setDecision] = useState('');
     const [reason, setReason] = useState('');
+    const [isCheckOpen, setIsCheckOpen] = useState(false);
 
     const handleUpdate = () => {
         onUpdate({ leaveSubNo, decision, reason });
+        setIsCheckOpen(false)
         onClose();
     };
 
@@ -71,10 +74,11 @@ const LeaveProcessingModal = ({ isOpen, onClose, onUpdate, leaveSubNo, selectedT
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
-                            <button type="button" className="btn btn-primary" onClick={handleUpdate}>처리</button>
+                            <button type="button" className="btn btn-primary" onClick={() => setIsCheckOpen(true)}>처리</button>
                         </div>
                     </div>
                 </div>
+        <LeaveCheckModal isOpen={isCheckOpen} onClose={setIsCheckOpen} onConfirm={handleUpdate} option='처리' />
             </div>
         )
     );

@@ -9,6 +9,7 @@ import { renderLeaveSubmit } from '../../utils/leaveUtil';
 import { convertToUtc } from '../../utils/CommonUtil';
 import '../../css/common.css';
 import '../../css/leave/MyLeave.css';
+import LeaveCheckModal from './LeaveCheckModal';
 
 function MyLeave() {
     const { page, leaveInfo, insertMessage } = useSelector(state => state.leaveReducer);
@@ -17,9 +18,12 @@ function MyLeave() {
     const [properties, setProperties] = useState('leaveSubNo');
     const [direction, setDirection] = useState('DESC');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCheckOpen, setIsCheckOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [leaveSubNo, setLeaveSubNo] = useState('');
     const [selectedTime, setSelectedTime] = useState('');
+    const [detailInfo, setDetailInfo] = useState('');
+    const [option, setOption] = useState('');
     const [isReset, setIsReset] = useState(false);
     const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
     const dispatch = useDispatch();
@@ -53,6 +57,8 @@ function MyLeave() {
         setIsModalOpen(false);
         setLeaveSubNo('');
         setSelectedTime('');
+        setDetailInfo('');
+        setOption('');
     };
 
     const handleInsert = ({ leaveSubNo, start, end, type, reason }) => {
@@ -68,8 +74,14 @@ function MyLeave() {
 
     };
 
-    const handleDelete = id => {
-        dispatch(callDeleteLeaveSubmitAPI(id));
+    const checkDelete = id => {
+        setDetailInfo(id)
+        setIsCheckOpen(true)
+        setOption('삭제')
+    }
+    const handleDelete = () => {
+        dispatch(callDeleteLeaveSubmitAPI(detailInfo));
+        setIsCheckOpen(false)
     };
 
     const handleCancel = id => {
@@ -162,7 +174,7 @@ function MyLeave() {
                                 : content !== undefined
                                     ?
                                     // 로딩 중이 아니면 실제 데이터 표시
-                                    renderLeaveSubmit(content, handleDelete, handleCancel, setSelectedTime)
+                                    renderLeaveSubmit(content, checkDelete, handleCancel, setSelectedTime)
                                     : <tr>
                                         <td colSpan="8">휴가 신청 내역이 존재하지 않습니다.</td>
                                     </tr>
@@ -189,7 +201,8 @@ function MyLeave() {
                 </div>
             </div>
         </div>
-        <MyLeaveModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} leaveSubNo={leaveSubNo} selectedTime={selectedTime} remainingDays={remainingDays}/>
+        <MyLeaveModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleInsert} leaveSubNo={leaveSubNo} selectedTime={selectedTime} remainingDays={remainingDays} />
+        <LeaveCheckModal isOpen={isCheckOpen} onClose={setIsCheckOpen} onConfirm={handleDelete} option={option} />
     </main>
 }
 

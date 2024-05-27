@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { callSelectMemberList } from '../../apis/LeaveAPICalls';
 import '../../css/leave/LeaveAccrualModal.css';
+import LeaveCheckModal from './LeaveCheckModal';
 
 const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
     const { memberList } = useSelector(state => state.leaveReducer);
@@ -9,11 +10,13 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
     const [id, setId] = useState('');
     const [days, setDays] = useState('');
     const [reason, setReason] = useState('');
+    const [isCheckOpen, setIsCheckOpen] = useState(false);
 
     const dispatch = useDispatch();
 
     const handleSave = () => {
         onSave({ id, days, reason });
+        setIsCheckOpen(false)
         onClose();
     };
 
@@ -79,10 +82,11 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
-                            <button type="button" className="btn btn-primary" onClick={handleSave}>등록</button>
+                            <button type="button" className="btn btn-primary" onClick={() => setIsCheckOpen(true)}>등록</button>
                         </div>
                     </div>
                 </div>
+        <LeaveCheckModal isOpen={isCheckOpen} onClose={setIsCheckOpen} onConfirm={handleSave} option='등록' />
             </div>
         )
     );

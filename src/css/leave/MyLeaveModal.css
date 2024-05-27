@@ -26,3 +26,18 @@
 .form-group label {
     margin-right: 11px;
 }
+
+.blur {
+    filter: blur(1px);
+    pointer-events: none; /* 이벤트 차단 */
+}
+
+.modal-backdrop-check {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1050; /* 확인 모달의 배경 z-index 설정 */
+    background-color: rgba(0, 0, 0, 0.7); /* 배경을 더 어둡게 설정 */
+}
