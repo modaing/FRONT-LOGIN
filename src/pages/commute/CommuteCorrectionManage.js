@@ -47,44 +47,10 @@ function CommuteCorrectionManage() {
     };
 
     /* 액션 */
-    // const result = useSelector(state => state.commuteReducer);
-    // const correctionlist = result.correctionlist;
-
-    // const pageInfo = correctionlist?.correctionlist.response.data.results || [];
-    // const { currentPage, totalItems, totalPages } = pageInfo || {};
-
-    // const correctionList = correctionlist?.correctionlist.response.data.results.correction || [];
-    // const commuteList = correctionlist?.correctionlist.response.data.results.commute || [];
-    // // const memberList = correctionlist?.correctionlist.reponse.data.results.member || [];
-    // // const departList = correctionlist?.correctionlist.response.data.results.depart || [];
-
-    // const result = useSelector(state => state.commuteReducer.correctionlist || []);
-    // const correctionlist = result.correctionlist.response || {};
-
-    // const pageInfo = correctionlist?.data.results || [];
-    // const { currentPage, totalItems, totalPages } = pageInfo || {};
-
-    // const correctionList = correctionlist?.data.results.correction || [];
-    // const commuteList = correctionlist?.data.results.commute || [];
-    // const memberList = correctionlist?.data.results.member || [];
-    // const departList = correctionlist?.data.results.depart || [];
-
-    // const result = useSelector((state) => state.commuteReducer.correctionlist.correctionlist || {});
-    // const { currentPage, totalItems, totalPages, data = [] } = result.response || {};
-    // const { correction: correctionList = [], commute: commuteList = [], member: memberList = [], depart: departList = [] } = data || {};
-
     const result = useSelector((state) => state.commuteReducer.correctionlist || {});
     const correctionlist = result?.correctionlist?.response?.data?.results || [];
     const correctionList = correctionlist?.result || [];
     const { currentPage, totalItems, totalPages } = correctionlist || {};
-    // const { response = {} } = result.correctionlist || {};
-    // const { data = { results: { correction: [], commute: [], member: [], depart: [] } } } = response || {};
-    // const { results = { correction: [], commute: [], member: [], depart: [] } } = data || {};
-    // const { currentPage = 0, totalItems = 0, totalPages = 0, correction: correctionList = [], commute: commuteList = [], member: memberList = [], depart: departList = [] } = results || {};
-
-    console.log('[CommuteCorrectionManage] result : ', result);
-    console.log('[CommuteCorrectionManage] correctionlist : ', correctionlist);
-    console.log('[CommuteCorrectionManage] correctionList : ', correctionList);
 
     const dispatch = useDispatch();
 
@@ -106,7 +72,12 @@ function CommuteCorrectionManage() {
     /* 출퇴근 정정 내역 API 호출 */
     useEffect(() => {
         dispatch(callSelectCorrectionListAPI(memberId, page, size, sort, direction, parsingDateOffset));
-    }, [parsingDateOffset]);
+    }, [parsingDateOffset, correctionList]);
+
+    /* 출퇴근 정정 내역 조회 API 재호출 */
+    const handleCorrectionUpdateCompleted = () => {
+        dispatch(callSelectCorrectionListAPI(memberId, page, size, sort, direction, parsingDateOffset));
+      };
 
     /* 근무 일자 형식 변경 */
     const formatWorkingDate = (workingDate) => {
@@ -140,7 +111,9 @@ function CommuteCorrectionManage() {
                         <li className="breadcrumb-item"><a href="/">Home</a></li>
                         <li className="breadcrumb-item">출퇴근</li>
                         <li className="breadcrumb-item active">출퇴근 정정 관리</li>
+                        <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
                         <SelectBox options={OPTIONS} defaultValue="2024-05"></SelectBox>
+                        </div>
                     </ol>
                 </nav>
             </div>
@@ -167,6 +140,7 @@ function CommuteCorrectionManage() {
                                             evenRow={index % 2 === 0}
                                             date={parsingDateOffset}
                                             style={{ zIndex: '1' }}
+                                            handleCorrectionUpdateCompleted={handleCorrectionUpdateCompleted}
                                         />
                                     ))
                                 ) : (

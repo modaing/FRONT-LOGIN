@@ -16,10 +16,9 @@ const ModalContent = styled.div`
   overflow-y: auto;
 `;
 
-const ClockInModal = ({ isOpen, onClose, parsingDateOffset, isClocked, memberId, commuteList, handleClockIn }) => {
+const ClockInModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteList, onClockInCompleted }) => {
 
-    console.log('parsingDateOffset : ',parsingDateOffset);
-
+    // console.log('parsingDateOffset : ',parsingDateOffset);
     const dispatch = useDispatch();
 
      /* 현재 시간 포맷 */
@@ -41,6 +40,7 @@ const ClockInModal = ({ isOpen, onClose, parsingDateOffset, isClocked, memberId,
           console.log('출근 api 호출 : ', newCommute);
     
           dispatch(callInsertCommuteAPI(newCommute));
+          onClockInCompleted();
           onClose();
 
         } catch (error) {
