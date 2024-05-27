@@ -8,11 +8,6 @@ import CorrectionManageItem from "../../components/commutes/CorrectionManageItem
 
 function CommuteCorrectionManage() {
 
-    const pageTitleStyle = {
-        marginBottom: '20px',
-        marginTop: '20px'
-    };
-
     const Select = styled.select`
         margin-left: 20px;
         -webkit-appearance: none;
@@ -28,52 +23,6 @@ function CommuteCorrectionManage() {
         cursor: 'pointer',
         margin-left: '750px',
     `;
-
-    const contentStyle = {
-        marginLeft: '25px'
-    };
-
-    const tableStyle = {
-        width: '97%',
-        borderCollapse: 'collapse',
-        textAlign: 'center',
-    };
-
-    const tableStyles = {
-        tableHeaderCell: {
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            padding: '15px'
-        },
-        tableCell1: {
-            width: '20%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell2: {
-            width: '20%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell3: {
-            width: '20%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell4: {
-            width: '20%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell5: {
-            width: '20%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        evenRow: {
-            backgroundColor: '#f9f9f9'
-        }
-    };
 
     const OPTIONS = [
         { value: "2024-03", name: "2024-03" },
@@ -125,18 +74,17 @@ function CommuteCorrectionManage() {
     // const { correction: correctionList = [], commute: commuteList = [], member: memberList = [], depart: departList = [] } = data || {};
 
     const result = useSelector((state) => state.commuteReducer.correctionlist || {});
-    const { response = {} } = result.correctionlist || {};
-    const { data = { results: { correction: [], commute: [], member: [], depart: [] } } } = response || {};
-    const { results = { correction: [], commute: [], member: [], depart: [] } } = data || {};
-    const { currentPage = 0, totalItems = 0, totalPages = 0, correction: correctionList = [], commute: commuteList = [], member: memberList = [], depart: departList = [] } = results || {};
+    const correctionlist = result?.correctionlist?.response?.data?.results || [];
+    const correctionList = correctionlist?.result || [];
+    const { currentPage, totalItems, totalPages } = correctionlist || {};
+    // const { response = {} } = result.correctionlist || {};
+    // const { data = { results: { correction: [], commute: [], member: [], depart: [] } } } = response || {};
+    // const { results = { correction: [], commute: [], member: [], depart: [] } } = data || {};
+    // const { currentPage = 0, totalItems = 0, totalPages = 0, correction: correctionList = [], commute: commuteList = [], member: memberList = [], depart: departList = [] } = results || {};
 
     console.log('[CommuteCorrectionManage] result : ', result);
+    console.log('[CommuteCorrectionManage] correctionlist : ', correctionlist);
     console.log('[CommuteCorrectionManage] correctionList : ', correctionList);
-    console.log('[CommuteCorrectionManage] commuteList : ', commuteList);
-    console.log('[CommuteCorrectionManage] memberList : ', memberList);
-    console.log('[CommuteCorrectionManage] departList : ', departList);
-
-    // console.log('result', result);
 
     const dispatch = useDispatch();
 
@@ -214,11 +162,7 @@ function CommuteCorrectionManage() {
                                     correctionList.map((item, index) => (
                                         <CorrectionManageItem
                                             key={item.corrNo}
-                                            // correction={item}
-                                            correctionList={item}
-                                            commute={commuteList}
-                                            member={memberList}
-                                            depart={departList}
+                                            correction={item}
                                             tableStyles={tableStyles}
                                             evenRow={index % 2 === 0}
                                             date={parsingDateOffset}
@@ -260,3 +204,54 @@ function CommuteCorrectionManage() {
 }
 
 export default CommuteCorrectionManage;
+
+const pageTitleStyle = {
+    marginBottom: '20px',
+    marginTop: '20px'
+};
+
+const contentStyle = {
+    marginLeft: '25px'
+};
+
+const tableStyle = {
+    width: '97%',
+    borderCollapse: 'collapse',
+    textAlign: 'center',
+};
+
+const tableStyles = {
+    tableHeaderCell: {
+        cursor: 'pointer',
+        fontWeight: 'bold',
+        padding: '15px'
+    },
+    tableCell1: {
+        width: '20%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell2: {
+        width: '20%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell3: {
+        width: '20%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell4: {
+        width: '20%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell5: {
+        width: '20%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    evenRow: {
+        backgroundColor: '#f9f9f9'
+    }
+};

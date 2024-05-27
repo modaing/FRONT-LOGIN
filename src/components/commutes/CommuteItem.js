@@ -4,29 +4,14 @@ import { useDispatch } from "react-redux";
 import { callInsertCorrectionAPI, callSelectCommuteListAPI } from "../../apis/CommuteAPICalls";
 import { CommuteUtil } from "../../utils/CommuteUtil";
 
-function CommuteItem({ commute, tableStyles, evenRow, date, memberId}) {
+function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDateOffset}) {
 
     // console.log('[CommuteItem] commute : ', commute);
     console.log('[CommuteItem] commute.commuteNo : ', commute.commuteNo);
     // console.log('[CommuteItem] commute.workingDate : ', commute.workingDate);
     // console.log('[CommuteItem] memberId : ', memberId);
-    // console.log('[CommuteItem] date : ', date);
+    console.log('[CommuteItem] parsingDateOffset : ', parsingDateOffset);
     // console.log('[CommuteItem] corrRegistrationDate : ', commute.correction.corrRegistrationDate);
-
-    const insertCorrection = {
-        backgroundColor: '#3F72AF',
-        cursor: 'pointer',
-        color: '#FFFFFF',
-        borderRadius: '4px',
-        border: '1px solid #3F72AF',
-        '&:hover': {
-            cursor: '#112D4E',
-        },
-        paddingLeft: '5px',
-        paddingRight: '5px',
-        paddingTop: '1px',
-        paddingBottom: '1px'
-    };
 
     const [showModal, setShowModal] = useState(false);
     const [showBtn, setShowBtn] = useState(true);
@@ -49,7 +34,7 @@ function CommuteItem({ commute, tableStyles, evenRow, date, memberId}) {
             reqStartWork: corrStartWork,
             reqEndWork: corrEndWork,
             reasonForCorr: reason,
-            corrRegistrationDate: date,
+            corrRegistrationDate: parsingDateOffset,
             corrStatus: '대기'
         };
         dispatch(callInsertCorrectionAPI(newCorrection));
@@ -173,7 +158,7 @@ function CommuteItem({ commute, tableStyles, evenRow, date, memberId}) {
                 clearInterval(intervalRef.current);
             };
 
-        }, [startTime, endTime]);
+        }, [startTime, endTime, commute]);
 
         return (
             <div className="progress">
@@ -228,3 +213,18 @@ function CommuteItem({ commute, tableStyles, evenRow, date, memberId}) {
 }
 
 export default CommuteItem;
+
+const insertCorrection = {
+    backgroundColor: '#3F72AF',
+    cursor: 'pointer',
+    color: '#FFFFFF',
+    borderRadius: '4px',
+    border: '1px solid #3F72AF',
+    '&:hover': {
+        cursor: '#112D4E',
+    },
+    paddingLeft: '5px',
+    paddingRight: '5px',
+    paddingTop: '1px',
+    paddingBottom: '1px'
+};
