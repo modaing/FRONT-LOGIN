@@ -122,8 +122,7 @@ const ApprovalInsert = () => {
 
 
     const handleSubmit = async (status) => {
-
-        if (title.trim() === '') {
+        if(status !== '임시저장' && title.trim() === ''){
             setWarningMessage('제목이 입력되지 않았습니다');
             setIsWarrningModalOpen(true);
             return;
@@ -181,18 +180,19 @@ const ApprovalInsert = () => {
 
             if (approvalNo) {
                 //저장된 approvalNo가 있다면 수정 API호출
-                response = await updateApprovalAPI({ approvalNo, formData })(dispatch);
+                response = await updateApprovalAPI( approvalNo, formData );
 
             }
             else {
                 //저장된 approvalNo가 없다면 등록 API호출
-                response = await submitApprovalAPI(formData)(dispatch);
-                const responseData = response.data?.data;
-                console.log('등록된 전자결재 번호 : ' + responseData);
+                response = await submitApprovalAPI(formData);
+                console.log('등록된 전자결재 번호 : ' + response.data?.approvalNo);
+                const responseData = response.data;
 
-                if (responseData?.approvalNo) {
-                    //전자결재가 저장되었다면
-                    setApprovalNo(responseData.approvalNo);     //전자결재 번호 저장
+                if (response.data?.approvalNo) {    //전자결재가 저장되었다면 
+                    setApprovalNo(response.data.approvalNo);
+                } else {
+                    console.error('응답에서 approvalNo를 찾을 수 없습니다.');
                 }
             }
 

@@ -113,8 +113,8 @@ export const getAllMemberAPI = () => {
     };
 };
 
-export const submitApprovalAPI = (formData) => {
-    return async (dispatch) => {
+export const submitApprovalAPI = async (formData) => {
+    
       
         // const formData = new FormData();
 
@@ -131,23 +131,23 @@ export const submitApprovalAPI = (formData) => {
             });
             console.log('결재 제출 성공', JSON.stringify(response));
 
-            dispatch(submitApprovalSuccess(response.data));
+            // dispatch(submitApprovalSuccess(response.data));
 
             return response.data;
         }catch (error){
 
-            dispatch(submitApprovalFailure(error));
+            // dispatch(submitApprovalFailure(error));
             console.error('결재 제출 실패 : ', error);
             throw error;
         }/* finally{
             dispatch(setLoading(false));
         } */
-    };
+   
 };
 
 // 임시저장된 전자결재 수정
-export const updateApprovalAPI = ({ approvalNo, formData }) => {
-    return async (dispatch) => {
+export const updateApprovalAPI = async ( approvalNo, formData ) => {
+   
         try{
             const response = await axios.put(`${API_BASE_URL}/approvals/${approvalNo}`, formData, {
                 headers: {
@@ -156,12 +156,11 @@ export const updateApprovalAPI = ({ approvalNo, formData }) => {
                 },
             });
             console.log('결재 수정 성공 : ' + JSON.stringify(response));
-            dispatch(updateApprovalSuccess(response.data));
+            // dispatch(updateApprovalSuccess(response.data));
             return response.data;
         }catch(error){
-            dispatch(updateApprovalFailure(error));
+            // dispatch(updateApprovalFailure(error));
             console.error('결재 수정 실패 : ' + error);
             throw error;
         }
-    };
 };
