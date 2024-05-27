@@ -25,6 +25,8 @@ function RoomList() {
   const memberInfo = decodeJwt(token);
   const memberId = memberInfo.memberId;
 
+  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
