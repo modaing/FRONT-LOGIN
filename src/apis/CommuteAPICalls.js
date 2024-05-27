@@ -121,7 +121,7 @@ export const callSelectCorrectionListAPI = (memberId, page, size, sort, directio
 export const callUpdateCorrectionAPI = (updateCorrection) => {
     return async (dispatch) => {
         try {
-            console.log('api 에욥 corrNo: ', updateCorrection.corrNo);
+            console.log('api 에욥 : ', updateCorrection);
             const url = `/corrections/${updateCorrection.corrNo}`;
             const response = await request('PUT', url, updateCorrection);
 

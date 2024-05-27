@@ -3,9 +3,9 @@ import { useDispatch } from "react-redux";
 import { callUpdateCommuteAPI } from "../../apis/CommuteAPICalls";
 import dayjs from "dayjs";
 
-const ClockOutModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteList, handleClockOut, }) => {
+const ClockOutModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteList, onClockOutCompleted }) => {
     
-    console.log('parsingDateOffset : ', parsingDateOffset);
+    // console.log('parsingDateOffset : ', parsingDateOffset);
     const dispatch = useDispatch();
 
     /* 현재 시간 포맷 */
@@ -73,6 +73,7 @@ const ClockOutModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteLi
                 console.log('퇴근 업뎃', updateCommute);
 
                 dispatch(callUpdateCommuteAPI(updateCommute));
+                onClockOutCompleted();
                 onClose();
 
         } catch (error) {

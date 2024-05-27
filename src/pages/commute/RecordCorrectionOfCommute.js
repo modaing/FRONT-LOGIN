@@ -37,25 +37,25 @@ function RecordCorrectionOfCommute() {
     const currentDate = new Date(parsingDateOffset);
     const currentMonth = currentDate.getMonth() + 1;
     const currentYear = currentDate.getFullYear();
-    
+
     const DATEOPTIONS = [];
-    
+
     for (let i = 0; i < 12; i++) {
         let month = currentMonth - i;
         let year = currentYear;
-    
+
         if (month <= 0) {
             month += 12;
             year -= 1;
         }
-    
+
         const monthString = `${year}-${String(month).padStart(2, '0')}`;
         DATEOPTIONS.push({
             value: `${year}-${String(month).padStart(2, '0')}-01`,
             name: monthString,
         });
     }
-    
+
     const handleMonthChange = (e) => {
         setMonth(e.target.value);
     };
@@ -134,7 +134,9 @@ function RecordCorrectionOfCommute() {
                         <li className="breadcrumb-item"><a href="/">Home</a></li>
                         <li className="breadcrumb-item">출퇴근</li>
                         <li className="breadcrumb-item active">출퇴근 정정 내역</li>
-                        <SelectBox options={DATEOPTIONS} value={month} onChange={handleMonthChange} style={{float: 'right'}}></SelectBox>
+                        <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
+                            <SelectBox options={DATEOPTIONS} value={month} onChange={handleMonthChange} style={{ float: 'right' }}></SelectBox>
+                        </div>
                     </ol>
                 </nav>
             </div>

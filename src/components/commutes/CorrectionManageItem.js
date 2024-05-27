@@ -3,12 +3,7 @@ import { useDispatch } from "react-redux";
 import CorrectionUpdateModal from "./CorrectionUpdateModal";
 import { callUpdateCorrectionAPI } from "../../apis/CommuteAPICalls";
 
-function CorrectionManageItem({ correction, tableStyles, evenRow, date }) {
-
-    // console.log('정정 관리 ', correction);
-    // console.log('출퇴근 ', commute);
-    // console.log('정정 신청자 ', member);
-    // console.log('부서 ', depart);
+function CorrectionManageItem({ correction, tableStyles, evenRow, date, handleCorrectionUpdateCompleted }) {
 
     const [showModal, setShowModal] = useState(false);
     // const currentCommute = commute?.[0] || {};
@@ -72,6 +67,7 @@ function CorrectionManageItem({ correction, tableStyles, evenRow, date }) {
                 onClose={handleCloseModal}
                 onSave={handleSaveModal}
                 correction={correction}
+                handleCorrectionUpdateCompleted={handleCorrectionUpdateCompleted}
             />
         </>
     );
