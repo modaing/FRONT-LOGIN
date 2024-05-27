@@ -122,7 +122,11 @@ const ApprovalInsert = () => {
 
 
     const handleSubmit = async (status) => {
+
+        console.log('status: ' + status);
+
         if(status === '처리 중' && title.trim() === ''){
+            console.log('status === 처리 중, title.trim() === "" ');
             setWarningMessage('제목이 입력되지 않았습니다');
             setIsWarrningModalOpen(true);
             return;
