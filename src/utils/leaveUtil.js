@@ -117,7 +117,7 @@ export function renderLeaveAccrual(content) {
                 <td>{leaveAccrual.recipientId}</td>
                 <td>{leaveAccrual.accrualDate}</td>
                 <td>{leaveAccrual.leaveAccrualDays}</td>
-                <td>{leaveAccrual.leaveAccrualReason}</td>
+                <td className="accrualReason" title={leaveAccrual.leaveAccrualReason}>{leaveAccrual.leaveAccrualReason}</td>
             </tr>
         );
     });
