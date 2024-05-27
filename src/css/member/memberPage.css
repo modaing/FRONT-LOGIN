@@ -5,14 +5,23 @@
 .main2Pages123 {
     font-size: 20px;
     display: flex;
-    width: 85%;
+    width: auto;
     height: auto;
-    /* flex-wrap: nowrap; */
 }
+
 .columnStyle {
-    width: 100%;
+    width: 90%;
     height: auto;
 }
+
+.firstPage123, .secondPage123 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: visible; /* Ensure content is not clipped */
+    box-sizing: border-box;
+}
+
 
 .columnStyle1 {
     display: flex;
@@ -38,28 +47,8 @@
     justify-content: flex-start;
 }
 
-.cardOuterLine {
+.cardOuterLine, .cardOuterLine2 {
     height: 100%; /* Make sure the card fills the parent height */
-}
-.cardOuterLine2 {
-    height: 100%; /* Make sure the card fills the parent height */
-}
-
-.firstPage123 {
-    flex: 1; /* Make both pages take equal space */
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    box-sizing: border-box;
-}
-
-.secondPage123 {
-    flex: 1; /* Make both pages take equal space */
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    box-sizing: border-box;
 }
 
 .pageTitleStyle {
@@ -68,9 +57,9 @@
 }
 
 .profilePic {
-    height: 270px;
-    width: 230px;
-    border-radius: 15px;
+    height: 260px;
+    width: 260px;
+    border-radius: 50%;
     margin-bottom: 10px;
 }
 
@@ -81,10 +70,9 @@
     margin: 50px 50px 0px 50px;
 }
 
-.contentStyle2 {
-    /* display: flex; */
+.contentStyle23 {
     justify-content: space-between;
-    margin: 50px 0px 0px 50px;
+    margin-top: 50px;
     display: flex;
     align-items: center;
 }
@@ -141,6 +129,14 @@
 .inputStyle, .inputStyleConfirmed {
     /* width: 250px; */
     /* padding-left: 10px; */
+    padding: 10px; /* Add padding for better visual appearance */
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 5px; /* Add rounded corners */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+}
+
+.inputStyleForMember {
+    width: 300px;
     padding: 10px; /* Add padding for better visual appearance */
     border: 1px solid #ccc; /* Add a border */
     border-radius: 5px; /* Add rounded corners */
@@ -259,9 +255,18 @@
     display: flex;
 }
 
+.departNameStyle {
+    width: 100px;
+    text-align: left;
+}
 
-.departNameDiv, .positionNameDiv {
-    margin-right: 20px;
+
+.departNameDiv {
+    /* margin-right: 20px; */
+}
+
+.positionNameDiv {
+    margin-left: 20px;
 }
 
 .inputStyle1 {
@@ -275,4 +280,57 @@
     width: 100px;
     height: 50px;
     font-size: 20px;
+}
+
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000; /* Ensure the modal is on top of other content */
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 500px;
+}
+
+.modal-backdrop {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 800px;
+    height: 800px;
+    padding: 7px;
+    transform: translate(-50%,-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999; /* Ensure the backdrop is just below the modal */
+}
+
+.transferredHistoryStyle {
+    width: 300px;
+}
+
+.transferredDateStyle {
+    text-align: left;
+}
+
+.inputStyleForBirthdayForMember {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    justify-content: space-between;
+    width: 300px; /* Match the width of the inputStyles */
+    height: 52.22px;
+}
+
+.inputStylesForYear, .inputStylesForMonth, .inputStylesForDays {
+    width: 70px;
+    /* padding-left: 10px; */
+    padding: 10px; /* Add padding for better visual appearance */
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 5px; /* Add rounded corners */
+    box-sizing: border-box; /* Ensure padding is included in the width */
 }

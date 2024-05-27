@@ -164,6 +164,10 @@ const ManageMember = () => {
 
     const handleNameClick = (member) => {
         console.log('member:', member);
+        if (!member) {
+            navigate("/error");
+            return;
+        }
         navigate(`${member.memberId}`);
     };
 
@@ -240,10 +244,10 @@ const ManageMember = () => {
                                             <span>이름</span><i className="bx bxs-sort-alt" />
                                         </th>
                                         <th onClick={() => sortData('departmentDTO.departName')}>
-                                            <span>부서</span><i className="bx bxs-sort-alt" />
+                                            <span>부서</span>
                                         </th>
                                         <th onClick={() => sortData('positionDTO.positionName')}>
-                                            <span>직급</span><i className="bx bxs-sort-alt" />
+                                            <span>직급</span>
                                         </th>
                                         <th onClick={() => sortData('employedDate')}>
                                             <span>입사일</span><i className="bx bxs-sort-alt" />

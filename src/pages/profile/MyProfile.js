@@ -65,6 +65,7 @@ function MyProfile() {
 
     const handleChangePassword = () => {
         setChangePasswordModalVisible(true);
+        navigate(`/changePassword`);
     }
 
     const handleCloseModal = () => {
@@ -127,7 +128,7 @@ function MyProfile() {
         <main id="main" className="main2Pages12">
             <div className='firstPage'>
                 <div className="pagetitle">
-                    <h1>마이 프로필</h1>
+                    <h1>{memberInfo.name}님 프로필</h1>
                     <nav>
                         <ol className="breadcrumb">
                             {/* <li className="breadcrumb-item"><a href="/">Home</a></li>
@@ -156,35 +157,35 @@ function MyProfile() {
                     <div className='content1 contentStyle3 titleStyle'>
                     <div className='memberIdStyle'>
                         <label className='memberId'>사번</label>
-                        <input className='inputStyle' value={memberInfo.memberId} />
+                        <input className='inputStyleWidth' value={memberInfo.memberId} />
                     </div>
                     <div className='memberIdStyle'>
                         <label className='memberId'>생일</label>
-                        <input className='inputStyle' value={formattedBirthday} />
+                        <input className='inputStyleWidth' value={formattedBirthday} />
                     </div>
                     <div className='emailStyle'>
                         <label className='email'>이메일</label>
-                        <input className='inputStyle' value={memberInfo.email} />
+                        <input className='inputStyleWidth' value={memberInfo.email} />
                     </div>
                     <div className='addressStyle'>
                         <label className='memberId'>주소</label>
-                        <input className='inputStyle' value={memberInfo.address} />
+                        <input className='inputStyleWidth' value={memberInfo.address} />
                     </div>
                     <div className='phoneNoStyle'>
                         <label className='memberId'>휴대폰 번호</label>
-                        <input className='inputStyle' value={memberInfo.phoneNo} />
+                        <input className='inputStyleWidth' value={memberInfo.phoneNo} />
                     </div>
                     <div className='employedDateStyle'>
                         <label className='memberId'>입사일</label>
-                        <input className='inputStyle' value={formattedEmployedDate} />
+                        <input className='inputStyleWidth' value={formattedEmployedDate} />
                     </div>
                     <div className='departStyle'>
                         <label className='memberId'>부서</label>
-                        <input className='inputStyle' value={memberInfo.departmentDTO.departName} />
+                        <input className='inputStyleWidth' value={memberInfo.departmentDTO.departName} />
                     </div>
                     <div className='positionStyle'>
                         <label className='position'>직급</label>
-                        <input className='inputStyle' value={memberInfo.positionDTO.positionName} />
+                        <input className='inputStyleWidth' value={memberInfo.positionDTO.positionName} />
                     </div>
                     </div>
                 </div>

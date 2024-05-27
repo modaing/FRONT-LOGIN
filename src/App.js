@@ -75,8 +75,10 @@ function App() {
         ) : (
           <Route path="/" element={<Navigate to="/login" replace />} />
         )}
-        {/* Error route */}
-        <Route path='*' element={<Error />} />
+        {/* <Route path="*" element={<Navigate to={isLoggedIn ? "/" : "/login"} replace />} /> */}
+        <Route path="*" element={isLoggedIn ? <Error /> : <Navigate to="/login" replace />} />
+        {/* <Route path='*' element={<Error />} /> */}
+
       </Routes>
     </BrowserRouter>
   );

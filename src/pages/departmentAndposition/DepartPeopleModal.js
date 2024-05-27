@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import '../../css/department/departmentRegistModal.css'
+import '../../css/department/departPeopleModal.css'
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { callShowAllMemberListAPI } from '../../apis/MemberAPICalls';
@@ -15,8 +15,11 @@ function DepartPeopleModal(props) {
             try {
                 // Await the result of the API call
                 const memberLists = await callShowAllMemberListAPI();
-                console.log('memberList:', memberLists);
-                // Set the memberList state with the resolved data
+    
+                // Sort the memberList array by positionLevel
+                memberLists.sort((a, b) => a.positionDTO.positionLevel - b.positionDTO.positionLevel);
+    
+                // Set the memberList state with the sorted data
                 setMemberList(memberLists);
             } catch (error) {
                 console.error('Error fetching member list:', error);
@@ -24,6 +27,7 @@ function DepartPeopleModal(props) {
         };
         fetchMemberLists();
     }, []);
+    
 
     if (!props.visible) return null;
 
@@ -44,9 +48,9 @@ function DepartPeopleModal(props) {
                             {memberList
                                 .filter(member => member.departmentDTO.departNo === departmentInformation.departNo)
                                 .map(member => (
-                                        <li key={member.memberId}>
-                                            {member.name}
-                                        </li>
+                                    <li key={member.memberId}>
+                                        {`${member.name} (`}<span className="boldPositionName">{member.positionDTO.positionName}</span>{`)`}
+                                    </li>
                                 ))}
                             </ol>
                         </div>
