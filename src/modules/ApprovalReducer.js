@@ -1,6 +1,5 @@
 import { createActions, handleActions } from "redux-actions";
 import { submitApprovalAPI, updateApprovalAPI } from "../apis/ApprovalAPI";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   fg: 'given',

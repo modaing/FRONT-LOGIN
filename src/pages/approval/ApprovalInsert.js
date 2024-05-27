@@ -129,6 +129,7 @@ const ApprovalInsert = () => {
             console.log('status === 처리 중, title.trim() === "" ');
             setWarningMessage('제목이 입력되지 않았습니다');
             setIsWarrningModalOpen(true);
+            setIsInsertConfirmModalOpen(false);
             return;
         }
 
@@ -138,18 +139,21 @@ const ApprovalInsert = () => {
         if (title.length > 50) {
             setWarningMessage('제목은 50자를 초과할 수 없습니다.');
             setIsWarrningModalOpen(true);
+            setIsInsertConfirmModalOpen(false);
             return;
         }
 
         if (status === '처리 중' && !approverLine.length > 0) {
             setWarningMessage('결재선이 선택되지 않았습니다.');
             setIsWarrningModalOpen(true);
+            setIsInsertConfirmModalOpen(false);
             return;
         }
 
         if (status === '처리 중' && strippedFormContent === '' || strippedFormContent === strippedInitialFormContent) {
             setWarningMessage('결재 내용이 입력되지 않았습니다');
             setIsWarrningModalOpen(true);
+            setIsInsertConfirmModalOpen(false);
             return;
         }
 
@@ -553,6 +557,7 @@ const ApprovalInsert = () => {
                         onClose={closeFailModal}
                     />
                     <WarningModal
+                        isOpen={isWarningModalOpen}
                         onClose={closeWarningModal}
                         message={warningMessage}
                     />
