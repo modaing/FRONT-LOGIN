@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { callSelectMemberList } from '../../apis/LeaveAPICalls';
 import '../../css/leave/LeaveAccrualModal.css';
+import LeaveCheckModal from './LeaveCheckModal';
 
 const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
     const { memberList } = useSelector(state => state.leaveReducer);
@@ -9,12 +10,13 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
     const [id, setId] = useState('');
     const [days, setDays] = useState('');
     const [reason, setReason] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [isCheckOpen, setIsCheckOpen] = useState(false);
 
     const dispatch = useDispatch();
 
     const handleSave = () => {
         onSave({ id, days, reason });
+        setIsCheckOpen(false)
         onClose();
     };
 
@@ -36,8 +38,8 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
 
     useEffect(() => {
         if (name) {
-            setIsLoading(true);
-            dispatch(callSelectMemberList(name)).finally(() => setIsLoading(false));
+            
+            dispatch(callSelectMemberList(name));
         }
     }, [name]);
 
@@ -63,25 +65,13 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
                             <div className="leaveAccrual">
                                 <label>사번</label>
                                 <select value={id} onChange={handleSelectChange} className="form-select">
-                                    {isLoading
-                                        // 로딩 중이면 로딩 메시지 표시
-                                        ? (
-                                            <tr>
-                                                <td colSpan="4" className="loadingText" />
-                                            </tr>
-                                        )
-                                        // 로딩 중이 아니면 실제 데이터 표시
-                                        : (
-                                            <>
-                                                <option value="">사번 선택</option>
-                                                {memberList && memberList.map((member) => (
-                                                    <option key={member.memberId} value={member.memberId}>
-                                                        {`${member.memberId} ${member.department} ${member.name}`}
-                                                    </option>
-                                                ))}
-                                            </>
-                                        )
-                                    }
+
+                                    <option value="">사번 선택</option>
+                                    {memberList && memberList.map((member) => (
+                                        <option key={member.memberId} value={member.memberId}>
+                                            {`${member.memberId} ${member.department} ${member.name}`}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
 
@@ -92,10 +82,11 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
-                            <button type="button" className="btn btn-primary" onClick={handleSave}>등록</button>
+                            <button type="button" className="btn btn-primary" onClick={() => setIsCheckOpen(true)}>등록</button>
                         </div>
                     </div>
                 </div>
+        <LeaveCheckModal isOpen={isCheckOpen} onClose={setIsCheckOpen} onConfirm={handleSave} option='등록' />
             </div>
         )
     );

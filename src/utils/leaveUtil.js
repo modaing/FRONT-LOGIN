@@ -1,11 +1,11 @@
-export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelectedTime, setDetailInfo, handleOpenModal) {
+export function renderLeaveSubmit(content, checkDelete, handleCancel, setSelectedTime, setDetailInfo, handleOpenModal) {
     if (!content) {
         return null;
     }
 
     const currentDate = new Date();
 
-    if (handleDelete != null && handleCancle != null) {
+    if (checkDelete != null && handleCancel != null) {
 
         return content.map((submit, index) => {
             const { formattedStartDate, formattedEndDate, leaveDaysCalc } = formattedLocalDate(submit);
@@ -27,13 +27,13 @@ export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelect
                         : ''
 
             const onClickHandler = submit.leaveSubStatus === "대기" && submit.refLeaveSubNo === 0
-                ? () => handleDelete(submit.leaveSubNo)
+                ? () => checkDelete(submit.leaveSubNo)
                 : isWithinOneDay
                     ? null
                     : submit.leaveSubStatus === "승인" && submit.refLeaveSubNo === 0
                         ? () => {
                             setSelectedTime({ start: formattedStartDate, end: formattedEndDate })
-                            handleCancle(submit.leaveSubNo)
+                            handleCancel(submit.leaveSubNo)
                         }
                         : null;
 
@@ -117,7 +117,7 @@ export function renderLeaveAccrual(content) {
                 <td>{leaveAccrual.recipientId}</td>
                 <td>{leaveAccrual.accrualDate}</td>
                 <td>{leaveAccrual.leaveAccrualDays}</td>
-                <td>{leaveAccrual.leaveAccrualReason}</td>
+                <td className="accrualReason" title={leaveAccrual.leaveAccrualReason}>{leaveAccrual.leaveAccrualReason}</td>
             </tr>
         );
     });
