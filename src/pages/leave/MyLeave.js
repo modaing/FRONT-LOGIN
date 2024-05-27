@@ -72,7 +72,7 @@ function MyLeave() {
         dispatch(callDeleteLeaveSubmitAPI(id));
     };
 
-    const handleCancle = id => {
+    const handleCancel = id => {
         setLeaveSubNo(id);
         setIsModalOpen(true);
     };
@@ -99,7 +99,7 @@ function MyLeave() {
         };
         isReset
             && fetchData();
-    }, [number, properties, direction, isReset]);
+    }, [number, properties, direction, insertMessage, isReset]);
 
     return <main id="main" className="main">
         <div className="pagetitle">
@@ -162,7 +162,7 @@ function MyLeave() {
                                 : content !== undefined
                                     ?
                                     // 로딩 중이 아니면 실제 데이터 표시
-                                    renderLeaveSubmit(content, handleDelete, handleCancle, setSelectedTime)
+                                    renderLeaveSubmit(content, handleDelete, handleCancel, setSelectedTime)
                                     : <tr>
                                         <td colSpan="8">휴가 신청 내역이 존재하지 않습니다.</td>
                                     </tr>

@@ -1,11 +1,11 @@
-export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelectedTime, setDetailInfo, handleOpenModal) {
+export function renderLeaveSubmit(content, handleDelete, handleCancel, setSelectedTime, setDetailInfo, handleOpenModal) {
     if (!content) {
         return null;
     }
 
     const currentDate = new Date();
 
-    if (handleDelete != null && handleCancle != null) {
+    if (handleDelete != null && handleCancel != null) {
 
         return content.map((submit, index) => {
             const { formattedStartDate, formattedEndDate, leaveDaysCalc } = formattedLocalDate(submit);
@@ -33,7 +33,7 @@ export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelect
                     : submit.leaveSubStatus === "승인" && submit.refLeaveSubNo === 0
                         ? () => {
                             setSelectedTime({ start: formattedStartDate, end: formattedEndDate })
-                            handleCancle(submit.leaveSubNo)
+                            handleCancel(submit.leaveSubNo)
                         }
                         : null;
 
