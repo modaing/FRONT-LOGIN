@@ -10,7 +10,7 @@ const ApprovalListComponent = ({ approvals, fg, handleDeleteClick, handleSortDir
 
     return (
         <div className={styles.tableContainer}>
-            <table className={styles.table}>
+            <table className={styles.ApprovalListTable}>
                 <thead>
                     <tr>
                         {fg === 'given' || fg === 'tempGiven' ? (
@@ -74,7 +74,7 @@ const ApprovalListComponent = ({ approvals, fg, handleDeleteClick, handleSortDir
                                                         approval.approvalStatus === "회수" ? styles.withdrawn :
                                                             approval.approvalStatus === "처리 중" ? styles.approving : ''
                                                 }>
-                                                    {approval.approvalStatus === "승인" ? (
+                                                    {approval.approvalStatus === "승인" || approval.approvalStatus === "반려" ? (
                                                         <div>
                                                             <div>{approval.approvalStatus}</div>
                                                             <div>{approval.finalApproverDate}</div>

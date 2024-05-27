@@ -13,8 +13,9 @@ import InsertFailModal from '../../components/approvals/InsertFailModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { submitApprovalAPI } from '../../apis/ApprovalAPI';
+import { submitApprovalAPI, updateApprovalAPI } from '../../apis/ApprovalAPI';
 import WarningModal from '../../components/approvals/WarningModal';
+import TempSaveModal from '../../components/approvals/TempSaveModal';
 
 const ApprovalInsert = () => {
 
@@ -29,10 +30,12 @@ const ApprovalInsert = () => {
     const [title, setTitle] = useState('');
     const [titleError, setTitleError] = useState('');
     const [files, setFiles] = useState([]);
+    const [approvalNo, setApprovalNo] = useState(null);
     const [isInsertConfirmModalOpen, setIsInsertConfirmModalOpen] = useState(false);
     const [isInsertSuccessModalOpen, setIsInsertSuccessModalOpen] = useState(false);
     const [isInsertFailModalOpen, setIsInsertFailModalOpen] = useState(false);
     const [isWarningModalOpen, setIsWarrningModalOpen] = useState(false);
+    const [isTempSaveModalOpen, setIsTempSaveModalOpen] = useState(false);
     const [warningMessage, setWarningMessage] = useState('');
     const editorRef = useRef(null);
     const dispatch = useDispatch();
@@ -109,7 +112,7 @@ const ApprovalInsert = () => {
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = html;
         const dateElement = tempDiv.querySelector('#date');
-        if(dateElement){
+        if (dateElement) {
             dateElement.remove();
         }
 
@@ -118,9 +121,8 @@ const ApprovalInsert = () => {
 
 
 
-    const handleSubmit = async () => {
-
-        if (title.trim() === '') {
+    const handleSubmit = async (status) => {
+        if(status !== '임시저장' && title.trim() === ''){
             setWarningMessage('제목이 입력되지 않았습니다');
             setIsWarrningModalOpen(true);
             return;
@@ -134,8 +136,8 @@ const ApprovalInsert = () => {
             setIsWarrningModalOpen(true);
             return;
         }
-        
-        if(!approverLine.length > 0 ){
+
+        if (!approverLine.length > 0) {
             setWarningMessage('결재선이 선택되지 않았습니다.');
             setIsWarrningModalOpen(true);
             return;
@@ -157,7 +159,7 @@ const ApprovalInsert = () => {
             approvalTitle: title,
             approvalContent: editorContent,
             formNo: selectedForm.formNo,
-            approvalStatus: '처리 중',
+            approvalStatus: status,
             approver: approverLine.map(approver => ({ memberId: approver.memberId })),
             referencer: referencerLine.map(referencer => ({ memberId: referencer.memberId }))
         };
@@ -174,8 +176,32 @@ const ApprovalInsert = () => {
         });
 
         try {
-            await dispatch(submitApprovalAPI(formData));
-            setIsInsertSuccessModalOpen(true);
+            let response;
+
+            if (approvalNo) {
+                //저장된 approvalNo가 있다면 수정 API호출
+                response = await updateApprovalAPI( approvalNo, formData );
+
+            }
+            else {
+                //저장된 approvalNo가 없다면 등록 API호출
+                response = await submitApprovalAPI(formData);
+                console.log('등록된 전자결재 번호 : ' + response.data?.approvalNo);
+                const responseData = response.data;
+
+                if (response.data?.approvalNo) {    //전자결재가 저장되었다면 
+                    setApprovalNo(response.data.approvalNo);
+                } else {
+                    console.error('응답에서 approvalNo를 찾을 수 없습니다.');
+                }
+            }
+
+            if (status === '임시저장') {
+                setIsTempSaveModalOpen(true);
+            }
+            else {
+                setIsInsertSuccessModalOpen(true);
+            }
         } catch (error) {
             openFailModal('');
             console.error(error);
@@ -278,6 +304,10 @@ const ApprovalInsert = () => {
         setIsWarrningModalOpen(false);
     };
 
+    const closeTempSaveModal = () => {
+        setIsTempSaveModalOpen(false);
+    }
+
     useEffect(() => {
         if (editorRef.current) {
             const doc = editorRef.current.getDoc();
@@ -305,7 +335,7 @@ const ApprovalInsert = () => {
                         </nav>
                     </div>
                     <div className={styles.tempSave}>
-                        <button>임시저장</button>
+                        <button type="button" onClick={() => handleSubmit('임시저장')}>임시저장</button>
                     </div>
                 </div>
                 <div className={styles.bigContent}>
@@ -499,9 +529,12 @@ const ApprovalInsert = () => {
                         onClose={closeFailModal}
                     />
                     <WarningModal
-                        isOpen={isWarningModalOpen}
                         onClose={closeWarningModal}
                         message={warningMessage}
+                    />
+                    <TempSaveModal
+                        isOpen={isTempSaveModalOpen}
+                        onClose={closeTempSaveModal}
                     />
                 </div>
             </main>

@@ -1,4 +1,6 @@
 import { createActions, handleActions } from "redux-actions";
+import { submitApprovalAPI, updateApprovalAPI } from "../apis/ApprovalAPI";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   fg: 'given',
@@ -13,6 +15,9 @@ const initialState = {
   loading: false,
   error: null,
 };
+
+
+
 
 // 액션 타입 및 액션 생성자 정의
 export const {
@@ -30,6 +35,8 @@ export const {
   getAllMembers,
   submitApprovalSuccess,
   submitApprovalFailure,
+  updateApprovalSuccess,
+  updateApprovalFailure,
 } = createActions({
   SET_FG: (fg) => fg,
   SET_TITLE: (title) => title,
@@ -45,6 +52,8 @@ export const {
   GET_ALL_MEMBERS: (members) => members,
   SUBMIT_APPROVAL_SUCCESS: () => {},
   SUBMIT_APPROVAL_FAILURE: (error) => error,
+  UPDATE_APPROVAL_SUCCESS: (data) => data,
+  UPDATE_APPROVAL_FAILURE: (error) => error,
 });
 
 // 리듀서 정의
@@ -116,7 +125,18 @@ const approvalReducer = handleActions(
       ...state,
       approvalStatus : 'failure',
       error: payload,
-    })
+    }),
+    [updateApprovalSuccess]: (state, { payload }) => ({
+      ...state,
+      approvals: state.approvals.map((approval) =>
+        approval.approvalNo === payload.approvalNo ? payload : approval
+    ),
+    error: null,
+    }),
+    [updateApprovalFailure]: (state, { payload }) => ({
+      ...state,
+      error: payload,
+    }),
   },
   initialState
 );

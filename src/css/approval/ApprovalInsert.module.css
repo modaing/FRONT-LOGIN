@@ -9,6 +9,13 @@
     margin-right: 50px;
     margin-top : 50px;
 }
+.tempSave button{
+    background-color: #3F72AF;
+}
+.tempSave button:hover{
+    background-color: #E9ECEF;
+    color: black;
+}
 
 .bigContent{
     margin: 10px;
@@ -17,7 +24,7 @@
     min-width: 1200px;
     padding-right: 50px;
     font-size: 15px;
-    margin-top : 50px;
+    /* margin-top : 50px; */
     padding-left: 20px;
     padding-top: 20px;
     
@@ -39,7 +46,7 @@
 .insertAppSideLeft {
     flex: 40%;
     height: 100%;
-    min-height: 1380px;
+    min-height: 1378px;
 }
 .insertAppSideRight{
     flex: 55%;
@@ -48,10 +55,31 @@
     flex-direction: column;
     justify-content: center;
 }
-
 .chooseApprover{
-    margin-top: 50px;
+    margin-left:20px;
 }
+.ApproversBtn p {
+    display: none;
+}
+.ApproversBtn:hover p {
+    
+    background-color: #F4F4F4;
+    color: grey;
+    display: block;
+    position: absolute;
+    text-decoration: none;
+    width: 150px;
+    z-index: 100;
+    margin-left: 80px;
+    margin-top: 15px;
+    padding: 5px;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: lighter;
+}
+
+
 .ApproversBtn{
     width: 100%;
     margin-right: 10px;
@@ -62,25 +90,30 @@
     border: 1px solid black;
     font-weight: bold;
     font-size: 20px;
-    margin-top: 30px;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 5px;
     padding-left: 10px;
+    position:relative;
 }
 .LineTitle{
     font-size: 20px;
     font-weight: bold;
     margin-left: 10px;
     margin-bottom : 10px;
+    display: flex;
+    align-items: center;
 }
 .LineBox{
     display: flex;
     flex-direction: column;
-    gap: 80px;
-    margin-top : 120px;
+    gap: 100px;
+    margin-top : 150px;
+}
+.approvalItem{
+    cursor:default;
 }
 
 .chooseForm{
@@ -103,7 +136,7 @@
 
 .SelectBoxApproverLine, .SelectBoxReferencerLine{
     border: 1px solid gray;
-    height: 300px;
+    height: 350px;
     border-radius: 5px;
     overflow-y: auto;
     padding-top: 20px;
@@ -122,7 +155,7 @@
     width: 20px;
     height: 20px;
 }
-.SelectBoxApproverTable th,td{
+.SelectBoxApproverTable th, .SelectBoxApproverTable td{
     max-width: 100px;
     overflow: hidden;
     padding: 5px;
@@ -160,14 +193,24 @@
 .insertAppButtons button{
     padding: 10px 18px;
     border-radius: 5px;
-    border: none;
-    background-color: #3498db;
-    color: white;
     cursor: pointer;
     margin-left: 10px;
+    border:none;
+}
+.insertAppButtons button:first-of-type{
+
+    background-color: white;
+    color: black;
+    border: 1px solid #BBBBBB;
+}
+.insertAppButtons button:last-of-type{
+   
+    background-color: #3F72AF;
+    color: white;
 }
 .insertAppButtons button:hover{
-    background-color: #005583;
+    background-color: #E9ECEF;
+    color: black;
 }
 .fileUpload {
     margin-top: 20px;
