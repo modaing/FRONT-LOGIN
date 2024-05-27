@@ -199,12 +199,19 @@ const ApprovalInsert = () => {
                 if(response && response.data && response.data.approvalNo){
                     setApprovalNo(response.data.approvalNo);
                 }
-            }else if(status === '임시저장'){
+            }else if(status === '임시저장' && !approvalNo){
                 //임시저장 상태이면 등록 API에 '임시저장'으로 등록
                 response = await submitApprovalAPI(formData);
                 
                 console.log('등록된 전자결재 번호 : ' + response.data?.approvalNo);
 
+                if(response && response.data && response.data.approvalNo){
+                    setApprovalNo(response.data.approvalNo);
+                }
+            }else if (status === '임시저장' && approvalNo){
+                response = await updateApprovalAPI(approvalNo, formData);
+                
+                console.log('등록된 전자결재 번호 : ' + response.data?.approvalNo);
                 if(response && response.data && response.data.approvalNo){
                     setApprovalNo(response.data.approvalNo);
                 }
