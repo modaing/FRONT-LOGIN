@@ -384,8 +384,7 @@ function Insite() {
                 <h1>인사이트</h1>
                 <nav>
                     <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><a href="/static">Home</a></li>
-                        <li className="breadcrumb-item">기타</li>
+                        <li className="breadcrumb-item"><a href="/">Home</a></li>
                         <li className="breadcrumb-item active">인사이트</li>
                     </ol>
                 </nav>

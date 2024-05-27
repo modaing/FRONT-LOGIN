@@ -12,7 +12,7 @@ function Header() {
     const memberInfo = decodeJwt(token);
     const image = memberInfo.imageUrl;
     const imageUrl = `/img/${image}`;
-        
+
     if (token) {
         try {
             const decodedTokenInfo = decodeJwt(token);
@@ -82,18 +82,11 @@ function Header() {
                     </li>
                     <li className="nav-item dropdown">
                         {/* 쪽지 메뉴를 토글하는 링크 */}
-                        <Link to="#" className="nav-link nav-icon" data-bs-toggle="dropdown">
+                        <Link to="/receiveNoteList" className="nav-link nav-icon" >
                             <i className="bi bi-envelope"></i>
                             <span className="badge bg-success badge-number"></span>
                         </Link>
-                        {/* 쪽지 메뉴 */}
-                        <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
-                            <li className="dropdown-header">
-                                You have 3 new messages
-                                <Link to="#"><span className="badge rounded-pill bg-primary p-2 ms-2">View all</span></Link>
-                            </li>
-                            {/* 쪽지 목록 */}
-                        </ul>
+                        
                     </li>
                     <li className="nav-item dropdown pe-3">
                         {/* 프로필 메뉴를 토글하는 링크 */}
