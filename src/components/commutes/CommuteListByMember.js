@@ -1,67 +1,11 @@
 import CommuteItem from "./CommuteItem";
 
-function CommuteListByMember({ commute, date, parsingDateOffset }) {
+function CommuteListByMember({ commute, date, parsingDateOffset, memberId, handleCorrectionRegistered, onClose }) {
 
-    console.log('[CommuteListByMember] commute : ', commute);
-    console.log('[CommuteListByMember] date : ', date);
-    console.log('[CommuteListByMember] parsingDateOffset : ', parsingDateOffset);
-
-    const content2 = {
-        marginLeft: '25px'
-
-    };
-
-    const tableStyle = {
-        width: '97%',
-        borderCollapse: 'collapse',
-        textAlign: 'center',
-    };
-
-    const tableStyles = {
-        tableHeaderCell: {
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            padding: '15px'
-        },
-        tableCell1: {
-            width: '15%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell2: {
-            width: '13%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell3: {
-            width: '13%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell4: {
-            width: '13%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell5: {
-            width: '22%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell6: {
-            width: '13%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        tableCell7: {
-            width: '15%',
-            textAlign: 'center',
-            padding: '10px',
-        },
-        evenRow: {
-            backgroundColor: '#f9f9f9'
-        }
-    };
+    // console.log('[CommuteListByMember] commute : ', commute);
+    // console.log('[CommuteListByMember] date : ', date);
+    // console.log('[CommuteListByMember] parsingDateOffset : ', parsingDateOffset);
+    // console.log('[CommuteListByMember] memberId : ', memberId);
 
     const formatWorkingDate = (workingDate) => {
         const dateObj = new Date(workingDate);
@@ -101,18 +45,29 @@ function CommuteListByMember({ commute, date, parsingDateOffset }) {
                                 <th style={tableStyles.tableHeaderCell} scope="col">정정 요청</th>
                             </tr>
                         </thead>
-                        {/* <tbody>
+                        <tbody>
                             {commute && commute.length > 0 ? (
                                 commute.map((item, index) => (
-                                    <CommuteItem key={item.commuteNo} commute={item} tableStyles={tableStyles} evenRow={index % 2 === 0} date={date} />
+                                    <CommuteItem 
+                                    key={item.commuteNo} 
+                                    commute={item} 
+                                    tableStyles={tableStyles} 
+                                    evenRow={index % 2 === 0} 
+                                    date={date} 
+                                    corrRegistrationDate={item.correction?.corrRegistrationDate} 
+                                    memberId={memberId}
+                                    parsingDateOffset={parsingDateOffset} 
+                                    handleCorrectionRegistered={handleCorrectionRegistered}
+                                    onClose={onClose}
+                                    />
                                 ))
                             ) : (
                                 <tr>
                                     <td colSpan={7}>출퇴근 내역이 없습니다.</td>
                                 </tr>
                             )}
-                        </tbody> */}
-                        <tbody>
+                        </tbody>
+                        {/* <tbody>
                             {generateDates().map((dateItem, index) => {
                                 const matchingCommute = commute.find(
                                     (item) => formatWorkingDate(item.workingDate) === dateItem
@@ -127,7 +82,7 @@ function CommuteListByMember({ commute, date, parsingDateOffset }) {
                                     />
                                 );
                             })}
-                        </tbody>
+                        </tbody> */}
                     </table>
                 </div>
             </div>
@@ -136,3 +91,60 @@ function CommuteListByMember({ commute, date, parsingDateOffset }) {
 }
 
 export default CommuteListByMember;
+
+const content2 = {
+    marginLeft: '25px'
+
+};
+
+const tableStyle = {
+    width: '97%',
+    borderCollapse: 'collapse',
+    textAlign: 'center',
+};
+
+const tableStyles = {
+    tableHeaderCell: {
+        cursor: 'pointer',
+        fontWeight: 'bold',
+        padding: '15px'
+    },
+    tableCell1: {
+        width: '15%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell2: {
+        width: '13%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell3: {
+        width: '13%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell4: {
+        width: '13%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell5: {
+        width: '22%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell6: {
+        width: '13%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    tableCell7: {
+        width: '15%',
+        textAlign: 'center',
+        padding: '10px',
+    },
+    evenRow: {
+        backgroundColor: '#f9f9f9'
+    }
+};

@@ -6,6 +6,7 @@ import { ancDetailAPI } from '../../apis/AncAPICalls';
 import { ancDeleteAPI } from '../../apis/AncAPICalls';
 import '../../css/announce/ancDetail.css';
 import DeleteRoomModal from '../chatting/DeleteModal'; // DeleteRoomModal 임포트
+import { decodeJwt } from '../../utils/tokenUtils';
 
 function AnnounceDetail() {
     const navigate = useNavigate();
@@ -15,20 +16,12 @@ function AnnounceDetail() {
     const [showModal, setShowModal] = useState(false); // 모달 상태 추가
     const contentRef = useRef(null);
 
-    const cardTitleStyle = {
-        marginLeft: '30px',
-    };
+    const token = window.localStorage.getItem('accessToken');
+    const role = token ? decodeJwt(token).role : null;
 
-    const contentStyle = {
-        marginLeft: '100px',
-    };
-
-    const marginStyle = {
-        marginBottom: '20px'
-    }
 
     const marginButtonGroup = {
-        marginLeft: '72%'
+        marginLeft: '90%'
     }
 
     useEffect(() => {
@@ -103,11 +96,18 @@ function AnnounceDetail() {
                 <nav>
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><a href="/">Home</a></li>
-                        <li className="breadcrumb-item">기타</li>
                         <li className="breadcrumb-item"><Link to="/announcements">공지사항</Link></li>
                         <div className="col-sm-10" style={marginButtonGroup}>
-                            <button className="deleteButton" onClick={handleDeleteModalOpen}>삭제</button>
-                            <button className="updateButton" onClick={handleUpdate}>수정</button>
+                            {role === 'ADMIN' && (
+                                <>
+                                    <button className="deleteButton" onClick={handleDeleteModalOpen}>
+                                        삭제
+                                    </button>
+                                    <button className="updateButton" onClick={handleUpdate}>
+                                        수정
+                                    </button>
+                                </>
+                            )}
                             <button className="listButton" onClick={() => navigate('/announces')}>목록</button>
                         </div>
                     </ol>
@@ -115,7 +115,7 @@ function AnnounceDetail() {
             </div>
             <div className="col-lg-12">
                 <div className="card">
-                    <h5 className="card-title">Notice</h5>
+                    <h5 className="card-title"></h5>
                     <div className="content">
                         {announceDetails && (
                             <React.Fragment>

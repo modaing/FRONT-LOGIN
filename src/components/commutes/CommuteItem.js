@@ -1,33 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import InsertCorrectionModal from "./InsertCorrectionModal";
 import { useDispatch } from "react-redux";
-import { callInsertCorrectionAPI } from "../../apis/CommuteAPICalls";
+import { callInsertCorrectionAPI, callSelectCommuteListAPI } from "../../apis/CommuteAPICalls";
+import { CommuteUtil } from "../../utils/CommuteUtil";
 
-function CommuteItem({ commute, tableStyles, evenRow, date, parsingDateOffset }) {
+function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDateOffset , handleCorrectionRegistered, onClose}) {
 
     // console.log('[CommuteItem] commute : ', commute);
-    // console.log('[CommuteItem] commute.commuteNo : ', commute.commuteNo);
+    console.log('[CommuteItem] commute.commuteNo : ', commute.commuteNo);
     // console.log('[CommuteItem] commute.workingDate : ', commute.workingDate);
-    // console.log('[CommuteItem] date : ', date);
-    // console.log('[CommuteItem] parsingDateOffset : ', parsingDateOffset);
-
-    const insertCorrection = {
-        backgroundColor: '#3F72AF',
-        cursor: 'pointer',
-        color: '#FFFFFF',
-        borderRadius: '4px',
-        border: '1px solid #3F72AF',
-        '&:hover': {
-            cursor: '#112D4E',
-        },
-        paddingLeft: '5px',
-        paddingRight: '5px',
-        paddingTop: '1px',
-        paddingBottom: '1px'
-    };
+    // console.log('[CommuteItem] memberId : ', memberId);
+    console.log('[CommuteItem] parsingDateOffset : ', parsingDateOffset);
+    // console.log('[CommuteItem] corrRegistrationDate : ', commute.correction.corrRegistrationDate);
 
     const [showModal, setShowModal] = useState(false);
     const [showBtn, setShowBtn] = useState(true);
+    const [commuteNo, setCommuteNo] = useState(commute.commuteNo);
     const dispatch = useDispatch();
 
     /* 정정 요청 등록 핸들러 */
@@ -36,17 +24,18 @@ function CommuteItem({ commute, tableStyles, evenRow, date, parsingDateOffset })
     };
 
     const handleCloseModal = () => {
+        onClose();
         setShowModal(false);
     };
 
     const handleSaveModal = ({ corrStartWork, corrEndWork, reason }) => {
-        console.log('commuteNo ', commute.commuteNo);
+        console.log('commuteNo 저장 ', commute.commuteNo);
         const newCorrection = {
             commuteNo: commute.commuteNo,
             reqStartWork: corrStartWork,
             reqEndWork: corrEndWork,
             reasonForCorr: reason,
-            corrRegistrationDate: date,
+            corrRegistrationDate: parsingDateOffset,
             corrStatus: '대기'
         };
         dispatch(callInsertCorrectionAPI(newCorrection));
@@ -169,7 +158,8 @@ function CommuteItem({ commute, tableStyles, evenRow, date, parsingDateOffset })
             return () => {
                 clearInterval(intervalRef.current);
             };
-        }, [startTime, endTime]);
+
+        }, [startTime, endTime, commute]);
 
         return (
             <div className="progress">
@@ -185,6 +175,7 @@ function CommuteItem({ commute, tableStyles, evenRow, date, parsingDateOffset })
         );
     };
 
+    // console.log('dd', commute.correction.corrRegistrationDate)
     return <>
         <tr style={evenRow ? tableStyles.evenRow : {}}>
             <td style={tableStyles.tableCell1}>{formatWorkingDate(commute.workingDate || '')}</td>
@@ -193,28 +184,50 @@ function CommuteItem({ commute, tableStyles, evenRow, date, parsingDateOffset })
             <td style={tableStyles.tableCell4}>{formatWorkingTime(commute.endWork || [])}</td>
             <td style={tableStyles.tableCell5}><ProgressBar startTime={commute.startWork || []} endTime={commute.endWork || []} /></td>
             <td style={tableStyles.tableCell6}>{commute.workingStatus || '미출근'}</td>
-            {/* <td style={tableStyles.tableCell7}><button style={insertCorrection} onClick={handleOpenModal} >정정</button></td> */}
-            {showBtn && (
+            {(commute.correction?.corrRegistrationDate) ? (
+                <td></td>
+            ) : (
                 <td style={tableStyles.tableCell7}>
-                    <button style={insertCorrection} onClick={handleOpenModal}>
-                        정정
-                    </button>
-                </td>
+                <button style={insertCorrection} onClick={handleOpenModal}>
+                    정정
+                </button>
+            </td>
             )}
         </tr>
         {/* <InsertCorrectionModal commute={commute} isOpen={showModal} onClose={handleCloseModal} onSave={handleSaveModal} date={commute.workingDate} startWork={formatWorkingTime(commute.startWork)} endWork={formatWorkingTime(commute.endWork)} /> */}
+        {/* <tbody>
+            {CommuteUtil(content)}
+        </tbody> */}
         {showModal && (
             <InsertCorrectionModal
                 commute={commute}
+                commuteNo={commuteNo}
                 isOpen={showModal}
                 onClose={handleCloseModal}
                 onSave={handleSaveModal}
                 date={commute.workingDate}
                 startWork={formatWorkingTime(commute.startWork)}
                 endWork={formatWorkingTime(commute.endWork)}
+                handleCorrectionRegistered={handleCorrectionRegistered}
+                handleCloseModal={onClose}
             />
         )}
     </>
 }
 
 export default CommuteItem;
+
+const insertCorrection = {
+    backgroundColor: '#3F72AF',
+    cursor: 'pointer',
+    color: '#FFFFFF',
+    borderRadius: '4px',
+    border: '1px solid #3F72AF',
+    '&:hover': {
+        cursor: '#112D4E',
+    },
+    paddingLeft: '5px',
+    paddingRight: '5px',
+    paddingTop: '1px',
+    paddingBottom: '1px'
+};

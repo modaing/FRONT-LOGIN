@@ -18,6 +18,7 @@ function LeaveProcessing() {
     const [leaveSubNo, setLeaveSubNo] = useState('');
     const [selectedTime, setSelectedTime] = useState('');
     const [detailInfo, setDetailInfo] = useState('');
+    const [isReset, setIsReset] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -63,7 +64,13 @@ function LeaveProcessing() {
     }
 
     useEffect(() => {
-        const resetNumber = async () => await dispatch({ type: SET_PAGENUMBER, payload: 0 })
+        const resetNumber = async () => {
+            try {
+                await dispatch({ type: SET_PAGENUMBER, payload: 0 })
+            } finally {
+                setIsReset(true);
+            }
+        }
         resetNumber();
     }, []);
 
@@ -76,8 +83,9 @@ function LeaveProcessing() {
                 setIsLoading(false);
             }
         };
-        fetchData();
-    }, [number, properties, direction]);
+        isReset
+            && fetchData();
+    }, [number, properties, direction, isReset]);
 
     return <main id="main" className="main">
         <div className="pagetitle">

@@ -1,11 +1,11 @@
-export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelectedTime, setDetailInfo, handleOpenModal) {
+export function renderLeaveSubmit(content, checkDelete, handleCancel, setSelectedTime, setDetailInfo, handleOpenModal) {
     if (!content) {
         return null;
     }
 
     const currentDate = new Date();
 
-    if (handleDelete != null && handleCancle != null) {
+    if (checkDelete != null && handleCancel != null) {
 
         return content.map((submit, index) => {
             const { formattedStartDate, formattedEndDate, leaveDaysCalc } = formattedLocalDate(submit);
@@ -26,11 +26,17 @@ export function renderLeaveSubmit(content, handleDelete, handleCancle, setSelect
                         ? 'cancelRequest'
                         : ''
 
-            const onClickHandler = submit.leaveSubProcessDate ? () => {
-                setSelectedTime({ start: formattedStartDate, end: formattedEndDate })
-                handleCancle(submit.leaveSubNo)
-            }
-                : () => handleDelete(submit.leaveSubNo);
+            const onClickHandler = submit.leaveSubStatus === "대기" && submit.refLeaveSubNo === 0
+                ? () => checkDelete(submit.leaveSubNo)
+                : isWithinOneDay
+                    ? null
+                    : submit.leaveSubStatus === "승인" && submit.refLeaveSubNo === 0
+                        ? () => {
+                            setSelectedTime({ start: formattedStartDate, end: formattedEndDate })
+                            handleCancel(submit.leaveSubNo)
+                        }
+                        : null;
+
 
             return (
                 <tr key={index}>
@@ -111,7 +117,7 @@ export function renderLeaveAccrual(content) {
                 <td>{leaveAccrual.recipientId}</td>
                 <td>{leaveAccrual.accrualDate}</td>
                 <td>{leaveAccrual.leaveAccrualDays}</td>
-                <td>{leaveAccrual.leaveAccrualReason}</td>
+                <td className="accrualReason" title={leaveAccrual.leaveAccrualReason}>{leaveAccrual.leaveAccrualReason}</td>
             </tr>
         );
     });

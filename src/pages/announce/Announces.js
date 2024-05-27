@@ -4,10 +4,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchAnnouncementsAsync, setCurrentPage } from '../../modules/AnnounceModule';
 import '../../css/common.css';
 import AnnounceList from '../announce/AnnouceList'
+import { decodeJwt } from '../../utils/tokenUtils';
 
 function Announces() {
     const { announcements, currentPage, totalPages } = useSelector(state => state.announceReducer);
     const dispatch = useDispatch();
+
+    const token = window.localStorage.getItem('accessToken');
+    const role = token ? decodeJwt(token).role : null;
 
     useEffect(() => {
         dispatch(fetchAnnouncementsAsync(currentPage)); // 현재 페이지의 공지사항 불러오기
@@ -26,7 +30,7 @@ function Announces() {
             <tr key={index}>
                 <td style={{ width: '10%', textAlign: 'center', padding: '10px' }}>{announce.ancNo}</td>
                 <td style={{ width: '40%', textAlign: 'center', padding: '10px' }}>
-                <Link className="linkWithoutUnderline" to={`/announces/${announce.ancNo}`}>{announce.ancTitle}</Link>
+                    <Link className="linkWithoutUnderline" to={`/announces/${announce.ancNo}`}>{announce.ancTitle}</Link>
                 </td>
                 <td style={{ width: '20%', textAlign: 'center', padding: '10px' }} >{announce.ancWriter}</td>
                 <td style={{ width: '20%', textAlign: 'center', padding: '10px' }}>{announce.ancDate}</td>
@@ -46,13 +50,27 @@ function Announces() {
                 <nav>
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><a href="/">Home</a></li>
-                        <li className="breadcrumb-item">기타</li>
                         <li className="breadcrumb-item active">공지사항</li>
-                        <Link to="/insertAnnounce" style={{ backgroundColor: '#112D4E', color: 'white', borderRadius: '10px', padding: '1% 2%', cursor: 'pointer', marginLeft: '93%', textDecoration: 'none' }}>등록</Link>
+                        {role === 'ADMIN' && (
+                            <Link
+                                to="/insertAnnounce"
+                                style={{
+                                    backgroundColor: '#112D4E',
+                                    color: 'white',
+                                    borderRadius: '10px',
+                                    padding: '1% 2%',
+                                    cursor: 'pointer',
+                                    marginLeft: '93%',
+                                    textDecoration: 'none'
+                                }}
+                            >
+                                등록
+                            </Link>
+                        )}
                     </ol>
                 </nav>
             </div>
-            <AnnounceList/>
+            <AnnounceList />
         </main>
     );
 }

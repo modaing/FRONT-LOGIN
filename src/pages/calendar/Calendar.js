@@ -72,7 +72,8 @@ function Calendar() {
     useEffect(() => {
         const fetchData = async () => {
             const result = await callDepartmentDetailListAPI();
-            setDepartments(result);
+            Array.isArray(result)
+                && setDepartments(result);
         };
 
         fetchData();
@@ -95,8 +96,9 @@ function Calendar() {
                 </nav>
             </div>
             <div className="calendarDepartment">
-            <select value={selectedDepartment} onChange={(e) => setSelectedDepartment(e.target.value)} className="form-select">
-                    {departments && departments.map(dept => (
+                <select value={selectedDepartment} onChange={(e) => setSelectedDepartment(e.target.value)} className="form-select">
+                    <option value='전체'>전체</option>
+                    {departments.map(dept => (
                         <option key={dept.departNo} value={dept.departName}>
                             {dept.departName}
                         </option>

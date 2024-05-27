@@ -144,7 +144,6 @@ const SendNoteList = () => {
                 <nav>
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><a href="/">Home</a></li>
-                        <li className="breadcrumb-item">기타</li>
                         <li className="breadcrumb-item active">쪽지</li>
                     </ol>
                 </nav>

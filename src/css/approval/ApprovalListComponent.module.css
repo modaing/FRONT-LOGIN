@@ -8,7 +8,7 @@
     margin-bottom : 50px;
 }
 
-.table{
+.ApprovalListTable{
     width : 100%;
     border-collapse: collapse;
     border-spacing: 50px;
@@ -18,11 +18,11 @@
     table-layout: fixed;
     border: none;
 }
-.table thead{
+.ApprovalListTable thead{
     font-weight: bold;
     font-size: 16px;
 }
-.table th, .table td{
+.ApprovalListTable th, .ApprovalListTable td{
     padding: 25px;
     border : none;
     border-bottom: 1px solid #D5D5D5;
@@ -30,11 +30,11 @@
     height: 100px;
     
 }
-.table th{
+.ApprovalListTable th{
     font-weight: 900;
     font-family: sans-serif ;
 }
-.table tbody tr:hover{
+.ApprovalListTable tbody tr:hover{
     background-color: #F4F4F4;
     cursor: pointer;
 }

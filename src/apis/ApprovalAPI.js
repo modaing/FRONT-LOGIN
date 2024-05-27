@@ -11,6 +11,8 @@ import {
     getAllMembers,
     submitApprovalSuccess,
     submitApprovalFailure,
+    updateApprovalSuccess,
+    updateApprovalFailure
 } from "../modules/ApprovalReducer";
 import { GET_MEMBER } from "../modules/MemberModule";
 
@@ -52,6 +54,7 @@ export const getApprovalsAPI = ( fg, page, title, direction )  => {
         dispatch(setLoading(true));
         try{
             const response = await axios.get(`${API_BASE_URL}/approvals?fg=${fg}&page=${page}&title=${title}&direction=${direction}`, { headers });
+            console.log(response);
             if(!response.data || !response.data.data){
                 throw new Error("Invalid API response structure");
             }
@@ -110,36 +113,54 @@ export const getAllMemberAPI = () => {
     };
 };
 
-export const submitApprovalAPI = (approvalData, files) => {
-    return async (dispatch) => {
+export const submitApprovalAPI = async (formData) => {
+    
+      
+        // const formData = new FormData();
 
-        dispatch(setLoading(true));
-        const formData = new FormData();
-
-        //결재 데이터 추가
-        formData.append('approvalData', new Blob([JSON.stringify(approvalData)], { type : 'application/json'}));
-
-        //파일 추가
-        files.forEach(file => {
-            formData.append("files", file);
-        });
+        // //결재 데이터 추가
+        // formData.append('approvalData', new Blob([JSON.stringify(approvalData)], { type : 'application/json'}));
 
         try{
             const response = await axios.post(`${API_BASE_URL}/approvals`, formData, {
                 headers : {
                     'Content-Type' : 'multipart/form-data',
+                    Accept: '*/*',
+                    Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
                 },
             });
-            console.log('결재 제출 성공', response.data);
+            console.log('결재 제출 성공', JSON.stringify(response));
 
-            dispatch(submitApprovalSuccess(response.data));
+            // dispatch(submitApprovalSuccess(response.data));
 
+            return response.data;
         }catch (error){
 
-            dispatch(submitApprovalFailure(error));
+            // dispatch(submitApprovalFailure(error));
             console.error('결재 제출 실패 : ', error);
-        }finally{
+            throw error;
+        }/* finally{
             dispatch(setLoading(false));
+        } */
+   
+};
+
+// 임시저장된 전자결재 수정
+export const updateApprovalAPI = async ( approvalNo, formData ) => {
+   
+        try{
+            const response = await axios.put(`${API_BASE_URL}/approvals/${approvalNo}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
+                },
+            });
+            console.log('결재 수정 성공 : ' + JSON.stringify(response));
+            // dispatch(updateApprovalSuccess(response.data));
+            return response.data;
+        }catch(error){
+            // dispatch(updateApprovalFailure(error));
+            console.error('결재 수정 실패 : ' + error);
+            throw error;
         }
-    };
 };

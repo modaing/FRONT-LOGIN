@@ -12,7 +12,7 @@ function Header() {
     const memberInfo = decodeJwt(token);
     const image = memberInfo.imageUrl;
     const imageUrl = `/img/${image}`;
-        
+
     if (token) {
         try {
             const decodedTokenInfo = decodeJwt(token);
@@ -39,12 +39,13 @@ function Header() {
     };
 
     return (
-        <header id="header" className="header fixed-top d-flex align-items-center">
+        <header id="header" className="header fixed-top d-flex align-items-center" >
             <div className="d-flex align-items-center justify-content-between">
                 {/* 홈으로 이동하는 링크 */}
                 <Link to="/" className="logo d-flex align-items-center">
                     <img src="img/logo.png" alt="" />
                 </Link>
+                <i class="bi bi-list toggle-sidebar-btn"></i>
             </div>
             <nav className="header-nav ms-auto">
                 <ul className="d-flex align-items-center">
@@ -80,18 +81,11 @@ function Header() {
                     </li>
                     <li className="nav-item dropdown">
                         {/* 쪽지 메뉴를 토글하는 링크 */}
-                        <Link to="#" className="nav-link nav-icon" data-bs-toggle="dropdown">
+                        <Link to="/receiveNoteList" className="nav-link nav-icon" >
                             <i className="bi bi-envelope"></i>
                             <span className="badge bg-success badge-number"></span>
                         </Link>
-                        {/* 쪽지 메뉴 */}
-                        <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
-                            <li className="dropdown-header">
-                                You have 3 new messages
-                                <Link to="#"><span className="badge rounded-pill bg-primary p-2 ms-2">View all</span></Link>
-                            </li>
-                            {/* 쪽지 목록 */}
-                        </ul>
+                        
                     </li>
                     <li className="nav-item dropdown pe-3">
                         {/* 프로필 메뉴를 토글하는 링크 */}

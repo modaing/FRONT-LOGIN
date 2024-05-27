@@ -1,21 +1,26 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import styles from '../../css/approval/ApprovalInsert.module.css';
-import { Editor } from '@tinymce/tinymce-react';
 import SelectFormComponent from '../../components/approvals/SelectFormComponent';
 import TinyEditor from '../../components/approvals/TinyEditor';
 import UserInfoComponent from '../../components/approvals/UserInfoComponent';
 import { decodeJwt } from '../../utils/tokenUtils';
 import ApproverModal from '../../components/approvals/ApproverModal';
+import InsertConfirmModal from '../../components/approvals/InsertConfirmModal';
+import InsertSuccessModal from '../../components/approvals/InsertSuccessModal';
+import InsertFailModal from '../../components/approvals/InsertFailModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { submitApprovalAPI } from '../../apis/ApprovalAPI';
-import { useDispatch } from 'react-redux';
-
+import { submitApprovalAPI, updateApprovalAPI } from '../../apis/ApprovalAPI';
+import WarningModal from '../../components/approvals/WarningModal';
+import TempSaveModal from '../../components/approvals/TempSaveModal';
 
 const ApprovalInsert = () => {
 
     const [formContent, setFormContent] = useState('');
+    const [initialFormContent, setInitialFormContent] = useState('');
     const [selectedForm, setSelectedForm] = useState(null);
     const [yearFormNo, setYearFormNo] = useState('');
     const [isRemovingBogusBr, setIsRemovingBogusBr] = useState(false);
@@ -25,8 +30,16 @@ const ApprovalInsert = () => {
     const [title, setTitle] = useState('');
     const [titleError, setTitleError] = useState('');
     const [files, setFiles] = useState([]);
+    const [approvalNo, setApprovalNo] = useState(null);
+    const [isInsertConfirmModalOpen, setIsInsertConfirmModalOpen] = useState(false);
+    const [isInsertSuccessModalOpen, setIsInsertSuccessModalOpen] = useState(false);
+    const [isInsertFailModalOpen, setIsInsertFailModalOpen] = useState(false);
+    const [isWarningModalOpen, setIsWarrningModalOpen] = useState(false);
+    const [isTempSaveModalOpen, setIsTempSaveModalOpen] = useState(false);
+    const [warningMessage, setWarningMessage] = useState('');
     const editorRef = useRef(null);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const decodedToken = decodeJwt(window.localStorage.getItem('accessToken'));
     const memberId = decodedToken.memberId;
@@ -38,6 +51,7 @@ const ApprovalInsert = () => {
         if (selectedForm && selectedForm.formShape) {
             const htmlContent = selectedForm.formShape;
             setFormContent(htmlContent); // 선택된 폼의 내용을 설정
+            setInitialFormContent(htmlContent);
 
             //결재 번호 생성
             const currentYear = new Date().getFullYear();
@@ -59,7 +73,19 @@ const ApprovalInsert = () => {
     };
 
     const handleFileChange = (e) => {
+
+        const selectedFiles = e.target.files;
+        const maxSize = 10 * 1024 * 1024; // 10 MB
         // setAttachedFiles(prevFiles => [...prevFiles, ...Array.from(e.target.files)]);
+
+        for (let i = 0; i < selectedFiles.length; i++) {
+            if (selectedFiles[i].size > maxSize) {
+                setWarningMessage('파일의 크기가 너무 큽니다. 파일은 최대 10MB까지 첨부 가능합니다.');
+                setIsWarrningModalOpen(true);
+                return;
+            }
+        }
+
         setFiles([...files, ...e.target.files]);
     };
 
@@ -72,55 +98,113 @@ const ApprovalInsert = () => {
     const handleTitleChange = (e) => {
         const newTitle = e.target.value;
 
-        if(newTitle.length <= 50){
+        if (newTitle.length <= 50) {
             setTitle(newTitle);
-            setTitleError('');
+            setWarningMessage('');
         }
-        else{
-            setTitleError('제목은 50자를 초과할 수 없습니다.');
+        else {
+            setWarningMessage('제목은 50자를 초과할 수 없습니다.');
+            setIsWarrningModalOpen(true);
         }
     };
 
-    /* const handleSubmit = () => {
-        const formData = {
-            content: formContent,
-            selectedForm: selectedForm,
-            approverLine: approverLine,
-            referencerLine: referencerLine,
-            attachedFiles: attachedFiles
-        };
-        console.log('기안 완료 : ', formData);
-    }; */
+    const stripHtmlExceptDate = (html) => {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        const dateElement = tempDiv.querySelector('#date');
+        if (dateElement) {
+            dateElement.remove();
+        }
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+        return tempDiv.textContent || tempDiv.innerHTML || '';
+    }
 
-        if (title.length > 50) {
-            setTitleError('제목은 50자를 초과할 수 없습니다.');
-            alert('제목은 50자를 초과할 수 없습니다.');
+
+
+    const handleSubmit = async (status) => {
+        if(status !== '임시저장' && title.trim() === ''){
+            setWarningMessage('제목이 입력되지 않았습니다');
+            setIsWarrningModalOpen(true);
             return;
         }
+
+        const strippedFormContent = stripHtmlExceptDate(formContent).trim(/\s+/g, '');
+        const strippedInitialFormContent = stripHtmlExceptDate(initialFormContent).replace(/\s+/g, '');
+
+        if (title.length > 50) {
+            setWarningMessage('제목은 50자를 초과할 수 없습니다.');
+            setIsWarrningModalOpen(true);
+            return;
+        }
+
+        if (!approverLine.length > 0) {
+            setWarningMessage('결재선이 선택되지 않았습니다.');
+            setIsWarrningModalOpen(true);
+            return;
+        }
+
+        if (strippedFormContent === '' || strippedFormContent === strippedInitialFormContent) {
+            setWarningMessage('결재 내용이 입력되지 않았습니다');
+            setIsWarrningModalOpen(true);
+            return;
+        }
+
 
         const formData = new FormData();
 
         //에디터 내용을 포함한 폼 데이터를 가져오기
         const editorContent = editorRef.current.getContent();
 
+        const approvalDTO = {
+            approvalTitle: title,
+            approvalContent: editorContent,
+            formNo: selectedForm.formNo,
+            approvalStatus: status,
+            approver: approverLine.map(approver => ({ memberId: approver.memberId })),
+            referencer: referencerLine.map(referencer => ({ memberId: referencer.memberId }))
+        };
 
-        formData.append('approvalContent', editorContent);
-        formData.append('formNo', selectedForm.formNo);
-        formData.append('approvalTitle', title);
-        formData.append('approver', JSON.stringify(approverLine));
-        formData.append('referencer', JSON.stringify(referencerLine));
+        formData.append('approvalDTO', new Blob([JSON.stringify(approvalDTO)], { type: 'application/json' }));
 
         //파일 추가
-        files.forEach(file => formData.append('multipartFile', file));
+        if (files && files.length > 0) {
+            files.forEach(file => formData.append('multipartFile', file));
+        }
+
+        formData.forEach((value, key) => {
+            console.log(key, value);
+        });
 
         try {
-            await dispatch(submitApprovalAPI(formData));
-            alert('전자결재가 성공적으로 등록되었습니다.');
+            let response;
+
+            if (approvalNo) {
+                //저장된 approvalNo가 있다면 수정 API호출
+                response = await updateApprovalAPI( approvalNo, formData );
+
+            }
+            else {
+                //저장된 approvalNo가 없다면 등록 API호출
+                response = await submitApprovalAPI(formData);
+                console.log('등록된 전자결재 번호 : ' + response.data?.approvalNo);
+                const responseData = response.data;
+
+                if (response.data?.approvalNo) {    //전자결재가 저장되었다면 
+                    setApprovalNo(response.data.approvalNo);
+                } else {
+                    console.error('응답에서 approvalNo를 찾을 수 없습니다.');
+                }
+            }
+
+            if (status === '임시저장') {
+                setIsTempSaveModalOpen(true);
+            }
+            else {
+                setIsInsertSuccessModalOpen(true);
+            }
         } catch (error) {
-            alert('전자결재 등록에 실패했습니다.');
+            openFailModal('');
+            console.error(error);
         }
 
     }
@@ -177,20 +261,51 @@ const ApprovalInsert = () => {
     };
 
     const openModal = () => {
-        console.log('openModal 실행 ');
         setIsModalOpen(true);
-        console.log('isModalOpen : ' + isModalOpen);
     };
 
     const closeModal = () => {
-        console.log('closeModal 실행');
         setIsModalOpen(false);
-        console.log('isModalOpen : ' + isModalOpen);
     };
 
     const handleSaveApprovers = (approverLine, referencerLine) => {
         setApproverLine(approverLine);
         setReferencerLine(referencerLine);
+    }
+
+    const openConfirmModal = () => {
+        setIsInsertConfirmModalOpen(true);
+    };
+
+    const closeConfirmModal = () => {
+        setIsInsertConfirmModalOpen(false);
+    };
+
+    const openFailModal = (message) => {
+        setIsInsertFailModalOpen(true);
+    }
+
+    const closeFailModal = () => {
+        setIsInsertFailModalOpen(false);
+
+    }
+
+    const confirmSubmit = () => {
+        closeConfirmModal();
+        handleSubmit();
+    };
+
+    const closeSuccessModal = () => {
+        setIsInsertSuccessModalOpen(false);
+        navigate('/approvals?fg=given&page=0title&direction=DESC');
+    };
+
+    const closeWarningModal = () => {
+        setIsWarrningModalOpen(false);
+    };
+
+    const closeTempSaveModal = () => {
+        setIsTempSaveModalOpen(false);
     }
 
     useEffect(() => {
@@ -220,23 +335,23 @@ const ApprovalInsert = () => {
                         </nav>
                     </div>
                     <div className={styles.tempSave}>
-                        <button>임시저장</button>
+                        <button type="button" onClick={() => handleSubmit('임시저장')}>임시저장</button>
                     </div>
                 </div>
                 <div className={styles.bigContent}>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={(e) => { e.preventDefault(); openConfirmModal(); }}>
                         <div className={styles.middleContent}>
                             <div className={styles.insertAppSideLeft} >
                                 <SelectFormComponent onSelectForm={handleSelectForm} />
-                                <div className={styles.chooseApprover}>
-                                    <button className={styles.ApproversBtn} onClick={openModal}>
-                                        결재선
-                                        <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px' }} />
-                                    </button>
-                                </div>
+
                                 <div className={styles.LineBox}>
                                     <div className={styles.approvers}>
-                                        <div className={styles.LineTitle}>결재선</div>
+                                        <div className={styles.LineTitle}>결재선
+                                            <div className={styles.chooseApprover}>
+                                                <button type="button" className={styles.ApproversBtn} onClick={openModal}>
+                                                    <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px' }} />
+                                                </button>
+                                            </div></div>
                                         <div className={styles.SelectBoxApproverLine} style={{ paddingLeft: '10px' }}>
                                             <table className={styles.SelectBoxApproverTable} style={{ textAlign: 'center' }}>
                                                 <thead>
@@ -262,7 +377,13 @@ const ApprovalInsert = () => {
                                         </div>
                                     </div>
                                     <div className={styles.referencers}>
-                                        <div className={styles.LineTitle}>참조선</div>
+                                        <div className={styles.LineTitle}>참조선
+                                            <div className={styles.chooseApprover}>
+                                                <button type="button" className={styles.ApproversBtn} onClick={openModal}>
+                                                    <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px' }} />
+                                                </button>
+                                            </div>
+                                        </div>
                                         <div className={styles.SelectBoxReferencerLine} style={{ paddingLeft: '10px' }}>
                                             <table className={styles.SelectBoxApproverTable} style={{ textAlign: 'center' }}>
                                                 <thead>
@@ -292,7 +413,7 @@ const ApprovalInsert = () => {
                             <div className={styles.insertAppSideRight}>
                                 <UserInfoComponent memberId={memberId} yearFormNo={yearFormNo} />
                                 <div className={styles.approvalTitle}>
-                                    <input type="text" name="approvalTitle" placeholder="제목" value={title} onChange={handleTitleChange} maxLength={50}/>
+                                    <input type="text" name="approvalTitle" placeholder="제목" value={title} onChange={handleTitleChange} maxLength={51} />
                                     {titleError && <div className={styles.titleError}>{titleError}</div>}
                                 </div>
                                 <TinyEditor
@@ -382,8 +503,8 @@ const ApprovalInsert = () => {
                             </div>
                         </div>
                         <div className={styles.insertAppButtons}>
-                            <button>취소</button>
-                            <button type="submit" onClick={handleSubmit}>등록</button>
+                            <button type='button'>취소</button>
+                            <button type="submit">등록</button>
                         </div>
                     </form>
                     <ApproverModal
@@ -392,6 +513,28 @@ const ApprovalInsert = () => {
                         onSave={handleSaveApprovers}
                         selectedApproverLine={approverLine}
                         selectedReferencerLine={referencerLine}
+                    />
+                    <InsertConfirmModal
+                        isOpen={isInsertConfirmModalOpen}
+                        onClose={closeConfirmModal}
+                        onConfirm={confirmSubmit}
+                    />
+                    <InsertSuccessModal
+                        isOpen={isInsertSuccessModalOpen}
+                        onClose={closeSuccessModal}
+                    />
+                    <InsertFailModal
+                        isOpen={isInsertFailModalOpen}
+
+                        onClose={closeFailModal}
+                    />
+                    <WarningModal
+                        onClose={closeWarningModal}
+                        message={warningMessage}
+                    />
+                    <TempSaveModal
+                        isOpen={isTempSaveModalOpen}
+                        onClose={closeTempSaveModal}
                     />
                 </div>
             </main>

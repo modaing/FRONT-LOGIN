@@ -1,66 +1,86 @@
 .rowdies-light {
-    font-family: "Rowdies", sans-serif;
-    font-weight: 300;
-    font-style: normal;
-  }
-  
-  .rowdies-regular {
-    font-family: "Rowdies", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-  }
-  
-  .rowdies-bold {
-    font-family: "Rowdies", sans-serif;
-    font-weight: 700;
-    font-style: normal;
-  }
+  font-family: "Rowdies", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.rowdies-regular {
+  font-family: "Rowdies", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.rowdies-bold {
+  font-family: "Rowdies", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
 
 .weather-container {
-    display: flex;
-    align-items: center; /* 세로 방향 가운데 정렬 */
-    justify-content: center; /* 가로 방향 가운데 정렬 */
+  display: flex;
+  align-items: center;
+  /* 세로 방향 가운데 정렬 */
+  justify-content: center;
+  /* 가로 방향 가운데 정렬 */
 }
 
 .weather {
-    display: flex;
-    flex-direction: column; /* 내부 요소를 세로로 배치 */
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  /* 내부 요소를 세로로 배치 */
+  height: 100%;
 }
 
 
 .weather-description {
-    margin: 0; /* 기본 마진 제거 */
-    width: 120px; /* 텍스트 영역의 고정 너비 설정 */
-    height: auto; /* 텍스트 영역의 높이를 자동으로 조절 */
-    font-family: Arial, sans-serif; /* 폰트 설정 */
-    font-size: 16px; /* 글자 크기 설정 */
-    color: #333; /* 텍스트 색상 설정 */
-    margin-bottom: 5px; /* 아래 여백 설정 */
-    font-family: "Rowdies", sans-serif;
-    font-weight: 300;
-    font-style: normal;
+  margin: 0;
+  /* 기본 마진 제거 */
+  width: 120px;
+  /* 텍스트 영역의 고정 너비 설정 */
+  height: auto;
+  /* 텍스트 영역의 높이를 자동으로 조절 */
+  font-family: Arial, sans-serif;
+  /* 폰트 설정 */
+  font-size: 16px;
+  /* 글자 크기 설정 */
+  color: #333;
+  /* 텍스트 색상 설정 */
+  margin-bottom: 5px;
+  /* 아래 여백 설정 */
+  font-family: "Rowdies", sans-serif;
+  font-weight: 300;
+  font-style: normal;
 }
 
 .weather-description-main {
-  margin: 0; /* 기본 마진 제거 */
-  width: 180px; /* 텍스트 영역의 고정 너비 설정 */
-  height: auto; /* 텍스트 영역의 높이를 자동으로 조절 */
-  font-family: Arial, sans-serif; /* 폰트 설정 */
-  color: #333; /* 텍스트 색상 설정 */
-  margin-bottom: 5px; /* 아래 여백 설정 */
+  margin: 0;
+  /* 기본 마진 제거 */
+  width: 180px;
+  /* 텍스트 영역의 고정 너비 설정 */
+  height: auto;
+  /* 텍스트 영역의 높이를 자동으로 조절 */
+  font-family: Arial, sans-serif;
+  /* 폰트 설정 */
+  color: #333;
+  /* 텍스트 색상 설정 */
+  margin-bottom: 5px;
+  /* 아래 여백 설정 */
   font-family: "Rowdies", sans-serif;
   font-weight: 300;
   font-style: normal;
 }
 
 .image-container {
-    margin-left: 20px; /* 이미지와 텍스트 사이 여백 조절 */
-    height: 100%;
+  margin-left: 20px;
+  /* 이미지와 텍스트 사이 여백 조절 */
+  height: 100%;
 }
 
 .image-container img {
-    max-width: 100%; /* 이미지 너비를 최대한 부모 요소에 맞춤 */
-    height: auto; /* 이미지 높이 자동 조절 */
-    border-radius: 50%; /* 이미지를 둥근 형태로 설정 */
+  max-width: 100%;
+  /* 이미지 너비를 최대한 부모 요소에 맞춤 */
+  height: auto;
+  /* 이미지 높이 자동 조절 */
+  border-radius: 50%;
+  /* 이미지를 둥근 형태로 설정 */
 }
