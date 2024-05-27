@@ -16,6 +16,7 @@ function LeaveAccrual() {
     const [direction, setDirection] = useState('DESC');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isReset, setIsReset] = useState(false);
     const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
 
     const dispatch = useDispatch();
@@ -60,7 +61,13 @@ function LeaveAccrual() {
     };
 
     useEffect(() => {
-        const resetNumber = async () => await dispatch({ type: SET_PAGENUMBER, payload: 0 })
+        const resetNumber = async () => {
+            try {
+                await dispatch({ type: SET_PAGENUMBER, payload: 0 })
+            } finally {
+                setIsReset(true);
+            }
+        }
         resetNumber();
     }, []);
 
@@ -73,10 +80,9 @@ function LeaveAccrual() {
                 setIsLoading(false);
             }
         };
-        number !== undefined 
+        isReset
             && fetchData();
-    }, [number, properties, direction]);
-
+    }, [number, properties, direction, isReset]);
     return <main id="main" className="main">
         <div className="pagetitle">
             <h1>휴가</h1>
