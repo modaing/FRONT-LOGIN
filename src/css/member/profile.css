@@ -106,8 +106,12 @@
     width: 100px;
 }
 
-.inputStyle {
-    width: 250px;
+.inputStyleWidth {
+    padding: 10px; /* Add padding for better visual appearance */
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 5px; /* Add rounded corners */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+    width: 350px;
 }
 
 .contentStyle3 {

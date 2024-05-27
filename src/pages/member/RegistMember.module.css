@@ -1,11 +1,12 @@
 /* 프로필 사진 preview */
 .profilePic {
-    height: 250px;
-    width: 250px;
+    height: 260px;
+    width: 260px;
     margin-bottom: 10px;
-    border: 4px solid #fff; /* Add a white border around the profile picture */
+    /* border: 4px solid #fff; Add a white border around the profile picture */
     /* border-radius: 50%; Make the profile picture round */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a drop shadow */
+    border-radius: 50%;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); Add a drop shadow */
 }
 
 /* 공용으로 사용하는 코드를 덮어쓰기 위한 logic */

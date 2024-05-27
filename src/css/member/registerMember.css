@@ -21,6 +21,24 @@
     margin-left: -50px;
 }
 
+.inputStyleForBirthday {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    justify-content: space-between;
+    width: 300px; /* Match the width of the inputStyles */
+    height: 52.22px;
+    margin-left: -50px;
+}
+
+.inputStylesForYear, .inputStylesForMonth, .inputStylesForDays {
+    width: 70px;
+    /* padding-left: 10px; */
+    padding: 10px; /* Add padding for better visual appearance */
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 5px; /* Add rounded corners */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+}
+
 .inputStyles.inputStyles:focus, .inputStyleConfirmed:focus {
     outline: none; /* Remove the default focus outline */
     border-color: #007bff; /* Change border color on focus */
@@ -31,9 +49,17 @@
     background-color: #D5D5D5;
 }
 
-/* body {
-    overflow: hidden;
-} */
+.inputStylesForBox, .inputStyleConfirmed {
+    width: 300px;
+    height: 52.22px;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px; /* Add padding for better visual appearance */
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 5px; /* Add rounded corners */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+    margin-left: -50px;
+}
 
 .main2Pages {
     font-size: 20px;
@@ -41,6 +67,18 @@
     /* width: 100%; */
     height: 90%;
 }
+
+.inputWrapper {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    margin-right: 5px; /* Add space between wrappers */
+}
+
+
+.inputWrapper span {
+    margin-left: 5px; /* Add space between input and span */
+}
+
 
 form {
     margin: 0;
@@ -153,6 +191,12 @@ form input, form button, form select, form textarea {
     margin-bottom: 20px;
 }
 
+.birthdayStyle {
+    /* display: flex; */
+    width: 100%/3;
+    height: 52.22px;
+}
+
 .memberId, .email, .address, .phoneNo, .employedDate, .depart, .position, .name, .memberStatus, .gender, .birthday {
     margin-right: 50px;
     width: 100px;
@@ -221,6 +265,40 @@ form input, form button, form select, form textarea {
      margin: 0px 10px;
 } */
 
-.box {
+/* .postCodeStyle {
+    width: 400px;
+    height: 400px;
+    display: modalSt;
+    display: modalState ? 'block' : 'none',
+} */
 
+.postCodeStyle {
+    width: 400px;
+    height: 400px;
+    display: none; /* Initially hide the modal */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid #ccc;
+    z-index: 1000; /* Ensure the modal appears above other elements */
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.postCodeStyle.active {
+    display: block; /* Show the modal when the "active" class is applied */
+}
+
+.notice-insert-button, .inputAddressButton {
+    background-color: #112D4E;
+    color: white;
+    border: 1px solid #D5D5D5;
+    border-radius: 15px;
+    padding: 10px 20px;
+    cursor: pointer;
+    height: 50px;
+    width: auto;
+    margin-left: 15px;
 }

@@ -1,0 +1,34 @@
+.modalContent {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width:  1000px;
+    height: 600px;
+    /* padding-right: 5px; */
+    overflow-y: hidden;
+}
+  
+.exitButton {
+    color: black;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    margin-top: -10px;
+}
+
+.exitButton:hover {
+    color: blue;
+}
+
+button :hover {
+    outline: none;
+    color: black;
+    background-color: none;
+    border: none;
+}

@@ -85,10 +85,20 @@ function DepartmentAndPosition() {
         }
     }
 
+    // useEffect(() => {
+    //     const fetchData = async() => {
+    //         await fetchDepartmentDetails();
+    //         await fetchPositionDetails();
+    //     };
+    //     fetchData();
+    // }, []);
+
     useEffect(() => {
-        const fetchData = async() => {
+        const fetchData = async () => {
             await fetchDepartmentDetails();
             await fetchPositionDetails();
+            // Sort positions by positionLevel after fetching position details
+            sortData2('positionLevel');
         };
         fetchData();
     }, []);

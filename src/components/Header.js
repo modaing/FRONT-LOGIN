@@ -22,7 +22,6 @@ function Header() {
         }
     }
 
-
     const onClickLogoutHandler = (event) => {
         event.preventDefault();
         dispatch(callLogoutAPI())
