@@ -111,7 +111,7 @@
     width: 20px;
     height: 20px;
 }
-.SelectBoxApproverTable th,.SelectBoxApproverTable td{
+.SelectBoxApproverTable th, .SelectBoxApproverTable td{
     max-width: 100px;
     overflow: hidden;
     padding: 5px;
