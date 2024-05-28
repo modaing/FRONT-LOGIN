@@ -9,6 +9,8 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
 const NewCommuteAndCorrection = ({ commuteList, isOpen, onClose, parsingDateOffset, memberId }) => {
 
+    console.log('parsingDateOffset', parsingDateOffset);
+
     const dispatch = useDispatch();
 
     const [workingDate, setWorkingDate] = useState(null);
@@ -49,32 +51,12 @@ const NewCommuteAndCorrection = ({ commuteList, isOpen, onClose, parsingDateOffs
 
     const handleSave = () => {
 
-        // if (!reason && !corrStartWork && !corrEndWork && workingDate) {
-        //     setShowDateErrorMessage(true);
-        //     setShowReasonErrorMessage(true);
-        //     setShowTimeErrorMessage(true);
-        //     return;
-        // };
-
-        // if (!reason) {
-        //     setShowReasonErrorMessage(true);
-        //     return;
-        // };
-
-        // if (!corrStartWork && !corrEndWork) {
-        //     setShowTimeErrorMessage(true);
-        //     return;
-        // };
-
-        // if (!workingDate) {
-        //     setShowDateErrorMessage(true);
-        //     return;
-        // }
-
         if (isFormValid()) {
 
             const koreaStartTime = parseTime(corrStartWork);
             const koreaEndTime = parseTime(corrEndWork);
+
+            console.log('parsingDateOffset', parsingDateOffset);
 
             let newCorrection = {
                 memberId: memberId,
@@ -85,6 +67,11 @@ const NewCommuteAndCorrection = ({ commuteList, isOpen, onClose, parsingDateOffs
                 corrStatus: '대기',
                 reasonForCorr: reason
             };
+
+            console.log('workingDate', workingDate);
+            console.log('koreaStartTime', koreaStartTime);
+            console.log('koreaEndTime', koreaEndTime);
+            console.log('parsingDateOffset', parsingDateOffset);
 
             dispatch(callInsertNewCorrectionAPI(newCorrection));
             // handleCorrectionRegistered();
@@ -150,12 +137,12 @@ const NewCommuteAndCorrection = ({ commuteList, isOpen, onClose, parsingDateOffs
                                     {/* <DemoContainer components={['DatePicker']}> */}
                                     <DatePicker
                                         label="정정 요청 대상 일시"
-                                        selected={new Date(workingDate)}
+                                        // selected={new Date(workingDate)}
                                         onChange={(e) => {
                                             setWorkingDate(e);
                                             setShowDateErrorMessage(false);
                                         }}
-                                        dateFormat="yyyy-MM-dd"
+                                        format="YYYY-MM-DD"
                                         DatePicker={workingDate}
                                     />
                                     {/* </DemoContainer> */}
