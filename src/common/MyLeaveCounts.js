@@ -1,24 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { callMyLeaveCountsAPI } from '../apis/InsiteAPICalls';
+import {callSelectLeaveSubmitAPI} from '../apis/LeaveAPICalls'
 import { decodeJwt } from './../utils/tokenUtils';
 import '../css/MyLeaveCounts.css';
 
 function MyLeaveCounts() {
     const dispatch = useDispatch();
     const [totalDays, setTotalDays] = useState('');
-    const [consumedDays, setConsumedDays] = useState('');
-    const remainingDays = totalDays - consumedDays;
-    const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
-    // const memberId = 241201001; (체크용)
+    const [remainingDays, setRemaingDats] = useState('');
+    // const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
+    const memberId = 240528903; 
+
+    const { leaveInfo } = useSelector(state => state.leaveReducer);
+
+    console.log(leaveInfo)
 
     useEffect(() => {
         const fetchMyLeaveCounts = async () => {
             try {
                 const response = await dispatch(callMyLeaveCountsAPI(memberId));
-                const myData = response.data.find(item => item.memberId === memberId);
+                const myData = response.data
                 if (myData) {
-                    setConsumedDays(myData.consumedDays);
+                    setRemaingDats(myData.remainingDays);
                     setTotalDays(myData.totalDays);
                 }
             } catch (error) {
@@ -28,6 +32,8 @@ function MyLeaveCounts() {
 
         fetchMyLeaveCounts();
     }, [dispatch, memberId]);
+
+
 
 
     return (
