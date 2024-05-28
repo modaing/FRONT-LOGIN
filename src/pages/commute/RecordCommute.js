@@ -9,10 +9,9 @@ import { Link } from 'react-router-dom';
 import ClockInModal from '../../components/commutes/ClockInModal';
 import dayjs from "dayjs";
 import 'react-datepicker/dist/react-datepicker.css';
-import RecordCorrectionOfCommute from './RecordCorrectionOfCommute';
 import ClockOutModal from '../../components/commutes/ClockOutModal';
 import ClockLimitModal from '../../components/commutes/ClockLimitModal';
-import { textAlign, width } from '@mui/system';
+import NewCommuteAndCorrection from '../../components/commutes/NewCommuteAndCorrection';
 
 function RecordCommute() {
 
@@ -41,12 +40,12 @@ function RecordCommute() {
     const [showClockInModal, setShowClockInModal] = useState(false);
     const [showClockOutModal, setShowClockOutModal] = useState(false);
     const [showClockLimitModal, setShowClockLimitModal] = useState(false);
+    const [showNewCommuteAndCorrModal, setShowNewCommuteAndCorrModal] = useState(false);
 
     const dispatch = useDispatch();
 
     /* 출퇴근 내역 액션 */
     const result = useSelector(state => state.commuteReducer);
-    console.log('[RecordCommute] result : ', result);
     const commuteList = result.commutelist;
 
     /* 출퇴근 내역 API 호출 */
@@ -82,7 +81,6 @@ function RecordCommute() {
 
     const handleClockIn = () => {
         try {
-
             if (todayCommute != null) {
                 if (todayCommute.endWork == null) {
                     setShowClockOutModal(true);
@@ -96,6 +94,14 @@ function RecordCommute() {
             }
         } catch (error) {
             console.error('Error checking commute:', error);
+        }
+    };
+
+    const handleNewCommuteAndCorrection = () => {
+        try {
+            setShowNewCommuteAndCorrModal(true);
+        } catch (error) {
+            console.log('Error checking commute:', error);
         }
     };
 
@@ -135,6 +141,10 @@ function RecordCommute() {
         dispatch(callSelectCommuteListAPI(target, targetValue, parsingDateOffset));
     };
 
+    const handleNewCommuteAndCorrModalClose = () => {
+        setShowNewCommuteAndCorrModal(false);
+    }
+
     return <>
         <main id="main" className="main">
             <div className="pagetitle">
@@ -144,7 +154,6 @@ function RecordCommute() {
                         <li className="breadcrumb-item"><a href="/">Home</a></li>
                         <li className="breadcrumb-item">출퇴근</li>
                         <li className="breadcrumb-item active">출퇴근 내역</li>
-                        {/* <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}> */}
                             <Link
                                 to="/recordCommute"
                                 className="notice-insert-button"
@@ -168,10 +177,10 @@ function RecordCommute() {
                                 to="/recordCommute"
                                 className="notice-insert-button"
                                 style={insert2Button}
+                                onClick={handleNewCommuteAndCorrection}
                             >
                                 정정요청
                             </Link>
-                        {/* </div> */}
                         {showClockInModal && (
                             <ClockInModal
                                 isOpen={showClockInModal}
@@ -197,6 +206,15 @@ function RecordCommute() {
                                 isOpen={showClockLimitModal}
                                 onClose={handleClockLimitModalClose}
                                 parsingDateOffset={parsingDateOffset}
+                            />
+                        )}
+                        {showNewCommuteAndCorrModal && (
+                            <NewCommuteAndCorrection
+                            commuteList={commuteList}
+                            isOpen={showNewCommuteAndCorrModal}
+                            onClose={handleNewCommuteAndCorrModalClose}
+                            parsingDateOffset={parsingDateOffset}
+                            memberId={memberId}
                             />
                         )}
                     </ol>
@@ -225,7 +243,6 @@ function RecordCommute() {
                 )}
             </div>
         </main>
-        {/* <ClockInModal isOpen={showModal} onClose={() => setShowModal(false)} isInsert={isInsert} memberId={memberId} parsingDateOffset={parsingDateOffset} /> */}
     </>
 
 }
@@ -245,7 +262,6 @@ const insertButton = {
     textDecoration: 'none',
     textAlign: 'center',
     display: 'inline-block',
-    // display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
 };
@@ -264,7 +280,6 @@ const updateButton = {
     textDecoration: 'none',
     textAlign: 'center',
     display: 'inline-block',
-    // display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
 };
@@ -282,7 +297,6 @@ const insert2Button = {
     textDecoration: 'none',
     textAlign: 'center',
     display: 'inline-block',
-    // display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
 };

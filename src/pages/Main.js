@@ -17,6 +17,7 @@ import ApproverCounts from '../common/ApproverCounts';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import MyLeaveCounts from '../common/MyLeaveCounts';
 import { decodeJwt } from '../utils/tokenUtils';
+import { callSelectNoticeListAPI } from '../apis/NoticeAPICalls';
 
 function Main() {
     const { calendarList } = useSelector(state => state.calendarReducer)
@@ -26,7 +27,7 @@ function Main() {
 
     const token = window.localStorage.getItem('accessToken');
     const role = token ? decodeJwt(token).role : null;
-
+    const memberId = decodeJwt(token).memberId;
 
     const toggleComponent = () => {
         setShowApprovalCounts(!showApprovalCounts);
@@ -36,6 +37,10 @@ function Main() {
     useEffect(() => { dispatch(callSelectCalendarAPI("개발팀")) }, []);
 
     useEffect(() => updateEvents(calendarList, setEvents), [calendarList]);
+
+    useEffect(() => {
+        dispatch(callSelectNoticeListAPI(memberId));
+    }, [])
 
     return (
         <main id="main" className="main">

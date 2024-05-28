@@ -4,38 +4,6 @@ import { margin } from '@mui/system';
 
 function CommuteTime({ commute, date, handlePreviousClick, handleNextClick }) {
 
-    // console.log('[CommuteTime] commute : ', commute);
-    console.log('[CommuteTime] date : ', date);
-
-    const content1 = {
-        marginLeft: '25px',
-        textAlign: 'center',
-        margin: '20px'
-
-    };
-
-    const red = {
-        color: '#AF3131',
-        fontWeight: 900,
-    };
-
-    const blue = {
-        color: '#3F72AF',
-        fontWeight: 900,
-    };
-
-    const black = {
-        color: '#00000',
-        fontWeight: 900,
-    };
-
-    const dateWeek = {
-        color: '#00000',
-        fontWeight: 800,
-        fontSize: '20px',
-        margin: '20px'
-    };
-
     const weekData = useMemo(() => {
         const weeks = [];
         let currentWeek = [];
@@ -98,8 +66,6 @@ function CommuteTime({ commute, date, handlePreviousClick, handleNextClick }) {
         return weekNumber;
     };
 
-    console.log('주 번호 계산 : ', getWeekNumber(date));
-
     /* 주 번호의 날짜 범위 계산 */
     function getWeekRange(date) {
         const currentDate = new Date(date);
@@ -137,15 +103,10 @@ function CommuteTime({ commute, date, handlePreviousClick, handleNextClick }) {
     const totalWorkingHours = commute.reduce((acc, item) => acc + item.totalWorkingHours, 0);
     const formattedTotalWorkingHours = formatTotalWorkingHours(totalWorkingHours);
 
-    console.log('포맷 전 실제 근로 시간 : ', totalWorkingHours);
-
     /* 잔여 근로시간 계산 */
     const maxWorkingHours = 3120;   // 52시간 = 3120분
     const remainingWorkingHours = maxWorkingHours - totalWorkingHours;
     const formattedRemainingWorkingHours = formatTotalWorkingHours(remainingWorkingHours);
-
-    console.log('실제 근로 시간 : ', formattedTotalWorkingHours);
-    console.log('잔여 근로 시간 : ', formattedRemainingWorkingHours);
 
     /* 한 주 전으로 이동 */
     const handlePreviousWeekClick = () => {
@@ -153,60 +114,11 @@ function CommuteTime({ commute, date, handlePreviousClick, handleNextClick }) {
         handlePreviousClick(new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7));
     };
 
-    // console.log('한 주 전으로 이동 : ', new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7));
-
     /* 한 주 후로 이동 */
     const handleNextWeekClick = () => {
         setCurrentWeek(Math.min(currentWeek + 1, weekData.length - 1));
         handleNextClick(new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7));
     };
-
-    // console.log('한 주 후로 이동 : ', new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7));
-
-    /* 주 단위 근로 시간 그래프 */
-    // const ProgressBar = ({ progress, style }) => {
-    //     if (progress === 0) {
-    //         return (
-    //             <div className="progress" style={style}>
-    //                 <div
-    //                     className="progress-bar"
-    //                     role="progressbar"
-    //                     style={{ width: `0%` }}
-    //                     aria-valuenow={0}
-    //                     aria-valuemin={0}
-    //                     aria-valuemax={100}
-    //                 />
-    //             </div>
-    //         );
-    //     } else if (progress >= 100) {
-    //         return (
-    //             <div className="progress" style={style}>
-    //                 <div
-    //                     className="progress-bar"
-    //                     role="progressbar"
-    //                     style={{ width: `100%` }}
-    //                     aria-valuenow={100}
-    //                     aria-valuemin={0}
-    //                     aria-valuemax={100}
-    //                 />
-    //             </div>
-    //         );
-    //     } else {
-    //         const progressPercentage = (progress / 52) * 100;
-    //         return (
-    //             <div className="progress" style={style}>
-    //                 <div
-    //                     className="progress-bar"
-    //                     role="progressbar"
-    //                     style={{ width: `${progressPercentage}%` }}
-    //                     aria-valuenow={progressPercentage}
-    //                     aria-valuemin={0}
-    //                     aria-valuemax={100}
-    //                 />
-    //             </div>
-    //         );
-    //     }
-    // };
 
     const ProgressBar = ({ progress, style }) => {
         return (
@@ -234,7 +146,6 @@ function CommuteTime({ commute, date, handlePreviousClick, handleNextClick }) {
                         <span style={dateWeek}>{`${date.getMonth() + 1}월 ${getWeekNumber(date)}째주`}</span>
                         <Button onClick={handleNextWeekClick}>&gt;</Button>
                         <h6>{getWeekRange(date)}</h6>
-                        {/* <h6>{getWeekRange(new Date(date.getFullYear(), date.getMonth(), date.getDate()))}</h6> */}
                         <ProgressBar progress={progressPercentage} style={{ width: '40%', margin: '20px auto' }} />
                         <h6 style={{ padding: '5px' }}>최대 근로시간 <span className="black" style={black}>52시간</span></h6>
                         <h6 style={{ padding: '5px' }}>실제 근로시간 <span className="blue" style={blue}>{formattedTotalWorkingHours}</span></h6>
@@ -247,3 +158,32 @@ function CommuteTime({ commute, date, handlePreviousClick, handleNextClick }) {
 }
 
 export default CommuteTime;
+
+const content1 = {
+    marginLeft: '25px',
+    textAlign: 'center',
+    margin: '20px'
+
+};
+
+const red = {
+    color: '#AF3131',
+    fontWeight: 900,
+};
+
+const blue = {
+    color: '#3F72AF',
+    fontWeight: 900,
+};
+
+const black = {
+    color: '#00000',
+    fontWeight: 900,
+};
+
+const dateWeek = {
+    color: '#00000',
+    fontWeight: 800,
+    fontSize: '20px',
+    margin: '20px'
+};

@@ -72,7 +72,7 @@ function CommuteCorrectionManage() {
     /* 출퇴근 정정 내역 API 호출 */
     useEffect(() => {
         dispatch(callSelectCorrectionListAPI(memberId, page, size, sort, direction, parsingDateOffset));
-    }, [parsingDateOffset, correctionList]);
+    }, [parsingDateOffset]);
 
     /* 출퇴근 정정 내역 조회 API 재호출 */
     const handleCorrectionUpdateCompleted = () => {

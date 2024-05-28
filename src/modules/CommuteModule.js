@@ -1,5 +1,4 @@
 import { createActions, handleActions } from "redux-actions";
-import { callSelectCommuteDetailAPI, callSelectCommuteListAPI } from "../apis/CommuteAPICalls";
 
 /* 초기값 */
 const initialState = {
@@ -22,11 +21,13 @@ export const GET_CORRECTIONLIST = 'commute/GET_CORRECTIONLIST';
 export const POST_CORRECTION = 'commute/POST_CORRECTION';
 export const PUT_CORRECTION = 'commute/PUT_CORRECTION';
 
+export const POST_NEWCORRECTION = 'commute/POST_NEWCORRECTION';
+
 export const SET_PAGENUMBER = 'commute/SET_PAGENUMBER';
 
 /* 액션 함수 */
-export const { commute: { getCommute, getCommutelist, postCommute, putCommute, getCorrection, getCorrectionlist, postCorrection, putCorrection, setPagenumber } } = createActions({
-    [GET_COMMUTE]: (res) => ({commute: res}),
+export const { commute: { getCommute, getCommutelist, postCommute, putCommute, getCorrection, getCorrectionlist, postCorrection, putCorrection, setPagenumber, postNewCorrection } } = createActions({
+    [GET_COMMUTE]: (res) => ({ commute: res }),
     [GET_COMMUTELIST]: (res) => ({ commutelist: res }),
     [POST_COMMUTE]: (res) => ({ postcommute: res }),
     [PUT_COMMUTE]: (res) => ({ putcommute: res }),
@@ -34,13 +35,14 @@ export const { commute: { getCommute, getCommutelist, postCommute, putCommute, g
     [GET_CORRECTIONLIST]: (res) => ({ correctionlist: res }),
     [POST_CORRECTION]: (res) => ({ postcorrection: res }),
     [PUT_CORRECTION]: (res) => ({ putcorrection: res }),
-    [SET_PAGENUMBER]: (page) => ({ page: page })
+    [SET_PAGENUMBER]: (page) => ({ page: page }),
+    [POST_CORRECTION]: (res) => ({ postnewcorrection: res })
 });
 
 /* 리듀서 */
 const commuteReducer = handleActions(
     {
-        [GET_COMMUTE]: (state, {payload}) => {
+        [GET_COMMUTE]: (state, { payload }) => {
             return payload;
         },
         [GET_COMMUTELIST]: (state, { payload }) => {
@@ -69,6 +71,9 @@ const commuteReducer = handleActions(
                 ...state,
                 currentPage: payload.page,
             })
+        },
+        [POST_NEWCORRECTION]: (state, { payload }) => {
+            return ({ ...state, postnewcorrection: payload });
         }
     },
     initialState

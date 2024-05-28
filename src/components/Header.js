@@ -1,8 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom'; // react-router-dom에서 Link 가져오기
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { decodeJwt } from '../utils/tokenUtils';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { callLogoutAPI, callGetProfilePictureAPI } from '../apis/MemberAPICalls';
+import { useEffect } from 'react';
+import { callSelectNoticeListAPI } from '../apis/NoticeAPICalls';
 
 function Header() {
 
@@ -12,6 +14,11 @@ function Header() {
     const memberInfo = decodeJwt(token);
     const image = memberInfo.imageUrl;
     const imageUrl = `/img/${image}`;
+
+    const memberId = decodeJwt(token).memberId;
+    const result = useSelector(state => state.noticeReducer);
+    console.log('result', result);
+    const noticeList = result?.noticeList?.response?.data?.results?.result || [];
 
     if (token) {
         try {
@@ -38,6 +45,10 @@ function Header() {
             });
     };
 
+    useEffect(() => {
+        dispatch(callSelectNoticeListAPI(memberId));
+    }, []);
+
     return (
         <header id="header" className="header fixed-top d-flex align-items-center" >
             <div className="d-flex align-items-center justify-content-between">
@@ -56,13 +67,13 @@ function Header() {
                             <span className="badge bg-primary badge-number"></span>
                         </Link>
                         {/* 알림 메뉴 */}
-                        <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+                        {/* <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
                             <li className="dropdown-header">
-                                You have 4 new notifications
-                                <Link to="#"><span className="badge rounded-pill bg-primary p-2 ms-2">View all</span></Link>
+                                새로운 알림
+                                <Link to="#"><span className="badge rounded-pill bg-primary p-2 ms-2">삭제</span></Link>
                             </li>
-                            {/* 알림 목록 */}
-                        </ul>
+                            알림 목록
+                        </ul> */}
                     </li>
                     <li className="nav-item dropdown">
                         {/* 알림 메뉴를 토글하는 링크 */}
@@ -71,12 +82,25 @@ function Header() {
                             <span className="badge bg-primary badge-number">4</span>
                         </Link>
                         {/* 알림 메뉴 */}
-                        <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                            <li className="dropdown-header">
-                                You have 4 new notifications
-                                <Link to="#"><span className="badge rounded-pill bg-primary p-2 ms-2">View all</span></Link>
-                            </li>
+                        <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" style={{ width: '300px' }}>
+                            <div >
+                                <li className="dropdown-header" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    새로운 알림
+                                    <Link to="#"><span className="badge rounded-pill bg-primary p-2 ms-2" style={{ marginLeft: '100px' }}>삭제</span></Link>
+                                </li>
+                            </div>
+                            <hr />
                             {/* 알림 목록 */}
+                            {noticeList && noticeList.slice(0, 4).map((notice, index) => (
+                                <li key={index} className="notification-item">
+                                    <i className="bi bi-exclamation-circle text-warning"></i>
+                                    <div>
+                                        <h4>{notice.noticeType}</h4>
+                                        <p>{notice.noticeContent}</p>
+                                        <p>{new Date(notice.createdAt).toLocaleString()}</p>
+                                    </div>
+                                </li>
+                            ))}
                         </ul>
                     </li>
                     <li className="nav-item dropdown">
@@ -85,7 +109,7 @@ function Header() {
                             <i className="bi bi-envelope"></i>
                             <span className="badge bg-success badge-number"></span>
                         </Link>
-                        
+
                     </li>
                     <li className="nav-item dropdown pe-3">
                         {/* 프로필 메뉴를 토글하는 링크 */}
