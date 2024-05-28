@@ -59,8 +59,8 @@ const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime, remai
             <>
                 <div className="modal-backdrop-check show"></div>
 
-                <div className="modal fade show" style={{ display: 'block' }}>
-                    <div className={isCheckOpen ? 'modal-dialog blur' : "modal-dialog"}>
+                <div className={isCheckOpen ? "modal fade" : "modal fade show"} style={{ display: 'block' }}>
+                    <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title">{isCancle}</h5>
