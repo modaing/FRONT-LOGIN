@@ -229,29 +229,34 @@ function RoomList() {
                     </div>
                   </div>
                 </div>
-                </div>
-                <div className="mesgs">
-                  <div className="msg_history">
-                    {activeRoomId ? (
-                      <Room roomId={activeRoomId} onLeaveRoom={handleLeaveRoom} />
-                    ) : (
-                      <div>
-                        <JoinRoom onRoomCreated={handleInsertRoom} />
-                      </div>
-                    )}
-                  </div>
+              </div>
+              <div className="mesgs">
+                <div className="msg_history">
+                  {activeRoomId ? (
+                    <Room
+                      roomId={activeRoomId}
+                      onLeaveRoom={handleLeaveRoom}
+                      senderDeleteYn={rooms.find(room => room.enteredRoomId === activeRoomId)?.senderDeleteYn || ''}
+                      receiverDeleteYn={rooms.find(room => room.enteredRoomId === activeRoomId)?.receiverDeleteYn || ''}
+                    />
+                  ) : (
+                    <div>
+                      <JoinRoom rooms={rooms} onRoomCreated={handleInsertRoom} />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        {/* 모달창 */}
-        <DeleteRoomModal
-          show={isModalOpen}
-          handleClose={() => setIsModalOpen(false)}
-          handleConfirmDelete={handleConfirmDelete}
-          handleCancelDelete={handleCancelDelete}
-        />
+      </div>
+      {/* 모달창 */}
+      <DeleteRoomModal
+        show={isModalOpen}
+        handleClose={() => setIsModalOpen(false)}
+        handleConfirmDelete={handleConfirmDelete}
+        handleCancelDelete={handleCancelDelete}
+      />
     </main>
   );
 }

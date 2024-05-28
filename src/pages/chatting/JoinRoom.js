@@ -6,7 +6,7 @@ import CustomButton from './CustomButton';
 import '../../css/chatting/joinRoom.css';
 import { decodeJwt } from '../../utils/tokenUtils';
 
-function JoinRoom({ onRoomCreated }) {
+function JoinRoom({ rooms, onRoomCreated }) {
     const [members, setMembers] = useState([]);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -21,11 +21,13 @@ function JoinRoom({ onRoomCreated }) {
     useEffect(() => {
         callMemberListAPI().then(response => {
             const responseData = response.data;
-            setMembers(responseData);
+            // 방에 이미 속한 멤버를 제외하고 멤버 목록 설정
+            const filteredMembers = responseData.filter(member => !rooms.some(room => room.receiverId === member.memberId || room.memberId === member.memberId));
+            setMembers(filteredMembers);
         }).catch(error => {
             console.error('Error fetching receivers:', error);
         });
-    }, []);
+    }, [rooms]);
 
     const handleNoteSubmit = (e) => {
         e.preventDefault();

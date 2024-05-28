@@ -6,7 +6,7 @@ import { Client } from '@stomp/stompjs';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { callMemberListAPI, callPostMessages, callGetMessages  } from '../../apis/ChattingAPICalls';
 
-function Room({ roomId, onLeaveRoom }) {
+function Room({ roomId, onLeaveRoom , senderDeleteYn, receiverDeleteYn}) {
     const dispatch = useDispatch();
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
@@ -14,8 +14,6 @@ function Room({ roomId, onLeaveRoom }) {
     const [roomLeft, setRoomLeft] = useState(false);
     const [members, setMembers] = useState([]);
     const [message, setMessage] = useState('');
-
-
     const messagesEndRef = useRef(null);
 
     const token = `Authorization:` + 'BEARER' + window.localStorage.getItem("accessToken");
@@ -24,7 +22,7 @@ function Room({ roomId, onLeaveRoom }) {
     const name = decodedTokenInfo.name;
     const imageUrl = decodedTokenInfo.imageUrl;
 
-
+    const isRoomDeleted = senderDeleteYn === 'Y' || receiverDeleteYn === 'Y';
 
     useEffect(() => {
         callMemberListAPI().then(response => {
@@ -47,7 +45,6 @@ function Room({ roomId, onLeaveRoom }) {
         fetchMessages(); // 함수 호출
     
     }, [dispatch, roomId]); // roomId가 바뀔 때마다 실행
-
 
     useEffect(() => {
         const socket = new WebSocket(`ws://localhost:8080/wss/chatting`);
@@ -167,7 +164,7 @@ function Room({ roomId, onLeaveRoom }) {
             if (memberPhoto) {
                 imageUrl = `/img/${memberPhoto.imageUrl}`;
             } else {
-                imageUrl = '/img/gpt.jpg'; // 기본 이미지 경로를 사용자가 원하는 이미지로 수정하세요.
+                imageUrl = '/img/gpt.jpg'; 
             }
 
             console.log(imageUrl);
@@ -183,7 +180,7 @@ function Room({ roomId, onLeaveRoom }) {
                 <ul>
                     {messages.map((message, index) => (
                         <li style={{ listStyle: 'none' }} key={index} className={message.senderId === memberId ? 'sent-message' : 'received-message'}>
-                            <img src={findUserPhoto(message.senderId, memberId, [], null)} className="avatar-room" style={{ marginRight: "10PX" }} />
+                            <img src={findUserPhoto(message.senderId, message)} className="avatar-room" style={{ marginRight: "10PX" }} />
                             <span className="sender-name">{message.senderName}</span>
                             <div className="message-info"></div>
                             <span className="message-text">{message.message}</span>
@@ -192,6 +189,7 @@ function Room({ roomId, onLeaveRoom }) {
                     <div ref={messagesEndRef} />
                 </ul>
             </div>
+            
             <div className="send-area">
                 <div className="message-input">
                     <input
@@ -203,6 +201,8 @@ function Room({ roomId, onLeaveRoom }) {
                                 sendMessage();
                             }
                         }}
+                        disabled={isRoomDeleted}
+                        placeholder={isRoomDeleted ? "이 방은 삭제되었습니다." : "메시지를 입력해주세요"}
                     />
                     <button onClick={sendMessage} >Send</button>
                     <button className='button-leave' onClick={handleLeaveRoom}>Leave Room</button>
