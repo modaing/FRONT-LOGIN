@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import styles from "../../css/approval/ApprovalDetail.module.css";
 import { decodeJwt } from "../../utils/tokenUtils";
-import { getApprovalDetailAPI, updateApprovalStatusAPI } from "../../apis/ApprovalAPI";
+import { getApprovalDetailAPI, updateApprovalStatusAPI, updateApproverStatusAPI } from "../../apis/ApprovalAPI";
 import UserInfoComponent from '../../components/approvals/UserInfoComponent';
 import ApproversInfo from "../../components/approvals/ApproversInfo";
 import ReferencerComponent from "../../components/approvals/ReferencerComponent";
 import ReturnConfirmModal from "../../components/approvals/ReturnConfirmModal";
+import ApproverStatusConfirmModal from "../../components/approvals/ApproverStatusConfirmModal";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -19,7 +20,11 @@ const ApprovalDetail = () => {
     const loading = useSelector((state) => state.approval.loading);
     const error = useSelector((state) => state.approval.error);
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+    const [isApproverStatusConfirmModalOpen, setIsApproverStatusConfirmModalOpen] = useState(false);
+
+    const [rejectReason, setRejectReason] = useState('');
+    const [actionType, setActionType] = useState('');
 
     const decodedToken = decodeJwt(window.localStorage.getItem('accessToken'));
     const memberId = decodedToken.memberId;
@@ -45,32 +50,82 @@ const ApprovalDetail = () => {
     const { memberId: approvalMemberId, approver, referencer, approvalTitle, approvalContent } = approvalDetail;
 
     const handleWithdrawClick = () => {
-        setIsModalOpen(true);
+        setIsWithdrawModalOpen(true);
+
     };
 
-    const handleModalConfirm = () => {
-        setIsModalOpen(false);
-        dispatch(updateApprovalStatusAPI(approvalNo)).then (() => {
+    const handleWithdrawConfirm = () => {
+        setIsWithdrawModalOpen(false);
+        dispatch(updateApprovalStatusAPI(approvalNo)).then(() => {
             navigate('/approvals?fg=given')
         });
     };
 
-    const handleModalCancel = () => {
-        setIsModalOpen(false);
+    const handleWithdrawCancel = () => {
+        setIsWithdrawModalOpen(false);
+    }
+
+    const handleModalConfirm = () => {
+        const approverToUpdate = approver.find(a => a.memberId === memberId && a.approverStatus === '대기');
+        if (approverToUpdate) {
+            const updateData = {
+                approverNo : approverToUpdate.approverNo,
+                approverStatus: actionType === 'approve' ? '승인' : '반려',
+                rejectReason: actionType === 'reject' ? rejectReason : ''
+            };
+            dispatch(updateApproverStatusAPI(approverToUpdate.approverNo, updateData)).then(() => {
+
+                setIsApproverStatusConfirmModalOpen(true);
+            });
+        }
     };
+
+    const handleApproverStatusConfirmModalClose = () => {
+        setIsApproverStatusConfirmModalOpen(false);
+        navigate('/approvals?fg=received');
+    }
+
+
+    const handleApproveClick = () => {
+        setRejectReason('');
+        setActionType('approve');
+    };
+
+    const handleRejectClick = () => {
+        setActionType('reject');
+    };
+
+
+    const handleRejectReasonChange = (e) => {
+        setRejectReason(e.target.value);
+    };
+
+    const handleProcessClick = () => {
+        handleModalConfirm();
+    }
 
     //작성자가 0번째에 있고, 작성자 다음으로 결재처리를 한 사람이 없거나 첫번째 사람이 결재처리를 안했으면 회수 버튼을 보이도록 설정
     const isSender = approver[0]?.memberId === memberId;
     console.log("0번째 결재자가 작성자가 맞는지: " + isSender)
-    const nextApproverIndex = approver.findIndex(a => a.approverStatus === '승인' || a.approverStatus === '반려') === -1;
-    console.log('nextApprover Index : ' + approver.findIndex(a => a.approverStatus === '승인' || a.approverStatus === '반려') === -1);
-    const canWithdraw = isSender && nextApproverIndex;
-    console.log('0번째 결재자가 작성자가 맞거나 승인 반려한사람이 없느냐' + canWithdraw);
+    const firstApproverHasNotApproved = approver[1]?.approverStatus !== '승인' && approver[1]?.approverStatus !== '반려';
+    console.log('첫번째 결재자가 결재를 했나 : ' + firstApproverHasNotApproved);
+    const canWithdraw = isSender && firstApproverHasNotApproved && approvalDetail.approvalStatus !== '회수';
+    console.log('0번째 결재자가 작성자가 맞거나 승인 반려한사람이 없거나 회수상태가 아닌가' + canWithdraw);
+
+    //접속자가 현재 approver 중에서 approverStatus 가 '대기'인 사람 중에 가장 먼저인가
+    const currentApprover = approver.find(a => a.memberId === memberId && a.approverStatus === '대기');
+    const canApproveOrReject = currentApprover && approver.every(a => a.approverOrder >= currentApprover.approverOrder || a.approverStatus !== '대기');
+
 
     let breadcrumbLabel = '결재 상신 내역';
-    if(!isSender){
+    if (!isSender) {
         breadcrumbLabel = '결재 수신 내역';
     }
+
+    //목록 버튼 url 설정
+    console.log('기안자 정보 : ' + approvalDetail.memberId);
+    const listUrl = (approvalMemberId === memberId) ? '/approvals?fg=given&page=0&title=&direction=DESC' : '/approvals?fg=received&page=0&title=&direction=DESC';
+    console.log("😫😫😫😫😫😫내가 기안자니?" + approvalDetail.memberId === memberId);
 
     return (
         <main id="main" className="main">
@@ -102,17 +157,50 @@ const ApprovalDetail = () => {
                         첨부파일
                     </div>
                 </div>
+                {canApproveOrReject && (
+                    <div class={styles.actionBox}>
+                        <div className={styles.actionButtons}>
+                            <label className={styles.approveRadios}>
+                                <input type="radio" name="action" value="approve" checked={actionType === 'approve'} onChange={handleApproveClick}/>
+                                <button onClick={handleApproveClick}>승인</button>
+                            </label>
+                            
+                            <label className={styles.rejectRadios}>
+                                <input type="radio" name="action" value="reject" checked={actionType === 'reject'} onChange={handleRejectClick}/>
+                                <button onClick={handleRejectClick}>반려</button>
+                            </label>
+                            
+                        </div>
+                        
+                        {actionType === 'reject' && (
+                            <div className={styles.rejectReasonContainer}>
+                                <div className={styles.rejectReasonLabel}>반려사유</div>
+                                <textarea
+                                    value={rejectReason}
+                                    onChange={handleRejectReasonChange}
+                                    placeholder="반려 사유를 입력하세요"
+                                />
+                            </div>
+                        )}
+                    </div>
+                )}
+
             </div>
             <div className={styles.ApprovalDetailBottom}>
                 <div className={styles.buttonContainer}>
-                    <button onClick={() => navigate('/approvals?fg=given')}>목록</button>
+                    <button onClick={() => navigate(listUrl)}>목록</button>
                     {canWithdraw && <button onClick={handleWithdrawClick}>회수</button>}
+                    {canApproveOrReject && <button onClick={handleProcessClick}>처리</button>}
                 </div>
             </div>
-            <ReturnConfirmModal 
-                isOpen={isModalOpen}
-                onConfirm={handleModalConfirm}
-                onCancel={handleModalCancel}
+            <ReturnConfirmModal
+                isOpen={isWithdrawModalOpen}
+                onConfirm={handleWithdrawConfirm}
+                onCancel={handleWithdrawCancel}
+            />
+            <ApproverStatusConfirmModal
+                isOpen={isApproverStatusConfirmModalOpen}
+                onClose={handleApproverStatusConfirmModalClose}
             />
         </main>
     );

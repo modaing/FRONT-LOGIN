@@ -1,25 +1,24 @@
 import React from 'react';
-import styles from '../../css/approval/ReturnConfirmModal.module.css'
+import styles from '../../css/approval/ApproverStatusConfirmModal.module.css';
 
-const ReturnConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
+const ApproverStatusConfirmModal = ({ isOpen, onClose }) => {
 
     if(!isOpen){
         return null;
     }
 
-    return(
+    return (
         <div className={styles.modalOverlay}>
             <div className={styles.modalContent}>
                 <div className={styles.modalConfirmMessage}>
-                    <p>기안을 회수하시겠습니까?</p>
+                <p>결재가 처리되었습니다.</p>
                 </div>
                 <div className={styles.modalActions}>
-                    <button onClick={onCancel}>취소</button>
-                    <button onClick={onConfirm}>회수</button>
+                    <button onClick={onClose}>닫기</button>
                 </div>
             </div>
         </div>
     );
-
 }
-export default ReturnConfirmModal;
+
+export default ApproverStatusConfirmModal;

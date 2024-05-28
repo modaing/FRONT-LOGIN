@@ -200,3 +200,14 @@ export const updateApprovalStatusAPI = (approvalNo, status) => {
     };
 };
 
+export const updateApproverStatusAPI = (approverNo, updateData) => {
+    return async (dispatch) =>{
+        try {
+            const response = await axios.put(`${API_BASE_URL}/approvers/${approverNo}`, updateData, { headers });
+            dispatch(updateApprovalSuccess(response.data));
+        }catch(error){
+            dispatch(updateApprovalFailure(error));
+            console.error('결재자 상태 업데이트 실패 : ', error);
+        }
+    };
+};
