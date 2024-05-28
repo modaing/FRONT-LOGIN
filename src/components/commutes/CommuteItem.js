@@ -3,7 +3,7 @@ import InsertCorrectionModal from "./InsertCorrectionModal";
 import { useDispatch } from "react-redux";
 import { callInsertCorrectionAPI, callSelectCommuteListAPI } from "../../apis/CommuteAPICalls";
 
-function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDateOffset , handleCorrectionRegistered, onClose}) {
+function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDateOffset, handleCorrectionRegistered, onClose }) {
 
     const [showModal, setShowModal] = useState(false);
     const [showBtn, setShowBtn] = useState(true);
@@ -31,8 +31,8 @@ function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDat
             corrStatus: '대기'
         };
         dispatch(callInsertCorrectionAPI(newCorrection));
-        console.log('이유', reason);
-        console.log('정정 요청 성공~!!!!!');
+        // console.log('이유', reason);
+        // console.log('정정 요청 성공~!!!!!');
         setShowBtn(false);
     }
 
@@ -167,8 +167,13 @@ function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDat
         );
     };
 
+    /* 임시 저장 출퇴근 내역은 렌더링 막는 기능 */
+    if (commute.workingStatus === '출퇴근 미입력으로 정정 대기 중') {
+        return null;
+    };
+
     return <>
-        <tr style={evenRow ? tableStyles.evenRow : {}}>
+        {/* <tr style={evenRow ? tableStyles.evenRow : {}}>
             <td style={tableStyles.tableCell1}>{formatWorkingDate(commute.workingDate || '')}</td>
             <td style={tableStyles.tableCell2}>{formatTotalWorkingHours(commute.totalWorkingHours || 0)}</td>
             <td style={tableStyles.tableCell3}>{formatWorkingTime(commute.startWork || [])}</td>
@@ -184,7 +189,24 @@ function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDat
                 </button>
             </td>
             )}
-        </tr>
+        </tr> */}
+<tr style={evenRow ? tableStyles.evenRow : {}}>
+        <td style={tableStyles.tableCell1}>{formatWorkingDate(commute.workingDate || '')}</td>
+        <td style={tableStyles.tableCell2}>{formatTotalWorkingHours(commute.totalWorkingHours || 0)}</td>
+        <td style={tableStyles.tableCell3}>{formatWorkingTime(commute.startWork || [])}</td>
+        <td style={tableStyles.tableCell4}>{formatWorkingTime(commute.endWork || [])}</td>
+        <td style={tableStyles.tableCell5}><ProgressBar startTime={commute.startWork || []} endTime={commute.endWork || []} /></td>
+        <td style={tableStyles.tableCell6}>{commute.workingStatus || '미출근'}</td>
+        {(commute.correction?.corrRegistrationDate) ? (
+          <td></td>
+        ) : (
+          <td style={tableStyles.tableCell7}>
+            <button style={insertCorrection} onClick={handleOpenModal}>
+              정정
+            </button>
+          </td>
+        )}
+      </tr>
         {showModal && (
             <InsertCorrectionModal
                 commute={commute}
