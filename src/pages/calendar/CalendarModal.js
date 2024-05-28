@@ -9,6 +9,11 @@ const CalendarModal = ({ isOpen, onClose, onSave }) => {
     const [end, setEnd] = useState('');
     const [color, setColor] = useState('red');
     const [detail, setDetail] = useState('');
+    const minEndTime = start && end && start.toDateString() === end.toDateString() ? start : new Date(0, 0, 0, 0, 0);
+    const maxEndTime = start ? new Date(start) : new Date(0, 0, 0, 23, 59); 
+    if (start) {
+        maxEndTime.setHours(23, 59, 59);
+    }
 
     const handleImport = () => {
         if (!start || !end) {
@@ -40,6 +45,12 @@ const CalendarModal = ({ isOpen, onClose, onSave }) => {
         }
     }, [isOpen]);
 
+    useEffect(() => {
+        console.log('start',start);
+        console.log('(start > end)', (start > end));
+        (start > end) && setEnd('')
+    }, [start])
+
     return (
         isOpen && (
             <div className="modal fade show" style={{ display: 'block' }}>
@@ -52,7 +63,7 @@ const CalendarModal = ({ isOpen, onClose, onSave }) => {
                         <div className="modal-body">
                             <div className="calendar"><label>일정 이름</label><input type="text" value={title} onChange={e => setTitle(e.target.value)} className="form-control" /></div>
                             <div className="form-group"><label>시작 일시</label> <DatePicker selected={start} onChange={e => setStart(e)} showTimeSelect dateFormat="yyyy-MM-dd h:mm aa" className="form-control" /></div>
-                            <div className="form-group"><label>종료 일시</label> <DatePicker selected={end} onChange={e => setEnd(e)} showTimeSelect timeInputLabel="종료시간" dateFormat="yyyy-MM-dd h:mm aa" className="form-control" /></div>
+                            <div className="form-group"><label>종료 일시</label> <DatePicker selected={end} onChange={e => setEnd(e)} showTimeSelect timeInputLabel="종료시간" dateFormat="yyyy-MM-dd h:mm aa" className="form-control" minDate={start} minTime={minEndTime} maxTime={maxEndTime}/></div>
                             <div className="calendar"><label>배경 색상</label>
                                 <select value={color} onChange={e => setColor(e.target.value)} className="form-select" >
                                     <option value="red">빨강색</option>
