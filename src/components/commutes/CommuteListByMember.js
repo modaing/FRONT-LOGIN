@@ -2,11 +2,6 @@ import CommuteItem from "./CommuteItem";
 
 function CommuteListByMember({ commute, date, parsingDateOffset, memberId, handleCorrectionRegistered, onClose }) {
 
-    // console.log('[CommuteListByMember] commute : ', commute);
-    // console.log('[CommuteListByMember] date : ', date);
-    // console.log('[CommuteListByMember] parsingDateOffset : ', parsingDateOffset);
-    // console.log('[CommuteListByMember] memberId : ', memberId);
-
     const formatWorkingDate = (workingDate) => {
         const dateObj = new Date(workingDate);
         return `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
@@ -29,6 +24,14 @@ function CommuteListByMember({ commute, date, parsingDateOffset, memberId, handl
         return dates;
     };
 
+    const hasValidCommute = () => {
+        return commute.some((item) => item.workingStatus !== '출퇴근 미입력으로 정정 대기 중');
+    };
+
+    const hasAnyCommute = () => {
+        return commute.length > 0;
+    };
+
     return (
         <div className="col-lg-12">
             <div className="card">
@@ -46,19 +49,19 @@ function CommuteListByMember({ commute, date, parsingDateOffset, memberId, handl
                             </tr>
                         </thead>
                         <tbody>
-                            {commute && commute.length > 0 ? (
+                            {commute.length > 0 && hasValidCommute() ? (
                                 commute.map((item, index) => (
-                                    <CommuteItem 
-                                    key={item.commuteNo} 
-                                    commute={item} 
-                                    tableStyles={tableStyles} 
-                                    evenRow={index % 2 === 0} 
-                                    date={date} 
-                                    corrRegistrationDate={item.correction?.corrRegistrationDate} 
-                                    memberId={memberId}
-                                    parsingDateOffset={parsingDateOffset} 
-                                    handleCorrectionRegistered={handleCorrectionRegistered}
-                                    onClose={onClose}
+                                    <CommuteItem
+                                        key={item.commuteNo}
+                                        commute={item}
+                                        tableStyles={tableStyles}
+                                        evenRow={index % 2 === 0}
+                                        date={date}
+                                        corrRegistrationDate={item.correction?.corrRegistrationDate}
+                                        memberId={memberId}
+                                        parsingDateOffset={parsingDateOffset}
+                                        handleCorrectionRegistered={handleCorrectionRegistered}
+                                        onClose={onClose}
                                     />
                                 ))
                             ) : (
@@ -67,6 +70,28 @@ function CommuteListByMember({ commute, date, parsingDateOffset, memberId, handl
                                 </tr>
                             )}
                         </tbody>
+                        {/* <tbody>
+                            {commute && commute.length > 0 ? (
+                                commute.map((item, index) => (
+                                    <CommuteItem
+                                        key={item.commuteNo}
+                                        commute={item}
+                                        tableStyles={tableStyles}
+                                        evenRow={index % 2 === 0}
+                                        date={date}
+                                        corrRegistrationDate={item.correction?.corrRegistrationDate}
+                                        memberId={memberId}
+                                        parsingDateOffset={parsingDateOffset}
+                                        handleCorrectionRegistered={handleCorrectionRegistered}
+                                        onClose={onClose}
+                                    />
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={7}>출퇴근 내역이 없습니다.</td>
+                                </tr>
+                            )}
+                        </tbody> */}
                         {/* <tbody>
                             {generateDates().map((dateItem, index) => {
                                 const matchingCommute = commute.find(

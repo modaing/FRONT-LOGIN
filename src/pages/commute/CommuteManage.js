@@ -142,6 +142,7 @@ function CommuteManage() {
 
         return workingYear === selectedYear && workingMonth === selectedMonth && workingDay === selectedDay;
     };
+    
     const convertTime = (timeArray) => {
         if (timeArray.length !== 2) {
             return ''; // 배열 길이가 2가 아닌 경우 빈 문자열 반환
@@ -205,7 +206,7 @@ function CommuteManage() {
                                                 style={{
                                                     maxWidth: '100px',
                                                     border: '1px solid #D5D5D5',
-                                                    padding: '0px',
+                                                    padding: '3px',
                                                     backgroundColor: member.commuteList && member.commuteList.filter(item => isSameDate(item.workingDate, [year, month, date])).length > 0 ? '#112D4E' : '#F6F5F5',
                                                     color: member.commuteList && member.commuteList.filter(item => isSameDate(item.workingDate, [year, month, date])).length > 0 ? '#ffffff' : '#000000'
                                                 }}

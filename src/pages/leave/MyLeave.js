@@ -4,12 +4,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { callDeleteLeaveSubmitAPI, callInsertLeaveSubmitAPI, callSelectLeaveSubmitAPI } from '../../apis/LeaveAPICalls';
 import { SET_PAGENUMBER } from '../../modules/LeaveModule';
 import MyLeaveModal from './MyLeaveModal';
+import LeaveCheckModal from './LeaveCheckModal';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { renderLeaveSubmit } from '../../utils/leaveUtil';
 import { convertToUtc } from '../../utils/CommonUtil';
 import '../../css/common.css';
 import '../../css/leave/MyLeave.css';
-import LeaveCheckModal from './LeaveCheckModal';
 
 function MyLeave() {
     const { page, leaveInfo, insertMessage } = useSelector(state => state.leaveReducer);

@@ -17,6 +17,7 @@ import ApproverCounts from '../common/ApproverCounts';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import MyLeaveCounts from '../common/MyLeaveCounts';
 import { decodeJwt } from '../utils/tokenUtils';
+import { callSelectNoticeListAPI } from '../apis/NoticeAPICalls';
 import { callDepartmentDetailListAPI } from '../apis/DepartmentAPICalls';
 
 function Main() {
@@ -28,8 +29,6 @@ function Main() {
     const [selectedDepartment, setSelectedDepartment] = useState("전체");
     const [departments, setDepartments] = useState([]);
     const dispatch = useDispatch();
-
-
 
     const toggleComponent = () => {
         setShowApprovalCounts(!showApprovalCounts);

@@ -18,7 +18,6 @@ const ModalContent = styled.div`
 
 const ClockInModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteList, onClockInCompleted }) => {
 
-    // console.log('parsingDateOffset : ',parsingDateOffset);
     const dispatch = useDispatch();
 
      /* 현재 시간 포맷 */

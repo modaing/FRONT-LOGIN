@@ -16,11 +16,6 @@ dayjs.extend(timezone);
 
 const InsertCorrectionModal = ({ commute, isOpen, onClose, onSave, date, startWork, endWork, handleCorrectionRegistered, handleCloseModal}) => {
 
-    // console.log('정정 요청 날짜 : ', date);
-    // console.log('기존 출근 시간 : ', startWork);
-    // console.log('기존 퇴근 시간 : ', endWork);
-    console.log('commute번호 : ', commute.commuteNo);
-
     const [corrStartWork, setCorrStartWork] = useState(null);
     const [corrEndWork, setCorrEndWork] = useState(null);
     const [reason, setReason] = useState('');
@@ -122,11 +117,6 @@ const InsertCorrectionModal = ({ commute, isOpen, onClose, onSave, date, startWo
                                     정정 요청할 시간을 입력해주세요!
                                 </h6>
                             )}
-                            {/* {(!corrStartWork && !corrEndWork) && (
-                                <h6 style={{ color: 'red', marginTop: '10px', fontSize: '15px', marginBottom: '14px', textAlign: 'left' }}>
-                                    정정 요청 출근 시간 또는 정정 요청 퇴근 시간을 입력해주세요!
-                                </h6>
-                            )} */}
                             <div style={{ display: 'flex', marginBottom: '0px' }}>
                                 <h6 style={{ fontWeight: 'bold', marginRight: '20px', marginBottom: '0px', width: '150px' }}>정정 요청 출근 시간</h6>
                                 <div className="form-group" style={{ marginBottom: '0px' }}>
@@ -168,11 +158,6 @@ const InsertCorrectionModal = ({ commute, isOpen, onClose, onSave, date, startWo
                                             정정 사유를 반드시 입력해주세요!
                                         </h6>
                                     )}
-                                    {/* {!reason && (
-                                        <h6 style={{ color: 'red', marginTop: '10px', fontSize: '15px', marginBottom: '0px' }}>
-                                            정정 사유를 입력해주세요!
-                                        </h6>
-                                    )} */}
                                 </h6>
                                 <textarea
                                     type="text"

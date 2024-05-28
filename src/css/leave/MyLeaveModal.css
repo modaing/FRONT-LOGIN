@@ -27,12 +27,12 @@
     margin-right: 11px;
 }
 
-.modal-backdrop-check {
+.modal-backdrop {
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
     z-index: 1050; /* 확인 모달의 배경 z-index 설정 */
-    background-color: rgba(201, 200, 200, 0.7); /* 배경을 더 어둡게 설정 */
+    background-color: rgba(201, 200, 200, 0.7);
 }

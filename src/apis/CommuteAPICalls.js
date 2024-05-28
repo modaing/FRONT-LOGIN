@@ -1,4 +1,4 @@
-import { getCommute, getCommutelist, getCorrectionlist, postCommute, postCorrection, putCommute, putCorrection } from "../modules/CommuteModule";
+import { getCommute, getCommutelist, getCorrectionlist, postCommute, postCorrection, postNewCorrection, putCommute, putCorrection } from "../modules/CommuteModule";
 import { request } from "./CommonAPI";
 
 /* 출퇴근 내역 조회 API  */
@@ -6,15 +6,15 @@ export const callSelectCommuteListAPI = (target, targetValue, date) => {
     /* redux-thunk(미들 웨어)를 이용한 비동기 처리 */
     return async (dispatch) => {
         try {
-                console.log('[target] : ', target);
-                console.log('[targetValue] : ', targetValue);
-                console.log('[date] : ', date);
+                // console.log('[ta/rget] : ', target);
+                // console.log('[targetValue] : ', targetValue);
+                // console.log('[date] : ', date);
     
                 const url = `/commutes?target=${target}&targetValue=${targetValue}&date=${date}`;
-                console.log('url : ', url);
+                // console.log('url : ', url);
                 const response = await request('GET', url);
     
-                console.log('[callSelectCommuteListAPI] response : ', response.response.data.results.result);
+                // console.log('[callSelectCommuteListAPI] response : ', response.response.data.results.result);
     
                 /* action 생성 함수에 결과 전달하며 dispatch 호출 */
                 dispatch(getCommutelist(response.response.data.results.result));    
@@ -32,7 +32,7 @@ export const callInsertCommuteAPI = (newCommute) => {
             const url = `/commutes`;
             const response = await request('POST', url, newCommute);
 
-            console.log('[callInsertCommuteAPI] response : ', response);
+            // console.log('[callInsertCommuteAPI] response : ', response);
 
             dispatch(postCommute(response));
 
@@ -46,12 +46,12 @@ export const callInsertCommuteAPI = (newCommute) => {
 export const callUpdateCommuteAPI = (updateCommute) => {
     return async (dispatch) => {
         try {
-            console.log('[callUpdateCommuteAPI] updateCommute.commuteNo : ', updateCommute.commuteNo);
+            // console.log('[callUpdateCommuteAPI] updateCommute.commuteNo : ', updateCommute.commuteNo);
 
             const url = `/commutes/${updateCommute.commuteNo}`;
             const response = await request('PUT', url, updateCommute);
 
-            console.log('[callUpdateCommuteAPI] response : ', response);
+            // console.log('[callUpdateCommuteAPI] response : ', response);
 
             dispatch(putCommute(response));
 
@@ -61,26 +61,42 @@ export const callUpdateCommuteAPI = (updateCommute) => {
     }
 };
 
-/* 출퇴근 정정 등록 API */
+/* 출퇴근 정정 등록 API (출퇴근 내역 존재) */
 export const callInsertCorrectionAPI = (newCorrection) => {
     return async (dispatch) => {
         try {
-            console.log('api에서 출퇴근번호 : ', newCorrection.commuteNo);
-            console.log('api에서 출퇴근 : ', newCorrection);
+            // console.log('api에서 출퇴근번호 : ', newCorrection.commuteNo);
+            // console.log('api에서 출퇴근 : ', newCorrection);
 
             const url = `/corrections`;
             const response = await request('POST', url, newCorrection);
 
-            console.log('[callInsertCorrectionAPI] response : ', response);
+            // console.log('[callInsertCorrectionAPI] response : ', response);
 
             dispatch(postCorrection(response));
-
 
         } catch (error) {
             console.log('[callInsertCorrectionAPI] error : ', error);
         }
     }
 };
+
+/* 출퇴근 정정 등록 (출퇴근 내역 미존재) */
+export const callInsertNewCorrectionAPI = (newCorrection) => {
+    return async (dispatch) => {
+        try {
+            const url = `/corrections/newCorrection`;
+            const response = await request('POST', url, newCorrection);
+
+            console.log('[callInsertCorrectionAPI] response : ', response);
+
+            dispatch(postNewCorrection(response));
+
+        } catch (error) {
+            console.log('[callInsertNewCorrectionAPI] error : ', error);
+        }
+    }
+}
 
 /* 출퇴근 정정 내역 조회 API */
 export const callSelectCorrectionListAPI = (memberId, page, size, sort, direction, date) => {
@@ -95,18 +111,18 @@ export const callSelectCorrectionListAPI = (memberId, page, size, sort, directio
 
                 const response = await request('GET', url);
 
-                console.log('[callSelectCorrectionListAPI] response : ', response);
+                // console.log('[callSelectCorrectionListAPI] response : ', response);
 
                 dispatch(getCorrectionlist(response));
 
             } else if (memberId !== null) {
                 // console.log('출퇴근 정정 내역 API 멤버 낫널 :', memberId);
                 const url = `/corrections?memberId=${memberId}&page=${page}&size=${size}&sort=${sort}&direction=${direction}&date=${date}`;
-                console.log('멤버 낫널 url', url);
+                // console.log('멤버 낫널 url', url);
 
                 const response = await request('GET', url);
 
-                console.log('[callSelectCorrectionListAPI] response : ', response);
+                // console.log('[callSelectCorrectionListAPI] response : ', response);
 
                 dispatch(getCorrectionlist(response));
             }

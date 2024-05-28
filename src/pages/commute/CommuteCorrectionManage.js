@@ -3,7 +3,7 @@ import { decodeJwt } from "../../utils/tokenUtils";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { callSelectCorrectionListAPI } from "../../apis/CommuteAPICalls";
-import { SET_PAGENUMBER } from "../../modules/CommuteModule";
+import { GET_CORRECTIONLIST, SET_PAGENUMBER } from "../../modules/CommuteModule";
 import CorrectionManageItem from "../../components/commutes/CorrectionManageItem";
 
 function CommuteCorrectionManage() {
@@ -72,7 +72,7 @@ function CommuteCorrectionManage() {
     /* 출퇴근 정정 내역 API 호출 */
     useEffect(() => {
         dispatch(callSelectCorrectionListAPI(memberId, page, size, sort, direction, parsingDateOffset));
-    }, [parsingDateOffset, correctionList]);
+    }, [parsingDateOffset]);
 
     /* 출퇴근 정정 내역 조회 API 재호출 */
     const handleCorrectionUpdateCompleted = () => {
@@ -87,20 +87,21 @@ function CommuteCorrectionManage() {
 
     /* 페이징 핸들러 */
     const handlePageChange = (page) => {
-        dispatch({ type: SET_PAGENUMBER, payload: { page: page } });
+        dispatch(callSelectCorrectionListAPI(memberId, page, size, sort, direction, parsingDateOffset));
     };
-
+    
     const handlePrevPage = () => {
         if (currentPage > 0) {
-            dispatch({ type: SET_PAGENUMBER, payload: { page: currentPage - 1 } });
+            dispatch(callSelectCorrectionListAPI(memberId, currentPage - 1, size, sort, direction, parsingDateOffset));
         }
     };
-
+    
     const handleNextPage = () => {
         if (currentPage < totalPages - 1) {
-            dispatch({ type: SET_PAGENUMBER, payload: { page: currentPage + 1 } });
+            dispatch(callSelectCorrectionListAPI(memberId, currentPage + 1, size, sort, direction, parsingDateOffset));
         }
     };
+    
 
     return (
         <main id="main" className="main">
