@@ -12,10 +12,15 @@ const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime, remai
     const [type, setType] = useState(leaveSubNo ? '취소' : '연차');
     const [reason, setReason] = useState('');
     const [isCheckOpen, setIsCheckOpen] = useState(false);
+    const [isHalf, setIsHalf] = useState(false);
     const isCancle = leaveSubNo ? '취소 신청' : '휴가 신청';
+    const today = new Date();
+    const maxEndDate = start ? new Date(start.getTime() + remainingDays * 24 * 60 * 60 * 1000) : null;
+
 
     const handleValidation = () => {
         const { leaveDaysCalc } = formattedLocalDate({ leaveSubStartDate: start, leaveSubEndDate: end })
+
         if (!start || !end) {
             alert('휴가 시작일과 종료일이 선택되어야 합니다.');
             return;
@@ -54,10 +59,23 @@ const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime, remai
         }
     }, [isOpen]);
 
+    useEffect(() => {
+        (start > end) && setEnd('')
+    }, [start, end]);
+
+    useEffect(() => {
+        if (type === '오전반차' || type === '오후반차') {
+            setIsHalf(true);
+            setEnd(start)
+        } else {
+            setIsHalf(false);
+        }
+    }, [type]);
+
     return <>
         {isOpen && (
             <>
-                <div className="modal-backdrop-check show"></div>
+                <div className={isCheckOpen ? "none" : "modal-backdrop show"}></div>
 
                 <div className={isCheckOpen ? "modal fade" : "modal fade show"} style={{ display: 'block' }}>
                     <div className="modal-dialog">
@@ -70,7 +88,7 @@ const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime, remai
                                     <label>시작 일자</label>
                                     {leaveSubNo
                                         ? <DatePicker selected={new Date(selectedTime.start)} dateFormat="yyyy-MM-dd" className="form-control" disabled />
-                                        : <DatePicker selected={start} onChange={e => setStart(e)} dateFormat="yyyy-MM-dd" className="form-control" />
+                                        : <DatePicker selected={start} onChange={e => setStart(e)} dateFormat="yyyy-MM-dd" className="form-control" minDate={today}/>
                                     }
                                 </div>
 
@@ -78,7 +96,7 @@ const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime, remai
                                     <label>종료 일자</label>
                                     {leaveSubNo
                                         ? <DatePicker selected={new Date(selectedTime.end)} dateFormat="yyyy-MM-dd" className="form-control" disabled />
-                                        : <DatePicker selected={end} onChange={e => setEnd(e)} dateFormat="yyyy-MM-dd" className="form-control" />
+                                        : <DatePicker selected={isHalf ? start : end} onChange={e => setEnd(e)} dateFormat="yyyy-MM-dd" className="form-control" minDate={start || today} maxDate={maxEndDate} disabled={isHalf}/>
                                     }
                                 </div>
                                 <div className="myLeave">
@@ -89,14 +107,13 @@ const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime, remai
                                         </select>
                                         : <select value={type} onChange={e => setType(e.target.value)} className="form-select">
                                             <option value="연차">연차</option>
-                                            <option value="반차오전">반차오전</option>
-                                            <option value="반차오후">반차오후</option>
-                                            <option value="특별휴가">특별휴가</option>
+                                            <option value="오전반차">오전반차</option>
+                                            <option value="오후반차">오후반차</option>
                                         </select>
                                     }
                                 </div>
 
-                                <label>일정 상세</label>
+                                <label>신청 사유</label>
                                 <textarea type="text" value={reason} onChange={e => setReason(e.target.value)} className="form-control" rows="3" />
                             </div>
                             <div className="modal-footer">
