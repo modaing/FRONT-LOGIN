@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
+import Post from './Post';
 // import '../../css/common.css'
 import '../../css/member/registerMember.css';
 import RegisterMemberCSS from './RegistMember.module.css';
-import { callRegisterMemberAPI, callGetDepartmentListAPI, callGetPositionListAPI } from '../../apis/MemberAPICalls';
+import { callRegisterMemberAPI, callGetDepartmentListAPI, callGetPositionListAPI, callShowAllMemberListAPI } from '../../apis/MemberAPICalls';
+import { height } from '@mui/system';
 
 function RegisterMember() {
     const navigate = useNavigate();
@@ -15,7 +17,21 @@ function RegisterMember() {
     const [positionInformation, setPositionInformation] = useState([]);
     const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
     const [inputtedPhoneNo, setInputtedPhoneNo] = useState('010-');
+    const [allMemberInfo, setAllMemberInfo] = useState(null);
+    const [memberIdLists, setMemberIdLists] = useState([]);
     const [generatedMemberId, setGeneratedMemberId] = useState();
+    const [toGenerateMemberId, setToGeneratedMemberId] = useState();
+    const [popup, setPopup] = useState(false);
+    const [inputtedAddress, setInputtedAddress] = useState('');
+    const [postAddress, setPostAddress] = useState('');
+    const [fullAddress, setFullAddress] = useState('');
+    const [enroll_company, setEnroll_company] = useState({
+        address:'',
+    });
+    const handleCloseModal = () => {
+        setPopup(false);
+    };
+
     const [member, setMember] = useState({
         name: '',
         address: '',
@@ -24,7 +40,11 @@ function RegisterMember() {
         memberId: '',
         employedDate: '',
         memberStatus: '',
-        birthday: { year: '', month: '', day: '' },
+        birthday: {
+            year: '',
+            month: '',
+            day: ''
+        },
         gender: '',
         departDTO: {
             departNo: '',
@@ -38,6 +58,24 @@ function RegisterMember() {
         imageUrl: ''
     });
     const {name, address, employedDate, phoneNo, memberStatus, birthday, gender, departDTO, positionDTO, role, email, memberId} = member;
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+        }
+    }
+
+    const next = (e, len, nextId) => {
+        if (e.target.value.length == len) {
+            document.getElementById(nextId).focus();
+        }
+    }
+
+    const handleAddData = (data) => {
+        // console.log('data received from Post component:', data.address);
+        setInputtedAddress(data.address);
+        console.log('address::',data.address);
+    }
 
     /* 부서 리스트 호출 */
     const fetchDepartments = async () => {
@@ -66,19 +104,43 @@ function RegisterMember() {
         }
     }
 
+    /* memberId가 존재하는지 확인할려고 가져온 logic */
+    const fetchMemberLists = async () => {
+        try {
+            const memberLists = await callShowAllMemberListAPI();
+            if (Array.isArray(memberLists)) {
+                const formattedMembers = memberLists.map(member => ({
+                    ...member,
+                    employedDate: formatDate(member.employedDate)
+                }));
+                setAllMemberInfo(formattedMembers);
+                // console.log('formatted members:', formattedMembers);
+                // console.log('filteredMemberInfo:',filteredMemberInfo);
+                const memberIds = memberLists.map(member => member.memberId);
+                console.log('memberIds:', memberIds);
+                setMemberIdLists(memberIds);
+            } else {
+                console.error('member list is not an array:', memberLists);
+            }
+        } catch (error) {
+            console.error('구성원 리스트 불러 오는데 오류가 발생했습니다:', error);
+        }
+    };
+
     const generateRandomThreeDigits = () => {
         return Math.floor(100 + Math.random() * 900);
     }
 
-    /* 구성원 memberId는 자동으로 생성 */
-    const generateMemberId = (departNo) => {
+    /* 구성원 memberId 앞(6자리)를 자동으로 생성 */
+    const generateMemberId = () => {
         const date = new Date();
         const year = String(date.getFullYear()).substring(2);
         const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
         const randomThreeDigits = generateRandomThreeDigits();
-        const paddedDepartNo = String(departNo).padStart(2, '0');
 
-        const memberId =`${year}${month}${paddedDepartNo}${randomThreeDigits}`;
+        const memberId =`${year}${month}${day}${randomThreeDigits}`;
+
         setGeneratedMemberId(memberId);
         return memberId;
     }
@@ -92,51 +154,10 @@ function RegisterMember() {
         return `${year}-${month}-${day}`;
     };
 
-
-    useEffect(() => {
-        const fetchData = async () => {
-            // Set employedDate to the current date when the component mounts
-            setMember((prevMember) => ({ ...prevMember, employedDate: getCurrentDate() }));
-    
-            // Generate memberId based on departDTO and positionDTO
-            const generateMemberId = () => {
-                const date = new Date();
-                const year = String(date.getFullYear()).substring(2);
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const randomThreeDigits = Math.floor(100 + Math.random() * 900);
-
-                const memberId =`${year}${month}${departDTO.departNo}${randomThreeDigits}`;
-
-                return memberId;
-            };
-
-            // Update memberId
-            setMember((prevMember) => ({
-                ...prevMember,
-                memberId: generateMemberId(),
-            }));
-
-            // Fetch departments and positions
-            await Promise.all([fetchDepartments(), fetchPositions()]);
-    
-            // Set the image preview URL when imageUrl changes
-            if (uploadedImageUrl) {
-                if (typeof uploadedImageUrl === 'string' && uploadedImageUrl.startsWith('data:image')) {
-                    // If imageUrl is already a data URL, set it directly as the preview URL
-                    setUploadedImageUrl(uploadedImageUrl);
-                } else {
-                    // Otherwise, read the file as a data URL and set it as the preview URL
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                        setUploadedImageUrl(reader.result);
-                    };
-                    reader.readAsDataURL(uploadedImageUrl);
-                }
-            }
-        };
-    
-        fetchData();
-    }, []);
+    const handleComplete = (e) => {
+        e.preventDefault();
+        setPopup(!popup);
+    }
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -169,6 +190,17 @@ function RegisterMember() {
                 ...prevMember,
                 gender: value
             }));
+        } else if (name === 'inputtedAddress') {
+            setPostAddress(value);
+        } else if (name === 'address') {
+            const fullAddress = inputtedAddress + ' ' + value;
+            console.log('fullAddress:',fullAddress);
+            setFullAddress(fullAddress);
+            setMember(prevMember => ({
+                ...prevMember,
+                [name]: fullAddress
+            }))
+        
         } else {
             setMember(prevMember => ({
                 ...prevMember,
@@ -188,6 +220,19 @@ function RegisterMember() {
         }
     };
 
+    const formatDate = (dateArray) => {
+        if (Array.isArray(dateArray) && dateArray.length === 3) {
+            const [year, month, day] = dateArray;
+
+            const formattedMonth = String(month).padStart(2, '0');
+            const formattedDay = String(day).padStart(2, '0');
+
+            return `${year}-${formattedMonth}-${formattedDay}`;
+        } else {
+            return dateArray;
+        }
+    }
+
     const formatDateInCalendar = (dateString) => {
         const date = new Date(dateString);
         const year = date.getFullYear();
@@ -197,44 +242,98 @@ function RegisterMember() {
     };
 
     const years = [];
-    for (let i = 1900; i <= new Date().getFullYear(); i++) {
+    for (let i = 1940; i <= new Date().getFullYear(); i++) {
         years.push(i);
     }
 
-    const months = [
-        { value: '01', label: '1월' },
-        { value: '02', label: '2월' },
-        { value: '03', label: '3월' },
-        { value: '04', label: '4월' },
-        { value: '05', label: '5월' },
-        { value: '06', label: '6월' },
-        { value: '07', label: '7월' },
-        { value: '08', label: '8월' },
-        { value: '09', label: '9월' },
-        { value: '10', label: '10월' },
-        { value: '11', label: '11월' },
-        { value: '12', label: '12월' },
-    ];
+    // const months = [
+    //     { value: '01', label: '1월' },
+    //     { value: '02', label: '2월' },
+    //     { value: '03', label: '3월' },
+    //     { value: '04', label: '4월' },
+    //     { value: '05', label: '5월' },
+    //     { value: '06', label: '6월' },
+    //     { value: '07', label: '7월' },
+    //     { value: '08', label: '8월' },
+    //     { value: '09', label: '9월' },
+    //     { value: '10', label: '10월' },
+    //     { value: '11', label: '11월' },
+    //     { value: '12', label: '12월' },
+    // ];
+
+    // const days = Array.from({ length: 31 }, (_, i) => i + 1);
     
-
-    const days = Array.from({ length: 31 }, (_, i) => i + 1);
-
     // JSX for populating the options
-    const yearOptions = years.map(year => (
-        <option key={year} value={year}>{year}년</option>
-    ));
+    // const yearOptions = years.map(year => (
+    //     <option key={year} value={year}>{year}년</option>
+    // ));
 
-    const monthOptions = months.map(month => (
-        <option key={month.value} value={month.value}>{month.label}</option>
-    ));
+    // const monthOptions = months.map(month => (
+    //     <option key={month.value} value={month.value}>{month.label}</option>
+    // ));
 
-    const dayOptions = days.map(day => (
-        <option key={day} value={day}>{day}일</option>
-    ));
+    // const dayOptions = days.map(day => (
+    //     <option key={day} value={day}>{day}일</option>
+    // ));
 
-    
     const today = formatDateInCalendar(new Date());
+
+    const handlePhoneNoChange = (e) => {
+        const rawPhoneNumber = e.target.value.replace(/[^\d]/g, ''); // Remove non-numeric characters
+        let formattedPhoneNumber = '';
+
+        if (!rawPhoneNumber.startsWith('01')) {
+            formattedPhoneNumber = '01';
+        } else {
+            if (rawPhoneNumber.length <= 3) {
+                formattedPhoneNumber = rawPhoneNumber;
+            } else if (rawPhoneNumber.length <= 7) {
+                formattedPhoneNumber = `${rawPhoneNumber.substring(0, 3)}-${rawPhoneNumber.substring(3)}`;
+            } else {
+                formattedPhoneNumber = `${rawPhoneNumber.substring(0, 3)}-${rawPhoneNumber.substring(3, 7)}-${rawPhoneNumber.substring(7, 11)}`;
+            }
+        }
+
+        setInputtedPhoneNo(formattedPhoneNumber);
+    }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            // Set employedDate to the current date when the component mounts
+            setMember((prevMember) => ({ ...prevMember, employedDate: getCurrentDate() }));
     
+            // Generate memberId based on departDTO and positionDTO
+            const memberIdThatHasBeenGenerated = generateMemberId();
+            console.log('memberIdThatHasBeenGenerated:', memberIdThatHasBeenGenerated);
+
+            // Update memberId
+            setMember((prevMember) => ({
+                ...prevMember,
+                memberId: generateMemberId(),
+            }));
+
+            // Fetch departments and positions
+            await Promise.all([fetchDepartments(), fetchPositions(), fetchMemberLists()]);
+    
+            // Set the image preview URL when imageUrl changes
+            if (uploadedImageUrl) {
+                if (typeof uploadedImageUrl === 'string' && uploadedImageUrl.startsWith('data:image')) {
+                    // If imageUrl is already a data URL, set it directly as the preview URL
+                    setUploadedImageUrl(uploadedImageUrl);
+                } else {
+                    // Otherwise, read the file as a data URL and set it as the preview URL
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        setUploadedImageUrl(reader.result);
+                    };
+                    reader.readAsDataURL(uploadedImageUrl);
+                }
+            }
+        };
+    
+        fetchData();
+    }, []);
+
     /* 구성원 등록할 때 보내줄 정보들 */
     const registerMember = async (e) => {
         e.preventDefault();
@@ -242,14 +341,13 @@ function RegisterMember() {
         const cleanedPhoneNo = inputtedPhoneNo.replace(/-/g, '');
 
         // console.log('휴대폰번호:', cleanedPhoneNo);
-        if (cleanedPhoneNo.length !== 11) {
+        if (cleanedPhoneNo.length !== 11 && !cleanedPhoneNo.startsWith('01')) {
             alert('휴대폰 번호를 올바른 형식으로 입력하세요 (010-1234-5678)');
             return;
         }
 
         const { year, month, day } = birthday;
         const formattedBirthday = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-
 
         const formData = new FormData();
 
@@ -274,24 +372,6 @@ function RegisterMember() {
             console.error("Registration failed:", error);
         }
     };
-
-    const handlePhoneNoChange = (e) => {
-        const rawPhoneNumber = e.target.value.replace(/[^\d]/g, ''); // Remove non-numeric characters
-        let formattedPhoneNumber = '';
-
-        // Format the phone number according to the Korean format
-        if (rawPhoneNumber.length < 4) {
-            formattedPhoneNumber = rawPhoneNumber;
-        } else if (rawPhoneNumber.length < 7) {
-            formattedPhoneNumber = `${rawPhoneNumber.substring(0, 3)}-${rawPhoneNumber.substring(3)}`;
-        } else if (rawPhoneNumber.length < 11) {
-            formattedPhoneNumber = `${rawPhoneNumber.substring(0, 3)}-${rawPhoneNumber.substring(3, 6)}-${rawPhoneNumber.substring(6)}`;
-        } else {
-            formattedPhoneNumber = `${rawPhoneNumber.substring(0, 3)}-${rawPhoneNumber.substring(3, 7)}-${rawPhoneNumber.substring(7, 11)}`;
-        }
-            
-        setInputtedPhoneNo(formattedPhoneNumber);
-    }
     
     return (
         <main id="main" className="main">
@@ -341,47 +421,47 @@ function RegisterMember() {
                                         />
                                     </div>
                                     <br />
-                                    {/* <div className="nameStyle">
-                                        <label htmlFor="birthday" className="birthday">생일</label>
-                                        <input
-                                            type='date'
-                                            max={today}
-                                            name='birthday'
-                                            value={birthday}
-                                            className="inputStyles"
-                                            onChange={(e) => handleInputChange(e)}
-                                        />
-                                    </div> */}
                                     <div className="birthdayStyle">
-                                        <label htmlFor="birthday" className="birthday">생일</label>
-                                        <div className="inputStyles">
-                                            <select
-                                                id="birth-year"
-                                                value={birthday.year}
-                                                onChange={(e) => setMember(prevMember => ({ ...prevMember, birthday: { ...prevMember.birthday, year: e.target.value }}))}
-                                                // className="box"
-                                            >
-                                                <option disabled selected>출생 연도</option>
-                                                {yearOptions}
-                                            </select>
-                                            <select
-                                                id="birth-month"
-                                                value={birthday.month}
-                                                onChange={(e) => setMember(prevMember => ({ ...prevMember, birthday: { ...prevMember.birthday, month: e.target.value }}))}
-                                                // className="box"
-                                            >
-                                                <option disabled selected>월</option>
-                                                {monthOptions}
-                                            </select>
-                                            <select
-                                                id="birth-day"
-                                                value={birthday.day}
-                                                onChange={(e) => setMember(prevMember => ({ ...prevMember, birthday: { ...prevMember.birthday, day: e.target.value }}))}
-                                                // className="box"
-                                            >
-                                                <option disabled selected>일</option>
-                                                {dayOptions}
-                                            </select>
+                                        <label htmlFor="birthday" className="birthday">생년월일</label>
+                                        <div className="inputStyleForBirthday">
+                                            <div className='inputWrapper'>
+                                                <input
+                                                    type='text'
+                                                    id="birth-year"
+                                                    maxLength={4}
+                                                    pattern='^[0-9]{4}'
+                                                    required='required'
+                                                    onKeyUp={(e) => next(e, 4, 'birth-month')}
+                                                    className='inputStylesForYear'
+                                                    onChange={(e) => setMember(prevMember => ({ ...prevMember, birthday: { ...prevMember.birthday, year: e.target.value }}))}
+                                                />
+                                                    <span>년</span>
+                                                </div>
+                                            <div className='inputWrapper'>
+                                                <input
+                                                    type='text'
+                                                    id="birth-month"
+                                                    maxLength={2}
+                                                    pattern='^[0-9]{2}'
+                                                    required='required'
+                                                    onKeyUp={(e) => next(e, 2, 'birth-day')}
+                                                    className='inputStylesForMonth'
+                                                    onChange={(e) => setMember(prevMember => ({ ...prevMember, birthday: { ...prevMember.birthday, month: e.target.value }}))}
+                                                />
+                                            <span>월</span>
+                                            </div>
+                                            <div className='inputWrapper'>
+                                                <input
+                                                    type='text'
+                                                    id="birth-day"
+                                                    maxLength={2}
+                                                    pattern='^[0-9]{2}'
+                                                    required='required'
+                                                    className='inputStylesForDays'
+                                                    onChange={(e) => setMember(prevMember => ({ ...prevMember, birthday: { ...prevMember.birthday, day: e.target.value }}))}
+                                                />
+                                            <span>일</span>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -389,7 +469,7 @@ function RegisterMember() {
                                     <br />
                                     <div className="genderStyle">
                                         <label htmlFor="inputText" className="gender">성별</label>
-                                        <select type='text' name='gender' value={gender} className="inputStyles" onChange={(e) => handleInputChange(e)}>
+                                        <select style={{height: '52.22px' }} type='text' name='gender' value={gender} className="inputStyles" onChange={(e) => handleInputChange(e)}>
                                             <option value="">성별</option>
                                             <option value="M">남자</option>
                                             <option value="F">여자</option>
@@ -402,10 +482,35 @@ function RegisterMember() {
                                     <br />
                                     <div className="addressStyle">
                                         <label htmlFor="inputText" className="address">주소</label>
-                                        <input
+                                        {/* <input
                                             type='text'
                                             name='address'
                                             value={address}
+                                            className="inputStyles"
+                                            onChange={(e) => handleInputChange(e)}
+                                        /> */}
+                                        <input
+                                            type='text'
+                                            name='inputtedAddress'
+                                            defaultValue={inputtedAddress}
+                                            value={inputtedAddress}
+                                            className='inputStyles'
+                                            onChange={(e) => handleInputChange(e)}
+                                            onClick={handleComplete}
+                                            required={true}
+                                            onKeyPress={handleKeyPress}
+                                        />
+                                        <button className='inputAddressButton' onClick={handleComplete}>주소 검색</button>
+                                        {popup && <Post company={enroll_company} setcompany={setEnroll_company} onClose={handleCloseModal} onAddData={handleAddData}/>}
+                                    </div>
+                                    <br />
+                                    <div className="emailStyle">
+                                        <label htmlFor="inputText" className="email">상세 주소</label>
+                                        <input
+                                            type='text'
+                                            name='address'
+                                            // value={detailedAddress}
+                                            defaultValue={address}
                                             className="inputStyles"
                                             onChange={(e) => handleInputChange(e)}
                                         />
@@ -431,11 +536,13 @@ function RegisterMember() {
                                             name='phoneNo'
                                             value={inputtedPhoneNo}
                                             className="inputStyles"
-                                            onChange={handlePhoneNoChange} placeholder='010-1234-5678'
+                                            pattern="010-\d{4}-\d{4}" // 휴대폰 형식
+                                            onChange={handlePhoneNoChange}
+                                            placeholder='010-1234-5678'
+                                            required="required"
                                         />
                                     </div>
                                     <br />
-
                                 </div>
                             </div>
                             
@@ -448,7 +555,7 @@ function RegisterMember() {
                                         <input
                                             type='text'
                                             name='memberId'
-                                            value={memberId}
+                                            value={generatedMemberId}
                                             className="inputStyles"
                                             readOnly 
                                         />
@@ -505,8 +612,6 @@ function RegisterMember() {
                             </div>
                                 </div>
                             </div>
-
-                            
                         </form>
                     </div>
                 </div>

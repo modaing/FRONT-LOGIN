@@ -1,46 +1,68 @@
 /* Image */
 .imageStyle {
-    height: 200px;
-    width: auto;
-    margin-bottom: 100px;
-    /* border-radius: 50%; */
+    width: 250px;
+    height: auto;
+    margin-bottom: 150px;
+    border-radius: 50%;
 }
 
 /* Form Container */
 .formContainerStyle {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    height: 100vh; /* Make the container fill the viewport height */
-    overflow: hidden; /* Prevent scrolling in both axes */
+    justify-content: center;
+    height: 1024px;
 }
 
-
 /* Input Styles */
-.inputStyle1,
-.inputStyle2 {
-    height: 40px;
-    width: 500px;
+.inputStyle123 {
+    /* height: 40px;
+    width: 300px;
     font-size: 25px;
     padding: 10px;
     border-radius: 15px;
     border: 1px solid #ccc;
     text-indent: 10px;
+    margin-left: 20px; */
+    width: 250px;
+    padding-left: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
-.inputStyle1::-webkit-inner-spin-button,
-.inputStyle1::-webkit-outer-spin-button {
+.inputStyle1::-webkit-inner-spin-button {
   appearance: none;
   -webkit-appearance: none;
   margin: 0;
 }
-.inputStyle2 {
-    margin-bottom: 10px;
+
+/* Link Style */
+.linkStyle {
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 18px;
+    display: inline-block;
+    margin-left: 150px;
+    margin-right: -100px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid #000;
 }
 
 /* Login Button */
-
+.loginButtonStyle {
+    height: 80px;
+    width: 500px;
+    font-size: 40px;
+    background-color: #3F72AF;
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    margin-top: 30px;
+}
 
 /* Link Container */
 .linkContainerStyle {
@@ -51,16 +73,18 @@
 
 /* Modal */
 .modalStyle {
+    /* Your modal container styles */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
 }
+
 
 /* Modal Content */
 .modalContentStyle {
@@ -68,18 +92,24 @@
     padding: 50px 200px; /* Top, Right, Bottom, Left */
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    max-height: 80%; /* Set a maximum height for the modal content */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds max height */
+}
+
+.modalContentStyle::-webkit-scrollbar {
+    width: 0; /* Remove the scrollbar width */
+    background: transparent; /* Set scrollbar background color to transparent */
 }
 
 /* Close Button */
 .closeButtonStyle {
     height: 50px;
     width: 100px;
-    margin-bottom: 10px;
     cursor: pointer;
-    margin-right: 30px;
     border-radius: 15px;
     font-size: 22px;
     stroke: #BBBBBB;
+    border: 1px solid #D5D5D5;
 }
 
 /* Confirmation Button */
@@ -91,6 +121,7 @@
     background-color: #3F72AF;
     color: white;
     font-size: 22px;
+    border: 1px solid #D5D5D5;
 }
 
 .closeButtonStyle:hover {
@@ -98,8 +129,8 @@
 }
 
 /* Button Container */
-.buttonContainerStyle {
-    margin-top: 100px;
+.buttonContainerStyle123 {
+    margin-top: 50px;
     display: flex;
     justify-content: flex-end; /* Align buttons to the right */
 }
@@ -115,9 +146,11 @@
 
 /* Paragraph Style */
 .pStyle {
+    width: 100px;
     font-size: 20px;
     margin-bottom: 2px;
     margin-left: 5px;
+    margin-right: 20px;
 }
 
 .information {
@@ -156,4 +189,26 @@
 
 .closeButton:hover {
     color: #ff0000; /* Change color on hover if desired */
+}
+
+.content123 {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Set only the positionName to bold */
+.boldPositionName {
+    font-weight: bold;
+}
+
+
+
+.contentBox1, .contentBox2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.contentBox1 {
+    margin-bottom: 20px;
 }

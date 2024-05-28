@@ -12,7 +12,9 @@ import {
     submitApprovalSuccess,
     submitApprovalFailure,
     updateApprovalSuccess,
-    updateApprovalFailure
+    updateApprovalFailure,
+    fetchApprovalDetailSuccess,
+    fetchApprovalDetailFailure
 } from "../modules/ApprovalReducer";
 import { GET_MEMBER } from "../modules/MemberModule";
 
@@ -163,4 +165,24 @@ export const updateApprovalAPI = async ( approvalNo, formData ) => {
             console.error('결재 수정 실패 : ' + error);
             throw error;
         }
+};
+
+export const getApprovalDetailAPI = (approvalNo) => {
+    return async (dispatch) => {
+        dispatch(setLoading(true));
+
+        try{
+            const response = await axios.get(`${API_BASE_URL}/approvals/${approvalNo}`, { headers });
+            if(response.data && response.data.data){
+                dispatch(fetchApprovalDetailSuccess(response.data.data));
+            }else{
+                throw new Error("Invalid API response structure");
+            }
+        } catch(error){
+            dispatch(fetchApprovalDetailFailure(error));
+            console.error('Error fetching approval detail:', error);;
+        }finally {
+            dispatch(setLoading(false));
+        }
+    };
 };

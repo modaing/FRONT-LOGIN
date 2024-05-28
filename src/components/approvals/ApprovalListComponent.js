@@ -1,12 +1,18 @@
 import React from "react";
 import styles from '../../css/approval/ApprovalListComponent.module.css';
 import { useSelector } from "react-redux";
+import { useNavigate } from 'react-router-dom'
 
 
 const ApprovalListComponent = ({ approvals, fg, handleDeleteClick, handleSortDirectionChange, loggedInUserId }) => {
 
     const loading = useSelector((state) => state.approval.loading);
     const error = useSelector((state) => state.approval.error);
+    const navigate = useNavigate();
+    
+    const handleRowClick = (approvalNo) => {
+        navigate(`/approvals/${approvalNo}`);
+    };
 
     return (
         <div className={styles.tableContainer}>
@@ -58,7 +64,7 @@ const ApprovalListComponent = ({ approvals, fg, handleDeleteClick, handleSortDir
                             const approverStatus = approver ? approver.approverStatus : '';
 
                             return (
-                                <tr key={approval.approvalNo}>
+                                <tr key={approval.approvalNo} onClick={() => handleRowClick(approval.approvalNo)}>
                                     {fg === 'given' || fg === 'tempGiven' ? (
                                         <>
                                             <td>{approval.approvalDate}</td>

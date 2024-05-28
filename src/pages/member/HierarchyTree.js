@@ -2,14 +2,13 @@ import '../../css/member/hierarchyTree.css';
 import { callShowAllMemberListAPI } from '../../apis/MemberAPICalls';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Modal from './Modal';
 
 function HierarchyTree() {
 
     const [zoomLevel, setZoomLevel] = useState(1);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [organizationalChart, setOrganizationalChart] = useState({ departments: {}, positions: {} });
     const [expandedDepartments, setExpandedDepartments] = useState({});
+    const navigate = useNavigate();
 
     const handleZoomIn = () => {
         setZoomLevel(prevZoomLevel => Math.min(prevZoomLevel + 0.2, 1.6));
@@ -21,9 +20,7 @@ function HierarchyTree() {
 
     const handleZoomReturn = () => {
         setZoomLevel(1);
-    }
-
-    const navigate = useNavigate();
+    };
 
     const handleNameClick = (member) => {
         navigate(`/ManageMember/${member.memberId}`);
@@ -83,7 +80,7 @@ function HierarchyTree() {
             const { departName } = departmentDTO;
             const { positionName, positionLevel } = positionDTO;
     
-            if (positionName === '대표이사' || positionName === '부장' || positionName === '차장' || positionName === '과장') {
+            if (positionName === '대표이사') {
                 if (!chart.positions[positionName]) {
                     chart.positions[positionName] = [];
                 }
@@ -97,7 +94,7 @@ function HierarchyTree() {
                 }
     
                 chart.departments[departName].push({ name, positionName, memberId, positionLevel, employedDate });
-                chart.positions[positionName].push({ name, positionName, memberId, positionLevel, employedDate });
+                chart.positions[positionName].push({ name, departName, positionName, memberId, positionLevel, employedDate });
             }
         });
     
@@ -131,8 +128,7 @@ function HierarchyTree() {
     
         return chart;
     };
-    
-    /* Update the renderBranch function in your HierarchyTree component */
+
     const renderBranch = (members) => {
         if (!Array.isArray(members)) return null;
 
@@ -148,7 +144,6 @@ function HierarchyTree() {
         ));
     };
 
-    
     const getPositionClass = (positionName) => {
         // Define CSS classes based on position names
         switch (positionName) {
@@ -164,27 +159,50 @@ function HierarchyTree() {
                 return '';
         }
     };
-    
+
     const renderPositions = () => {
         const predefinedPositions = ['대표이사', '부장', '차장', '과장'];
     
         return (
-            <div className="flexedUpperPositions">
+            <div className="positionsContainer">
                 {predefinedPositions.map((position, index) => {
                     const members = organizationalChart.positions[position];
                     if (!members) return null;
-    
-                    return (
-                        <div key={index} className="positionWrapper">
-                            <div className="flexedMembers">{renderBranch(members)}</div>
-                        </div>
-                    );
+
+                    if (position === '대표이사') {
+                        // Render 대표이사 in its current style
+                        return (
+                            <div key={index} className="positionWrapper">
+                                <div className="flexedMembers">{renderBranch(members)}</div>
+                            </div>
+                        );
+                    } else {
+                        // Render 부장, 차장, 과장 in the same style as departments
+                        const groupedByDepartment = members.reduce((acc, member) => {
+                        if (!acc[member.departName]) {
+                        acc[member.departName] = [];
+                        }
+                        acc[member.departName].push(member);
+                        return acc;
+                        }, {});
+                        return (
+                            <div key={index} className="positionWrapper horizontal">
+                                {Object.entries(groupedByDepartment).map(([departName, members], index) => (
+                                    <div key={index} className="department">
+                                        <div className="departBox" onClick={() => handleDepartmentClick(departName)}>
+                                            <h2>{departName}</h2>
+                                        </div>
+                                        {expandedDepartments[departName] && <div className="branch">{renderBranch(members)}</div>}
+                                    </div>
+                                ))}
+                            </div>
+                        );
+                    }
                 })}
             </div>
         );
     };
     
-
     const renderDepartments = () => {
         const totalWidth = window.innerWidth; // Get the total width of the viewport
         const departmentCount = Object.keys(organizationalChart.departments).length;
@@ -240,17 +258,15 @@ function HierarchyTree() {
                             ></i>
                         )}
                     </div>
-
+    
                     <div className="chartContainer" style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'top center', transition: 'transform 0.3s' }}>
                         {/* Render your organizational chart content here */}
                         <div className="flexedUpperPositions">
                             {renderPositions()}
                         </div>
-                        {/* <div className='flexedLowerPositions'> */}
-                            <div className="departmentsContainer">
-                                {renderDepartments()}
-                            </div>
-                        {/* </div> */}
+                        <div className="departmentsContainer">
+                            {renderDepartments()}
+                        </div>
                     </div>
                 </div>
             </div>

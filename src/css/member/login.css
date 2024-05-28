@@ -1,12 +1,17 @@
-.inputStyle1 {
+.inputStyleLogin {
     height: 60px;
-    /* width: 500px; */
-    width: auto;
+    width: 500px;
     font-size: 30px;
+    padding: 10px; /* Add padding for better visual appearance */
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 5px; /* Add rounded corners */
+    box-sizing: border-box; /* Ensure padding is included in the width */
 }
 
-.inputBoxStyle {
-    width: auto;
+.inputStyleLogin[type=number]::-webkit-inner-spin-button,
+.inputStyleLogin[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .classifyStyle {

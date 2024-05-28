@@ -82,6 +82,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1000;
 }
 
 /* Modal Content */
@@ -90,6 +91,7 @@
     padding: 50px 200px; /* Top, Right, Bottom, Left */
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: relative;
 }
 
 /* Close Button */

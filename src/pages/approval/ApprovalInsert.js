@@ -10,12 +10,14 @@ import ApproverModal from '../../components/approvals/ApproverModal';
 import InsertConfirmModal from '../../components/approvals/InsertConfirmModal';
 import InsertSuccessModal from '../../components/approvals/InsertSuccessModal';
 import InsertFailModal from '../../components/approvals/InsertFailModal';
+import WarningModal from '../../components/approvals/WarningModal';
+import TempSaveModal from '../../components/approvals/TempSaveModal';
+import CancelInsertModal from '../../components/approvals/CancelInsertModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { submitApprovalAPI, updateApprovalAPI } from '../../apis/ApprovalAPI';
-import WarningModal from '../../components/approvals/WarningModal';
-import TempSaveModal from '../../components/approvals/TempSaveModal';
+
 
 const ApprovalInsert = () => {
 
@@ -36,6 +38,7 @@ const ApprovalInsert = () => {
     const [isInsertFailModalOpen, setIsInsertFailModalOpen] = useState(false);
     const [isWarningModalOpen, setIsWarrningModalOpen] = useState(false);
     const [isTempSaveModalOpen, setIsTempSaveModalOpen] = useState(false);
+    const [isCancelInsertModalOpen, setIsCancelInsertModalOpen] = useState(false);
     const [warningMessage, setWarningMessage] = useState('');
     const editorRef = useRef(null);
     const dispatch = useDispatch();
@@ -119,13 +122,12 @@ const ApprovalInsert = () => {
         return tempDiv.textContent || tempDiv.innerHTML || '';
     }
 
-
-
-    const handleSubmit = async (status) => {
-        if(status !== '임시저장' && title.trim() === ''){
+    const validateForm = (status) => {
+        if(status === '처리 중' && title.trim() === ''){
+            console.log('status === 처리 중, title.trim() === "" ');
             setWarningMessage('제목이 입력되지 않았습니다');
             setIsWarrningModalOpen(true);
-            return;
+            return false;
         }
 
         const strippedFormContent = stripHtmlExceptDate(formContent).trim(/\s+/g, '');
@@ -134,20 +136,33 @@ const ApprovalInsert = () => {
         if (title.length > 50) {
             setWarningMessage('제목은 50자를 초과할 수 없습니다.');
             setIsWarrningModalOpen(true);
-            return;
+            return false;
         }
 
-        if (!approverLine.length > 0) {
+        if (status === '처리 중' && !approverLine.length > 0) {
             setWarningMessage('결재선이 선택되지 않았습니다.');
             setIsWarrningModalOpen(true);
-            return;
+            return false;
         }
 
-        if (strippedFormContent === '' || strippedFormContent === strippedInitialFormContent) {
+        if (status === '처리 중' && strippedFormContent === '' || strippedFormContent === strippedInitialFormContent) {
             setWarningMessage('결재 내용이 입력되지 않았습니다');
             setIsWarrningModalOpen(true);
-            return;
+            return false;
         }
+
+        return true;
+    };
+
+
+
+    const handleSubmit = async (status) => {
+
+        console.log('status: ' + status);
+
+       if(!validateForm(status)) {
+            return;
+       }
 
 
         const formData = new FormData();
@@ -178,23 +193,49 @@ const ApprovalInsert = () => {
         try {
             let response;
 
-            if (approvalNo) {
-                //저장된 approvalNo가 있다면 수정 API호출
-                response = await updateApprovalAPI( approvalNo, formData );
-
-            }
-            else {
-                //저장된 approvalNo가 없다면 등록 API호출
+            if(status === '처리 중' && !approvalNo){
+                //상태가 '처리 중' 이고 approvalNo가 존재하지 않으면 등록 API 호출
                 response = await submitApprovalAPI(formData);
-                console.log('등록된 전자결재 번호 : ' + response.data?.approvalNo);
-                const responseData = response.data;
-
-                if (response.data?.approvalNo) {    //전자결재가 저장되었다면 
+                if(response && response.data && response.data.approvalNo){
                     setApprovalNo(response.data.approvalNo);
-                } else {
-                    console.error('응답에서 approvalNo를 찾을 수 없습니다.');
                 }
+            }else if(status === '임시저장' && !approvalNo){
+                //임시저장 상태이면 등록 API에 '임시저장'으로 등록
+                response = await submitApprovalAPI(formData);
+                
+                console.log('등록된 전자결재 번호 : ' + response.data?.approvalNo);
+
+                if(response && response.data && response.data.approvalNo){
+                    setApprovalNo(response.data.approvalNo);
+                }
+            }else if (status === '임시저장' && approvalNo){
+                response = await updateApprovalAPI(approvalNo, formData);
+                
+                console.log('등록된 전자결재 번호 : ' + response.data?.approvalNo);
+                if(response && response.data && response.data.approvalNo){
+                    setApprovalNo(response.data.approvalNo);
+                }
+            }else{
+                //기타 상태이면 수정 API 호출
+                response = await updateApprovalAPI(approvalNo, formData);
             }
+
+            // if (approvalNo) {
+            //     //저장된 approvalNo가 있다면 수정 API호출
+            //     response = await updateApprovalAPI( approvalNo, formData );
+
+            // }
+            // else {
+            //     //저장된 approvalNo가 없다면 등록 API호출
+            //     response = await submitApprovalAPI(formData);
+            //     const responseData = response.data;
+
+            //     if (response.data?.approvalNo) {    //전자결재가 저장되었다면 
+            //         setApprovalNo(response.data.approvalNo);
+            //     } else {
+            //         console.error('응답에서 approvalNo를 찾을 수 없습니다.');
+            //     }
+            // }
 
             if (status === '임시저장') {
                 setIsTempSaveModalOpen(true);
@@ -274,7 +315,10 @@ const ApprovalInsert = () => {
     }
 
     const openConfirmModal = () => {
-        setIsInsertConfirmModalOpen(true);
+        if(validateForm('처리 중')){
+
+            setIsInsertConfirmModalOpen(true);
+        }
     };
 
     const closeConfirmModal = () => {
@@ -292,7 +336,7 @@ const ApprovalInsert = () => {
 
     const confirmSubmit = () => {
         closeConfirmModal();
-        handleSubmit();
+        handleSubmit('처리 중');
     };
 
     const closeSuccessModal = () => {
@@ -308,6 +352,20 @@ const ApprovalInsert = () => {
         setIsTempSaveModalOpen(false);
     }
 
+    const openCancelInsertModal = () => {
+        setIsCancelInsertModalOpen(true);
+    }
+
+    const closeCancelInserstModal = () => {
+        setIsCancelInsertModalOpen(false);
+    }
+
+    const insertCancel = () => {
+        setIsCancelInsertModalOpen(false);
+        navigate('/approvals?fg=given&page=0title=&direction=DESC');
+    }
+
+    
     useEffect(() => {
         if (editorRef.current) {
             const doc = editorRef.current.getDoc();
@@ -503,8 +561,8 @@ const ApprovalInsert = () => {
                             </div>
                         </div>
                         <div className={styles.insertAppButtons}>
-                            <button type='button'>취소</button>
-                            <button type="submit">등록</button>
+                            <button type='button' onClick={openCancelInsertModal}>취소</button>
+                            <button type="submit" onClick={() => handleSubmit('처리 중')}>등록</button>
                         </div>
                     </form>
                     <ApproverModal
@@ -529,12 +587,18 @@ const ApprovalInsert = () => {
                         onClose={closeFailModal}
                     />
                     <WarningModal
+                        isOpen={isWarningModalOpen}
                         onClose={closeWarningModal}
                         message={warningMessage}
                     />
                     <TempSaveModal
                         isOpen={isTempSaveModalOpen}
                         onClose={closeTempSaveModal}
+                    />
+                    <CancelInsertModal
+                        isOpen={isCancelInsertModalOpen}
+                        onClose={closeCancelInserstModal}
+                        onConfirm={insertCancel}
                     />
                 </div>
             </main>

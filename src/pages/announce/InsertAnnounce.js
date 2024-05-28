@@ -2,11 +2,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { SHA256 } from 'crypto-js';
 import { ancInsertAPI } from '../../apis/AncAPICalls';
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
-import ReactMarkdown from 'react-markdown';
 import { decodeJwt } from '../../utils/tokenUtils';
 import '../../css/common.css';
 
@@ -79,7 +77,13 @@ function InsertAnnounce() {
     };
 
     const handleChangeFiles = (e) => {
-        setFiles([...e.target.files]); // 모든 파일을 파일 목록에 추가
+        const selectedFiles = [...e.target.files];
+        if (selectedFiles.length + files.length > 3) {
+            alert("파일은 최대 3개까지 등록할 수 있습니다.");
+            e.target.value = ''; // 파일 선택 초기화
+            return;
+        }
+        setFiles([...files, ...selectedFiles]); // 선택된 파일을 기존 파일 목록에 추가
     };
 
     useEffect(() => {

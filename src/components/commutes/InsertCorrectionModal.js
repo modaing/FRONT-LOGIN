@@ -14,7 +14,7 @@ import '../../style.css';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const InsertCorrectionModal = ({ commute, isOpen, onClose, onSave, date, startWork, endWork, onCorrectionRegistered  }) => {
+const InsertCorrectionModal = ({ commute, isOpen, onClose, onSave, date, startWork, endWork, handleCorrectionRegistered, handleCloseModal}) => {
 
     // console.log('정정 요청 날짜 : ', date);
     // console.log('기존 출근 시간 : ', startWork);
@@ -55,6 +55,8 @@ const InsertCorrectionModal = ({ commute, isOpen, onClose, onSave, date, startWo
             corrEndWork: koreaEndTime,
             reason: reason
         });
+        handleCorrectionRegistered();
+        // handleCloseModal();
         onClose();
     };
 

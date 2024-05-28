@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { callInsertCorrectionAPI, callSelectCommuteListAPI } from "../../apis/CommuteAPICalls";
 import { CommuteUtil } from "../../utils/CommuteUtil";
 
-function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDateOffset}) {
+function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDateOffset , handleCorrectionRegistered, onClose}) {
 
     // console.log('[CommuteItem] commute : ', commute);
     console.log('[CommuteItem] commute.commuteNo : ', commute.commuteNo);
@@ -24,6 +24,7 @@ function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDat
     };
 
     const handleCloseModal = () => {
+        onClose();
         setShowModal(false);
     };
 
@@ -207,6 +208,8 @@ function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDat
                 date={commute.workingDate}
                 startWork={formatWorkingTime(commute.startWork)}
                 endWork={formatWorkingTime(commute.endWork)}
+                handleCorrectionRegistered={handleCorrectionRegistered}
+                handleCloseModal={onClose}
             />
         )}
     </>

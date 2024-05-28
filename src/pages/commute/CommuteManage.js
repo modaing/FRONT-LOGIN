@@ -6,6 +6,7 @@ import { callSelectCommuteListAPI } from "../../apis/CommuteAPICalls";
 import { textAlign } from "@mui/system";
 import '../../css/commute/commute.css';
 import { decodeJwt } from '../../utils/tokenUtils';
+import TotalWorkingHours from '../../components/commutes/TotalWorkingHours';
 
 function CommuteManage() {
 
@@ -24,6 +25,8 @@ function CommuteManage() {
 
     const [date, setDate] = useState("2024-05-01"); // 발표 전 6월로 바꾸기 
     const [depart, setDepart] = useState(1);
+    const [showWorkingHours, setShowWorkingHours] = useState(false);
+    const [showWorkingHoursComponent, setShowWorkingHoursComponent] = useState(false);
 
     const SelectBox = (props) => {
         return (
@@ -71,6 +74,11 @@ function CommuteManage() {
 
     const handleMonthChange = (e) => {
         setDate(e.target.value);
+    };
+
+    const handleShowWorkingHours = () => {
+        setShowWorkingHours(!showWorkingHours);
+        setShowWorkingHoursComponent(!showWorkingHoursComponent);
     };
 
     const year = parseInt(date.split("-")[0]);
@@ -159,64 +167,97 @@ function CommuteManage() {
                             <li className="breadcrumb-item"><a href="/">Home</a></li>
                             <li className="breadcrumb-item">출퇴근</li>
                             <li className="breadcrumb-item active">출퇴근 관리</li>
-                            <SelectBox options={DEPARTOPTIONS} defaultValue={depart} onChange={handleAction}></SelectBox>
-                            <SelectBox options={DATEOPTIONS} defaultValue={date} onChange={handleMonthChange}></SelectBox>
+                            <div className="form-check form-switch" style={{ display: 'flex' }} >
+                                <h6 className="form-check-label" for="flexSwitchCheckDefault" style={{ display: 'flex', color: '#112D4E', marginLeft: '10px', marginRight: '50px' }}>근무 시간 조회</h6>
+                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked={showWorkingHours} onChange={handleShowWorkingHours} />
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
+                                <SelectBox options={DEPARTOPTIONS} defaultValue={depart} onChange={handleAction}></SelectBox>
+                                <SelectBox options={DATEOPTIONS} defaultValue={date} onChange={handleMonthChange}></SelectBox>
+                            </div>
                         </ol>
                     </nav>
                 </div>
                 <div className="col-lg-12">
-                    <table className="table table-hover" style={{ width: '100%', position: 'relative', overflow: 'auto' }}>
-                        <thead >
-                            <tr>
-                                <th rowSpan={2} scope='col' style={{ width: '40px', border: '1px solid #D5D5D5', verticalAlign: 'middle', textAlign: 'center' }}>이름</th>
-                                {dates.map(date => (
-                                    <th
-                                        key={date}
-                                        style={{ ...tableStyles.tableHeaderCell, ...(isWeekend(getDayOfWeek(year, month, date)) && tableStyles.weekendCell), border: '1px solid #D5D5D5' }}
-                                    >
-                                        {date}/{getDayOfWeek(year, month, date)}
-                                    </th>
-                                ))}
-                                <th rowSpan={1} scope='col' style={{ border: '1px solid #D5D5D5' }}>합계</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {commuteList.map((member, index) => (
-                                <tr key={index}>
-                                    <td style={{ border: '1px solid #D5D5D5' }}>{member.name}</td>
+                    {!showWorkingHours ? (
+                        <table className="table table-hover" style={{ textAlign: 'center', justifyContent: 'center', width: '100%', position: 'relative', overflow: 'auto', wordWrap: 'break-word', webkitLineClamp: 1, textOverflow: 'ellipsis' }}>
+                            <thead >
+                                <tr>
+                                    <th rowSpan={2} scope='col' style={{ textAlign: 'center', width: '40px', border: '1px solid #D5D5D5', verticalAlign: 'middle' }}>이름</th>
                                     {dates.map(date => (
-                                        <td key={`${index}-${date}`} style={{ border: '1px solid #D5D5D5', padding: '0px', backgroundColor: '#112D4E', color: '#ffffff' }} className={emptyCellClass}>
-                                            {member.commuteList && member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])) ? (
-                                                <>
-                                                    <span style={{textAlign: 'center', padding: '11px'}}>{convertTime(member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).startWork)}</span><br/>
-                                                    {member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).endWork && (
-                                                        <span style={{textAlign: 'center', padding: '11px'}}>{convertTime(member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).endWork)}</span>
-                                                    )}
-                                                </>
-                                            ) : (
-                                                <td style={{ backgroundColor: '#F6F5F5', width: '61px', height: '65px' }}></td>
-                                            )}
+                                        <th
+                                            key={date}
+                                            style={{ ...tableStyles.tableHeaderCell, ...(isWeekend(getDayOfWeek(year, month, date)) && tableStyles.weekendCell), border: '1px solid #D5D5D5' }}
+                                        >
+                                            {date}/{getDayOfWeek(year, month, date)}
+                                        </th>
+                                    ))}
+                                    <th colSpan={3} rowSpan={3} style={{ border: '1px solid #D5D5D5', whiteSpace: 'nowrap' }}>개별근무일수</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {commuteList.map((member, index) => (
+                                    <tr key={index}>
+                                        <td style={{ border: '1px solid #D5D5D5' }}>{member.name}</td>
+                                        {dates.map(date => (
+                                            <td
+                                                key={`${index}-${date}`}
+                                                style={{
+                                                    maxWidth: '100px',
+                                                    border: '1px solid #D5D5D5',
+                                                    padding: '0px',
+                                                    backgroundColor: member.commuteList && member.commuteList.filter(item => isSameDate(item.workingDate, [year, month, date])).length > 0 ? '#112D4E' : '#F6F5F5',
+                                                    color: member.commuteList && member.commuteList.filter(item => isSameDate(item.workingDate, [year, month, date])).length > 0 ? '#ffffff' : '#000000'
+                                                }}
+                                                className={emptyCellClass}
+                                            >
+                                                {member.commuteList && member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])) ? (
+                                                    <>
+                                                        <span style={{ textAlign: 'center', padding: '11px' }}>{convertTime(member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).startWork)}</span><br />
+                                                        {member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).endWork && (
+                                                            <span style={{ textAlign: 'center', padding: '11px' }}>{convertTime(member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).endWork)}</span>
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <td ></td>
+                                                )}
+                                            </td>
+                                        ))}
+                                        <td style={{ border: '1px solid #D5D5D5', width: '60px' }}>
+                                            {member.commuteList && member.commuteList.filter(item => isSameDate(item.workingDate, [year, month, date])).reduce((total, item) => total + item.workingDate, 0)}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                            <tfoot>
+                                <tr style={{ border: '1px solid #D5D5D5' }}>
+                                    <td style={{ fontWeight: '800' }}>근무인원</td>
+                                    {dates && dates.map(date => (
+                                        <td key={date} style={{ border: '1px solid #D5D5D5' }}>
+                                            {commuteList
+                                                .flatMap((member) => member.commuteList || [])
+                                                .filter((commute) => isSameDate(commute.workingDate, [year, month, date]))
+                                                .length}
                                         </td>
                                     ))}
-                                    <td style={{ border: '1px solid #D5D5D5' }}>
-                                        {member.commuteList && member.commuteList.filter(item => isSameDate(item.workingDate, [year, month])).reduce((total, item) => total + item.totalWorkingHours, 0)}
-                                    </td>
                                 </tr>
-                            ))}
-                        </tbody>
-                        <tfoot>
-                            <tr style={{ border: '1px solid #D5D5D5' }}>
-                                <td style={{ fontWeight: '800' }}>근무인원</td>
-                                {dates.map(date => (
-                                    <td key={date} style={{ border: '1px solid #D5D5D5' }}>
-                                        {commuteList && commuteList.filter(member => member.commuteList && member.commuteList.some(item => isSameDate(new Date(item.workingDate), new Date(year, month - 1, date)))).length}
-                                    </td>
-                                ))}
-                            </tr>
-                        </tfoot>
-                    </table>
+                            </tfoot>
+                        </table>
+                    ) : (
+                        <TotalWorkingHours
+                            commuteList={commuteList}
+                            year={year}
+                            month={month}
+                            dates={dates}
+                            isSameDate={isSameDate}
+                            tableStyles={tableStyles}
+                            isWeekend={isWeekend}
+                            getDayOfWeek={getDayOfWeek}
+                            emptyCellClass={emptyCellClass}
+                        />
+                    )}
                 </div>
-            </main>
+            </main >
         </>
     );
 };
