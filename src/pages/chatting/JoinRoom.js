@@ -33,6 +33,9 @@ function JoinRoom({ onRoomCreated }) {
             memberId: memberId,
             roomName: roomName,
             receiverId: parseInt(receiveId),
+            senderDeleteYn: "N",
+            receiverDeleteYn: "N",
+            roomStatus: 'ENTER'
         };
         dispatch(callInsertRoomAPI(request)).then(() => {
             // 새로운 방이 성공적으로 만들어지면 부모 컴포넌트에 알립니다.
