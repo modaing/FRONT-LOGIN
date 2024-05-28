@@ -102,26 +102,42 @@ function RecordCorrectionOfCommute() {
 
     /* 출퇴근 정정 내역 API 호출 */
     useEffect(() => {
-        console.log('[useEffect] memberId : ', memberId);
-        console.log('[useEffect] page : ', currentPage);
-        console.log('[useEffect] month : ', month);
+        // console.log('[useEffect] memberId : ', memberId);
+        // console.log('[useEffect] page : ', currentPage);
+        // console.log('[useEffect] month : ', month);
         dispatch(callSelectCorrectionListAPI(memberId, page, size, sort, direction, month));
     }, [memberId, month, page, dispatch]);
 
     /* 페이징 핸들러 */
-    const handlePageChange = (page) => {
-        dispatch({ type: SET_PAGENUMBER, payload: { page: page } });
-    };
+    // const handlePageChange = (page) => {
+    //     dispatch({ type: SET_PAGENUMBER, payload: { page: page } });
+    // };
 
+    // const handlePrevPage = () => {
+    //     if (currentPage > 0) {
+    //         dispatch({ type: SET_PAGENUMBER, payload: { page: currentPage - 1 } });
+    //     }
+    // };
+
+    // const handleNextPage = () => {
+    //     if (currentPage < totalPages - 1) {
+    //         dispatch({ type: SET_PAGENUMBER, payload: { page: currentPage + 1 } });
+    //     }
+    // };
+
+    const handlePageChange = (page) => {
+        dispatch(callSelectCorrectionListAPI(memberId, page, size, sort, direction, month));
+    };
+    
     const handlePrevPage = () => {
         if (currentPage > 0) {
-            dispatch({ type: SET_PAGENUMBER, payload: { page: currentPage - 1 } });
+            dispatch(callSelectCorrectionListAPI(memberId, currentPage - 1, size, sort, direction, month));
         }
     };
-
+    
     const handleNextPage = () => {
         if (currentPage < totalPages - 1) {
-            dispatch({ type: SET_PAGENUMBER, payload: { page: currentPage + 1 } });
+            dispatch(callSelectCorrectionListAPI(memberId, currentPage + 1, size, sort, direction, month));
         }
     };
 
@@ -135,7 +151,7 @@ function RecordCorrectionOfCommute() {
                         <li className="breadcrumb-item">출퇴근</li>
                         <li className="breadcrumb-item active">출퇴근 정정 내역</li>
                         <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
-                            <SelectBox options={DATEOPTIONS} value={month} onChange={handleMonthChange} style={{ float: 'right' }}></SelectBox>
+                            {/* <SelectBox options={DATEOPTIONS} value={month} onChange={handleMonthChange} style={{ float: 'right' }}></SelectBox> */}
                         </div>
                     </ol>
                 </nav>
