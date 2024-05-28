@@ -11,6 +11,7 @@ const initialState = {
   files:[],
   uploadStatus: null,
   approvalStatus : null,
+  approvalDetail : null,
   loading: false,
   error: null,
 };
@@ -36,6 +37,8 @@ export const {
   submitApprovalFailure,
   updateApprovalSuccess,
   updateApprovalFailure,
+  fetchApprovalDetailSuccess,
+  fetchApprovalDetailFailure,
 } = createActions({
   SET_FG: (fg) => fg,
   SET_TITLE: (title) => title,
@@ -53,6 +56,8 @@ export const {
   SUBMIT_APPROVAL_FAILURE: (error) => error,
   UPDATE_APPROVAL_SUCCESS: (data) => data,
   UPDATE_APPROVAL_FAILURE: (error) => error,
+  FETCH_APPROVAL_DETAIL_SUCCESS: (approvalDetail) => approvalDetail,
+  FETCH_APPROVAL_DETAIL_FAILURE: (error) => error,
 });
 
 // 리듀서 정의
@@ -136,6 +141,15 @@ const approvalReducer = handleActions(
       ...state,
       error: payload,
     }),
+    [fetchApprovalDetailSuccess]: (state, { payload }) => ({
+      ...state,
+      approvalDetail: payload,
+      error: null,
+    }),
+    [fetchApprovalDetailFailure]: (state, { payload }) => ({
+      ...state,
+      error: payload,
+    })
   },
   initialState
 );

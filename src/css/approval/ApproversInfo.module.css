@@ -1,0 +1,28 @@
+.ApproverTable{
+    /* border: 1px solid black; */
+    width: 100%;
+    margin-top : 20px;
+    margin-bottom : 40px;
+    border : 1px solid black;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+.ApproverTable th{
+    background-color: #3F72AF;
+    color: white;
+}
+.ApproverTable th, .ApproverTable td{
+    font-weight: 400;
+    border: 1.5px solid black;
+    text-align: center;
+    padding: 5px;
+    height: 70px;
+}
+
+.ApproverTable th{
+    width: calc(100% /7);
+}
+
+.ApproverTable td{
+    width: calc(100% /7);
+}

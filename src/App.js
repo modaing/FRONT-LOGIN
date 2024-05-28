@@ -30,6 +30,7 @@ import Leaves from './pages/leave/Leaves';
 import SurveyList from './pages/survey/SurveyList';
 import MemberPage from './pages/member/MemberPage';
 import HierarchyTree from './pages/member/HierarchyTree';
+import ApprovalDetail from './pages/approval/ApprovalDetail';
 
 function App() {
   const isLoggedIn = !!window.localStorage.getItem("accessToken");
@@ -71,6 +72,7 @@ function App() {
             <Route path='approvals' element={<ApprovalPage />} />
             <Route path="/manageMember/:memberId" element={<MemberPage />} />
             <Route path='/hierarchyTree' element={<HierarchyTree />} />
+            <Route path='/approvals/:approvalNo' element={<ApprovalDetail />}/>
           </Route>
         ) : (
           <Route path="/" element={<Navigate to="/login" replace />} />
