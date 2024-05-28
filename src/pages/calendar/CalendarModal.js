@@ -46,10 +46,8 @@ const CalendarModal = ({ isOpen, onClose, onSave }) => {
     }, [isOpen]);
 
     useEffect(() => {
-        console.log('start',start);
-        console.log('(start > end)', (start > end));
         (start > end) && setEnd('')
-    }, [start])
+    }, [start, end])
 
     return (
         isOpen && (
