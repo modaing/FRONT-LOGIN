@@ -47,7 +47,7 @@ function PositionNameModal(props) {
     }
 
     return (
-        <div className="modalStyle">
+        <div className="modalStyle123">
             <div className="modalContentStyle">
                 <h2 className='changePasswordStyle'>직급명 변경</h2>
                 <form onSubmit={handleSubmit}>

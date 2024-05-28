@@ -104,6 +104,8 @@ function Login() {
                 if (responseData.failType != null) {
                     alert(responseData.failType);
                     setForm({memberId: '', password: ''});
+                } else if (responseData.message === '휴먼 상태의 계정입니다') {
+                    alert('휴면 계정입니다');
                 } else {
                     /* 로그인 성공시 */
                     console.log('responseData:',responseData);

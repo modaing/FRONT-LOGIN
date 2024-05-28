@@ -87,7 +87,7 @@ function PositionDeleteModal(props) {
     }
 
     return (
-        <div className="modalStyle">
+        <div className="modalStyle123">
             <div className="modalContentStyle">
                 <h2 className='changePasswordStyle'>직급 삭제</h2>
                 <form onSubmit={handleSubmit}> {/* Form format */}

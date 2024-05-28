@@ -6,7 +6,7 @@ function ModalID(props) {
     if (!props.visible) return null;
 
     return (
-        <div className={LoginCSS.modalStyle} onClick={props.onClose}>
+        <div className={LoginCSS.modalStyle123} onClick={props.onClose}>
             <div className={LoginCSS.modalContentStyle} onClick={(e) => e.stopPropagation()}>
                 <button className={LoginCSS.closeButton} onClick={props.onClose}>X</button>
                 <div className={LoginCSS.information}>
