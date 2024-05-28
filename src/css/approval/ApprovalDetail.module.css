@@ -3,13 +3,13 @@
     width: 100%;
     max-width: 1800px;
     min-width: 1200px;
-    padding-right: 50px;
     font-size: 15px;
     /* margin-top : 50px; */
-    padding-left: 20px;
-    padding-top: 20px;
-    min-height: 1100px;
-    margin-bottom : 200px;
+    min-height: 1500px;
+    margin-bottom : 100px;
+    background-color: white;
+    padding:70px;
+    height: 1800px;
 }
 
 .approvalTitleContainer {
@@ -33,6 +33,7 @@
     word-wrap: break-word; /* 긴 단어를 줄바꿈 처리 */
     white-space: pre-wrap; /* 공백을 유지하며 줄바꿈 처리 */
     overflow-wrap: break-word; /* 긴 단어를 줄바꿈 처리 */
+    cursor:default;
 }
 
 .ContentContainer {
@@ -91,6 +92,7 @@
     box-sizing: border-box;
     white-space: normal;
     -webkit-user-modify: read-only;
+    cursor: default;
 }
 
 .contentForm td {
@@ -172,9 +174,10 @@
     text-align: right;
 }
 
-.contentForm #ovt_warning {
+#ovt_warning , .ovt_warning{
     color: red;
     font-weight: 1000;
+    background-color: red;
 }
 
 .contentForm #ovt_table td {
@@ -193,4 +196,35 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.ApprovalDetailBottom{
+    margin-bottom : 50px;
+}
+.buttonContainer{
+    display: flex;
+    justify-content: end;
+    margin-top: 30px;
+    margin-bottom : 50px;
+}
+.buttonContainer button{
+    padding: 10px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    border:none;
+}
+.buttonContainer button:first-of-type{
+
+    background-color: white;
+    color: black;
+    border: 1px solid #BBBBBB;
+}
+.buttonContainer button:last-of-type{
+   
+    background-color: #3F72AF;
+    color: white;
+}
+.buttonContainer button:hover{
+    background-color: #E9ECEF;
+    color: black;
 }
