@@ -45,7 +45,7 @@ const Post = (props) => {
   }, [visible, onClose]);
 
   return (
-    <div className={`modalStyle ${visible ? 'visible' : 'hidden'}`} ref={modalRef}>
+    <div className={`modalStyle123 ${visible ? 'visible' : 'hidden'}`} ref={modalRef}>
       <div className="modalContent" style={{height: "500px", width: "1000px", padding: "0 30px 0 0"}}>
         <DaumPostcode style={{ width: "100%", height: "100%"}} onComplete={(data, event) => handlePostCode(data,event)} /> 
         <div className="exitButton" onClick={handleClose} style={{ position: "absolute", top: "10px", right: "10px" }}>×</div>

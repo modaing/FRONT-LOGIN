@@ -20,7 +20,6 @@ function RegisterMember() {
     const [allMemberInfo, setAllMemberInfo] = useState(null);
     const [memberIdLists, setMemberIdLists] = useState([]);
     const [generatedMemberId, setGeneratedMemberId] = useState();
-    const [toGenerateMemberId, setToGeneratedMemberId] = useState();
     const [popup, setPopup] = useState(false);
     const [inputtedAddress, setInputtedAddress] = useState('');
     const [postAddress, setPostAddress] = useState('');
@@ -172,7 +171,7 @@ function RegisterMember() {
                     departNo: selectedDepartNo,
                     departName: selectedDepartName
                 },
-                memberId: generateMemberId(selectedDepartNo),
+                // memberId: generateMemberId(selectedDepartNo),
             }));
         } else if (name === 'positionDTO') {
             const selectedPositionLevel = value;

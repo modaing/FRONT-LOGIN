@@ -65,7 +65,8 @@ function MyProfile() {
 
     const handleChangePassword = () => {
         setChangePasswordModalVisible(true);
-        navigate(`/changePassword`);
+        const url = window.location.pathname;
+        window.history.replaceState(null, '', `myProfile/changePassword`);
     }
 
     const handleCloseModal = () => {
