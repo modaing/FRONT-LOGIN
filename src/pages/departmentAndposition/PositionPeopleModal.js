@@ -35,7 +35,7 @@ function PositionPeopleModal(props) {
     }
 
     return (
-        <div className="modalStyle">
+        <div className="modalStyle123">
             <div className="modalContentStyle">
                 <h2 className='changePasswordStyle'>{positionInformation.positionName} 구성원 리스트</h2>
                 <div className='content123'>

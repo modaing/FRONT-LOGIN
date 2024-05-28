@@ -97,6 +97,8 @@ function Login() {
                 }),
             });
             
+            console.log('response:', response);
+
             const responseData = await response.json();
             if (response.ok) {
 
@@ -111,7 +113,7 @@ function Login() {
                     localStorage.setItem('accessToken', token); // Store the token in localStorage for future use
                     // console.log("token 정보:",token);
                     
-                    // Navigate to the home page if login is successful
+                    // 로그인이 성공적이면 메인 화면으로 이동하는 logic
                     navigate("/main", { replace:true});
                 }
             }

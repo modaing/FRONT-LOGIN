@@ -129,20 +129,69 @@ function HierarchyTree() {
         return chart;
     };
 
+    // const renderBranch = (members) => {
+    //     if (!Array.isArray(members)) return null;
+
+    //     return members.map((member, index) => (
+    //         <div key={index} className="branchItem">
+    //             <div className="box">
+    //                 <div className="box-content" onClick={() => handleNameClick(member)}>
+    //                     <span className={`positionTitle ${getPositionClass(member.positionName)}`}>{member.positionName}</span>
+    //                     <span className='memberName'>{member.name}</span>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     ));
+    // };
+
     const renderBranch = (members) => {
         if (!Array.isArray(members)) return null;
-
-        return members.map((member, index) => (
-            <div key={index} className="branchItem">
-                <div className="box">
-                    <div className="box-content" onClick={() => handleNameClick(member)}>
-                        <span className={`positionTitle ${getPositionClass(member.positionName)}`}>{member.positionName}</span>
-                        <span className='memberName'>{member.name}</span>
+    
+        // Calculate representative director's position
+        const repPosition = members.find(member => member.positionName === '대표이사');
+        const repElement = document.getElementById(repPosition.memberId);
+        const repPositionRect = repElement.getBoundingClientRect();
+        const repPositionX = repPositionRect.left + repPositionRect.width / 2;
+        const repPositionY = repPositionRect.top + repPositionRect.height;
+    
+        // Render SVG lines connecting 대표이사 to departments
+        const lines = Object.entries(organizationalChart.departments).map(([departName, deptMembers]) => {
+            // Calculate department's position
+            const deptPosition = deptMembers.find(member => member.positionName === '부서장');
+            const deptElement = document.getElementById(deptPosition.memberId);
+            const deptPositionRect = deptElement.getBoundingClientRect();
+            const deptPositionX = deptPositionRect.left + deptPositionRect.width / 2;
+            const deptPositionY = deptPositionRect.top;
+    
+            // Render SVG line connecting 대표이사 to the department
+            return (
+                <line
+                    key={`${repPosition.memberId}-${departName}`}
+                    x1={repPositionX}
+                    y1={repPositionY}
+                    x2={deptPositionX}
+                    y2={deptPositionY}
+                    stroke="#000"
+                    strokeWidth="2"
+                />
+            );
+        });
+    
+        return (
+            <div className="branchItem">
+                {lines}
+                {members.map((member, index) => (
+                    <div key={index} className="box" id={member.memberId}>
+                        <div className="box-content" onClick={() => handleNameClick(member)}>
+                            <span className={`positionTitle ${getPositionClass(member.positionName)}`}>{member.positionName}</span>
+                            <span className='memberName'>{member.name}</span>
+                        </div>
                     </div>
-                </div>
+                ))}
             </div>
-        ));
+        );
     };
+      
 
     const getPositionClass = (positionName) => {
         // Define CSS classes based on position names

@@ -1,4 +1,4 @@
-import { useNavigate, Link, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { callGetMemberAPI, callGetTransferredHistory, callUpdateMemberAPI } from "../../apis/MemberAPICalls";
 import { callGetDepartmentByDepartNoAPI } from "../../apis/DepartmentAPICalls";
 import React, { useEffect, useState, useMemo, useRef } from "react";
@@ -9,14 +9,12 @@ import '../../css/member/profile.css';
 
 function MyProfile() {
     
-    const { memberId } = useParams();
     const [memberInfo, setMemberInfo] = useState(null);
     const [memberInformation, setMemberInformation] = useState(null);
     const [loading, setLoading] = useState(true);
     const [formattedEmployedDate, setFormattedEmployedDate] = useState('');
     const [formattedBirthday, setFormattedBirthday] = useState('');
     const [transferredHistoryInformation, setTransferredHistoryInformation] = useState([]);
-    const [departmentName, setDepartmentNames] = useState(null);
     const [changePasswordModalVisible, setChangePasswordModalVisible] = useState(false);
     const token = window.localStorage.getItem("accessToken");
     const memberInfos = decodeJwt(token);
@@ -63,9 +61,10 @@ function MyProfile() {
         // console.log('Formatted date:', formattedEmployedDate);
     }
 
+    const currentUrl = window.location.pathname;
     const handleChangePassword = () => {
         setChangePasswordModalVisible(true);
-        navigate(`/changePassword`);
+        window.history.replaceState(null, '', `${currentUrl}/changePassword`)
     }
 
     const handleCloseModal = () => {

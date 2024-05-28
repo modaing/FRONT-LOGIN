@@ -27,7 +27,7 @@ function Modal(props) {
     if (!props.visible) return null;
     
     return (
-        <div className={LoginCSS.modalStyle} onClick={props.onClose}>
+        <div className={LoginCSS.modalStyle123} onClick={props.onClose}>
             <div className={LoginCSS.modalContentStyle} onClick={(e) => e.stopPropagation()}>
                 <h2 className={LoginCSS.changePasswordStyle}>비밀번호 변경</h2>
                 <form onSubmit={handleConfirmationButtonClick}> {/* Form format */}

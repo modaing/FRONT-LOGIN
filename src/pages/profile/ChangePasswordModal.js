@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import LoginCSS from '../member/Login.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPassword1Action, setPassword2Action } from '../../modules/PasswordReducer';
+import { useNavigate } from 'react-router-dom';
 import { callChangePasswordAPI } from '../../apis/MemberAPICalls';
 import '../../css/member/changePasswordModal.css';
 
@@ -10,6 +11,7 @@ function ChangePasswordModal(props) {
     const password1 = useSelector(state => state.passwordReducer.password1);
     const password2 = useSelector(state => state.passwordReducer.password2);
     const [currentPassword, setCurrentPassword] = useState('');
+    const navigate = useNavigate();
     
     const handlePasswordChange = (e) => {
         const { name, value } = e.target;
@@ -40,6 +42,7 @@ function ChangePasswordModal(props) {
                 // alert('response.data:',response.data);
                 if (response === 'Successfully changed the password') {
                     alert('비밀번호를 성공적으로 변경했습니다');
+                    navigate('/myProfile');
                     window.location.reload();
                 } else if (response.data === 'New passwords do not match') {
                     alert('비밀번호가 일치하지 않습니다');
@@ -51,11 +54,16 @@ function ChangePasswordModal(props) {
             }
         }
     };
+
+    const handleClose = () => {
+        window.history.replaceState(null, '', `/myProfile`);
+        props.onClose();
+    }
     
     if (!props.visible) return null;
     
     return (
-        <div className={LoginCSS.modalStyle} onClick={props.onClose}>
+        <div className={LoginCSS.modalStyle123} onClick={props.onClose}>
             <div className={LoginCSS.modalContentStyle} onClick={(e) => e.stopPropagation()}>
                 <h2 className={LoginCSS.changePasswordStyle}>비밀번호 변경</h2>
                 <form onSubmit={handleConfirmationButtonClick}> {/* Form format */}
@@ -69,7 +77,7 @@ function ChangePasswordModal(props) {
                     <input type="password" name="newPassword2" placeholder="새 비밀번호 (확인)" className="inputStyleWidth" onChange={handlePasswordChange}/>
                     <br/>
                     <div className={LoginCSS.buttonContainerStyle}>
-                        <button type="button" className={LoginCSS.closeButtonStyle} onClick={props.onClose}>취소</button>
+                        <button type="button" className={LoginCSS.closeButtonStyle} onClick={handleClose}>취소</button>
                         <button type="submit" className={LoginCSS.confirmationButtonStyle}>변경</button>
                     </div>
                 </form>
