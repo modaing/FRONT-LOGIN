@@ -97,8 +97,6 @@ function Login() {
                 }),
             });
             
-            console.log('response:', response);
-
             const responseData = await response.json();
             if (response.ok) {
 
@@ -106,6 +104,8 @@ function Login() {
                 if (responseData.failType != null) {
                     alert(responseData.failType);
                     setForm({memberId: '', password: ''});
+                } else if (responseData.message === '휴먼 상태의 계정입니다') {
+                    alert('휴면 계정입니다');
                 } else {
                     /* 로그인 성공시 */
                     console.log('responseData:',responseData);
@@ -113,7 +113,7 @@ function Login() {
                     localStorage.setItem('accessToken', token); // Store the token in localStorage for future use
                     // console.log("token 정보:",token);
                     
-                    // 로그인이 성공적이면 메인 화면으로 이동하는 logic
+                    // Navigate to the home page if login is successful
                     navigate("/main", { replace:true});
                 }
             }

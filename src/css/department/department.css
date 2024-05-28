@@ -70,19 +70,6 @@
     margin-top: 10px;
 }
 
-/* Modal */
-.modalStyle123 {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 /* Modal Content */
 .modalContentStyle {
     background-color: #fff;
@@ -146,6 +133,19 @@
 .information {
     margin-top: 0px;
     text-align: center;
+}
+
+.modalStyle123 {
+    /* Your modal container styles */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .modalContentStyle {

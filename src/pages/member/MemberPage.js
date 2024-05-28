@@ -197,7 +197,6 @@ function MemberPage() {
     const fetchTransferredHistory = async() => {
         try {
             const transferredHistory = await callGetTransferredHistory(memberId);
-            console.log('transferred history:', transferredHistory);
             if (Array.isArray(transferredHistory)) {
                 const formattedTransferredHistory = transferredHistory.map(formattedHistory => ({
                     ...formattedHistory
@@ -249,7 +248,6 @@ function MemberPage() {
     const handleUpdateMember = async (e) => {
         e.preventDefault();
 
-        /* 생년월일 중 입력은 안한 값은 그대로 보내기 위한 logic */
         console.log('year:',member.birthday.year);
         console.log('month:',member.birthday.month);
         console.log('day:',member.birthday.day);
@@ -294,11 +292,6 @@ function MemberPage() {
 
         const formData = new FormData();
         
-        /*
-         * 이미지를 저장을 하기 위한 logic.
-         * 이미지를 올리지 않으면 empty 파일을 보내야 backend에서 받는다.
-         * 그렇지 않으면 method 2개 만들어서 파일 없는 formData는 파일을 받지 않는 method으로 보낸다
-         */
         if (uploadedImage) {
             formData.append('memberProfilePicture', uploadedImage);
         } else {
@@ -307,11 +300,10 @@ function MemberPage() {
         }
         // formData.append('memberDTO', new Blob([JSON.stringify(changedValues)], { type: 'application/json' }));
         
-        /* 변경이 되어있는 값들이 존재하는 경우, 멤버 수정할 것 */
         const hasChanges = Object.keys(changedValues).some(key => changedValues[key] !== memberInfo[key]);
         
         if (hasChanges) {
-            /* 날짜를 제대로 입력을 했는지 확인하는 용도 */
+            // 날짜를 잘 입력을 했는지 확인
             const day = parseInt(originalDay, 10);
             const month = parseInt(originalMonth, 10);
             
@@ -325,23 +317,19 @@ function MemberPage() {
         } else {
             alert('수정한 정보가 없습니다');
         }
-        // console.log('formData:',formData);
+        console.log('formData:',formData);
         
         try {
             const response = await callUpdateMemberAPI(formData);
             console.log('response:',response);
             if (response === '구성원 정보가 업데이트되었습니다') {
-                console.log('response:',response);
-                alert('구성원 정보 수정이 완료되었습니다');
                 // window.location.reload();
             }
             fetchMemberInfo();
         } catch (error) {
-            alert('error:', error);
             console.error('Failed to update member information:', error);
         }
 
-        /* 직급이 변경 되었으면 인사발령내역에 반영할 것 */
         const updatedTransferredHistory = transferredHistoryInformation.map(history => ({
             ...history,
             newPositionName: member.positionDTO.positionName // Update newPositionName for each transferred history item
@@ -430,7 +418,21 @@ function MemberPage() {
         
     }
 
-    /* 휴대폰 번호 형식에 (010-1111-2222) 맞게 변경하는 logic */
+    const formatPhoneNumber = (phoneNo) => {
+        const input = phoneNo.replace(/[^\d]/g, ''); // Remove non-numeric characters
+        if (input.startsWith("010")) {
+            if (input.length <= 3) {
+                return input;
+            } else if (input.length <= 7) {
+                return `010-${input.substring(3, 7)}`;
+            } else {
+                return `010-${input.substring(3, 7)}-${input.substring(7, 11)}`;
+            }
+        } else {
+            return `010-${input}`;
+        }
+    };    
+
     const handlePhoneNoChange = (e) => {
         let rawPhoneNumber = e.target.value.replace(/[^\d]/g, ''); // Remove non-numeric characters
         
@@ -554,7 +556,7 @@ function MemberPage() {
                                     <div className='inputWrapper'>
                                         <input
                                             name='month'
-                                            type='number'
+                                            type='text'
                                             id="birth-month"
                                             maxLength={2}
                                             pattern='^[0-9]{2}'
@@ -563,14 +565,14 @@ function MemberPage() {
                                             onKeyUp={(e) => next(e, 2, 'birth-day')}
                                             className={`inputStylesForMonth ${member.birthday.month && member.birthday.month !== originalMonth ? 'changed' : ''}`}
                                             onChange={(e) => setMember(prevMember => ({ ...prevMember, birthday: { ...prevMember.birthday, month: e.target.value }}))}
-                                            max="12"
+                                            max={12}
                                         />
                                         <span>월</span>
                                     </div>
                                     <div className='inputWrapper'>
                                         <input
                                             name='day'
-                                            type='number'
+                                            type='text'
                                             id="birth-day"
                                             maxLength={2}
                                             pattern='^[0-9]{2}'
@@ -578,7 +580,7 @@ function MemberPage() {
                                             defaultValue={originalDay}
                                             className={`inputStylesForDays ${member.birthday.day && member.birthday.day !== originalDay ? 'changed' : ''}`}
                                             onChange={(e) => setMember(prevMember => ({ ...prevMember, birthday: { ...prevMember.birthday, day: e.target.value }}))}
-                                            max="31"
+                                            max={31}
                                         />
                                         <span>일</span>
                                     </div>
@@ -750,9 +752,7 @@ function MemberPage() {
                             </div>
                             {transferredHistoryInformation.map((history, index) => {
                                 const startDate = history.transferredDate.map(d => d.toString().padStart(2, '0')).join('.'); // Format start date
-                                const endDate = index === transferredHistoryInformation.length - 1 
-                                    ? '현재' 
-                                    : transferredHistoryInformation[index + 1].transferredDate.map(d => d.toString().padStart(2, '0')).join('.'); // Format end date
+                                const endDate = index === transferredHistoryInformation.length - 1 ? '현재' : history.transferredDate.map(d => d.toString().padStart(2, '0')).join('.');
                                 return (
                                     <div key={index} className='contentStyle23'>
                                         <div className="departNameStyleOuter">
