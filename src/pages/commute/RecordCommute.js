@@ -81,21 +81,24 @@ function RecordCommute() {
 
     const handleClockIn = () => {
         try {
-            if (todayCommute != null) {
-                if (todayCommute.endWork == null) {
-                    setShowClockOutModal(true);
-                    setTodaysCommute(todayCommute);
-                } else {
-                    setShowClockLimitModal(true);
-                }
+          if (todayCommute != null) {
+            if (todayCommute.endWork == null) {
+              setShowClockOutModal(true);
+              setTodaysCommute(todayCommute);
+              setIsClocked(true); // 퇴근 버튼 보이도록 설정
             } else {
-                setTodaysCommute(todayCommute);
-                setShowClockInModal(true);
+              setShowClockLimitModal(true);
+              setIsClocked(false); // 출근 버튼 보이도록 설정
             }
+          } else {
+            setTodaysCommute(todayCommute);
+            setShowClockInModal(true);
+            setIsClocked(false); // 출근 버튼 보이도록 설정
+          }
         } catch (error) {
-            console.error('Error checking commute:', error);
+          console.error('Error checking commute:', error);
         }
-    };
+      };      
 
     const handleNewCommuteAndCorrection = () => {
         try {
@@ -109,7 +112,7 @@ function RecordCommute() {
         setShowClockInModal(false);
         setIsClocked((prevState) => !prevState); // 버튼 상태 변경
         handleClockInCompleted(); // 출근 등록 완료 후 콜백 호출
-    };
+      };
 
     const handleClockInCompleted = () => {
         // 출퇴근 내역 조회 API 재호출
@@ -120,7 +123,7 @@ function RecordCommute() {
         setShowClockOutModal(false);
         setIsClocked((prevState) => !prevState); // 버튼 상태 변경
         handleClockOutCompleted(); // 퇴근 등록 완료 후 콜백 호출
-    };
+      };
 
     const handleClockOutCompleted = () => {
         // 출퇴근 내역 조회 API 재호출
@@ -167,10 +170,10 @@ function RecordCommute() {
                                 onClick={handleClockIn}
                             >
                                 {!todayCommute
-                                    ? '출근하기'
+                                    ? '출근 시간 등록'
                                     : todayCommute
-                                        ? '퇴근하기'
-                                        : '출근하기'
+                                        ? '퇴근 시간 등록'
+                                        : '출근 시간 등록'
                                 }
                             </Link>
                             <Link
@@ -179,7 +182,7 @@ function RecordCommute() {
                                 style={insert2Button}
                                 onClick={handleNewCommuteAndCorrection}
                             >
-                                정정요청
+                                미출근 정정 요청
                             </Link>
                         {showClockInModal && (
                             <ClockInModal
@@ -250,7 +253,7 @@ function RecordCommute() {
 export default RecordCommute;
 
 const insertButton = {
-    width: '100px',
+    width: '150px',
     float: 'right',
     backgroundColor: '#112D4E',
     color: 'white',
@@ -267,7 +270,7 @@ const insertButton = {
 };
 
 const updateButton = {
-    width: '100px',
+    width: '150px',
     float: 'right',
     backgroundColor: '#ffffff',
     color: '#112D4E',
@@ -285,7 +288,7 @@ const updateButton = {
 };
 
 const insert2Button = {
-    width: '100px',
+    width: '150px',
     float: 'right',
     backgroundColor: '#3F72AF',
     color: 'white',

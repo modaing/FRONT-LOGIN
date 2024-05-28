@@ -2,6 +2,7 @@ import CommuteItem from "./CommuteItem";
 
 function CommuteListByMember({ commute, date, parsingDateOffset, memberId, handleCorrectionRegistered, onClose }) {
 
+    console.log('출퇴근', commute);
     const formatWorkingDate = (workingDate) => {
         const dateObj = new Date(workingDate);
         return `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;

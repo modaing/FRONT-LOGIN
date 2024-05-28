@@ -53,13 +53,13 @@ const ClockInModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteLis
             <div className="modal-dialog">
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title" style={{ color: '#112D4E' }}>출근하기</h5>
+                  <h5 className="modal-title" style={{ color: '#000000' }}>출근하기</h5>
                   <button type="button" className="btn-close" onClick={onClose}></button>
                 </div>
                 <div className="modal-body">
-                  <div style={{ color: '#112D4E' }}><h6><span style={{ fontWeight: 'bold', marginRight: '80px' }} >대상 일자</span> {parsingDateOffset}</h6></div>
+                  <div style={{ color: '#000000' }}><h6><span style={{ fontWeight: 'bold', marginRight: '80px' }} >대상 일자</span> {parsingDateOffset}</h6></div>
                   <br />
-                  <h6 style={{ color: '#112D4E' }}>오늘 출근하시겠습니까?</h6>
+                  <h6 style={{ color: '#000000' }}>오늘 출근하시겠습니까?</h6>
                 </div>
                 <div className="modal-footer">
                   <button onClick={onClose} style={{
