@@ -186,3 +186,28 @@ export const getApprovalDetailAPI = (approvalNo) => {
         }
     };
 };
+
+export const updateApprovalStatusAPI = (approvalNo, status) => {
+    return async dispatch => {
+        try{
+            const response = await axios.put(`${API_BASE_URL}/approvals/${approvalNo}/status`, { status }, { headers });
+            dispatch(updateApprovalSuccess(response.data));
+        }catch(error){
+            dispatch(updateApprovalFailure(error));
+            console.error('결재 상태 업데이트 실패 : ', error);
+            throw error;
+        }
+    };
+};
+
+export const updateApproverStatusAPI = (approverNo, updateData) => {
+    return async (dispatch) =>{
+        try {
+            const response = await axios.put(`${API_BASE_URL}/approvers/${approverNo}`, updateData, { headers });
+            dispatch(updateApprovalSuccess(response.data));
+        }catch(error){
+            dispatch(updateApprovalFailure(error));
+            console.error('결재자 상태 업데이트 실패 : ', error);
+        }
+    };
+};
