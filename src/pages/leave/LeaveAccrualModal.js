@@ -11,6 +11,7 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
     const [days, setDays] = useState('');
     const [reason, setReason] = useState('');
     const [isCheckOpen, setIsCheckOpen] = useState(false);
+    const [reasonCount, setReasonCount] = useState(0);
 
     const dispatch = useDispatch();
 
@@ -50,6 +51,16 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
         }
     }, [isOpen]);
 
+    useEffect(() => {
+        setReasonCount(reason.length);
+    }, [reason]);
+
+    useEffect(() => {
+        if (reasonCount > 100) {
+            setReason(reason.slice(0, 100));
+        }
+    }, [reasonCount]);
+
     return (
         isOpen && (
             <div className="modal fade show" style={{ display: 'block' }}>
@@ -79,6 +90,7 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
 
                             <label>발생 사유</label>
                             <textarea type="text" value={reason} onChange={e => setReason(e.target.value)} className="form-control" rows="3" />
+                            <span className='accrualCount'>{reasonCount} / 100</span>
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
