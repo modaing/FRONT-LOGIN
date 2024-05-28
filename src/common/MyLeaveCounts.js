@@ -17,7 +17,6 @@ function MyLeaveCounts() {
             try {
                 const response = await dispatch(callMyLeaveCountsAPI(memberId));
                 const myData = response.data.find(item => item.memberId === memberId);
-
                 if (myData) {
                     setConsumedDays(myData.consumedDays);
                     setTotalDays(myData.totalDays);
