@@ -46,7 +46,7 @@ function DepartNameModal(props) {
     }
 
     return (
-        <div className="modalStyle">
+        <div className="modalStyle123">
             <div className="modalContentStyle">
                 <h2 className='changePasswordStyle'>부서명 변경</h2>
                 <form onSubmit={handleSubmit}> {/* Form format */}

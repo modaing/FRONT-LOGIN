@@ -189,7 +189,7 @@ function HierarchyTree() {
                             <div key={index} className="positionWrapper horizontal">
                                 {Object.entries(groupedByDepartment).map(([departName, members], index) => (
                                     <div key={index} className="department">
-                                        <div className="departBox" onClick={() => handleDepartmentClick(departName)}>
+                                        <div className="departBox">
                                             <h2>{departName}</h2>
                                         </div>
                                         {expandedDepartments[departName] && <div className="branch">{renderBranch(members)}</div>}
