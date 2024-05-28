@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { decodeJwt } from './../utils/tokenUtils';
-import { POST_ROOM, DELETE_ROOM, POST_MESSAGES, GET_MESSAGES } from '../modules/CahttingModules';
+import { POST_ROOM, DELETE_ROOM, POST_MESSAGES, GET_MESSAGES, PUT_ROOM_STATUS } from '../modules/CahttingModules';
 
 
 const API_BASE_URL = 'http://localhost:8080';
@@ -23,9 +23,9 @@ export const callMemberListAPI = () => {
 };
 
 
-export const callCahttingAPI = async (memberId) => {
+export const callCahttingAPI = async (memberId, receiverDeleteYn, senderDeleteYn) => {
   try {
-    let url = `${API_BASE_URL}/api/rooms/?memberId=${memberId}&receiverMemberId=${memberId}`;
+    let url = `${API_BASE_URL}/api/rooms/?memberId=${memberId}&receiverMemberId=${memberId}&receiverDeleteYn='N'&senderDeleteYn='N'`;
 
     const response = await axios.get(url, { headers });
     return response.data;
@@ -73,6 +73,20 @@ export const callDeleteRoomAPI = (enteredRoomId) => {
   }
 };
 
+
+export const callPutRoomStatusAPI = (enteredRoomId, memberId) => {
+  return async (dispatch) => {
+    try {
+      const putRoomStatusResponse = await axios.put(`${API_BASE_URL}/api/rooms/${enteredRoomId}?memberId=${memberId}&action=delete`, {}, { headers });
+      console.log(putRoomStatusResponse);
+      dispatch({ type: PUT_ROOM_STATUS, payload: putRoomStatusResponse });
+      return putRoomStatusResponse;
+    } catch (error) {
+      console.error("Error deleting room:", error);
+    }
+  }
+}
+
 export const callPostMessages = (messageDTO) => {
   return async (dispatch) => {
     try {
@@ -90,7 +104,7 @@ export const callGetMessages = (enteredRoomId) => {
   return async (dispatch) => {
     try {
       const getMessagesResponse = await axios.get(`${API_BASE_URL}/api/messages/${enteredRoomId}`, { headers });
-      dispatch( {type: GET_MESSAGES, payload: getMessagesResponse.data} );
+      dispatch({ type: GET_MESSAGES, payload: getMessagesResponse.data });
       console.log('getMessagesResponse', getMessagesResponse);
       return getMessagesResponse;
     } catch (error) {

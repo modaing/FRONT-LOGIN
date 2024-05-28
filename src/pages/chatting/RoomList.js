@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { callCahttingAPI, leaveRoom, callDeleteRoomAPI } from '../../apis/ChattingAPICalls';
+import { callCahttingAPI, leaveRoom, callDeleteRoomAPI, callPutRoomStatusAPI } from '../../apis/ChattingAPICalls';
 import { callMemberListAPI } from '../../apis/ChattingAPICalls';
 import { useDispatch, useSelector } from 'react-redux';
 import { decodeJwt } from '../../utils/tokenUtils';
@@ -25,7 +25,7 @@ function RoomList() {
   const memberInfo = decodeJwt(token);
   const memberId = memberInfo.memberId;
 
-  
+  console.log(token)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,7 +89,7 @@ function RoomList() {
 
   const handleConfirmDelete = async () => {
     try {
-      await dispatch(callDeleteRoomAPI(roomToDelete));
+      await dispatch(callPutRoomStatusAPI(roomToDelete, memberId));
       console.log(`Deleting room with ID: ${roomToDelete}`);
       if (activeRoomId === roomToDelete) {
         await handleLeaveRoom();
@@ -142,7 +142,7 @@ function RoomList() {
 
   const findUserPhoto = (receiverId, memberId, members, room) => {
     let imageUrl = null;
-  
+
     if (receiverId === memberId) {
       // receiverId와 memberId가 같다면, room.memberId의 사진을 반환
       const memberPhoto = members.find(member => member.memberId === room.memberId);
@@ -152,7 +152,7 @@ function RoomList() {
       const receiverPhoto = members.find(member => member.memberId === receiverId);
       imageUrl = receiverPhoto ? receiverPhoto.imageUrl : null;
     }
-  
+
     return imageUrl ? `/img/${imageUrl}` : null;
   };
 
@@ -181,9 +181,23 @@ function RoomList() {
                 <div className="inbox_chat">
                   <div className="chat_list active_chat">
                     <div className="chat_people">
-                      {
-                        Array.isArray(rooms) && rooms.length > 0 ? (
-                          rooms.map((room, index) => (
+                      {Array.isArray(rooms) && rooms.length > 0 ? (
+                        rooms.map((room, index) => {
+                          // senderDeleteYn 및 receiverDeleteYn 값 확인
+                          const senderDeleted = room.senderDeleteYn === 'Y';
+                          const receiverDeleted = room.receiverDeleteYn === 'Y';
+
+                          // senderDeleteYn이 Y이고 해당 사용자가 sender인 경우 해당 방을 렌더링하지 않음
+                          if (senderDeleted && room.memberId === memberId) {
+                            return null;
+                          }
+
+                          // receiverDeleteYn이 Y이고 해당 사용자가 receiver인 경우 해당 방을 렌더링하지 않음
+                          if (receiverDeleted && room.receiverId === memberId) {
+                            return null;
+                          }
+
+                          return (
                             <div
                               key={index}
                               className={`chat_room ${room.enteredRoomId === activeRoomId ? 'active' : ''}`}
@@ -207,37 +221,37 @@ function RoomList() {
                                 )}
                               </div>
                             </div>
-                          ))
-                        ) : (
-                          <p>메시지가 없습니다</p>
-                        )
-                      }
+                          );
+                        })
+                      ) : (
+                        <p>메시지가 없습니다</p>
+                      )}
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="mesgs">
-                <div className="msg_history">
-                  {activeRoomId ? (
-                    <Room roomId={activeRoomId} onLeaveRoom={handleLeaveRoom} />
-                  ) : (
-                    <div>
-                      <JoinRoom onRoomCreated={handleInsertRoom} />
-                    </div>
-                  )}
+                </div>
+                <div className="mesgs">
+                  <div className="msg_history">
+                    {activeRoomId ? (
+                      <Room roomId={activeRoomId} onLeaveRoom={handleLeaveRoom} />
+                    ) : (
+                      <div>
+                        <JoinRoom onRoomCreated={handleInsertRoom} />
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      {/* 모달창 */}
-      <DeleteRoomModal
-        show={isModalOpen}
-        handleClose={() => setIsModalOpen(false)}
-        handleConfirmDelete={handleConfirmDelete}
-        handleCancelDelete={handleCancelDelete}
-      />
+        {/* 모달창 */}
+        <DeleteRoomModal
+          show={isModalOpen}
+          handleClose={() => setIsModalOpen(false)}
+          handleConfirmDelete={handleConfirmDelete}
+          handleCancelDelete={handleCancelDelete}
+        />
     </main>
   );
 }

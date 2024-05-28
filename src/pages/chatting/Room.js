@@ -15,9 +15,7 @@ function Room({ roomId, onLeaveRoom }) {
     const [members, setMembers] = useState([]);
     const [message, setMessage] = useState('');
 
-    console.log(roomId)
 
-    // Ref to the scrollable container
     const messagesEndRef = useRef(null);
 
     const token = `Authorization:` + 'BEARER' + window.localStorage.getItem("accessToken");
@@ -25,6 +23,8 @@ function Room({ roomId, onLeaveRoom }) {
     const memberId = decodedTokenInfo.memberId;
     const name = decodedTokenInfo.name;
     const imageUrl = decodedTokenInfo.imageUrl;
+
+
 
     useEffect(() => {
         callMemberListAPI().then(response => {

@@ -1,0 +1,196 @@
+.bigContent {
+    margin: 10px;
+    width: 100%;
+    max-width: 1800px;
+    min-width: 1200px;
+    padding-right: 50px;
+    font-size: 15px;
+    /* margin-top : 50px; */
+    padding-left: 20px;
+    padding-top: 20px;
+    min-height: 1100px;
+    margin-bottom : 200px;
+}
+
+.approvalTitleContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* max-width: 1500px; */
+    width: 650px;
+    margin-top: 50px;
+}
+
+.approvalTitle {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid black;
+    width: 400px;
+    font-size: 1.2em;
+    padding: 4px 0;
+    outline: none;
+    text-align: center;
+    word-wrap: break-word; /* 긴 단어를 줄바꿈 처리 */
+    white-space: pre-wrap; /* 공백을 유지하며 줄바꿈 처리 */
+    overflow-wrap: break-word; /* 긴 단어를 줄바꿈 처리 */
+}
+
+.ContentContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.contentForm {
+    margin-top: 70px;
+    border: 1px solid black;
+    width: 900px;
+    min-height: 800px;
+    padding: 70px;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    gap: 100px;
+}
+
+/* .contentForm body{
+    contenteditable: false;
+} */
+/* .contentForm .wholeForm {
+    margin-top: 50px !important;
+    padding: 70px !important;
+} */
+
+.contentForm table {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid black;
+    table-layout: fixed
+}
+
+.contentForm tr {
+    height: 70px;
+}
+
+.contentForm #sup_table {
+    height: 400px;
+}
+
+.contentForm #sideTable {
+    margin-bottom: 50px;
+}
+
+.contentForm th,
+.contentForm td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    border: 1px solid black;
+    box-sizing: border-box;
+    white-space: normal;
+    -webkit-user-modify: read-only;
+}
+
+.contentForm td {
+    word-break: break-all;
+}
+
+.contentForm th {
+    background-color: #e7e6e6;
+    width: 150px;
+    text-align: center;
+}
+
+
+.contentForm .exp_date {
+    text-align: left;
+}
+
+.contentForm th:first-child,
+.contentForm td:first-child:not(.exp_date):not(.sup_itemname):not(.sup_price) {
+    text-align: center;
+}
+
+.contentForm td {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.contentForm #rei_content {
+    height: 200px;
+}
+
+.contentForm #abs_reason {
+    height: 200px;
+}
+
+.contentForm #orders {
+    height: 150px;
+}
+
+.contentForm #date {
+    margin-top: 80px;
+    margin-bottom: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    height: 50px;
+}
+
+.contentForm #useDetail {
+    width: calc(20% * 1.6);
+}
+
+.contentForm #usePrice {
+    width: calc(20% * 1.2);
+}
+
+.contentForm #sup_table #sup_header {
+    height: 35px;
+}
+
+.contentForm .purchasePrice {
+    height: 35px;
+}
+
+.contentForm #purchasePricetr {
+    height: 35px;
+}
+
+.contentForm .sup_itemname {
+    text-align: left;
+}
+
+.contentForm .sup_price {
+    text-align: right;
+}
+
+.contentForm .sup_itemAmount {
+    text-align: right;
+}
+
+.contentForm #ovt_warning {
+    color: red;
+    font-weight: 1000;
+}
+
+.contentForm #ovt_table td {
+    text-align: center;
+}
+
+.contentForm .nonContent {
+    height: 500px;
+}
+
+.contentForm .mce-content-body {
+    scrollbar-color: rgb(241, 255, 190) black;
+}
+
+.contentForm #date {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

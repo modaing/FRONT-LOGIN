@@ -32,6 +32,7 @@ import MemberPage from './pages/member/MemberPage';
 import HierarchyTree from './pages/member/HierarchyTree';
 import { useDispatch } from 'react-redux';
 import { decodeJwt } from './utils/tokenUtils';
+import ApprovalDetail from './pages/approval/ApprovalDetail';
 
 function App() {
   // const dispatch = useDispatch();
@@ -75,6 +76,7 @@ function App() {
             <Route path='approvals' element={<ApprovalPage />} />
             <Route path="/manageMember/:memberId" element={<MemberPage />} />
             <Route path='/hierarchyTree' element={<HierarchyTree />} />
+            <Route path='/approvals/:approvalNo' element={<ApprovalDetail />}/>
           </Route>
         ) : (
           <Route path="/" element={<Navigate to="/login" replace />} />

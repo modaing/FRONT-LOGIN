@@ -4,6 +4,8 @@ import '../../css/leave/LeaveCheckModal.css';
 const LeaveCheckModal = ({ isOpen, onClose, onConfirm, option }) => {
     return (
         isOpen && (
+            <>
+                <div className="modal-backdrop-check show"></div>
                 <div className="modal fade show leaveCheckModal" style={{ display: 'block' }}>
                     <div className="modal-dialog">
                         <div className="modal-content">
@@ -20,6 +22,7 @@ const LeaveCheckModal = ({ isOpen, onClose, onConfirm, option }) => {
                         </div>
                     </div>
                 </div>
+            </>
         )
     );
 }

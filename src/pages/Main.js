@@ -18,11 +18,16 @@ import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import MyLeaveCounts from '../common/MyLeaveCounts';
 import { decodeJwt } from '../utils/tokenUtils';
 import { callSelectNoticeListAPI } from '../apis/NoticeAPICalls';
+import { callDepartmentDetailListAPI } from '../apis/DepartmentAPICalls';
 
 function Main() {
+    const token = window.localStorage.getItem('accessToken');
+    const role = token ? decodeJwt(token).role : null;
     const { calendarList } = useSelector(state => state.calendarReducer)
     const [showApprovalCounts, setShowApprovalCounts] = useState(true);
     const [events, setEvents] = useState([]);
+    const [selectedDepartment, setSelectedDepartment] = useState("전체");
+    const [departments, setDepartments] = useState([]);
     const dispatch = useDispatch();
 
     const token = window.localStorage.getItem('accessToken');
@@ -33,8 +38,17 @@ function Main() {
         setShowApprovalCounts(!showApprovalCounts);
     };
 
-    // TODO: 나중에 부서 선택해서 추가하는 기능넣어야 함
-    useEffect(() => { dispatch(callSelectCalendarAPI("개발팀")) }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const result = await callDepartmentDetailListAPI();
+            Array.isArray(result)
+                && setDepartments(result);
+        };
+
+        fetchData();
+    }, [])
+
+    useEffect(() => { dispatch(callSelectCalendarAPI(selectedDepartment)) }, [selectedDepartment]);
 
     useEffect(() => updateEvents(calendarList, setEvents), [calendarList]);
 
@@ -73,6 +87,16 @@ function Main() {
                     <MyLeaveCounts />
                 </div>
             </div>
+            <div className="calendarDepartment">
+                <select value={selectedDepartment} onChange={(e) => setSelectedDepartment(e.target.value)} className="form-select">
+                    <option value='전체'>전체</option>
+                    {departments.map(dept => (
+                        <option key={dept.departNo} value={dept.departName}>
+                            {dept.departName}
+                        </option>
+                    ))}
+                </select>
+            </div>
             <div className="main-second">
                 <Fullcalendar
                     plugins={[dayGridPlugin, interactionPlugin]}
@@ -85,7 +109,7 @@ function Main() {
                     events={events}
                     eventDidMount={info => calendarPopover(info)}
                     locale={koLocale}
-                    height="300px"
+                    height="250px"
                 />
                 <div className='annouce' style={{ marginTop: '50px' }}>
                     <AnnounceList maxVisibleAnnouncements={5} hidePagination={true} hidePlus={true} /> {/* hidePagination을 true로 설정하여 페이징 숨김 */}

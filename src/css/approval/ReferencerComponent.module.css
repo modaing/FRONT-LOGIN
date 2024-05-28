@@ -1,0 +1,29 @@
+.ReferencerTable{
+    /* border: 1px solid black; */
+    width: 100%;
+    margin-top : 20px;
+    margin-bottom : 40px;
+    border : 1px solid black;
+    border-collapse: collapse;
+    table-layout: fixed;
+    height: 80px;
+}
+.ReferencerTable th{
+    background-color: white;
+    color: black
+}
+.ReferencerTable th, .ReferencerTable td{
+    font-weight: 400;
+    border: 1.5px solid black;
+    text-align: center;
+    padding: 5px;
+    height: 70px;
+}
+
+.ReferencerTable th{
+    width: calc(100% /7);
+}
+
+.ReferencerTable td{
+    width: calc(100% /7);
+}
