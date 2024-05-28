@@ -30,10 +30,14 @@ import Leaves from './pages/leave/Leaves';
 import SurveyList from './pages/survey/SurveyList';
 import MemberPage from './pages/member/MemberPage';
 import HierarchyTree from './pages/member/HierarchyTree';
+import { useDispatch } from 'react-redux';
+import { decodeJwt } from './utils/tokenUtils';
 import ApprovalDetail from './pages/approval/ApprovalDetail';
 
 function App() {
+  // const dispatch = useDispatch();
   const isLoggedIn = !!window.localStorage.getItem("accessToken");
+  // const memberId = token ? decodeJwt(token).memberId : null;
 
   return (
     <BrowserRouter>

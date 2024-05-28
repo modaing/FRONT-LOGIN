@@ -2,16 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import InsertCorrectionModal from "./InsertCorrectionModal";
 import { useDispatch } from "react-redux";
 import { callInsertCorrectionAPI, callSelectCommuteListAPI } from "../../apis/CommuteAPICalls";
-import { CommuteUtil } from "../../utils/CommuteUtil";
 
 function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDateOffset , handleCorrectionRegistered, onClose}) {
-
-    // console.log('[CommuteItem] commute : ', commute);
-    console.log('[CommuteItem] commute.commuteNo : ', commute.commuteNo);
-    // console.log('[CommuteItem] commute.workingDate : ', commute.workingDate);
-    // console.log('[CommuteItem] memberId : ', memberId);
-    console.log('[CommuteItem] parsingDateOffset : ', parsingDateOffset);
-    // console.log('[CommuteItem] corrRegistrationDate : ', commute.correction.corrRegistrationDate);
 
     const [showModal, setShowModal] = useState(false);
     const [showBtn, setShowBtn] = useState(true);
@@ -175,7 +167,6 @@ function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDat
         );
     };
 
-    // console.log('dd', commute.correction.corrRegistrationDate)
     return <>
         <tr style={evenRow ? tableStyles.evenRow : {}}>
             <td style={tableStyles.tableCell1}>{formatWorkingDate(commute.workingDate || '')}</td>
@@ -194,10 +185,6 @@ function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDat
             </td>
             )}
         </tr>
-        {/* <InsertCorrectionModal commute={commute} isOpen={showModal} onClose={handleCloseModal} onSave={handleSaveModal} date={commute.workingDate} startWork={formatWorkingTime(commute.startWork)} endWork={formatWorkingTime(commute.endWork)} /> */}
-        {/* <tbody>
-            {CommuteUtil(content)}
-        </tbody> */}
         {showModal && (
             <InsertCorrectionModal
                 commute={commute}

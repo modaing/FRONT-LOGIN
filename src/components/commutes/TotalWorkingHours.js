@@ -5,7 +5,7 @@ const TotalWorkingHours = ({ commuteList, year, month, dates, isSameDate, tableS
                 <table className="table table-hover" style={{ textAlign: 'center', justifyContent: 'center', width: '100%', position: 'relative', overflow: 'auto', wordWrap: 'break-word', webkitLineClamp: 1, textOverflow: 'ellipsis' }}>
                     <thead >
                         <tr>
-                            <th rowSpan={2} scope='col' style={{ textAlign: 'center', width: '40px', border: '1px solid #D5D5D5', verticalAlign: 'middle' }}>이름</th>
+                            <th rowSpan={2} scope='col' style={{ whiteSpace: 'nowrap', textAlign: 'center', width: '40px', border: '1px solid #D5D5D5', verticalAlign: 'middle' }}>이름</th>
                             {dates.map(date => (
                                 <th
                                     key={date}
@@ -25,19 +25,24 @@ const TotalWorkingHours = ({ commuteList, year, month, dates, isSameDate, tableS
                                     <td
                                         key={`${index}-${date}`}
                                         style={{
-                                            maxWidth: '100px',
                                             border: '1px solid #D5D5D5',
                                             textAlign: 'center',
-                                            padding: '11px',
+                                            padding: '7px',
                                             backgroundColor: member.commuteList && member.commuteList.filter(item => isSameDate(item.workingDate, [year, month, date])).length > 0 ? '#112D4E' : '#F6F5F5',
                                             color: member.commuteList && member.commuteList.filter(item => isSameDate(item.workingDate, [year, month, date])).length > 0 ? '#ffffff' : '#000000'
                                         }}
                                         className={emptyCellClass}
                                     >
-                                        {member.commuteList && member.commuteList.filter(item => isSameDate(item.workingDate, [year, month, date])).reduce((total, item) => total + item.totalWorkingHours, 0) > 0
-                                            ? `${Math.floor(member.commuteList.filter(item => isSameDate(item.workingDate, [year, month, date])).reduce((total, item) => total + item.totalWorkingHours, 0) / 60)}시간 ${member.commuteList.filter(item => isSameDate(item.workingDate, [year, month, date])).reduce((total, item) => total + item.totalWorkingHours, 0) % 60}분`
-                                            : ''
-                                        }
+                                        <td style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>{member.commuteList && member.commuteList.filter(item => isSameDate(item.workingDate, [year, month, date])).reduce((total, item) => total + item.totalWorkingHours, 0) > 0
+                                            ? (
+                                                <div>
+                                                    <span>{Math.floor(member.commuteList.filter(item => isSameDate(item.workingDate, [year, month, date])).reduce((total, item) => total + item.totalWorkingHours, 0) / 60)}시간</span><br/>
+                                                    <span>{member.commuteList.filter(item => isSameDate(item.workingDate, [year, month, date])).reduce((total, item) => total + item.totalWorkingHours, 0) % 60}분</span>
+                                                </div>
+                                            ) : (
+                                                ''
+                                            )}
+                                        </td>
                                     </td>
                                 ))}
                                 <td style={{ border: '1px solid #D5D5D5', width: '60px' }}>

@@ -205,7 +205,7 @@ function CommuteManage() {
                                                 style={{
                                                     maxWidth: '100px',
                                                     border: '1px solid #D5D5D5',
-                                                    padding: '0px',
+                                                    padding: '3px',
                                                     backgroundColor: member.commuteList && member.commuteList.filter(item => isSameDate(item.workingDate, [year, month, date])).length > 0 ? '#112D4E' : '#F6F5F5',
                                                     color: member.commuteList && member.commuteList.filter(item => isSameDate(item.workingDate, [year, month, date])).length > 0 ? '#ffffff' : '#000000'
                                                 }}

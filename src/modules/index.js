@@ -10,6 +10,7 @@ import {chattingReducer, roomReducer} from "./CahttingModules";
 import approvalReducer from "./ApprovalReducer";
 import surveyReducer from "./SurveyModule";
 import insiteReducer from "./InsiteModule";
+import noticeReducer from "./NoticeModule";
 
 
 const rootReducer = combineReducers({
@@ -24,7 +25,8 @@ const rootReducer = combineReducers({
     roomReducer,
     approval: approvalReducer,
     surveyReducer,
-    insiteReducer
+    insiteReducer,
+    noticeReducer
 });
 
 export default rootReducer;

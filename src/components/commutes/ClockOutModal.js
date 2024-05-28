@@ -5,7 +5,6 @@ import dayjs from "dayjs";
 
 const ClockOutModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteList, onClockOutCompleted }) => {
     
-    // console.log('parsingDateOffset : ', parsingDateOffset);
     const dispatch = useDispatch();
 
     /* 현재 시간 포맷 */
