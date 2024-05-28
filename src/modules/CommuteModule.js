@@ -1,4 +1,5 @@
 import { createActions, handleActions } from "redux-actions";
+// import { createSlice } from '@reduxjs/toolkit';
 
 /* 초기값 */
 const initialState = {
@@ -25,8 +26,12 @@ export const POST_NEWCORRECTION = 'commute/POST_NEWCORRECTION';
 
 export const SET_PAGENUMBER = 'commute/SET_PAGENUMBER';
 
+export const SET_WORKING_HOURS_STATUS = 'commute/SET_WORKING_HOURS_STATUS';
+
 /* 액션 함수 */
-export const { commute: { getCommute, getCommutelist, postCommute, putCommute, getCorrection, getCorrectionlist, postCorrection, putCorrection, setPagenumber, postNewCorrection } } = createActions({
+export const { commute: { getCommute, getCommutelist, postCommute, putCommute,
+     getCorrection, getCorrectionlist, postCorrection, putCorrection,
+      setPagenumber, postNewCorrection, setWorkingHoursStatus } } = createActions({
     [GET_COMMUTE]: (res) => ({ commute: res }),
     [GET_COMMUTELIST]: (res) => ({ commutelist: res }),
     [POST_COMMUTE]: (res) => ({ postcommute: res }),
@@ -36,7 +41,8 @@ export const { commute: { getCommute, getCommutelist, postCommute, putCommute, g
     [POST_CORRECTION]: (res) => ({ postcorrection: res }),
     [PUT_CORRECTION]: (res) => ({ putcorrection: res }),
     [SET_PAGENUMBER]: (page) => ({ page: page }),
-    [POST_CORRECTION]: (res) => ({ postnewcorrection: res })
+    [POST_CORRECTION]: (res) => ({ postnewcorrection: res }),
+    [SET_WORKING_HOURS_STATUS]: (status) => status,
 });
 
 /* 리듀서 */
@@ -74,9 +80,17 @@ const commuteReducer = handleActions(
         },
         [POST_NEWCORRECTION]: (state, { payload }) => {
             return ({ ...state, postnewcorrection: payload });
-        }
+        },
+        [SET_WORKING_HOURS_STATUS]: (state, { payload }) => {
+            return {
+                ...state,
+                isWorkingHoursLimited: payload.isWorkingHoursLimited,
+                totalWorkingHours: payload.totalWorkingHours,
+            };
+        },
     },
     initialState
 );
+
 
 export default commuteReducer;

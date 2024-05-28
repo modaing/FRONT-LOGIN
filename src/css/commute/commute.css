@@ -53,3 +53,18 @@
     color: #fff;
 }
 
+.red {
+    color: '#AF3131';
+    font-weight: 900;
+};
+
+.blue {
+    color: '#3F72AF';
+    font-weight: 900;
+};
+
+.black {
+    color: '#00000';
+    font-weight: 900;
+};
+

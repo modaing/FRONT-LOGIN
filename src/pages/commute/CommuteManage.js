@@ -142,14 +142,15 @@ function CommuteManage() {
 
         return workingYear === selectedYear && workingMonth === selectedMonth && workingDay === selectedDay;
     };
-    
+
     const convertTime = (timeArray) => {
         if (timeArray.length !== 2) {
             return ''; // 배열 길이가 2가 아닌 경우 빈 문자열 반환
         }
 
-        const hour = timeArray[0];
-        const minute = timeArray[1];
+        let [hour, minute] = timeArray;
+        hour = hour.toString().padStart(2, '0');
+        minute = minute.toString().padStart(2, '0');
 
         return `${hour}:${minute}`;
     };
@@ -169,7 +170,9 @@ function CommuteManage() {
                             <li className="breadcrumb-item">출퇴근</li>
                             <li className="breadcrumb-item active">출퇴근 관리</li>
                             <div className="form-check form-switch" style={{ display: 'flex' }} >
-                                <h6 className="form-check-label" for="flexSwitchCheckDefault" style={{ display: 'flex', color: '#112D4E', marginLeft: '10px', marginRight: '50px' }}>근무 시간 조회</h6>
+                                <h6 className="form-check-label" for="flexSwitchCheckDefault" style={{ display: 'flex', color: '#112D4E', marginLeft: '10px', marginRight: '50px' }}>
+                                    {showWorkingHours ? '총 근무 시간 조회' : '출퇴근 시간 조회'}
+                                </h6>
                                 <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked={showWorkingHours} onChange={handleShowWorkingHours} />
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
@@ -193,7 +196,7 @@ function CommuteManage() {
                                             {date}/{getDayOfWeek(year, month, date)}
                                         </th>
                                     ))}
-                                    <th colSpan={3} rowSpan={3} style={{ border: '1px solid #D5D5D5', whiteSpace: 'nowrap' }}>개별근무일수</th>
+                                    <th colSpan={2} scope='col' style={{ border: '1px solid #D5D5D5', whiteSpace: 'nowrap' }}>개별근무일수</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -214,9 +217,14 @@ function CommuteManage() {
                                             >
                                                 {member.commuteList && member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])) ? (
                                                     <>
-                                                        <span style={{ textAlign: 'center', padding: '11px' }}>{convertTime(member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).startWork)}</span><br />
+                                                        <span style={{ textAlign: 'center', padding: '11px' }}>
+                                                            {convertTime(member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).startWork)}
+                                                        </span>
+                                                        <br />
                                                         {member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).endWork && (
-                                                            <span style={{ textAlign: 'center', padding: '11px' }}>{convertTime(member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).endWork)}</span>
+                                                            <span style={{ textAlign: 'center', padding: '11px' }}>
+                                                                {convertTime(member.commuteList.find(item => isSameDate(item.workingDate, [year, month, date])).endWork)}
+                                                            </span>
                                                         )}
                                                     </>
                                                 ) : (

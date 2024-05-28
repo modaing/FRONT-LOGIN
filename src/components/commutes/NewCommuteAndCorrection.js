@@ -9,6 +9,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
 const NewCommuteAndCorrection = ({ commuteList, isOpen, onClose, parsingDateOffset, memberId }) => {
 
+    console.log('commuteList', commuteList);
     console.log('parsingDateOffset', parsingDateOffset);
 
     const dispatch = useDispatch();
@@ -95,6 +96,11 @@ const NewCommuteAndCorrection = ({ commuteList, isOpen, onClose, parsingDateOffs
         }
     }, [isOpen]);
 
+    const shouldDisableDate = (date) => {
+        const formattedDate = dayjs(date).format('YYYY-MM-DD');
+        return commuteList.some((commute) => commute.workingDate === formattedDate);
+    };
+
     /* 날짜 데이터 파싱 */
     const parseDate = (dateData) => {
         if (Array.isArray(dateData)) {
@@ -114,29 +120,31 @@ const NewCommuteAndCorrection = ({ commuteList, isOpen, onClose, parsingDateOffs
     };
 
     return (
-        <div className="modal fade show" style={{ display: 'block', zIndex: 1 }}>
+        <div className="modal fade show" style={{ display: 'block', zIndex: 999, color: '#000000' }}>
             <div className="modal-dialog" style={{ padding: '0px' }}>
                 <div className="modal-content" style={{ padding: '25px', width: '550px' }}>
                     <div className="modal-header" style={{ paddingBottom: '20px', paddingTop: '0px' }}>
                         <h5 className="modal-title">출퇴근 정정 등록</h5>
                         <button type="button" onClick={resetModal} style={{ background: '#ffffff', color: '#000000', paddingLeft: '20px', cursor: 'pointer' }}><i className="bi bi-arrow-counterclockwise"></i></button>
-                        <button type="button" className="btn-close" onClick={onClose} style={{ backgroundColor: '#ffffff', cursor: 'pointer' }}></button>
+                        <button type="button" className="btn-close" onClick={onClose} style={{ backgroundColor: '#ffffff', cursor: 'pointer' }}></button><br/>
                         {/* 시간 새로고침은 되는데 화면에 반영안됨!! */}
+                        
                     </div>
                     <div className="modal-body" style={{ paddingTop: '30px', paddingBottom: '20px' }}>
+                    <p style={{color: 'blue'}}>* 출퇴근 미입력 후 지나간 날짜만 등록 가능합니다.</p>
                         {showDateErrorMessage && (
-                            <h6 style={{ color: 'red', marginTop: '10px', fontSize: '15px', marginBottom: '14px', textAlign: 'left'}}>
+                            <h6 style={{ color: 'red', marginTop: '10px', fontSize: '15px', marginBottom: '14px', textAlign: 'left' }}>
                                 정정 요청 날짜를 입력해주세요!
                             </h6>
                         )}
                         <div style={{ display: 'flex' }}>
-                            <h6 style={{ fontWeight: 'bold', marginRight: '20px', marginBottom: '0px', width: '180px', textOverflow: 'ellipsis' }}>정정 대상 일자
+                            <h6 style={{ fontWeight: 'bold', marginRight: '20px', marginBottom: '0px', width: '180px', textOverflow: 'ellipsis' }}>정정 요청 대상 일자
                             </h6>
                             <div className="form-group" style={{ marginBottom: '0px' }}>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     {/* <DemoContainer components={['DatePicker']}> */}
                                     <DatePicker
-                                        label="정정 요청 대상 일시"
+                                        label="정정 요청 대상 일자"
                                         // selected={new Date(workingDate)}
                                         onChange={(e) => {
                                             setWorkingDate(e);
@@ -144,6 +152,8 @@ const NewCommuteAndCorrection = ({ commuteList, isOpen, onClose, parsingDateOffs
                                         }}
                                         format="YYYY-MM-DD"
                                         DatePicker={workingDate}
+                                        maxDate={dayjs().startOf('day')}
+                                        shouldDisableDate={shouldDisableDate}
                                     />
                                     {/* </DemoContainer> */}
                                 </LocalizationProvider>
