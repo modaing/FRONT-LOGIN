@@ -200,7 +200,20 @@ export default function TinyEditor(props) {
                 }
                 .mce-content-body{
                     scrollbar-color : rgb(241, 255, 190) black;
+                },
+                .tox-editor-container{
+                    z-index: 0;
                 }
+                .tox:not(.tox-tinymce-inline) .tox-editor-header:not(.tox-editor-dock-transition){
+                    z-index: 0;
+                }
+                .tox .tox-editor-header{
+                    z-index: 0;
+                }
+                .tox-tinymce-aux{
+                    z-index:0 !important;
+                }
+                
                 `
                 ].join('\n'),
                 plugins: [
