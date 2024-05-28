@@ -170,7 +170,7 @@ function Room({ roomId, onLeaveRoom , senderDeleteYn, receiverDeleteYn}) {
             console.log(imageUrl);
             return imageUrl;
         } else {
-            return null; // 자동 메시지인 경우 이미지를 반환하지 않음
+            return '/img/gpt.jpg'; 
         }
     };
 
