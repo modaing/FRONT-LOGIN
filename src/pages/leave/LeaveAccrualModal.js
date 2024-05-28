@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { callSelectMemberList } from '../../apis/LeaveAPICalls';
-import '../../css/leave/LeaveAccrualModal.css';
 import LeaveCheckModal from './LeaveCheckModal';
+import '../../css/leave/LeaveAccrualModal.css';
 
 const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
     const { memberList } = useSelector(state => state.leaveReducer);
@@ -11,8 +11,28 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
     const [days, setDays] = useState('');
     const [reason, setReason] = useState('');
     const [isCheckOpen, setIsCheckOpen] = useState(false);
+    const [reasonCount, setReasonCount] = useState(0);
 
     const dispatch = useDispatch();
+
+    const handleValidation = () => {
+        if (!name || !id) {
+            alert('발생 대생자의 이름 또는 사번이 유효하지 않습니다.')
+            return;
+        }
+
+        if (!days || days < 0) {
+            alert('발생 일수가 유효하지 않습니다.');
+            return;
+        }
+
+        if (!reason) {
+            alert('발생 사유가 입력되지 않았습니다.')
+            return;
+        }
+
+        setIsCheckOpen(true)
+    }
 
     const handleSave = () => {
         onSave({ id, days, reason });
@@ -38,7 +58,7 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
 
     useEffect(() => {
         if (name) {
-            
+
             dispatch(callSelectMemberList(name));
         }
     }, [name]);
@@ -50,43 +70,56 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
         }
     }, [isOpen]);
 
+    useEffect(() => {
+        setReasonCount(reason.length);
+    }, [reason]);
+
+    useEffect(() => {
+        if (reasonCount > 100) {
+            setReason(reason.slice(0, 100));
+        }
+    }, [reasonCount]);
+
     return (
         isOpen && (
             <div className="modal fade show" style={{ display: 'block' }}>
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">휴가 발생</h5>
-                        </div>
-                        <div className="modal-body">
-
-                            <div className="leaveAccrual"><label>사원명</label><input type="text" value={name} onChange={e => setName(e.target.value)} className="form-control" /></div>
-
-                            <div className="leaveAccrual">
-                                <label>사번</label>
-                                <select value={id} onChange={handleSelectChange} className="form-select">
-
-                                    <option value="">사번 선택</option>
-                                    {memberList && memberList.map((member) => (
-                                        <option key={member.memberId} value={member.memberId}>
-                                            {`${member.memberId} ${member.department} ${member.name}`}
-                                        </option>
-                                    ))}
-                                </select>
+                <>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">휴가 발생</h5>
                             </div>
+                            <div className="modal-body">
 
-                            <div className="leaveAccrual"><label>발생 일수</label><input type="number" value={days} onChange={e => setDays(e.target.value)} className="form-control" /></div>
+                                <div className="leaveAccrual"><label>사원명</label><input type="text" value={name} onChange={e => setName(e.target.value)} className="form-control" /></div>
 
-                            <label>발생 사유</label>
-                            <textarea type="text" value={reason} onChange={e => setReason(e.target.value)} className="form-control" rows="3" />
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
-                            <button type="button" className="btn btn-primary" onClick={() => setIsCheckOpen(true)}>등록</button>
+                                <div className="leaveAccrual">
+                                    <label>사번</label>
+                                    <select value={id} onChange={handleSelectChange} className="form-select">
+
+                                        <option value="">사번 선택</option>
+                                        {memberList && memberList.map((member) => (
+                                            <option key={member.memberId} value={member.memberId}>
+                                                {`${member.memberId} ${member.department} ${member.name}`}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="leaveAccrual"><label>발생 일수</label><input type="number" value={days} onChange={e => setDays(e.target.value)} className="form-control" /></div>
+
+                                <label>발생 사유</label>
+                                <textarea type="text" value={reason} onChange={e => setReason(e.target.value)} className="form-control" rows="3" />
+                                <span className='accrualCount'>{reasonCount} / 100</span>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
+                                <button type="button" className="btn btn-primary" onClick={handleValidation}>등록</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-        <LeaveCheckModal isOpen={isCheckOpen} onClose={setIsCheckOpen} onConfirm={handleSave} option='등록' />
+                    <LeaveCheckModal isOpen={isCheckOpen} onClose={setIsCheckOpen} onConfirm={handleSave} option='등록' />
+                </>
             </div>
         )
     );

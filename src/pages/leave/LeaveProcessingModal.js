@@ -10,6 +10,15 @@ const LeaveProcessingModal = ({ isOpen, onClose, onUpdate, leaveSubNo, selectedT
     const [reason, setReason] = useState('');
     const [isCheckOpen, setIsCheckOpen] = useState(false);
 
+    const handleValidation = () => {
+        if (decision === '반려' && !reason) {
+            alert('반려사유가 입력되지 않았습니다.');
+            return;
+        }
+
+        setIsCheckOpen(true)
+    }
+
     const handleUpdate = () => {
         onUpdate({ leaveSubNo, decision, reason });
         setIsCheckOpen(false)
@@ -17,7 +26,7 @@ const LeaveProcessingModal = ({ isOpen, onClose, onUpdate, leaveSubNo, selectedT
     };
 
     const resetModal = () => {
-        setDecision('');
+        setDecision('승인');
         setReason('');
     };
 
@@ -74,11 +83,11 @@ const LeaveProcessingModal = ({ isOpen, onClose, onUpdate, leaveSubNo, selectedT
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
-                            <button type="button" className="btn btn-primary" onClick={() => setIsCheckOpen(true)}>처리</button>
+                            <button type="button" className="btn btn-primary" onClick={handleValidation}>처리</button>
                         </div>
                     </div>
                 </div>
-        <LeaveCheckModal isOpen={isCheckOpen} onClose={setIsCheckOpen} onConfirm={handleUpdate} option='처리' />
+                <LeaveCheckModal isOpen={isCheckOpen} onClose={setIsCheckOpen} onConfirm={handleUpdate} option='처리' />
             </div>
         )
     );
