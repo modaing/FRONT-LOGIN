@@ -230,6 +230,16 @@
     color: black;
     border: 1px solid #BBBBBB;
 }
+.attachmentsList {
+    display: flex;
+    width: 100%;
+    margin-top: 50px;
+    margin-left: 20px;
+}
+.attachmentListLabel{
+    font-weight: bold;
+    font-size: 18px;;
+}
 .rejectRadios button{
     background-color: #112D4E;
     color: white;
@@ -257,6 +267,25 @@
     border-radius: 5px;
     padding: 10px;
     outline: none;
+}
+.rejectReasonDisplay {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-left: 160px;
+    margin-top: 50px;
+    gap: 10px;
+    margin-bottom: 50px;
+}
+.rejectReasonLabel{
+    font-weight: bold;
+    font-size: 18px;
+}
+.rejectReason{
+    border: 1px solid black;
+    max-width: 500px;
+    min-height: 150px;
+    padding: 10px;
 }
 .buttonContainer{
     display: flex;

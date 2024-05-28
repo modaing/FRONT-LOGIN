@@ -47,7 +47,7 @@ const ApprovalDetail = () => {
         return <div>No detail available</div>
     }
 
-    const { memberId: approvalMemberId, approver, referencer, approvalTitle, approvalContent } = approvalDetail;
+    const { memberId: approvalMemberId, approver, referencer, approvalTitle, approvalContent, approvalStatus } = approvalDetail;
 
     const handleWithdrawClick = () => {
         setIsWithdrawModalOpen(true);
@@ -69,7 +69,7 @@ const ApprovalDetail = () => {
         const approverToUpdate = approver.find(a => a.memberId === memberId && a.approverStatus === '대기');
         if (approverToUpdate) {
             const updateData = {
-                approverNo : approverToUpdate.approverNo,
+                approverNo: approverToUpdate.approverNo,
                 approverStatus: actionType === 'approve' ? '승인' : '반려',
                 rejectReason: actionType === 'reject' ? rejectReason : ''
             };
@@ -127,6 +127,10 @@ const ApprovalDetail = () => {
     const listUrl = (approvalMemberId === memberId) ? '/approvals?fg=given&page=0&title=&direction=DESC' : '/approvals?fg=received&page=0&title=&direction=DESC';
     console.log("😫😫😫😫😫😫내가 기안자니?" + approvalDetail.memberId === memberId);
 
+    //반려 사유 확인
+    const rejectReasonFromApprover = approver.find(a => a.approverStatus === '반려')?.rejectReason;
+
+
     return (
         <main id="main" className="main">
             <div className={styles.pageTop}>
@@ -153,25 +157,30 @@ const ApprovalDetail = () => {
                     <div dangerouslySetInnerHTML={{ __html: approvalDetail.approvalContent }}
                         className={styles.contentForm} />
 
-                    <div>
-                        첨부파일
+                    <div className={styles.attachmentsList}>
+                        <div className={styles.attachmentListLabel}>
+                            첨부파일
+                        </div>
+                        <div>
+                            
+                        </div>
                     </div>
                 </div>
                 {canApproveOrReject && (
                     <div class={styles.actionBox}>
                         <div className={styles.actionButtons}>
                             <label className={styles.approveRadios}>
-                                <input type="radio" name="action" value="approve" checked={actionType === 'approve'} onChange={handleApproveClick}/>
+                                <input type="radio" name="action" value="approve" checked={actionType === 'approve'} onChange={handleApproveClick} />
                                 <button onClick={handleApproveClick}>승인</button>
                             </label>
-                            
+
                             <label className={styles.rejectRadios}>
-                                <input type="radio" name="action" value="reject" checked={actionType === 'reject'} onChange={handleRejectClick}/>
+                                <input type="radio" name="action" value="reject" checked={actionType === 'reject'} onChange={handleRejectClick} />
                                 <button onClick={handleRejectClick}>반려</button>
                             </label>
-                            
+
                         </div>
-                        
+
                         {actionType === 'reject' && (
                             <div className={styles.rejectReasonContainer}>
                                 <div className={styles.rejectReasonLabel}>반려사유</div>
@@ -182,6 +191,13 @@ const ApprovalDetail = () => {
                                 />
                             </div>
                         )}
+
+                    </div>
+                )}
+                {rejectReasonFromApprover && (
+                    <div className={styles.rejectReasonDisplay}>
+                        <div className={styles.rejectReasonLabel}>반려 사유</div>
+                        <div className={styles.rejectReason}>{rejectReasonFromApprover}</div>
                     </div>
                 )}
 
