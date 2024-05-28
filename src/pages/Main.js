@@ -30,10 +30,6 @@ function Main() {
     const [departments, setDepartments] = useState([]);
     const dispatch = useDispatch();
 
-    const token = window.localStorage.getItem('accessToken');
-    const role = token ? decodeJwt(token).role : null;
-    const memberId = decodeJwt(token).memberId;
-
     const toggleComponent = () => {
         setShowApprovalCounts(!showApprovalCounts);
     };
@@ -51,10 +47,6 @@ function Main() {
     useEffect(() => { dispatch(callSelectCalendarAPI(selectedDepartment)) }, [selectedDepartment]);
 
     useEffect(() => updateEvents(calendarList, setEvents), [calendarList]);
-
-    useEffect(() => {
-        dispatch(callSelectNoticeListAPI(memberId));
-    }, [])
 
     return (
         <main id="main" className="main">
