@@ -213,6 +213,15 @@ export default function TinyEditor(props) {
                 .tox-tinymce-aux{
                     z-index:0 !important;
                 }
+                textarea{
+                    width: 100%;
+                    resize: none;
+                    height: 100%;
+                    border: none;
+                    font-size: 15px;
+                    padding-left: 10px;
+                    outline: none;
+                }
                 
                 `
                 ].join('\n'),
@@ -225,7 +234,7 @@ export default function TinyEditor(props) {
                 toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
                 height: 1000,
                 menubar: false,
-                forced_root_block: 'div',     //기본 블록 요소 설정
+                // forced_root_block: 'div',     //기본 블록 요소 설정
                 branding: false,
                 elementpath: false,
                 statusbar: false,
