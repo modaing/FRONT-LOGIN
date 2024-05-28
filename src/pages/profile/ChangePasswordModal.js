@@ -15,6 +15,11 @@ function ChangePasswordModal(props) {
         const { name, value } = e.target;
         name === 'newPassword1' ? dispatch(setPassword1Action(value)) : dispatch(setPassword2Action(value));
     };
+
+    const handleClose = () => {
+        window.history.replaceState(null, '', `/myProfile`);
+        props.onClose();
+    }
     
     const handleConfirmationButtonClick = async (e) => {
         e.preventDefault();
@@ -69,7 +74,7 @@ function ChangePasswordModal(props) {
                     <input type="password" name="newPassword2" placeholder="새 비밀번호 (확인)" className="inputStyleWidth" onChange={handlePasswordChange}/>
                     <br/>
                     <div className={LoginCSS.buttonContainerStyle}>
-                        <button type="button" className={LoginCSS.closeButtonStyle} onClick={props.onClose}>취소</button>
+                        <button type="button" className={LoginCSS.closeButtonStyle} onClick={handleClose}>취소</button>
                         <button type="submit" className={LoginCSS.confirmationButtonStyle}>변경</button>
                     </div>
                 </form>
