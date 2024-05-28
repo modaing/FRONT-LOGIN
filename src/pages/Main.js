@@ -18,6 +18,7 @@ import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import MyLeaveCounts from '../common/MyLeaveCounts';
 import { decodeJwt } from '../utils/tokenUtils';
 import { callSelectNoticeListAPI } from '../apis/NoticeAPICalls';
+import { callSelectLeaveSubmitAPI } from '../apis/LeaveAPICalls';
 import { callDepartmentDetailListAPI } from '../apis/DepartmentAPICalls';
 
 function Main() {
@@ -29,6 +30,7 @@ function Main() {
     const [selectedDepartment, setSelectedDepartment] = useState("전체");
     const [departments, setDepartments] = useState([]);
     const dispatch = useDispatch();
+
 
     const toggleComponent = () => {
         setShowApprovalCounts(!showApprovalCounts);
@@ -44,7 +46,9 @@ function Main() {
         fetchData();
     }, [])
 
-    useEffect(() => { dispatch(callSelectCalendarAPI(selectedDepartment)) }, [selectedDepartment]);
+    useEffect(() => { 
+        dispatch(callSelectCalendarAPI(selectedDepartment)) 
+    }, [selectedDepartment]);
 
     useEffect(() => updateEvents(calendarList, setEvents), [calendarList]);
 
@@ -55,7 +59,7 @@ function Main() {
                     <ClockContainer />
                 </div>
                 <div className="main-card">
-                    {/* { <Weather />   } */}
+                    {/* <Weather /> */}
                     {/* API 횟수 제한이 있어서, 주석 해놓겠습니다 */}
                 </div>
                 <div className="main-card">

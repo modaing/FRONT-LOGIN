@@ -15,6 +15,8 @@ function Header() {
     const image = memberInfo.imageUrl;
     const imageUrl = `/img/${image}`;
 
+    console.log(imageUrl)
+
     const memberId = decodeJwt(token).memberId;
     const result = useSelector(state => state.noticeReducer);
     console.log('result', result);
@@ -79,7 +81,7 @@ function Header() {
                         {/* 알림 메뉴를 토글하는 링크 */}
                         <Link to="#" className="nav-link nav-icon" data-bs-toggle="dropdown">
                             <i className="bi bi-bell"></i>
-                            <span className="badge bg-primary badge-number">4</span>
+                            <span className="badge bg-primary badge-number">3</span>
                         </Link>
                         {/* 알림 메뉴 */}
                         <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" style={{ width: '300px' }}>
