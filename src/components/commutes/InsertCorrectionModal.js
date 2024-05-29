@@ -90,7 +90,7 @@ const InsertCorrectionModal = ({ commute, isOpen, onClose, onSave, date, startWo
 
     return (
         isOpen && (
-            <div className="modal fade show" style={{ display: 'block', zIndex: 1 }}>
+            <div className="modal fade show" style={{ display: 'block', zIndex: 999 }}>
                 <div className="modal-dialog" style={{ padding: '0px' }}>
                     <div className="modal-content" style={{ padding: '25px', width: '550px' }}>
                         <div className="modal-header" style={{ paddingBottom: '20px', paddingTop: '0px' }}>

@@ -133,7 +133,7 @@ function HistoryInfo() {
         backgroundColor: '#3F72AF',
         cursor: 'pointer',
         color: '#FFFFFF',
-        borderRadius: '4px',
+        borderRadius: '5px',
         border: '1px solid #3F72AF',
         '&:hover': {
             cursor: '#112D4E',
