@@ -2,7 +2,6 @@ import React from 'react';
 import '../../css/commute/commute.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { callInsertCommuteAPI, callSelectCommuteListAPI, callUpdateCommuteAPI } from '../../apis/CommuteAPICalls';
-import Modal from 'react-modal';
 import styled from 'styled-components';
 
 const ModalContent = styled.div`
@@ -62,19 +61,8 @@ const ClockInModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteLis
             </div>
             <div className="modal-footer">
               <button onClick={onClose}
-                className="cancel"
+                className="mini-btn cancel"
                 type="button"
-                // style={{
-                //   width: '50px',
-                //   height: '40px',
-                  // backgroundColor: '#ffffff',
-                  // color: '#000000',
-                  // border: '2px solid #D9D9D9',
-                  // borderRadius: '5px',
-                  // padding: '2px',
-                //   cursor: 'pointer',
-                //   textDecoration: 'none'
-                // }}
                 >
                 취소
               </button>

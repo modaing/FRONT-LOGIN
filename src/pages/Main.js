@@ -69,9 +69,9 @@ function Main() {
                             style={{ background: 'none', border: 'none' }}
                         >
                             {showApprovalCounts ? (
-                                <FaAngleRight style={{ color: '#3F72AF', marginTop: '-40px', marginRight: '-30px' }} />
+                                <FaAngleRight style={{ color: '#3F72AF' }} />
                             ) : (
-                                <FaAngleLeft style={{ color: '#ec76a2', marginTop: '-40px', marginRight: '-30px' }} />
+                                <FaAngleLeft style={{ color: '#ec76a2' }} />
                             )}
                         </button>
                     {showApprovalCounts ? <ApprovalCounts /> : <ApproverCounts />}
