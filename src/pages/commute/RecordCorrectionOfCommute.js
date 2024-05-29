@@ -32,7 +32,7 @@ function RecordCorrectionOfCommute() {
     let parsingDateOffset = dateOffset.toISOString().slice(0, 10);
     const [month, setMonth] = useState(parsingDateOffset);
 
-    console.log('utc 변환 ', parsingDateOffset);
+    // console.log('utc 변환 ', parsingDateOffset);
 
     const currentDate = new Date(parsingDateOffset);
     const currentMonth = currentDate.getMonth() + 1;
@@ -81,12 +81,16 @@ function RecordCorrectionOfCommute() {
 
     /* 출퇴근 정정 내역 액션 */
     const result = useSelector(state => state.commuteReducer);
-    // console.log('[RecordCorrectionOfCommute] result : ', result);
     const correctionlist = result?.correctionlist?.correctionlist || [];
-    // console.log('[RecordCorrectionOfCommute] correctionlist : ', correctionlist);
     const correctionList = correctionlist?.response?.data?.results?.result || [];
-    // console.log('[RecordCorrectionOfCommute] correctionList : ', correctionList.result);
     const { currentPage, totalItems, totalPages } = correctionList || {};
+
+    const [corrStatus, setCorrStatus] = useState('all');
+
+    const filteredCorrectionList = correctionList.filter(item => {
+        if (corrStatus === 'all') return true;
+        return item.corrStatus === corrStatus;
+    });
 
     const page = 0;
     const size = 10;
@@ -102,42 +106,23 @@ function RecordCorrectionOfCommute() {
 
     /* 출퇴근 정정 내역 API 호출 */
     useEffect(() => {
-        // console.log('[useEffect] memberId : ', memberId);
-        // console.log('[useEffect] page : ', currentPage);
-        // console.log('[useEffect] month : ', month);
         dispatch(callSelectCorrectionListAPI(memberId, page, size, sort, direction, month));
-    }, [memberId, month, page, dispatch]);
+    }, [memberId, month, dispatch]);
 
     /* 페이징 핸들러 */
-    // const handlePageChange = (page) => {
-    //     dispatch({ type: SET_PAGENUMBER, payload: { page: page } });
-    // };
-
-    // const handlePrevPage = () => {
-    //     if (currentPage > 0) {
-    //         dispatch({ type: SET_PAGENUMBER, payload: { page: currentPage - 1 } });
-    //     }
-    // };
-
-    // const handleNextPage = () => {
-    //     if (currentPage < totalPages - 1) {
-    //         dispatch({ type: SET_PAGENUMBER, payload: { page: currentPage + 1 } });
-    //     }
-    // };
-
     const handlePageChange = (page) => {
-        dispatch(callSelectCorrectionListAPI(memberId, page, size, sort, direction, month));
+        dispatch(callSelectCorrectionListAPI(memberId, page, size, sort, direction, parsingDateOffset));
     };
-    
+
     const handlePrevPage = () => {
         if (currentPage > 0) {
-            dispatch(callSelectCorrectionListAPI(memberId, currentPage - 1, size, sort, direction, month));
+            dispatch(callSelectCorrectionListAPI(memberId, currentPage - 1, size, sort, direction, parsingDateOffset));
         }
     };
-    
+
     const handleNextPage = () => {
         if (currentPage < totalPages - 1) {
-            dispatch(callSelectCorrectionListAPI(memberId, currentPage + 1, size, sort, direction, month));
+            dispatch(callSelectCorrectionListAPI(memberId, currentPage + 1, size, sort, direction, parsingDateOffset));
         }
     };
 
@@ -151,7 +136,17 @@ function RecordCorrectionOfCommute() {
                         <li className="breadcrumb-item">출퇴근</li>
                         <li className="breadcrumb-item active">출퇴근 정정 내역</li>
                         <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
-                            {/* <SelectBox options={DATEOPTIONS} value={month} onChange={handleMonthChange} style={{ float: 'right' }}></SelectBox> */}
+                            <Select
+                                id="corrStatus"
+                                value={corrStatus}
+                                onChange={(e) => setCorrStatus(e.target.value)}
+                            >
+                                <option value="all">전체</option>
+                                <option value="대기">대기</option>
+                                <option value="승인">승인</option>
+                                <option value="반려">반려</option>
+                            </Select>
+                            <SelectBox options={DATEOPTIONS} value={month} onChange={handleMonthChange} style={{ float: 'right' }}></SelectBox>
                         </div>
                     </ol>
                 </nav>
@@ -170,8 +165,8 @@ function RecordCorrectionOfCommute() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {correctionList.length > 0 ? (
-                                    correctionList.map((item, index) => (
+                                {filteredCorrectionList.length > 0 ? (
+                                    filteredCorrectionList.map((item, index) => (
                                         <CorrectionItem
                                             key={item.corrRegistrationDate}
                                             correction={item}

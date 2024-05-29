@@ -10,8 +10,6 @@ dayjs.extend(timezone);
 
 function CorrectionUpdateModal({ isOpen, onClose, onSave, correction, handleCorrectionUpdateCompleted }) {
 
-    // console.log('[CorrectionUpdateModal] correction.corrNo : ', correction.corrNo);
-
     const [selectedStatus, setSelectedStatus] = useState(correction?.corrStatus || null);
     const [reasonForRejection, setReasonForRejection] = useState(correction.reasonForRejection || null);
     const [corrStatus, setCorrStatus] = useState('');
@@ -37,26 +35,8 @@ function CorrectionUpdateModal({ isOpen, onClose, onSave, correction, handleCorr
     let dateOffset = new Date(date.getTime() - offset); // 한국 시간으로 파싱
     let parsingDateOffset = dateOffset.toISOString().slice(0, 10);
 
-    // console.log('날짜 파싱 : ', parsingDateOffset);
-
     /* 정정 처리 */
     const handleSave = () => {
-
-        // if (!corrStatus && !reasonForRejection) {
-        //     setShowStatusErrorMessage(true);
-        //     setShowReasonErrorMessage(true);
-        //     return;
-        // }
-
-        // if (!corrStatus) {
-        //     setShowStatusErrorMessage(true);
-        //     return;
-        // }
-
-        // if (!reasonForRejection) {
-        //     setShowReasonErrorMessage(true);
-        //     return;
-        // }
 
         if (!selectedStatus) {
             setShowStatusErrorMessage(true);
@@ -133,7 +113,6 @@ function CorrectionUpdateModal({ isOpen, onClose, onSave, correction, handleCorr
                     <div className="modal-content" style={{ padding: '25px', width: '550px' }}>
                         <div className="modal-header" style={{ paddingBottom: '20px', paddingTop: '0px' }}>
                             <h5 className="modal-title">출퇴근 정정 등록 처리</h5>
-                            <button type="button" className="btn-close" onClick={onClose} style={{ backgroundColor: '#ffffff', cursor: 'pointer' }}></button>
                         </div>
                         <div className="modal-body" style={{ paddingTop: '30px', paddingBottom: '20px' }}>
                             <div style={{ display: 'flex' }}>
@@ -141,7 +120,7 @@ function CorrectionUpdateModal({ isOpen, onClose, onSave, correction, handleCorr
                                 <h6>{correction && correction?.name}</h6>
                             </div>
                             <div style={{ display: 'flex' }}>
-                                <h6 style={{ fontWeight: 'bold', marginRight: '270px' }}>소속 부서</h6>
+                                <h6 style={{ fontWeight: 'bold', marginRight: '250px' }}>소속 부서</h6>
                                 <h6>{correction && correction?.departName}</h6>
                             </div>
                             <div style={{ display: 'flex' }}>
@@ -268,11 +247,11 @@ function CorrectionUpdateModal({ isOpen, onClose, onSave, correction, handleCorr
                             </div>
                         </div>
                         <div className="modal-footer" style={{ paddingBottom: '0px', paddingTop: '20px' }}>
-                            <button type="button" className="btn btn-secondary" onClick={onClose} style={{ backgroundColor: '#FFFFFF', border: '1px solid #D5D5D5', color: '#000000' }}>
-                                목록
+                            <button type="button" className="btn btn-secondary" onClick={onClose} style={{ backgroundColor: '#FFFFFF', border: '2px solid #D5D5D5', color: '#000000' }}>
+                                닫기
                             </button>
                             {correction?.corrStatus === '대기' && (
-                                <button type="button" className="btn btn-secondary" onClick={handleSave} style={{ backgroundColor: '#3F72AF', border: '1px solid #3F72AF' }}>
+                                <button type="button" className="btn btn-secondary" onClick={handleSave} style={{ backgroundColor: '#112D4E', border: '1px solid #3F72AF' }}>
                                     처리
                                 </button>
                             )}

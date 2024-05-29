@@ -88,7 +88,7 @@ export const callInsertNewCorrectionAPI = (newCorrection) => {
             const url = `/corrections/newCorrection`;
             const response = await request('POST', url, newCorrection);
 
-            console.log('[callInsertCorrectionAPI] response : ', response);
+            console.log('[callInsertNewCorrectionAPI] response : ', response);
 
             dispatch(postNewCorrection(response));
 
