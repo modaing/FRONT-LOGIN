@@ -75,7 +75,7 @@ const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime, remai
     return <>
         {isOpen && (
             <>
-                <div className={isCheckOpen ? "none" : "modal-backdrop show"}></div>
+                <div className={isCheckOpen ? "none" : "leaveModal-backdrop show"}></div>
 
                 <div className={isCheckOpen ? "modal fade" : "modal fade show"} style={{ display: 'block' }}>
                     <div className="modal-dialog">

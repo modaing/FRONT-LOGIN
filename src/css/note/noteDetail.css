@@ -28,3 +28,35 @@
     padding: 10px;
     border-radius: 5px;
 }
+
+.note-close-btn {
+    background-color: #ffffff;
+    border: 2px solid #D9D9D9;
+    color: white;
+    color: black;
+    border-radius: 10px;
+    padding: 1% 1.5%;
+}
+
+.note-response-btn {
+    background-color: #112D4E;
+    border-radius: 10px;
+    color: white;
+    padding: 1% 1.5%;
+}
+
+.note-close-btn:hover {
+    background-color: #EDEAEA;
+    border: 2px solid #D9D9D9;
+    color: white;
+    color: black;
+    border-radius: 10px;
+    padding: 1% 1.5%;
+}
+
+.note-response-btn:hover {
+    background-color: #465970;
+    color: white;
+    border-radius: 10px;
+    padding: 1% 1.5%;
+}

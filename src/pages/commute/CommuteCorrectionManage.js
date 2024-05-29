@@ -24,20 +24,46 @@ function CommuteCorrectionManage() {
         margin-left: '750px',
     `;
 
-    const OPTIONS = [
-        { value: "2024-03", name: "2024-03" },
-        { value: "2024-04", name: "2024-04" },
-        { value: "2024-05", name: "2024-05" }
-    ];
+    /* UTC 기준 날짜 반환으로 한국 표준시보다 9시간 빠른 날짜가 표시 되는 문제 해결 */
+    const [date, setDate] = useState(new Date());
+    let offset = date.getTimezoneOffset() * 60000;      // ms 단위이기 때문에 60000 곱해야함
+    let dateOffset = new Date(date.getTime() - offset); // 한국 시간으로 파싱
+    let parsingDateOffset = dateOffset.toISOString().slice(0, 10);
+    const [month, setMonth] = useState(parsingDateOffset);
+
+    const currentDate = new Date(parsingDateOffset);
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+
+    const DATEOPTIONS = [];
+
+    for (let i = 0; i < 12; i++) {
+        let month = currentMonth - i;
+        let year = currentYear;
+
+        if (month <= 0) {
+            month += 12;
+            year -= 1;
+        }
+
+        const monthString = `${year}-${String(month).padStart(2, '0')}`;
+        DATEOPTIONS.push({
+            value: `${year}-${String(month).padStart(2, '0')}-01`,
+            name: monthString,
+        });
+    }
+
+    const handleMonthChange = (e) => {
+        setMonth(e.target.value);
+    };
 
     const SelectBox = (props) => {
         return (
-            <Select>
+            <Select value={props.value} onChange={props.onChange}>
                 {props.options.map((option) => (
                     <option
                         key={option.value}
                         value={option.value}
-                        defaultValue={props.defaultValue === option.value}
                     >
                         {option.name}
                     </option>
@@ -53,15 +79,12 @@ function CommuteCorrectionManage() {
     const { currentPage, totalItems, totalPages } = correctionlist || {};
 
     const dispatch = useDispatch();
+    const [corrStatus, setCorrStatus] = useState('all');
 
-    const [date, setDate] = useState(new Date());
-
-    /* UTC 기준 날짜 반환으로 한국 표준시보다 9시간 빠른 날짜가 표시 되는 문제 해결 */
-    let offset = date.getTimezoneOffset() * 60000;      // ms 단위이기 때문에 60000 곱해야함
-    let dateOffset = new Date(date.getTime() - offset); // 한국 시간으로 파싱
-    let parsingDateOffset = dateOffset.toISOString().slice(0, 10);
-
-    console.log('utc 변환 ', parsingDateOffset);
+    const filteredCorrectionList = correctionList.filter(item => {
+        if (corrStatus === 'all') return true;
+        return item.corrStatus === corrStatus;
+    });
 
     const memberId = null;
     const page = 0;
@@ -77,7 +100,7 @@ function CommuteCorrectionManage() {
     /* 출퇴근 정정 내역 조회 API 재호출 */
     const handleCorrectionUpdateCompleted = () => {
         dispatch(callSelectCorrectionListAPI(memberId, page, size, sort, direction, parsingDateOffset));
-      };
+    };
 
     /* 근무 일자 형식 변경 */
     const formatWorkingDate = (workingDate) => {
@@ -89,19 +112,19 @@ function CommuteCorrectionManage() {
     const handlePageChange = (page) => {
         dispatch(callSelectCorrectionListAPI(memberId, page, size, sort, direction, parsingDateOffset));
     };
-    
+
     const handlePrevPage = () => {
         if (currentPage > 0) {
             dispatch(callSelectCorrectionListAPI(memberId, currentPage - 1, size, sort, direction, parsingDateOffset));
         }
     };
-    
+
     const handleNextPage = () => {
         if (currentPage < totalPages - 1) {
             dispatch(callSelectCorrectionListAPI(memberId, currentPage + 1, size, sort, direction, parsingDateOffset));
         }
     };
-    
+
 
     return (
         <main id="main" className="main">
@@ -113,7 +136,17 @@ function CommuteCorrectionManage() {
                         <li className="breadcrumb-item">출퇴근</li>
                         <li className="breadcrumb-item active">출퇴근 정정 관리</li>
                         <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
-                        <SelectBox options={OPTIONS} defaultValue="2024-05"></SelectBox>
+                            <Select
+                                id="corrStatus"
+                                value={corrStatus}
+                                onChange={(e) => setCorrStatus(e.target.value)}
+                            >
+                                <option value="all">전체</option>
+                                <option value="대기">대기</option>
+                                <option value="승인">승인</option>
+                                <option value="반려">반려</option>
+                            </Select>
+                            <SelectBox options={DATEOPTIONS} value={month} onChange={handleMonthChange} style={{ float: 'right' }}></SelectBox>
                         </div>
                     </ol>
                 </nav>
@@ -132,8 +165,8 @@ function CommuteCorrectionManage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {correctionList && correctionList.length > 0 ? (
-                                    correctionList.map((item, index) => (
+                                {filteredCorrectionList && filteredCorrectionList.length > 0 ? (
+                                    filteredCorrectionList.map((item, index) => (
                                         <CorrectionManageItem
                                             key={item.corrNo}
                                             correction={item}

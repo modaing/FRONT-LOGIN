@@ -9,8 +9,8 @@ function MyLeaveCounts() {
     const dispatch = useDispatch();
     const [totalDays, setTotalDays] = useState('');
     const [remainingDays, setRemaingDats] = useState('');
-    // const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
-    const memberId = 240528903; 
+    const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
+    // const memberId = 240528903; 
 
     const { leaveInfo } = useSelector(state => state.leaveReducer);
 
@@ -46,7 +46,7 @@ function MyLeaveCounts() {
                         <span className="leave-percentage">{remainingDays}<span>일</span></span>
                     </div>
                     <div className="leave-icon-container">
-                        <i className="bi bi-joystick"></i>
+                        <i className="bi bi-suitcase"></i>
                     </div>
                 </div>
             </div>

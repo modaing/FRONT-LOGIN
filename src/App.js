@@ -44,7 +44,7 @@ function App() {
       <Routes>
         {/* Public routes */}
         <Route path="/login" element={<Login />} />
-        
+
         {/* Private routes */}
         {isLoggedIn ? (
           <Route element={<Layout />}>
@@ -54,6 +54,7 @@ function App() {
             <Route path='myProfile' element={<MyProfile />} />
             <Route path="recordCommute" element={<RecordCommute />} />
             <Route path="recordCorrectionOfCommute" element={<RecordCorrectionOfCommute />} />
+
             <Route path="commuteManage" element={<CommuteManage />} />
             <Route path="commuteCorrectionManage" element={<CommuteCorrectionManage />} />
             <Route path="myLeave" element={<MyLeave />} />
@@ -76,7 +77,7 @@ function App() {
             <Route path='approvals' element={<ApprovalPage />} />
             <Route path="/manageMember/:memberId" element={<MemberPage />} />
             <Route path='/hierarchyTree' element={<HierarchyTree />} />
-            <Route path='/approvals/:approvalNo' element={<ApprovalDetail />}/>
+            <Route path='/approvals/:approvalNo' element={<ApprovalDetail />} />
           </Route>
         ) : (
           <Route path="/" element={<Navigate to="/login" replace />} />
