@@ -66,7 +66,7 @@ function Sidebar() {
                         </li>
                         <li>
                             <Link to="/leaveAccrual" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>휴가 발생 관리</span>
+                                <i className="bi bi-circle"></i><span>특별 휴가 발생 관리</span>
                             </Link>
                         </li>
                         <li>

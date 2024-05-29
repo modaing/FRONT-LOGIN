@@ -13,8 +13,8 @@ export const updateEvents = (calendarList, setEvents) => {
             let textColor = 'white';
             if (calendar.color === 'yellow') {
                 textColor = 'black';
-            }
-
+            } 
+              
             return {
                 id: calendar.calendarNo,
                 title: calendar.calendarName,

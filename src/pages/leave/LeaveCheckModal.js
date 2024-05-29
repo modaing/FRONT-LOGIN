@@ -5,7 +5,7 @@ const LeaveCheckModal = ({ isOpen, onClose, onConfirm, option }) => {
     return (
         isOpen && (
             <>
-                <div className="modal-backdrop show"></div>
+                <div className="leaveModal-backdrop show"></div>
                 <div className="modal fade show leaveCheckModal" style={{ display: 'block' }}>
                     <div className="modal-dialog">
                         <div className="modal-content">
