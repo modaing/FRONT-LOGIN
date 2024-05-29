@@ -1,66 +1,21 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from '../../css/approval/ApprovalListComponent.module.css';
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom'
-import { fetchApprovalsAsync, setPageInfo, setCurrentPage } from '../../modules/ApprovalReducer';
 
 
-const ApprovalListComponent = ({  fg, handleDeleteClick, handleSortDirectionChange, loggedInUserId }) => {
+const ApprovalListComponent = ({ approvals, fg, handleDeleteClick, handleSortDirectionChange, loggedInUserId }) => {
 
-    const { approvals, loading, error, pageInfo } = useSelector(state => state.approval);
+    const loading = useSelector((state) => state.approval.loading);
+    const error = useSelector((state) => state.approval.error);
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(fetchApprovalsAsync(pageInfo.currentPage));
-    }, [pageInfo.currentPage, dispatch]);
 
     const handleRowClick = (approvalNo) => {
         navigate(`/approvals/${approvalNo}`);
     };
 
-    const handlePageChange = (newPage) => {
-        dispatch(setCurrentPage(newPage));
-        dispatch(fetchApprovalsAsync(newPage));
-    };
-
-    const handlePrevPage = () => {
-        if (pageInfo.currentPage > 0) {
-            handlePageChange(pageInfo.currentPage - 1);
-        }
-    };
-
-    const handleNextPage = () => {
-        if (pageInfo.currentPage < pageInfo.totalPages - 1) {
-            handlePageChange(pageInfo.currentPage + 1);
-        }
-    };
-
-    const getPaginationRange = () => {
-        const totalPageNumbers = 10;
-        const halfPageNumbers = Math.floor(totalPageNumbers / 2);
-
-        let start = pageInfo.currentPage - halfPageNumbers;
-        let end = pageInfo.currentPage + halfPageNumbers;
-
-        if (start < 0) {
-            start = 0;
-            end = totalPageNumbers;
-        }
-
-        if (end > pageInfo.totalPages) {
-            start = pageInfo.totalPages - totalPageNumbers;
-            end = pageInfo.totalPages;
-        }
-
-        return Array.from({ length: end - start }, (_, i) => i + start);
-    };
-
-
-    const paginationRange = getPaginationRange();
-
     const truncateName = (name, maxLength = 6) => {
-        if (name.length > maxLength) {
+        if(name.length > maxLength) {
             return name.slice(0, 5) + '...';
         }
         return name;
@@ -81,18 +36,13 @@ const ApprovalListComponent = ({  fg, handleDeleteClick, handleSortDirectionChan
                     >
                         {truncateName(approver.name)}
                         {(index + 1) % 3 === 0 && index !== approvers.length - 1 && <br />}
-                        {(index !== approvers.length - 1 && (index + 1) % 3 !== 0) && ' - '}
+                        {(index !== approvers.length -1 && (index + 1) % 3 !== 0) && ' - '}
                     </span>
                 ))}
             </div>
 
         );
-    };
-
-    const paginationStyle = {
-        display: 'flex',
-        justifyContent: 'center',
-    };
+    }
 
     return (
         <div className={styles.tableContainer}>
@@ -213,23 +163,6 @@ const ApprovalListComponent = ({  fg, handleDeleteClick, handleSortDirectionChan
                     )}
 
                 </tbody>
-                <nav style={paginationStyle}>
-                <ul className="pagination">
-                    <li className={`page-item ${pageInfo.currentPage === 0 ? 'disabled' : ''}`}>
-                        <button className="page-link" onClick={handlePrevPage}>◀</button>
-                    </li>
-                    {paginationRange.map((page) => (
-                        <li key={page} className={`page-item ${pageInfo.currentPage === page ? 'active' : ''}`}>
-                            <button className="page-link" onClick={() => handlePageChange(page)}>
-                                {page + 1}
-                            </button>
-                        </li>
-                    ))}
-                    <li className={`page-item ${pageInfo.currentPage === pageInfo.totalPages - 1 ? 'disabled' : ''}`}>
-                        <button className="page-link" onClick={handleNextPage}>▶</button>
-                    </li>
-                </ul>
-            </nav>
             </table>
         </div>
     );

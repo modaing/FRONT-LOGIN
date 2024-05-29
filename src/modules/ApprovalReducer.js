@@ -60,6 +60,8 @@ export const {
   FETCH_APPROVAL_DETAIL_FAILURE: (error) => error,
 });
 
+
+
 // 리듀서 정의
 const approvalReducer = handleActions(
   {
