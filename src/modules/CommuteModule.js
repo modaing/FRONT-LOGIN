@@ -4,6 +4,10 @@ import { createActions, handleActions } from "redux-actions";
 /* 초기값 */
 const initialState = {
     commutelist: [],
+    startTime: null,
+    expectedTotalWorkingTime: null,
+    isWorkingHoursLimited: false,
+    totalWorkingHours: 0,
     // correctionlist: {
     //     correctionlist: [],
     //     currentPage: 0,
@@ -26,24 +30,28 @@ export const POST_NEWCORRECTION = 'commute/POST_NEWCORRECTION';
 
 export const SET_PAGENUMBER = 'commute/SET_PAGENUMBER';
 
+export const SET_START_TIME = 'commute/SET_START_TIME';
+export const SET_EXPECTED_TOTAL_WORKING_TIME = 'commute/SET_EXPECTED_TOTAL_WORKING_TIME';
 export const SET_WORKING_HOURS_STATUS = 'commute/SET_WORKING_HOURS_STATUS';
 
 /* 액션 함수 */
 export const { commute: { getCommute, getCommutelist, postCommute, putCommute,
-     getCorrection, getCorrectionlist, postCorrection, putCorrection,
-      setPagenumber, postNewCorrection, setWorkingHoursStatus } } = createActions({
-    [GET_COMMUTE]: (res) => ({ commute: res }),
-    [GET_COMMUTELIST]: (res) => ({ commutelist: res }),
-    [POST_COMMUTE]: (res) => ({ postcommute: res }),
-    [PUT_COMMUTE]: (res) => ({ putcommute: res }),
-    [GET_CORRECTION]: (res) => ({ correction: res }),
-    [GET_CORRECTIONLIST]: (res) => ({ correctionlist: res }),
-    [POST_CORRECTION]: (res) => ({ postcorrection: res }),
-    [PUT_CORRECTION]: (res) => ({ putcorrection: res }),
-    [SET_PAGENUMBER]: (page) => ({ page: page }),
-    [POST_CORRECTION]: (res) => ({ postnewcorrection: res }),
-    [SET_WORKING_HOURS_STATUS]: (status) => status,
-});
+    getCorrection, getCorrectionlist, postCorrection, putCorrection,
+    setPagenumber, postNewCorrection, setStartTime, setExpectedTotalWorkingTime, setWorkingHoursStatus } } = createActions({
+        [GET_COMMUTE]: (res) => ({ commute: res }),
+        [GET_COMMUTELIST]: (res) => ({ commutelist: res }),
+        [POST_COMMUTE]: (res) => ({ postcommute: res }),
+        [PUT_COMMUTE]: (res) => ({ putcommute: res }),
+        [GET_CORRECTION]: (res) => ({ correction: res }),
+        [GET_CORRECTIONLIST]: (res) => ({ correctionlist: res }),
+        [POST_CORRECTION]: (res) => ({ postcorrection: res }),
+        [PUT_CORRECTION]: (res) => ({ putcorrection: res }),
+        [SET_PAGENUMBER]: (page) => ({ page: page }),
+        [POST_NEWCORRECTION]: (res) => ({ postnewcorrection: res }),
+        [SET_START_TIME]: (startTime) => ({ startTime }),
+        [SET_EXPECTED_TOTAL_WORKING_TIME]: (expectedTotalWorkingTime) => ({ expectedTotalWorkingTime }),
+        [SET_WORKING_HOURS_STATUS]: (status) => (status),
+    });
 
 /* 리듀서 */
 const commuteReducer = handleActions(
@@ -79,8 +87,16 @@ const commuteReducer = handleActions(
             })
         },
         [POST_NEWCORRECTION]: (state, { payload }) => {
-            return ({ ...state, postnewcorrection: payload });
+            return ({ ...state, postnewcorrection: payload.postnewcorrection });
         },
+        [SET_START_TIME]: (state, { payload }) => ({
+            ...state,
+            startTime: payload.startTime,
+        }),
+        [SET_EXPECTED_TOTAL_WORKING_TIME]: (state, { payload }) => ({
+            ...state,
+            expectedTotalWorkingTime: payload.expectedTotalWorkingTime,
+        }),
         [SET_WORKING_HOURS_STATUS]: (state, { payload }) => {
             return {
                 ...state,
