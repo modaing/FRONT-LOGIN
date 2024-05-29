@@ -4,10 +4,12 @@ import '../common/common.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'boxicons/css/boxicons.css';
 import 'remixicon/fonts/remixicon.css';
+import { decodeJwt } from '../utils/tokenUtils.js';
 
 
 function Sidebar() {
-
+    const token = window.localStorage.getItem('accessToken');
+    const role = token ? decodeJwt(token).role : null;
     const location = useLocation();
 
     const underLineStyle = {
@@ -64,21 +66,24 @@ function Sidebar() {
                                 <i className="bi bi-circle"></i><span>나의 휴가 관리</span>
                             </Link>
                         </li>
-                        <li>
-                            <Link to="/leaveAccrual" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>특별 휴가 발생 관리</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/leaveProcessing" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>휴가 신청 처리</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/leaves" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>휴가 보유 내역 조회</span>
-                            </Link>
-                        </li>
+                        {role === 'ADMIN' &&
+                            <li>
+                                <Link to="/leaveAccrual" style={underLineStyle}>
+                                    <i className="bi bi-circle"></i><span>특별 휴가 발생 관리</span>
+                                </Link>
+                            </li>}
+                        {role === 'ADMIN' &&
+                            <li>
+                                <Link to="/leaveProcessing" style={underLineStyle}>
+                                    <i className="bi bi-circle"></i><span>휴가 신청 처리</span>
+                                </Link>
+                            </li>}
+                        {role === 'ADMIN' &&
+                            <li>
+                                <Link to="/leaves" style={underLineStyle}>
+                                    <i className="bi bi-circle"></i><span>휴가 보유 내역 조회</span>
+                                </Link>
+                            </li>}
                     </ul>
                 </li>
                 <li className={`nav-item ${location.pathname === '/calendar' ? 'active' : ''}`}>
@@ -128,7 +133,7 @@ function Sidebar() {
                                 <i className="bi bi-circle"></i><span>부서 및 직급 관리</span>
                             </Link>
                         </li>
-                        
+
                     </ul>
                 </li>
                 <li className={`nav-item ${location.pathname === '/insite' ? 'active' : ''}`}>
@@ -156,7 +161,7 @@ function Sidebar() {
                         <i className="bi bi-envelope"></i><span>쪽지</span>
                     </Link>
                 </li>
-                
+
             </ul>
         </aside>
     );

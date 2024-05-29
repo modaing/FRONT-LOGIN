@@ -21,8 +21,10 @@ function SurveyList() {
     const [survey, setServey] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
-    const name = decodeJwt(window.localStorage.getItem("accessToken")).name;
+    const token = decodeJwt(window.localStorage.getItem("accessToken"));
+    const memberId = token?.memberId;
+    const name = token?.name;
+    const isAdmin = token?.role === 'Admin' ? true : false;
 
     const dispatch = useDispatch();
 
@@ -98,10 +100,11 @@ function SurveyList() {
                         <li className="breadcrumb-item"><Link to="/">Home</Link></li>
                     </ol>
                 </nav>
-                <div className="leaveHeader">
-                    <div> </div>
-                    <span className="insertSurvey" onClick={handleInsertOpenModal} >수요조사 등록</span>
-                </div>
+                {isAdmin &&
+                    <div className="leaveHeader">
+                        <div> </div>
+                        <span className="insertSurvey" onClick={handleInsertOpenModal} >수요조사 등록</span>
+                    </div>}
             </div>
             <div className="col-lg-12">
                 <div className="card">
