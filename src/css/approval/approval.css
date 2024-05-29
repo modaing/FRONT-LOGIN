@@ -48,12 +48,18 @@
 }
 .approvalSearchBtn button{
     border : none;
-    background-color: #3F72AF;
-    color : white;
+    background-color: white;
+    color : black;
     font-size: 14px;
     padding: 4px 12px;
     border-radius: 5px;
     height: 35px;
+    border : 1px solid #3F72AF;
+    font-weight: bold;
+}
+.approvalSearchBtn button:hover{
+    background-color: #F9F7F7;
+    
 }
 
 .ApprovalListBtn {
@@ -61,16 +67,15 @@
     align-items: center;
     justify-content: center;
     height: 40px;
-    min-width: 120px;
-    border-radius: 5px;
-    padding: 1% 1.5%;
+    min-width: 100px;
+    border-radius: 10px;
     cursor: pointer;
     text-decoration: none;
     margin-right: 20px;
     vertical-align: middle;
     text-align: center;
-    padding-top: 7px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding: 0px 15px;
 }

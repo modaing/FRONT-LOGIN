@@ -182,6 +182,9 @@
     justify-items: center;
     padding: 3px;
 }
+.moveButton:hover{
+    background-color: #EDEAEA;
+}
 
 
 .modalConfirmMessage {
@@ -210,14 +213,18 @@
     color: black;
     border: 1px solid #BBBBBB;
 }
+.modalActions button:first-of-type:hover{
+    background-color: #EDEAEA;
+    color: black;
+}
 
 .modalActions button:last-of-type {
-    background-color: #3F72AF;
+    background-color: #112D4E;
     color: white;
 }
-.modalActions button:hover{
-    background-color: #E9ECEF;
-    color: black;
+.modalActions button:last-of-type:hover{
+    background-color: #465970;
+    color: white;
 }
 
 .close {

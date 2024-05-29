@@ -48,9 +48,9 @@
 }
 
 .modalActions button {
-    padding: 10px 20px;
+    padding: 10px 15px;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
 }
 
@@ -58,14 +58,17 @@
 .modalActions button:first-of-type {
     background-color: white;
     color: black;
-    border: 1px solid #BBBBBB;
+    border: 1px solid #D9D9D9;
 }
 
 .modalActions button:last-of-type {
-    background-color: #3F72AF;
+    background-color: #112D4E;
     color: white;
+    margin-left: 15px;
 }
-.modalActions button:hover{
-    background-color: #E9ECEF;
-    color: black;
+.modalActions button:first-of-type:hover{
+    background-color: #EDEAEA;
+}
+.modalActions button:last-of-type:hover{
+    background-color: #465970;
 }

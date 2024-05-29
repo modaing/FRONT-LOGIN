@@ -123,7 +123,7 @@ const ApprovalInsert = () => {
     }
 
     const validateForm = (status) => {
-        if(status === '처리 중' && title.trim() === ''){
+        if (status === '처리 중' && title.trim() === '') {
             console.log('status === 처리 중, title.trim() === "" ');
             setWarningMessage('제목이 입력되지 않았습니다');
             setIsWarrningModalOpen(true);
@@ -160,9 +160,9 @@ const ApprovalInsert = () => {
 
         console.log('status: ' + status);
 
-       if(!validateForm(status)) {
+        if (!validateForm(status)) {
             return;
-       }
+        }
 
 
         const formData = new FormData();
@@ -171,6 +171,7 @@ const ApprovalInsert = () => {
         const editorContent = editorRef.current.getContent();
 
         const approvalDTO = {
+            approvalNo : approvalNo ? approvalNo : null,
             approvalTitle: title,
             approvalContent: editorContent,
             formNo: selectedForm.formNo,
@@ -193,30 +194,31 @@ const ApprovalInsert = () => {
         try {
             let response;
 
-            if(status === '처리 중' && !approvalNo){
-                //상태가 '처리 중' 이고 approvalNo가 존재하지 않으면 등록 API 호출
+            if (status === '처리 중') {
+                //상태가 '처리 중' 이면 등록 API 호출
                 response = await submitApprovalAPI(formData);
-                if(response && response.data && response.data.approvalNo){
+                if (response && response.data && response.data.approvalNo) {
                     setApprovalNo(response.data.approvalNo);
                 }
-            }else if(status === '임시저장' && !approvalNo){
+            } else if (status === '임시저장' && !approvalNo) {
                 //임시저장 상태이면 등록 API에 '임시저장'으로 등록
                 response = await submitApprovalAPI(formData);
-                
+
                 console.log('등록된 전자결재 번호 : ' + response.data?.approvalNo);
 
-                if(response && response.data && response.data.approvalNo){
+                if (response && response.data && response.data.approvalNo) {
                     setApprovalNo(response.data.approvalNo);
                 }
-            }else if (status === '임시저장' && approvalNo){
+            } else if (status === '임시저장' && approvalNo) {
                 response = await updateApprovalAPI(approvalNo, formData);
-                
+
                 console.log('등록된 전자결재 번호 : ' + response.data?.approvalNo);
-                if(response && response.data && response.data.approvalNo){
+                if (response && response.data && response.data.approvalNo) {
                     setApprovalNo(response.data.approvalNo);
                 }
-            }else{
-                //기타 상태이면 수정 API 호출
+            } 
+            //기타 상태이면 수정 API 호출
+            else {
                 response = await updateApprovalAPI(approvalNo, formData);
             }
 
@@ -315,8 +317,7 @@ const ApprovalInsert = () => {
     }
 
     const openConfirmModal = () => {
-        if(validateForm('처리 중')){
-
+        if (validateForm('처리 중')) {
             setIsInsertConfirmModalOpen(true);
         }
     };
@@ -335,8 +336,10 @@ const ApprovalInsert = () => {
     }
 
     const confirmSubmit = () => {
+
         closeConfirmModal();
         handleSubmit('처리 중');
+        
     };
 
     const closeSuccessModal = () => {
@@ -365,7 +368,7 @@ const ApprovalInsert = () => {
         navigate('/approvals?fg=given&page=0title=&direction=DESC');
     }
 
-    
+
     useEffect(() => {
         if (editorRef.current) {
             const doc = editorRef.current.getDoc();
@@ -562,7 +565,7 @@ const ApprovalInsert = () => {
                         </div>
                         <div className={styles.insertAppButtons}>
                             <button type='button' onClick={openCancelInsertModal}>취소</button>
-                            <button type="submit" onClick={() => handleSubmit('처리 중')}>등록</button>
+                            <button type="submit" /* onClick={() => handleSubmit('처리 중')} */>등록</button>
                         </div>
                     </form>
                     <ApproverModal
