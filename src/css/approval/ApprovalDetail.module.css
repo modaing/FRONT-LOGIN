@@ -310,6 +310,8 @@
     margin-left: 20px;
     background-color: white;
 
+    background: white;
+    color: black;
 }
 .fileDownloadBtn:hover{
      

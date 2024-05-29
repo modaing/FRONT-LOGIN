@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import styles from "../../css/approval/ApprovalDetail.module.css";
 import { decodeJwt } from "../../utils/tokenUtils";
-import { getApprovalDetailAPI, updateApprovalStatusAPI, updateApproverStatusAPI } from "../../apis/ApprovalAPI";
+import { downloadFileAPI, getApprovalDetailAPI, updateApprovalStatusAPI, updateApproverStatusAPI } from "../../apis/ApprovalAPI";
 import UserInfoComponent from '../../components/approvals/UserInfoComponent';
 import ApproversInfo from "../../components/approvals/ApproversInfo";
 import ReferencerComponent from "../../components/approvals/ReferencerComponent";
@@ -11,6 +11,7 @@ import ReturnConfirmModal from "../../components/approvals/ReturnConfirmModal";
 import ApproverStatusConfirmModal from "../../components/approvals/ApproverStatusConfirmModal";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
 
 const ApprovalDetail = () => {
     const { approvalNo } = useParams();
@@ -22,6 +23,8 @@ const ApprovalDetail = () => {
 
     const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
     const [isApproverStatusConfirmModalOpen, setIsApproverStatusConfirmModalOpen] = useState(false);
+
+    const [isDownloading, setIsDownloading] = useState(false);
 
     const [rejectReason, setRejectReason] = useState('');
     const [actionType, setActionType] = useState('');
@@ -130,7 +133,63 @@ const ApprovalDetail = () => {
     //반려 사유 확인
     const rejectReasonFromApprover = approver.find(a => a.approverStatus === '반려')?.rejectReason;
 
-    
+    //파일 다운로드
+    const downloadFile = async (fileSavepath, fileSavename, fileOriname) => {
+
+        setIsDownloading(true);
+
+        try{
+            const fileData = await downloadFileAPI (fileSavepath, fileSavename, fileOriname);
+            const url = window.URL.createObjectURL(new Blob([fileData]));
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileOriname;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            }, 0);
+
+        } catch(error){
+            console.error('파일 다운로드 오류 : ', error);
+        }finally {
+            setIsDownloading(false);
+        }
+
+        // axios.get(fileUrl, { responseType: 'blob' })
+        //     .then((response) => {
+        //         const url = window.URL.createObjectURL(new Blob([response.data]));
+        //         const a = document.createElement('a');
+        //         a.href = url;
+        //         a.download = fileOriname;
+        //         document.body.appendChild(a);
+        //         a.click();
+        //         setTimeout(() => {
+        //             window.URL.revokeObjectURL(url);
+        //             document.body.removeChild(a);
+        //         }, 0);
+        //     }).catch((error) => {
+        //         console.error('파일 다운로드 오류', error);
+        //     }).finally(() => {
+        //         setIsDownloading(false);
+        //     });
+        //두번쨰방법 - 안됨
+
+
+        // const link = document.createElement('a');
+        // link.href = `/approvals/files?fileSavepath=${encodeURIComponent(fileSavepath)}&fileSavename=${encodeURIComponent(fileSavename)}&fileOriname=${encodeURIComponent(fileOriname)}`;
+        // // link.download  = fileOriname;
+        // // document.body.appendChild(link);
+        // // link.click();
+        // // document.body.removeChild(link);
+        // link.setAttribute('download', fileOriname);
+        // document.body.appendChild(link);
+        // link.click();
+        // document.body.removeChild(link);
+        //첫번째 방법 - 안됨
+    };
+
 
     return (
         <main id="main" className="main">
@@ -167,13 +226,15 @@ const ApprovalDetail = () => {
                                 {attachment.map((file, index) => (
                                     <li key={index}>
                                         {file.fileOriname}
-                                        <button className={styles.fileDownloadBtn}><a href={`/approvals/files?fileSavepath=${encodeURIComponent(file.fileSavepath)}&fileSavename=${encodeURIComponent(file.fileSavename)}&fileOriname=${encodeURIComponent(file.fileOriname)}`} download>다운로드</a></button>
+                                        <button className={styles.fileDownloadBtn} onClick={() => downloadFile(file.fileSavepath, file.fileSavename, file.fileOriname)}>
+                                            {isDownloading ? '다운로드 중...' : '다운로드'}
+                                        </button>
                                     </li>
                                 ))}
                             </ul>
                         )}
                         <div>
-                            
+
                         </div>
                     </div>
                 </div>
