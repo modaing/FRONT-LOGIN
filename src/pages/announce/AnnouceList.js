@@ -1,5 +1,3 @@
-// AnnouncementsList.js
-
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,7 +7,7 @@ function AnnouncementsList({ maxVisibleAnnouncements, hidePagination, hidePlus }
     const { announcements, currentPage, totalPages } = useSelector(state => state.announceReducer);
     const dispatch = useDispatch();
 
-    const visibleAnnouncements = announcements.slice(0, maxVisibleAnnouncements); // 최대 보여줄 공지사항 수에 맞게 announcements 배열을 잘라냅니다.
+    const visibleAnnouncements = announcements.slice(0, maxVisibleAnnouncements); 
 
     useEffect(() => {
         dispatch(fetchAnnouncementsAsync(currentPage));
