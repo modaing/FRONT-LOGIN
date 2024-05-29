@@ -49,10 +49,10 @@
 }
 
 .modalActions button:last-of-type {
-    background-color: #3F72AF;
-    color: white;
+    background-color: white;
+    color: black;
+    border: 1px solid #D9D9D9;
 }
 .modalActions button:hover{
-    background-color: #E9ECEF;
-    color: black;
+    background-color: #EDEAEA;
 }
