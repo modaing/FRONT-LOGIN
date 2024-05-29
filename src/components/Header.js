@@ -3,8 +3,8 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import { decodeJwt } from '../utils/tokenUtils';
 import { useDispatch, useSelector } from 'react-redux';
 import { callLogoutAPI, callGetProfilePictureAPI } from '../apis/MemberAPICalls';
-import { useEffect } from 'react';
-import { callSelectNoticeListAPI } from '../apis/NoticeAPICalls';
+import { useEffect, useState } from 'react';
+import { callDeleteNoticeListAPI, callSelectNoticeListAPI } from '../apis/NoticeAPICalls';
 
 function Header() {
 
@@ -20,7 +20,9 @@ function Header() {
     const memberId = decodeJwt(token).memberId;
     const result = useSelector(state => state.noticeReducer);
     console.log('result', result);
-    const noticeList = result?.noticeList?.response?.data?.results?.result || [];
+    // const noticeList = result?.noticeList?.response?.data?.results?.result || [];
+    const [unreadNoticeCount, setUnreadNoticeCount] = useState(0);
+    const [noticeList, setNoticeList] = useState([]);
 
     if (token) {
         try {
@@ -49,7 +51,28 @@ function Header() {
 
     useEffect(() => {
         dispatch(callSelectNoticeListAPI(memberId));
-    }, []);
+    }, [dispatch, memberId]);
+
+    useEffect(() => {
+        const unreadNotices = noticeList && noticeList.filter((notice) => !notice.isRead);
+        setUnreadNoticeCount(unreadNotices?.length);
+    }, [noticeList]);
+
+    // const handleDeleteNotices = () => {
+    //     dispatch(callDeleteNoticeListAPI(memberId));
+    //     setUnreadNoticeCount(0);
+    //     dispatch(callSelectNoticeListAPI(memberId));
+    //   };
+
+    const handleDeleteNotices = () => {
+        dispatch(callDeleteNoticeListAPI(memberId)).then(() => {
+            // 알림 삭제 후 목록 업데이트
+            dispatch(callSelectNoticeListAPI(memberId)).then((response) => {
+                setNoticeList(response);
+                setUnreadNoticeCount(0);
+            });
+        });
+    };
 
     return (
         <header id="header" className="header fixed-top d-flex align-items-center" >
@@ -68,41 +91,54 @@ function Header() {
                             <i className="bi bi-chat-right-dots"></i>
                             <span className="badge bg-primary badge-number"></span>
                         </Link>
-                        {/* 알림 메뉴 */}
-                        {/* <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                            <li className="dropdown-header">
-                                새로운 알림
-                                <Link to="#"><span className="badge rounded-pill bg-primary p-2 ms-2">삭제</span></Link>
-                            </li>
-                            알림 목록
-                        </ul> */}
                     </li>
                     <li className="nav-item dropdown">
                         {/* 알림 메뉴를 토글하는 링크 */}
                         <Link to="#" className="nav-link nav-icon" data-bs-toggle="dropdown">
                             <i className="bi bi-bell"></i>
-                            <span className="badge bg-primary badge-number">3</span>
+                            <span className="badge badge-number" style={{ backgroundColor: '#FA6060' }}>{unreadNoticeCount?.toString().padStart(1, '0')}</span>
                         </Link>
                         {/* 알림 메뉴 */}
-                        <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" style={{ width: '300px' }}>
+                        <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" style={{ width: '300px', height: '120px' }}>
                             <div >
-                                <li className="dropdown-header" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    새로운 알림
-                                    <Link to="#"><span className="badge rounded-pill bg-primary p-2 ms-2" style={{ marginLeft: '100px' }}>삭제</span></Link>
+                                <li className="dropdown-header" style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0px' }}>
+                                    <span style={{ marginLeft: '50px', fontSize: '15px' }}>새로운 알림</span>
+                                    {/* <Link to="#"><span style={{ border: '2px solid #FA6060', color: '#000000', backgroundColor: '#ffffff', borderRadius: '5px', padding: '3px' }} onClick={handleDeleteNotices}>삭제</span></Link> */}
+                                    <Link to="#"><i class="bi bi-trash-fill" onclick={handleDeleteNotices}></i></Link>
                                 </li>
                             </div>
                             <hr />
                             {/* 알림 목록 */}
-                            {noticeList && noticeList.slice(0, 4).map((notice, index) => (
-                                <li key={index} className="notification-item">
-                                    <i className="bi bi-exclamation-circle text-warning"></i>
+                            {noticeList.length > 0 ? (
+                                noticeList.slice(0, 4).map((notice, index) => (
+                                    <li key={index} className="notification-item">
+                                        <i className="bi bi-exclamation-circle text-warning"></i>
+                                        <div>
+                                            <h4>{notice.noticeType}</h4>
+                                            <p>{notice.noticeContent}</p>
+                                            <p>
+                                                {notice.createdAt
+                                                    ? new Date(
+                                                        notice.createdAt[0],
+                                                        notice.createdAt[1] - 1,
+                                                        notice.createdAt[2],
+                                                        notice.createdAt[3],
+                                                        notice.createdAt[4],
+                                                        notice.createdAt[5],
+                                                        notice.createdAt[6]
+                                                    ).toLocaleString()
+                                                    : ''}
+                                            </p>
+                                        </div>
+                                    </li>
+                                ))
+                            ) : (
+                                <li className="notification-item">
                                     <div>
-                                        <h4>{notice.noticeType}</h4>
-                                        <p>{notice.noticeContent}</p>
-                                        <p>{new Date(notice.createdAt).toLocaleString()}</p>
+                                        <p>알림이 없습니다.</p>
                                     </div>
                                 </li>
-                            ))}
+                            )}
                         </ul>
                     </li>
                     <li className="nav-item dropdown">

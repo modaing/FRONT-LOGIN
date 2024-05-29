@@ -83,8 +83,8 @@ function CorrectionDetailModal({ isOpen, onClose, correction }) {
                             </div>
                         </div>
                         <div className="modal-footer" style={{ paddingBottom: '0px', paddingTop: '20px' }}>
-                            <button type="button" className="btn btn-secondary" onClick={onClose} style={{ backgroundColor: '#3F72AF', border: '1px solid #3F72AF' }}>
-                                목록
+                            <button type="button" className="btn btn-secondary" onClick={onClose} style={{ backgroundColor: '#ffffff', border: '2px solid #D9D9D9', color: '#000000' }}>
+                                확인
                             </button>
                         </div>
                     </div>
