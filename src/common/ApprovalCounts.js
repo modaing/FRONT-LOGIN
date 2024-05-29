@@ -41,7 +41,7 @@ function ApprovalCounts() {
     return (
         <div className="approval-counts-container">
             <div className="approval-counts-body">
-                <h7 className="approval-counts-title">상신 미처리 전자결재</h7>
+                <h7 className="approval-counts-title">진행 중인 결자결재 건수</h7>
 
                 <div className="content-container">
                     <div className="text-container">
