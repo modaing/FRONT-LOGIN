@@ -63,7 +63,6 @@ function Main() {
                     {/* API 횟수 제한이 있어서, 주석 해놓겠습니다 */}
                 </div>
                 <div className="main-card">
-                    {role === 'ADMIN' && (
                         <button
                             className='slide-toggle-button'
                             onClick={toggleComponent}
@@ -75,7 +74,6 @@ function Main() {
                                 <FaAngleLeft style={{ color: '#ec76a2', marginTop: '-40px', marginRight: '-30px' }} />
                             )}
                         </button>
-                    )}
                     {showApprovalCounts ? <ApprovalCounts /> : <ApproverCounts />}
                 </div>
 

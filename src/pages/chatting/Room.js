@@ -59,7 +59,7 @@ function Room({ roomId, onLeaveRoom , senderDeleteYn, receiverDeleteYn}) {
             console.log('STOMP client connected to the server.');
             setStompClient(client);
 
-            sendMessageToEnteredRoom(client);
+            /* sendMessageToEnteredRoom(client);  입장 시 자동 메시지 제거 */
 
             const subscription = client.subscribe(`/sub/room/${roomId}`, message => {
                 console.log('Received message:', message.body);
@@ -97,7 +97,7 @@ function Room({ roomId, onLeaveRoom , senderDeleteYn, receiverDeleteYn}) {
             const message = {
                 senderId: memberId,
                 senderName: name,
-                message: `${name} 님이 입장하셨습니다.`
+                message: `${name} 님이 입장하셨습니다.`,
             };
             client.publish({
                 destination: `/pub/room/${roomId}/entered`,
