@@ -28,6 +28,12 @@
     width: auto;
 }
 
+.insertLeave:hover {
+    background-color: #465970; 
+    color: #ffffff;
+    border: solid #465970;
+}
+
 .myLeaveListContent th {
     text-align: center;
     padding: 10px;
@@ -49,19 +55,31 @@
 .cancelRequest {
     background-color: #112D4E;
     color: #ffffff;
-    border: solid #112D4E;
+    border: solid 2px #112D4E;
     border-radius: 10px;
     padding: 1% 2%;
     cursor: pointer;
     text-decoration: none;
 }
 
-.requestDelete {
-    background-color: #3F72AF;
+.cancelRequest:hover {
+    background-color: #465970; 
     color: #ffffff;
-    border: solid #3F72AF;
+    border: solid 2px #465970;
+}
+
+.requestDelete {
+    background-color: #ffffff;
+    color: #000000;
+    border: solid 2px #FA6060;
     border-radius: 10px;
     padding: 1% 2%;
     cursor: pointer;
     text-decoration: none;
+}
+
+.requestDelete:hover {
+    background-color: #FA6060; 
+    color: #ffffff;
+    border: solid 2px #FA6060;
 }
