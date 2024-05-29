@@ -33,6 +33,9 @@
     justify-content: space-around; */
     align-self: end;
     justify-self: flex-end;
+    gap: 20px;
+    display: flex;
+    margin-right: 10px;
 }
 
 .modalActions button {

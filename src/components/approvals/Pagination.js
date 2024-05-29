@@ -19,6 +19,29 @@ function Pagination({ totalPages, currentPage, onPageChange }) {
         return {marginLeft : '0px'};
     }
 
+    const getPaginationRange = () => {
+        const totalPageNumbers = 10;
+        const halfPageNumbers = Math.floor(totalPageNumbers / 2);
+
+        let start = currentPage - halfPageNumbers;
+        let end = currentPage + halfPageNumbers;
+
+        if (start < 0) {
+            start = 0;
+            end = totalPageNumbers;
+        }
+
+        if (end > totalPages) {
+            start = totalPages - totalPageNumbers;
+            end = totalPages;
+        }
+
+        return Array.from({ length: end - start }, (_, i) => i + start);
+    };
+
+    const paginationRange = getPaginationRange();
+
+
     return (
         <div className='pagination approvalPage'>
             

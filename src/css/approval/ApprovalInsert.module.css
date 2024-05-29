@@ -11,6 +11,10 @@
 .tempSave button{
     background-color: #3F72AF;
     border-radius: 10px;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    
 }
 .tempSave button:hover{
     background-color: #92B9E7;
@@ -79,6 +83,7 @@
     border-radius: 5px;
     font-size: 15px;
     font-weight: lighter;
+    border-radius: 10px;
 }
 
 
@@ -99,6 +104,7 @@
     padding: 5px;
     padding-left: 10px;
     position:relative;
+    border-radius: 10px;
 }
 .LineTitle{
     font-size: 20px;
