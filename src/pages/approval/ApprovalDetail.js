@@ -47,7 +47,7 @@ const ApprovalDetail = () => {
         return <div>No detail available</div>
     }
 
-    const { memberId: approvalMemberId, approver, referencer, approvalTitle, approvalContent, approvalStatus } = approvalDetail;
+    const { memberId: approvalMemberId, approver, referencer, approvalTitle, approvalContent, approvalStatus, attachment } = approvalDetail;
 
     const handleWithdrawClick = () => {
         setIsWithdrawModalOpen(true);
@@ -106,11 +106,11 @@ const ApprovalDetail = () => {
 
     //작성자가 0번째에 있고, 작성자 다음으로 결재처리를 한 사람이 없거나 첫번째 사람이 결재처리를 안했으면 회수 버튼을 보이도록 설정
     const isSender = approver[0]?.memberId === memberId;
-    console.log("0번째 결재자가 작성자가 맞는지: " + isSender)
+    // console.log("0번째 결재자가 작성자가 맞는지: " + isSender)
     const firstApproverHasNotApproved = approver[1]?.approverStatus !== '승인' && approver[1]?.approverStatus !== '반려';
-    console.log('첫번째 결재자가 결재를 했나 : ' + firstApproverHasNotApproved);
+    // console.log('첫번째 결재자가 결재를 했나 : ' + firstApproverHasNotApproved);
     const canWithdraw = isSender && firstApproverHasNotApproved && approvalDetail.approvalStatus !== '회수';
-    console.log('0번째 결재자가 작성자가 맞거나 승인 반려한사람이 없거나 회수상태가 아닌가' + canWithdraw);
+    // console.log('0번째 결재자가 작성자가 맞거나 승인 반려한사람이 없거나 회수상태가 아닌가' + canWithdraw);
 
     //접속자가 현재 approver 중에서 approverStatus 가 '대기'인 사람 중에 가장 먼저인가
     const currentApprover = approver.find(a => a.memberId === memberId && a.approverStatus === '대기');
@@ -130,6 +130,7 @@ const ApprovalDetail = () => {
     //반려 사유 확인
     const rejectReasonFromApprover = approver.find(a => a.approverStatus === '반려')?.rejectReason;
 
+    
 
     return (
         <main id="main" className="main">
@@ -161,6 +162,16 @@ const ApprovalDetail = () => {
                         <div className={styles.attachmentListLabel}>
                             첨부파일
                         </div>
+                        {attachment && attachment.length > 0 && (
+                            <ul className={styles.attachmentList}>
+                                {attachment.map((file, index) => (
+                                    <li key={index}>
+                                        {file.fileOriname}
+                                        <button className={styles.fileDownloadBtn}><a href={`/approvals/files?fileSavepath=${encodeURIComponent(file.fileSavepath)}&fileSavename=${encodeURIComponent(file.fileSavename)}&fileOriname=${encodeURIComponent(file.fileOriname)}`} download>다운로드</a></button>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                         <div>
                             
                         </div>
