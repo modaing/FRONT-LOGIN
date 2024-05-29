@@ -170,7 +170,7 @@ function Room({ roomId, onLeaveRoom , senderDeleteYn, receiverDeleteYn}) {
             console.log(imageUrl);
             return imageUrl;
         } else {
-            return null; // 자동 메시지인 경우 이미지를 반환하지 않음
+            return '/img/gpt.jpg'; 
         }
     };
 
@@ -202,7 +202,7 @@ function Room({ roomId, onLeaveRoom , senderDeleteYn, receiverDeleteYn}) {
                             }
                         }}
                         disabled={isRoomDeleted}
-                        placeholder={isRoomDeleted ? "이 방은 삭제되었습니다." : "메시지를 입력해주세요"}
+                        placeholder={isRoomDeleted ? "상대방이 퇴장하였습니다." : "메시지를 입력해주세요"}
                     />
                     <button onClick={sendMessage} >Send</button>
                     <button className='button-leave' onClick={handleLeaveRoom}>Leave Room</button>

@@ -50,7 +50,7 @@ const ResponseNoteModal = ({ note, onClose, showResponseButton = true }) => {
                     </div>
                     <div className="modal-body">
                     <div className="note-detail-item">
-                                <div className="note-detail-label">보낸 사람:</div>
+                                <div className="note-detail-label">받는 사람:</div>
                                 <div className="note-detail-value">{note.senderId}</div>
                             </div>
                         <div className="note-detail-item">

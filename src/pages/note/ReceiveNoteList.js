@@ -176,7 +176,7 @@ const ReceiveNoteList = () => {
                                                             <Link to="#" className="bi bi-envelope" style={{ fontSize: '1.2rem', color: '#808080', background: 'none', marginLeft: '20px' }}></Link>
                                                         </div>
                                                     </th>
-                                                    <th className="third-column">받을 사원</th>
+                                                    <th className="third-column">보낸 사원</th>
                                                     <th className="fourth-column">제목</th>
                                                     <th className="fifth-column">받은 날짜</th>
                                                 </tr>
