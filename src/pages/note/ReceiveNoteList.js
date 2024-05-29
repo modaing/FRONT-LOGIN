@@ -151,7 +151,7 @@ const ReceiveNoteList = () => {
                         <div className="row">
                             <div className="col-lg-2" style={{ borderRight: '1px solid #ccc' }}>
                                 <div style={{ marginTop: '50px' }}>
-                                    <Link to="#" className="sendMailBtn" type="button" onClick={openForm}>쪽지 보내기</Link>
+                                    <Link to="#" className="sendMailBtn" type="button" onClick={openForm}>쪽지 발송</Link>
                                     <Link to="/sendNoteList" className="sidebar-fake">
                                         <i className="bi bi-envelope" style={{ marginRight: '10px' }}></i><span>보낸 편지함</span>
                                     </Link>
@@ -173,7 +173,6 @@ const ReceiveNoteList = () => {
                                                     <th className="second-column-top">
                                                         <div style={{ marginBottom: '-2px', marginLeft: '-25px' }}>
                                                             <Link to="#" className="bi bi-trash" style={{ fontSize: '1.3rem', color: '#a1a1a1', background: 'none' }} onClick={() => setIsUpdateModalOpen(true)}></Link>
-                                                            <Link to="#" className="bi bi-envelope" style={{ fontSize: '1.2rem', color: '#808080', background: 'none', marginLeft: '20px' }}></Link>
                                                         </div>
                                                     </th>
                                                     <th className="third-column">보낸 사원</th>

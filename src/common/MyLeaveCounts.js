@@ -9,8 +9,8 @@ function MyLeaveCounts() {
     const dispatch = useDispatch();
     const [totalDays, setTotalDays] = useState('');
     const [remainingDays, setRemaingDats] = useState('');
-    // const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
-    const memberId = 240528903; 
+    const memberId = decodeJwt(window.localStorage.getItem("accessToken")).memberId;
+    // const memberId = 240528903; 
 
     const { leaveInfo } = useSelector(state => state.leaveReducer);
 

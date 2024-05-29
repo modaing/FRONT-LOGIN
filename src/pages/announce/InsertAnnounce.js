@@ -6,7 +6,7 @@ import { ancInsertAPI } from '../../apis/AncAPICalls';
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 import { decodeJwt } from '../../utils/tokenUtils';
-import '../../css/common.css';
+import { fontSize } from '@mui/system';
 
 function InsertAnnounce() {
     const navigate = useNavigate();
@@ -19,33 +19,10 @@ function InsertAnnounce() {
     let memberId = 0; // const는 재할당 불가능 하므로, let으로 만들어주었음
     let name = '';
 
-
     const decodedTokenInfo = decodeJwt(window.localStorage.getItem("accessToken"));
-
 
     memberId = decodedTokenInfo.memberId; // 함수 내부에서 memberId 할당
     name = decodedTokenInfo.name;
-
-
-
-    const insertButton = {
-        backgroundColor: '#112D4E',
-        color: 'white',
-        borderRadius: '15px',
-        padding: '10px 20px',
-        cursor: 'pointer',
-        marginRight: '15px'
-    };
-
-    const cancelButton = {
-        backgroundColor: '#ffffff',
-        color: 'black',
-        border: '1px solid #D5D5D5',
-        borderRadius: '15px',
-        padding: '10px 20px',
-        cursor: 'pointer',
-        marginRight: '15px'
-    };
 
     const buttonClass = {
         marginTop: '20px',
@@ -146,8 +123,13 @@ function InsertAnnounce() {
                                 </div>
                             </div>
                             <div style={buttonClass}>
-                                <button className="notice-cancel-button" type='button' style={cancelButton} onClick={() => navigate('/announces')}>취소하기</button>
-                                <button className="notice-insert-button" style={insertButton}>등록하기</button>
+                                <button className="anc-cancel-button" type='button'  onClick={() => navigate('/announces')}>취소</button>
+                                <button 
+                                    className="anc-insert-button" 
+                                    disabled={!title || !content.trim()} // Disable if title or content is empty
+                                >
+                                    등록
+                                </button>
                             </div>
                         </form>
                     </div>
