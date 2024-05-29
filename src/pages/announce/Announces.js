@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchAnnouncementsAsync, setCurrentPage } from '../../modules/AnnounceModule';
-import '../../css/common.css';
 import AnnounceList from '../announce/AnnouceList'
 import { decodeJwt } from '../../utils/tokenUtils';
+import '../../css/announce/ancList.css';
 
 function Announces() {
     const { announcements, currentPage, totalPages } = useSelector(state => state.announceReducer);
@@ -52,17 +52,9 @@ function Announces() {
                         <li className="breadcrumb-item"><a href="/">Home</a></li>
                         <li className="breadcrumb-item active">공지사항</li>
                         {role === 'ADMIN' && (
-                            <Link
+                            <Link className="insertAnnouceBtn"
                                 to="/insertAnnounce"
-                                style={{
-                                    backgroundColor: '#112D4E',
-                                    color: 'white',
-                                    borderRadius: '10px',
-                                    padding: '1% 2%',
-                                    cursor: 'pointer',
-                                    marginLeft: '93%',
-                                    textDecoration: 'none'
-                                }}
+                                style={{color: 'white'}}
                             >
                                 등록
                             </Link>

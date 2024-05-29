@@ -75,9 +75,9 @@ const ResponseNoteModal = ({ note, onClose, showResponseButton = true }) => {
                         </div>
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" onClick={onClose} style={{ backgroundColor: '#ec76a2' }}>닫기</button>
+                        <button type="button" className="note-close-btn" onClick={onClose} >닫기</button>
                         {showResponseButton && (
-                            <button type="button" className="btn btn-secondary" style={{ backgroundColor: '#112D4E', color: 'white', borderRadius: '5px' }} onClick={handleNoteSubmit}>답장</button>
+                            <button type="button" className="note-response-btn" onClick={handleNoteSubmit}>답장</button>
                         )}
                     </div>
                 </div>
