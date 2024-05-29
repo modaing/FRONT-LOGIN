@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { callSelectMemberList } from '../../apis/LeaveAPICalls';
 import LeaveCheckModal from './LeaveCheckModal';
 import '../../css/leave/LeaveAccrualModal.css';
+import { formattedLocalDate } from '../../utils/leaveUtil';
 
 const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
     const { memberList } = useSelector(state => state.leaveReducer);
     const [name, setName] = useState('');
     const [id, setId] = useState('');
+    const [start, setStart] = useState();
+    const [end, setEnd] = useState();
     const [days, setDays] = useState('');
     const [reason, setReason] = useState('');
+    const [etcReason, setEtcReason] = useState('');
     const [isCheckOpen, setIsCheckOpen] = useState(false);
-    const [reasonCount, setReasonCount] = useState(0);
+    const { leaveDaysCalc } = formattedLocalDate({ leaveSubStartDate: start, leaveSubEndDate: end })
 
     const dispatch = useDispatch();
 
@@ -35,7 +41,8 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
     }
 
     const handleSave = () => {
-        onSave({ id, days, reason });
+        const AccReason = reason === '기타' ? etcReason : reason;
+        onSave({ id, start, end, days, AccReason });
         setIsCheckOpen(false)
         onClose();
     };
@@ -43,6 +50,8 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
     const resetModal = () => {
         setId('');
         setName('');
+        setStart();
+        setEnd();
         setDays('');
         setReason('');
     };
@@ -71,14 +80,23 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
     }, [isOpen]);
 
     useEffect(() => {
-        setReasonCount(reason.length);
+        if (reason !== '기타') {
+            setEtcReason('');
+        }
     }, [reason]);
 
     useEffect(() => {
-        if (reasonCount > 100) {
-            setReason(reason.slice(0, 100));
+        (start > end) && setEnd('')
+        if (start && end) {
+            const diffTime = Math.abs(end - start);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            setDays(diffDays);
         }
-    }, [reasonCount]);
+    }, [start, end]);
+
+    useEffect(() => {
+        setDays(leaveDaysCalc);
+    }, [leaveDaysCalc]);
 
     return (
         isOpen && (
@@ -105,12 +123,30 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
                                         ))}
                                     </select>
                                 </div>
+                                <div className="form-group">
+                                    <label>발생 기간</label>
+                                    <div className='dateFlex'>
+                                        <DatePicker selected={start} onChange={e => setStart(e)} dateFormat="yyyy-MM-dd" className="form-control" />
+                                        <DatePicker selected={end} onChange={e => setEnd(e)} dateFormat="yyyy-MM-dd" className="form-control" />
+                                    </div>
+                                </div>
+                                <div className="leaveAccrual"><label>발생 일수</label><input type="number" value={days} onChange={e => setDays(e.target.value)} className="form-control" disabled /></div>
 
-                                <div className="leaveAccrual"><label>발생 일수</label><input type="number" value={days} onChange={e => setDays(e.target.value)} className="form-control" /></div>
 
-                                <label>발생 사유</label>
-                                <textarea type="text" value={reason} onChange={e => setReason(e.target.value)} className="form-control" rows="3" />
-                                <span className='accrualCount'>{reasonCount} / 100</span>
+                                <div className="leaveAccrual">
+                                    <label>사유</label>
+                                    <select value={reason} onChange={e => setReason(e.target.value)} className="form-select">
+                                        {!reason && <option value="">사유 선택</option>}
+                                        <option value="공가">공가</option>
+                                        <option value="경조사">경조사</option>
+                                        <option value="예비군">예비군</option>
+                                        <option value="기타">기타</option>
+                                    </select>
+                                </div>
+                                {reason === '기타'
+                                    &&
+                                    <input className="form-control" placeholder="기타 사유를 입력해주세요" type='text' value={etcReason} onChange={e => setEtcReason(e.target.value)} />
+                                }
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>

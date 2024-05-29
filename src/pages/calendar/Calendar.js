@@ -17,9 +17,9 @@ import '../../css/common.css'
 import '../../css/calendar/Calendar.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 
-
 function Calendar() {
     const token = decodeJwt(window.localStorage.getItem("accessToken"));
+    const isAdmin = token?.role === 'Admin' ? true : false;
     const { calendarList, insertMessage, updateMessage, deleteMessage } = useSelector(state => state.calendarReducer)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [events, setEvents] = useState([]);
@@ -38,11 +38,10 @@ function Calendar() {
     };
 
     const handleEventClick = info => {
-        if (info.event.extendedProps.detail === '공휴일') {
-            return; 
+        if (isAdmin && info.event.extendedProps.detail !== '공휴일') {
+            setSelectedEvent(info.event);
+            handleOpenModal();
         }
-        setSelectedEvent(info.event);
-        handleOpenModal();
     };
 
     const handleInsert = ({ title, start, end, color, detail }) => {
@@ -86,6 +85,23 @@ function Calendar() {
 
     useEffect(() => updateEvents(calendarList, setEvents), [calendarList]);
 
+    // 풀캘린더 권한 제한용
+    const calendarHeaderToolbar = isAdmin ? {
+        start: 'prev,today,next AddButton',
+        center: 'title',
+        end: 'dayGridMonth,timeGridWeek,timeGridDay'
+    } : {
+        start: 'prev,today,next',
+        center: 'title',
+        end: 'dayGridMonth,timeGridWeek,timeGridDay'
+    };
+
+    const customButtons = isAdmin ? {
+        AddButton: {
+            text: "일정 등록",
+            click: handleOpenModal
+        }
+    } : {};
 
     return <>
         <main id="main" className="main">
@@ -111,18 +127,8 @@ function Calendar() {
             <Fullcalendar
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                 initialView={'dayGridMonth'}
-                customButtons={{
-                    AddButton: {
-                        text: "일정 등록",
-                        click: handleOpenModal
-                    }
-                }}
-                headerToolbar={{
-                    start: 'prev,today,next AddButton',             // 툴바 좌측
-                    center: 'title',                                // 툴바 중앙
-                    end: 'dayGridMonth,timeGridWeek,timeGridDay'    // 툴바 우측
-                }}
-
+                customButtons={customButtons}
+                headerToolbar={calendarHeaderToolbar}
                 events={events}
                 eventDidMount={info => calendarPopover(info)}
                 eventClick={handleEventClick}
