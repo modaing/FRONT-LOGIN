@@ -8,6 +8,7 @@ import { decodeJwt } from '../../utils/tokenUtils';
 import { renderLeaveAccrual } from '../../utils/leaveUtil';
 import '../../css/common.css';
 import '../../css/leave/LeaveAccrual.css';
+import { convertToUtc } from '../../utils/CommonUtil';
 
 function LeaveAccrual() {
     const { page, insertMessage } = useSelector(state => state.leaveReducer);
@@ -50,13 +51,16 @@ function LeaveAccrual() {
         setIsModalOpen(false);
     };
 
-    const handleInsert = ({ id, days, reason }) => {
+    const handleInsert = ({ id, start, end, days, AccReason }) => {
         const requestData = {
             recipientId: id,
             leaveAccrualDays: days,
-            leaveAccrualReason: reason,
+            leaveSubStartDate: convertToUtc(start),
+            leaveSubEndDate: convertToUtc(end),
+            leaveAccrualReason: AccReason,
             grantorId: memberId
         };
+        console.log('requestData', requestData);
         dispatch(callInsertLeaveAccrualAPI(requestData));
     };
 

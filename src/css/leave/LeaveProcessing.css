@@ -17,11 +17,17 @@
 }
 
 .leaveDetail {
-    background-color: #3F72AF;
+    background-color: #112D4E;
     color: #ffffff;
-    border: solid #3F72AF;
+    border: solid 2px #112D4E;
     border-radius: 10px;
-    padding: 1% 4%;
+    padding: 1% 2%;
     cursor: pointer;
     text-decoration: none;
+}
+
+.leaveDetail:hover {
+    background-color: #465970; 
+    color: #ffffff;
+    border: solid 2px #465970;
 }
