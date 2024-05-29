@@ -38,6 +38,9 @@ function Calendar() {
     };
 
     const handleEventClick = info => {
+        if (info.event.extendedProps.detail === '공휴일') {
+            return; 
+        }
         setSelectedEvent(info.event);
         handleOpenModal();
     };

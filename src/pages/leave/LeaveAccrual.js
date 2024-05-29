@@ -90,7 +90,7 @@ function LeaveAccrual() {
                 <ol className="breadcrumb">
                     <li className="breadcrumb-item"><Link to="/">Home</Link></li>
                     <li className="breadcrumb-item">휴가</li>
-                    <li className="breadcrumb-item active">휴가 발생 관리</li>
+                    <li className="breadcrumb-item active">특별 휴가 발생 관리</li>
                 </ol>
             </nav>
             <div className="leaveHeader">
