@@ -19,7 +19,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 function Calendar() {
     const token = decodeJwt(window.localStorage.getItem("accessToken"));
-    const isAdmin = token?.role === 'Admin' ? true : false;
+    const isAdmin = token?.role === 'ADMIN' ? true : false;
     const { calendarList, insertMessage, updateMessage, deleteMessage } = useSelector(state => state.calendarReducer)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [events, setEvents] = useState([]);
@@ -85,6 +85,8 @@ function Calendar() {
 
     useEffect(() => updateEvents(calendarList, setEvents), [calendarList]);
 
+    console.log('token',token);
+    console.log('isAdmin',isAdmin);
     // 풀캘린더 권한 제한용
     const calendarHeaderToolbar = isAdmin ? {
         start: 'prev,today,next AddButton',

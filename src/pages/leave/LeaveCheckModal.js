@@ -16,8 +16,8 @@ const LeaveCheckModal = ({ isOpen, onClose, onConfirm, option }) => {
                                 <span>{option}하시겠습니까?</span>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" onClick={() => onClose(false)}>취소</button>
-                                <button type="button" className="btn btn-primary" onClick={onConfirm}>{option}</button>
+                                <button type="button" className="btn btn-negative" onClick={() => onClose(false)}>취소</button>
+                                <button type="button" className="btn btn-positive" onClick={onConfirm}>{option}</button>
                             </div>
                         </div>
                     </div>

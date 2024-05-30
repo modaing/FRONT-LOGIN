@@ -76,8 +76,8 @@ const CalendarModal = ({ isOpen, onClose, onSave }) => {
                             <textarea type="text" value={detail} onChange={e => setDetail(e.target.value)} className="form-control" rows="3" />
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
-                            <button type="button" className="btn btn-primary" onClick={handleImport}>등록</button>
+                            <button type="button" className="btn btn-negative" onClick={onClose}>취소</button>
+                            <button type="button" className="btn btn-positive" onClick={handleImport}>등록</button>
                         </div>
                     </div>
                 </div>

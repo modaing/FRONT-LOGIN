@@ -24,7 +24,7 @@ function SurveyList() {
     const token = decodeJwt(window.localStorage.getItem("accessToken"));
     const memberId = token?.memberId;
     const name = token?.name;
-    const isAdmin = token?.role === 'Admin' ? true : false;
+    const isAdmin = token?.role === 'ADMIN' ? true : false;
 
     const dispatch = useDispatch();
 
