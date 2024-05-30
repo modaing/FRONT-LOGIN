@@ -42,7 +42,8 @@ function DepartNameModal(props) {
 
     const handleClose = () => {
         onClose();
-        navigate(-1); // Replace the current URL with the desired one
+        // navigate(-1); // Replace the current URL with the desired one
+        navigate('/departmentAndPosition');
         // window.location.reload(); // Refresh the page
     }
 
