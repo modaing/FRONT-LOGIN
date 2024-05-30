@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import '../../css/commute/commute.css';
 import '../../css/common.css';
-import { LocalizationProvider, PickersActionBar, TimePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from "dayjs";
 import utc from 'dayjs/plugin/utc';
@@ -179,11 +179,11 @@ const InsertCorrectionModal = ({ commute, isOpen, onClose, onSave, date, startWo
                             </div>
                         </div>
                         <div className="modal-footer" style={{ paddingBottom: '0px', paddingTop: '20px' }}>
-                            <button type="button" className="cancel" onClick={onClose} 
+                            <button type="button" className="btn-negative" onClick={onClose} 
                             >
                                 취소
                             </button>
-                            <button type="button" className="regist" onClick={handleSave} 
+                            <button type="button" className="btn-positive" onClick={handleSave} 
                             >
                                 등록
                             </button>

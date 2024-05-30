@@ -1,5 +1,5 @@
 import '../../css/commute/commute.css';
-// import '../../css/common.css';
+import '../../css/common.css';
 
 function CorrectionDetailModal({ isOpen, onClose, correction }) {
 
@@ -82,7 +82,7 @@ function CorrectionDetailModal({ isOpen, onClose, correction }) {
                             </div>
                         </div>
                         <div className="modal-footer" style={{ paddingBottom: '0px', paddingTop: '20px' }}>
-                            <button type="button" className="cancel-btn" onClick={onClose}
+                            <button type="button" className="btn-negative" onClick={onClose}
                             // style={{ backgroundColor: '#ffffff', border: '2px solid #D9D9D9', color: '#000000' }}
                             >
                                 확인
