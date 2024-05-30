@@ -64,8 +64,8 @@ const SurveyModal = ({ isOpen, onClose, onSave, survey }) => {
                             </div>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
-                            <button type="button" className="btn btn-primary" onClick={handleInsert}>제출</button>
+                            <button type="button" className="btn btn-negative" onClick={onClose}>취소</button>
+                            <button type="button" className="btn btn-positive" onClick={handleInsert}>제출</button>
                         </div>
                     </div>
                 </div>

@@ -78,8 +78,8 @@ function Leaves() {
                     <table className="table table-hover">
                         <thead>
                             <tr>
-                                <th onClick={() => handleSort('applicantName')}>
-                                    <span>사원명</span><i className="bx bxs-sort-alt"></i>
+                                <th>
+                                    <span>사원명</span>
                                 </th>
 
                                 <th onClick={() => handleSort('memberId')}>
