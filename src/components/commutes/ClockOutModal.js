@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { callUpdateCommuteAPI } from "../../apis/CommuteAPICalls";
 import dayjs from "dayjs";
 import '../../css/commute/commute.css';
+import '../../css/common.css';
 
 const ClockOutModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteList, onClockOutCompleted }) => {
     
@@ -96,6 +97,7 @@ const ClockOutModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteLi
                         </div>
                         <div className="modal-footer">
                             <button onClick={onClose} 
+
                             className="btn-negative"
                             //  style={{
                             //     width: '50px',
@@ -122,6 +124,14 @@ const ClockOutModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteLi
                             //     cursor: 'pointer',
                             //     textDecoration: 'none'
                             // }}
+
+                            className="btn-negative "
+                            >
+                                취소
+                            </button>
+                            <button onClick={handleUpdateCommute} 
+                            className="btn-positive"
+
                             >
                                 퇴근
                             </button>

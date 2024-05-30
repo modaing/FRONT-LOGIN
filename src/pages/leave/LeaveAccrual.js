@@ -99,7 +99,7 @@ function LeaveAccrual() {
             </nav>
             <div className="leaveHeader">
                 <div></div>
-                <span className="insertAccrual" onClick={handleOpenModal} >휴가 발생</span>
+                <span className="btn-contentHeader" onClick={handleOpenModal} >휴가 발생</span>
             </div>
         </div>
         <div className="col-lg-12">

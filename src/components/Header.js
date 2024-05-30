@@ -100,7 +100,7 @@ function Header() {
                         <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" style={{ width: '300px', height: '480px' }}>
                             <div >
                                 <li className="dropdown-header" style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0px' }}>
-                                    <span style={{ marginLeft: '50px', fontSize: '15px' }}>새로운 알림</span>
+                                    <span style={{ fontSize: '15px' }}>알림 내역</span>
                                     {/* <Link to="#"><span style={{ border: '2px solid #FA6060', color: '#000000', backgroundColor: '#ffffff', borderRadius: '5px', padding: '3px' }} onClick={handleDeleteNotices}>삭제</span></Link> */}
                                     <Link to="#" onclick={handleDeleteNotices}><i class="bi bi-trash-fill"></i></Link>
                                 </li>

@@ -23,7 +23,7 @@ function CommuteManage() {
         border-color: #D5D5D5;
     `;
 
-    const [date, setDate] = useState("2024-05-01"); // 발표 전 6월로 바꾸기 
+    const [date, setDate] = useState("2024-06-01"); 
     const [depart, setDepart] = useState(1);
     const [showWorkingHours, setShowWorkingHours] = useState(false);
     const [showWorkingHoursComponent, setShowWorkingHoursComponent] = useState(false);
@@ -113,7 +113,7 @@ function CommuteManage() {
     ];
 
     const DATEOPTIONS = [
-        // { value: "2024-06-01", name: "2024-06" },    // 발표 전 주석 해제하기 
+        { value: "2024-06-01", name: "2024-06" },
         { value: "2024-05-01", name: "2024-05" },
         { value: "2024-04-01", name: "2024-04" },
         { value: "2024-03-01", name: "2024-03" },
@@ -125,7 +125,7 @@ function CommuteManage() {
         { value: "2023-09-01", name: "2023-09" },
         { value: "2023-08-01", name: "2023-08" },
         { value: "2023-07-01", name: "2023-07" },
-        { value: "2023-06-01", name: "2023-06" }
+        // { value: "2023-06-01", name: "2023-06" }
     ];
 
     const isSameDate = (workingDateArray, selectedDateArray) => {

@@ -14,6 +14,7 @@ import ClockLimitModal from '../../components/commutes/ClockLimitModal';
 import NewCommuteAndCorrection from '../../components/commutes/NewCommuteAndCorrection';
 import { setExpectedTotalWorkingTime, setStartTime, setWorkingHoursStatus } from '../../modules/CommuteModule';
 import ClockOutWarningModalBy52 from '../../components/commutes/ClockOutWarningModalBy52';
+import LimitClockinModalBy52 from '../../components/commutes/LimitClockInModalBy52';
 
 function RecordCommute() {
 
@@ -44,6 +45,8 @@ function RecordCommute() {
     const [showClockLimitModal, setShowClockLimitModal] = useState(false);
     const [showNewCommuteAndCorrModal, setShowNewCommuteAndCorrModal] = useState(false);
     const [showClockOutWarningModalBy52, setShowClockOutWarningModalBy52] = useState(false);
+    const [showLimitClockInModalBy52, setShowLimitClockInModalBy52] = useState(false);
+    const [limitClockInButton, setLimitClockInButton] = useState(false);
 
     const dispatch = useDispatch();
     const { startTime, expectedTotalWorkingTime, isWorkingHoursLimited, totalWorkingHours } = useSelector(
@@ -257,6 +260,28 @@ function RecordCommute() {
         setShowNewCommuteAndCorrModal(false);
     }
 
+    /* 실제 근로 시간이 52시간에 도달하여 출근시간 등록 제한 경고 모달 */
+    const handleShowLimitClockInModalBy52 = () => {
+        setShowLimitClockInModalBy52(true);
+    }
+
+    const handleShowLimitClockInModalBy52Close = () => {
+        setShowLimitClockInModalBy52(false);
+    }
+
+    /* 잔여 근로 시간이 8시간 이하일 경우 잔여 근로 시간 내에 '퇴근하기' 진행 권고 모달 */
+    const handleShowLimitClockOutWarningModalBy52 = () => {
+        setShowClockOutWarningModalBy52(true);
+    }
+
+    const handleShowLimitClockOutWarningModalBy52Close = () => {
+        setShowClockOutWarningModalBy52(false);
+    }
+
+    const handleShowLimitClockInButton = () => {
+        setLimitClockInButton(true);
+    }
+
     return <>
         <main id="main" className="main">
             <div className="pagetitle">
@@ -331,11 +356,21 @@ function RecordCommute() {
                                 memberId={memberId}
                             />
                         )}
-                        {showClockOutWarningModalBy52 && (
+                        {showClockOutWarningModalBy52 && (  // 잔여 근로 시간 8시간 이하일 때 잔여 근로 시간 내 퇴근 등록 안내 모달 
                             <ClockOutWarningModalBy52
+                                date={date}
                                 isOpen={showClockOutWarningModalBy52}
-                                onClose={() => setShowClockOutWarningModalBy52(false)}
-                                totalWorkingHours={totalWorkingHours}
+                                onClose={handleShowLimitClockOutWarningModalBy52Close}
+                                commute={commuteList}
+                            />
+                        )}
+                        {showLimitClockInModalBy52 && ( // 잔여 근로 시간 2분 미만일 때 출근 제한 안내 모달
+                            <LimitClockinModalBy52
+                                date={date}
+                                isOpen={showLimitClockInModalBy52}
+                                onClose={handleShowLimitClockInModalBy52Close}
+                                parsingDateOffset={parsingDateOffset}
+                                commute={commuteList}
                             />
                         )}
                     </ol>
@@ -348,7 +383,11 @@ function RecordCommute() {
                         commute={commuteList}
                         date={date}
                         handlePreviousClick={handlePreviousClick}
-                        handleNextClick={handleNextClick} />
+                        handleNextClick={handleNextClick}
+                        handleShowLimitClockInModalBy52={handleShowLimitClockInModalBy52}
+                        handleShowLimitClockOutWarningModalBy52={handleShowLimitClockOutWarningModalBy52}
+                        handleShowLimitClockInButton={handleShowLimitClockInButton}
+                    />
                 )}
             </div>
             <div>
@@ -360,7 +399,8 @@ function RecordCommute() {
                         parsingDateOffset={parsingDateOffset}
                         memberId={memberId}
                         handleCorrectionRegistered={handleCorrectionRegistered}
-                        onClose={handleCorrectionModalClose} />
+                        onClose={handleCorrectionModalClose}
+                    />
                 )}
             </div>
         </main>

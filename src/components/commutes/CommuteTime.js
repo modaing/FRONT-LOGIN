@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import '../../css/commute/commute.css';
 import { margin } from '@mui/system';
 
-function CommuteTime({ commute, date, handlePreviousClick, handleNextClick }) {
+function CommuteTime({ commute, date, handlePreviousClick, handleNextClick, handleShowLimitClockInModalBy52, handleShowLimitClockOutWarningModalBy52, handleShowLimitClockInButton }) {
 
+    console.log('time date', date);
     const weekData = useMemo(() => {
         const weeks = [];
         let currentWeek = [];
@@ -36,21 +37,21 @@ function CommuteTime({ commute, date, handlePreviousClick, handleNextClick }) {
     /* 주 단위로 이동하는 버튼 */
     const Button = ({ children, onClick }) => {
         return (
-            <button 
-            onClick={onClick} 
-            style={{
-                backgroundColor: 'transparent',
-                border: 'none',
-                fontSize: '24px',
-                cursor: 'pointer',
-                fontWeight: 900,
-                color: '#000000',
-                paddingLeft: '10px',
-                paddingRight: '10px',
-                ':hover': {
-                    backgroundColor: '#d5d5d5',
-                },
-            }}>
+            <button
+                onClick={onClick}
+                style={{
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    fontSize: '24px',
+                    cursor: 'pointer',
+                    fontWeight: 900,
+                    color: '#000000',
+                    paddingLeft: '10px',
+                    paddingRight: '10px',
+                    ':hover': {
+                        backgroundColor: '#d5d5d5',
+                    },
+                }}>
                 {children}
             </button>
         );
@@ -69,15 +70,20 @@ function CommuteTime({ commute, date, handlePreviousClick, handleNextClick }) {
     /* 주 번호의 날짜 범위 계산 */
     function getWeekRange(date) {
         const currentDate = new Date(date);
+        console.log('오늘날짜 ', currentDate);
         const dayOfWeek = currentDate.getDay() || 7;    // 일요일을 7로 처리
         const mondayDate = new Date(currentDate.getTime() - (dayOfWeek - 1) * 24 * 60 * 60 * 1000);
         const sundayDate = new Date(mondayDate.getTime() + 6 * 24 * 60 * 60 * 1000);
+        console.log(mondayDate);
+        console.log(sundayDate);
 
         const monthStart = new Date(mondayDate);    // 이번주 월요일
         const monthEnd = new Date(sundayDate);      // 이번주 일요일
 
         const monthStartStr = `${monthStart.getMonth() + 1}월 ${monthStart.getDate()}일`;   // 이번주 월요일 문자열로 변환
         const monthEndStr = `${monthEnd.getMonth() + 1}월 ${monthEnd.getDate()}일`;         // 이번주 일요일 문자열로 변환
+        console.log(monthStartStr);
+        console.log(monthEndStr);
 
         return `${monthStartStr} ~ ${monthEndStr}`;
     };
@@ -107,6 +113,21 @@ function CommuteTime({ commute, date, handlePreviousClick, handleNextClick }) {
     const maxWorkingHours = 3120;   // 52시간 = 3120분
     const remainingWorkingHours = maxWorkingHours - totalWorkingHours;
     const formattedRemainingWorkingHours = formatTotalWorkingHours(remainingWorkingHours);
+    const isRemainingLessThanEight = remainingWorkingHours <= 480; // 8시간 이하 여부 확인
+    const isRemainingWorkTime = remainingWorkingHours < 2;
+
+    useEffect(() => {
+        if (isRemainingLessThanEight) {
+            console.log('잔여 근로 시간 888888888888888888888888888888888888888888888');
+            handleShowLimitClockOutWarningModalBy52();
+            handleShowLimitClockInButton();
+        }
+        if (isRemainingWorkTime) {
+            console.log('잔여 근로 시간 000000000000000000000000000000000000000000000');
+            handleShowLimitClockInModalBy52();
+            handleShowLimitClockInButton();
+        }
+    }, [isRemainingLessThanEight, isRemainingWorkTime]);
 
     /* 한 주 전으로 이동 */
     const handlePreviousWeekClick = () => {
