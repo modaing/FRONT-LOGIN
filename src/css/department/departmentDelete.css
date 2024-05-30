@@ -137,13 +137,21 @@
     margin-bottom: 100px;
 }
 
-/* Paragraph Style */
-.pStyleDeleteDepart {
-    width: 150px;
-    font-size: 20px;
-    margin-bottom: 2px;
-    margin-left: 5px;
+.departNameStyle123 {
+    /* margin-right: 20px; */
+    margin: auto;
     margin-right: 20px;
+    display: flex;
+    align-items: center;
+    width: 90px;
+}
+
+.positionDeleteModalStyle {
+    margin: auto;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    width: 80px;
 }
 
 .pStyleDeletePosition {

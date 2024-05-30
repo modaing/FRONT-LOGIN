@@ -1,191 +1,79 @@
-.main2Pages {
-    margin: 20px;
-    width: 100%;
-}
-
-.pagetitle {
-    margin-bottom: 20px;
-}
-
-.department {
-    text-align: center;
+.firstPage {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width: 200px;
-    margin: 0px 20px;
-}
-
-.branchItem {
-    margin: 0px 20px;
-    align-items: center;
-}
-
-.positionWrapper {
-    display: flex;
-    justify-content: center;
-    align-content: center;
-}
-
-.flexedMembers {
-    display: flex;
-}
-
-.zoomInIcon {
-    size: 40;
-}
-
-.positionLevel {
-    margin-bottom: 20px;
-}
-
-.flexedUpperPositions {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 20px 0;
-}
-
-.flexedUpperPositions .department {
-    margin-bottom: 20px;
-}
-
-.flexedUpperPositions .branch {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.branch {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    align-self: center;
-    overflow: hidden; /* Hide overflow content */
-    transition: height 0.3s ease; /* Transition height changes */
-}
-
-.branch.collapsed {
-    height: 0; /* Collapse the branch when the collapsed class is applied */
-}
-
-/* Main container for departments */
-.departmentsContainer {
-    display: flex;
-    overflow-x: auto; /* Enable horizontal scroll */
-    white-space: nowrap; /* Prevent items from wrapping to the next line */
-    /* Add more spacing or other styling as needed */
-}
-
-.box {
-    background-color: white;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 30px;
-    padding: 10px;
-    width: 200px;
-    min-height: 100px; /* Adjusted min-height */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    transition: background-color 0.3s ease;
-    /* margin-right: 10px;  */
-    box-sizing: border-box; /* Include padding and border in the width calculation */
-}
-
-
-.departBox {
-    margin-bottom: 10px;
-    border: 1px solid;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50px;
-    width: 200px;
-    background-color: #3F72AF;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.departBox:hover {
-    background-color: #365f9b;
-}
-
-.departBox h2 {
-    margin: 0;
-}
-
-.departTitle {
-    text-align: center;
-    border: 1px solid;
-    padding: auto;
-}
-
-.positionTitle {
-    font-size: 18px;
-    color: #AAAAAA;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-.positionTitle--representative {
-    color: #3F72AF; /* Adjust color as needed */
-}
-
-.positionTitle--head {
-    color: #3F72AF; /* Adjust color as needed */
-}
-
-.positionTitle--viceHead {
-    color: #3F72AF; /* Adjust color as needed */
-}
-
-.positionTitle--manager {
-    color: #3F72AF; /* Adjust color as needed */
-}
-
-
-.memberName {
-    font-size: 25px;
-}
-
-.box-content {
-    cursor: pointer;
-    width: 100%; /* Adjusted width */
-    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
-    transition: background-color 0.3s ease;
+    box-sizing: border-box;
 }
 
-/* Add this CSS to your hierarchyTree.css file */
-
-/* Define the style for the connecting lines */
-.box-content::after {
-    content: '';
-    position: absolute;
-    top: calc(100% + 10px); /* Adjust the vertical position as needed */
-    left: 50%; /* Position the line in the center of the box */
-    border-left: 2px solid #000; /* Adjust line color and thickness */
-    transform: translateX(-50%); /* Center the line horizontally */
-    z-index: -1; /* Ensure lines are behind the boxes */
+.columnStyle {
+    width: 100%; /* Ensure it takes full width */
+    height: 100%; /* Ensure it takes full height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 
-.box:hover {
-    background-color: #f0f0f0;
-}
-
-.box-content span {
-    display: block;
+.treeWrapper {
+    width: 1088.89;
+    height: calc(100vh - 200px); /* Adjust the height to fit within the visible viewport, minus any headers/footers */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
+    overflow: hidden; /* Hide overflow within this container */
 }
 
 .chartContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto; /* Allow scrolling if content overflows */
+}
+
+
+.zoomControls {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center horizontally */
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+}
+
+.pagetitle h1 {
+    color: #2c3e50;
+    font-size: 24px;
+}
+
+.breadcrumb {
+    background: none;
+    padding: 0;
+    margin: 0;
+}
+
+.breadcrumb-item a {
+    color: #3498db;
+}
+
+.breadcrumb-item.active {
+    color: #7f8c8d;
+}
+
+.main2Pages {
+    height: 100vh; /* Ensure the main element takes the full viewport height */
+    overflow: hidden; /* Hide overflow to avoid scroll issues */
+}
+
+.no-font-style {
+    font-family: inherit !important;
 }

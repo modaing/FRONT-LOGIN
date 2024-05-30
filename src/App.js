@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Main from './pages/Main';
 import Announces from './pages/announce/Announces';
@@ -33,6 +33,7 @@ import HierarchyTree from './pages/member/HierarchyTree';
 import { useDispatch } from 'react-redux';
 import { decodeJwt } from './utils/tokenUtils';
 import ApprovalDetail from './pages/approval/ApprovalDetail';
+import ChangeMemberPage from './pages/member/ChangeMemberPage';
 
 function App() {
   const isLoggedIn = !!window.localStorage.getItem("accessToken");
@@ -47,9 +48,10 @@ function App() {
         {isLoggedIn ? (
           <Route element={<Layout />}>
             <Route index element={<Main />} />
-            <Route path="main" element={<Main />} />
-            <Route path='calendar' element={<Calendar />} />
-            <Route path='myProfile' element={<MyProfile />} />
+            <Route path="/" element={<Main />} />
+            <Route path="/main" element={<Main />} />
+            <Route path="calendar" element={<Calendar />} />
+            <Route path="myProfile" element={<MyProfile />} />
             <Route path="recordCommute" element={<RecordCommute />} />
             <Route path="recordCorrectionOfCommute" element={<RecordCorrectionOfCommute />} />
             <Route path="commuteManage" element={<CommuteManage />} />
@@ -63,18 +65,19 @@ function App() {
             <Route path="updateAnnounces/:ancNo" element={<UpdateAnnounce />} />
             <Route path="insite" element={<Insite />} />
             <Route path="insertAnnounce" element={<InsertAnnounce />} />
-            <Route path='manageMember' element={<ManageMember />} />
-            <Route path='registerMember' element={<RegisterMember />} />
-            <Route path='surveyList' element={<SurveyList />} />
-            <Route path='receiveNoteList' element={<ReceiveNoteList />} />
-            <Route path='sendNoteList' element={<SendNoteList />} />
+            <Route path="manageMember" element={<ManageMember />} />
+            <Route path="registerMember" element={<RegisterMember />} />
+            <Route path="surveyList" element={<SurveyList />} />
+            <Route path="receiveNoteList" element={<ReceiveNoteList />} />
+            <Route path="sendNoteList" element={<SendNoteList />} />
             <Route path="chatRoomList" element={<RoomList />} />
             <Route path="/room/:roomId" element={<Room />} />
-            <Route path='/departmentAndPosition' element={<DepartmentAndPosition />} />
-            <Route path='approvals' element={<ApprovalPage />} />
+            <Route path="departmentAndPosition" element={<DepartmentAndPosition />} />
+            <Route path="approvals" element={<ApprovalPage />} />
             <Route path="/manageMember/:memberId" element={<MemberPage />} />
             <Route path='/hierarchyTree' element={<HierarchyTree />} />
             <Route path='/approvals/:approvalNo' element={<ApprovalDetail />} />
+            <Route path='/manageMember/:memberId/edit' element={<ChangeMemberPage />} />
           </Route>
         ) : (
           <Route path="/" element={<Navigate to="/login" replace />} />
