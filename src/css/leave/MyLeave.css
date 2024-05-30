@@ -18,22 +18,6 @@
     margin-left: 10px;
 }
 
-.insertLeave {
-    background-color: #112D4E;
-    color: #ffffff;
-    border-radius: 10px; 
-    padding: 1% 1%;
-    cursor: pointer;
-    text-decoration: none;
-    width: auto;
-}
-
-.insertLeave:hover {
-    background-color: #465970; 
-    color: #ffffff;
-    border: solid #465970;
-}
-
 .myLeaveListContent th {
     text-align: center;
     padding: 10px;

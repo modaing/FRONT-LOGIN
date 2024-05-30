@@ -1,0 +1,27 @@
+.closeModalIdButton, .closeModalPasswordButton {
+    background-color: #ffffff;
+    color: black;
+    border: 1px solid #D5D5D5;
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 50px;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%; /* Ensure the container takes the full width of its parent */
+}
+
+.IdInformation, .PasswordInformation {
+    margin-top: 0px;
+    text-align: center;
+}
+
+.modalStyleForModalId, .modalStyleForModalPassword {
+    background-color: #fff;
+    padding: 50px 100px; /* Top, Right, Bottom, Left */
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}

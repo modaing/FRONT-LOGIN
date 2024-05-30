@@ -30,6 +30,7 @@ function PositionPeopleModal(props) {
 
     const handleClose = () => {
         onClose();
+        // navigate(-1);
         navigate('/departmentAndPosition');
         // window.location.reload();
     }
@@ -55,7 +56,7 @@ function PositionPeopleModal(props) {
                 </div>
                 <br/>
                 <div className='buttonContainerStyle123'>
-                    <button type="button" className='closeButtonStyle' onClick={handleClose}>취소</button>
+                    <button type="button" className='closeButtonStyle123' onClick={handleClose}>취소</button>
                 </div>
             </div>
         </div>

@@ -9,13 +9,11 @@ import moment from 'moment/moment';
 import dayjs from 'dayjs';
 
 function Header() {
-
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const token = window.localStorage.getItem("accessToken");
-    const memberInfo = decodeJwt(token);
-    const image = memberInfo.imageUrl;
-    const imageUrl = `/img/${image}`;
+    const memberInfo = token ? decodeJwt(token) : null;
+    const imageUrl = memberInfo ? `/img/${memberInfo.imageUrl}` : null;
 
     console.log(imageUrl)
 
@@ -27,24 +25,13 @@ function Header() {
     const [noticeCount, setNoticeCount] = useState(0);
     // const [noticeList, setNoticeList] = useState([]);
 
-    if (token) {
-        try {
-            const decodedTokenInfo = decodeJwt(token);
-
-        } catch (error) {
-            console.log('Error decoding JWT token:', error);
-        }
-    }
-
     const onClickLogoutHandler = (event) => {
         event.preventDefault();
         dispatch(callLogoutAPI())
             .then(() => {
                 window.localStorage.removeItem("accessToken");
-                console.log('구성원 로그아웃');
-                // alert('로그아웃 합니다');
-                /* 토큰 정보 없앴는지 확인용 */
-                console.log("token 정보:", window.localStorage.getItem("accessToken"));
+                // console.log('구성원 로그아웃');
+                alert('로그아웃합니다')
                 navigate("/login", { replace: true });
             })
             .catch(error => {
@@ -90,9 +77,9 @@ function Header() {
             <div className="d-flex align-items-center justify-content-between">
                 {/* 홈으로 이동하는 링크 */}
                 <Link to="/" className="logo d-flex align-items-center">
-                    <img src="img/logo.png" alt="" />
+                    <img src="img/logo.png" alt="Logo" />
                 </Link>
-                <i class="bi bi-list toggle-sidebar-btn"></i>
+                <i className="bi bi-list toggle-sidebar-btn"></i>
             </div>
             <nav className="header-nav ms-auto">
                 <ul className="d-flex align-items-center">
@@ -113,7 +100,7 @@ function Header() {
                         <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" style={{ width: '300px', height: '480px' }}>
                             <div >
                                 <li className="dropdown-header" style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0px' }}>
-                                    <span style={{ marginLeft: '50px', fontSize: '15px' }}>새로운 알림</span>
+                                    <span style={{ fontSize: '15px' }}>알림 내역</span>
                                     {/* <Link to="#"><span style={{ border: '2px solid #FA6060', color: '#000000', backgroundColor: '#ffffff', borderRadius: '5px', padding: '3px' }} onClick={handleDeleteNotices}>삭제</span></Link> */}
                                     <Link to="#" onclick={handleDeleteNotices}><i class="bi bi-trash-fill"></i></Link>
                                 </li>
@@ -139,19 +126,20 @@ function Header() {
                             <i className="bi bi-envelope"></i>
                             <span className="badge bg-success badge-number"></span>
                         </Link>
-
                     </li>
                     <li className="nav-item dropdown pe-3">
                         {/* 프로필 메뉴를 토글하는 링크 */}
-                        <Link to="#" className="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown">
-                            <img src={imageUrl} alt="Profile" className="rounded-circle" />
-                            <span className="d-none d-md-block dropdown-toggle ps-2">{memberInfo.name} </span>
-                        </Link>
+                        {memberInfo && (
+                            <Link to="#" className="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown">
+                                <img src={imageUrl} alt="Profile" className="rounded-circle" />
+                                <span className="d-none d-md-block dropdown-toggle ps-2">{memberInfo.name} </span>
+                            </Link>
+                        )}
                         {/* 프로필 메뉴 */}
                         <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                             <li className="dropdown-header">
-                                <h6>{memberInfo.name}</h6>
-                                <span>{memberInfo.positionName}</span>
+                                <h6>{memberInfo ? memberInfo.name : ''}</h6>
+                                <span>{memberInfo ? memberInfo.positionName : ''}</span>
                             </li>
                             <li>
                                 <hr className="dropdown-divider" />
@@ -188,7 +176,7 @@ function Header() {
                             </li>
                             {/* 프로필 메뉴 항목 */}
                             <li>
-                                <button to="#" className="dropdown-item d-flex align-items-center" onClick={onClickLogoutHandler}>
+                                <button className="dropdown-item d-flex align-items-center" onClick={onClickLogoutHandler}>
                                     <i className="bi bi-box-arrow-right"></i>
                                     <span>Sign Out</span>
                                 </button>

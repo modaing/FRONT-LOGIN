@@ -39,11 +39,12 @@ function RegisterMember() {
         memberId: '',
         employedDate: '',
         memberStatus: '',
-        birthday: {
-            year: '',
-            month: '',
-            day: ''
-        },
+        // birthday: {
+        //     year: '',
+        //     month: '',
+        //     day: ''
+        // },
+        birthday: '',
         gender: '',
         departDTO: {
             departNo: '',
@@ -64,11 +65,11 @@ function RegisterMember() {
         }
     }
 
-    const next = (e, len, nextId) => {
-        if (e.target.value.length == len) {
-            document.getElementById(nextId).focus();
-        }
-    }
+    // const next = (e, len, nextId) => {
+    //     if (e.target.value.length == len) {
+    //         document.getElementById(nextId).focus();
+    //     }
+    // }
 
     const handleAddData = (data) => {
         // console.log('data received from Post component:', data.address);
@@ -81,6 +82,7 @@ function RegisterMember() {
         try {
             const departmentList = await callGetDepartmentListAPI();
             setDepartmentInformation(departmentList);
+            console.log('departmentList:', departmentList);
         } catch (error) {
             console.error('부서 리스트 불러 오는데 오류 발생:', error); 
         }
@@ -200,6 +202,12 @@ function RegisterMember() {
                 [name]: fullAddress
             }))
         
+        } else if (name === 'birthday') {
+            console.log('inputted birthday:', value);
+            setMember(prevMember => ({
+                ...prevMember,
+                birthday: value
+            }));
         } else {
             setMember(prevMember => ({
                 ...prevMember,
@@ -240,10 +248,10 @@ function RegisterMember() {
         return `${year}-${month}-${day}`;
     };
 
-    const years = [];
-    for (let i = 1940; i <= new Date().getFullYear(); i++) {
-        years.push(i);
-    }
+    // const years = [];
+    // for (let i = 1940; i <= new Date().getFullYear(); i++) {
+    //     years.push(i);
+    // }
 
     // const months = [
     //     { value: '01', label: '1월' },
@@ -262,7 +270,6 @@ function RegisterMember() {
 
     // const days = Array.from({ length: 31 }, (_, i) => i + 1);
     
-    // JSX for populating the options
     // const yearOptions = years.map(year => (
     //     <option key={year} value={year}>{year}년</option>
     // ));
@@ -295,6 +302,14 @@ function RegisterMember() {
 
         setInputtedPhoneNo(formattedPhoneNumber);
     }
+
+    const returnPage = () => {
+        const userConfirmed = window.confirm('등록 그만하시고 돌아가시겠습니까?');
+    
+        if (userConfirmed) {
+            navigate('/manageMember');
+        }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -345,13 +360,13 @@ function RegisterMember() {
             return;
         }
 
-        const { year, month, day } = birthday;
-        const formattedBirthday = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        // const { year, month, day } = birthday;
+        // const formattedBirthday = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 
         const formData = new FormData();
 
         // formData.append('memberDTO', new Blob([JSON.stringify({name: name, address: address, email, email, memberId: memberId, memberStatus: "재직", employedDate: employedDate, password: '0000', role: role, phoneNo: inputtedPhoneNo, departmentDTO: {departNo: departDTO.departNo, departName: departDTO.departName}, positionDTO: {positionName: positionDTO.positionName, positionLevel: positionDTO.positionLevel}})], { type: 'application/json'}));
-        formData.append('memberDTO', new Blob([JSON.stringify({name: name, address: address, email: email, birthday: formattedBirthday, gender: gender, memberId: memberId, memberStatus: "재직", employedDate: employedDate, password: '0000', role: role, phoneNo: inputtedPhoneNo, departmentDTO: {departNo: departDTO.departNo, departName: departDTO.departName}, positionDTO: {positionName: positionDTO.positionName, positionLevel: positionDTO.positionLevel}})], { type: 'application/json'}));
+        formData.append('memberDTO', new Blob([JSON.stringify({name: name, address: address, email: email, birthday: birthday, gender: gender, memberId: memberId, memberStatus: "재직", employedDate: employedDate, password: '0000', role: role, phoneNo: inputtedPhoneNo, departmentDTO: {departNo: departDTO.departNo, departName: departDTO.departName}, positionDTO: {positionName: positionDTO.positionName, positionLevel: positionDTO.positionLevel}})], { type: 'application/json'}));
         formData.append('memberProfilePicture', uploadedImage);
 
         const memberDTOFile = formData.get('memberDTO');
@@ -366,7 +381,7 @@ function RegisterMember() {
 
             alert(`memberId: ${memberId}을 등록하는데 성공했습니다`);
             // window.location.reload();
-            // navigate("/ManageMember");
+            navigate("/ManageMember");
         } catch (error) {
             console.error("Registration failed:", error);
         }
@@ -397,19 +412,21 @@ function RegisterMember() {
                                     <div className={RegisterMemberCSS.uploadContainer}>
                                         <img className={RegisterMemberCSS.profilePic} src={imagePreviewUrl}/><br/>
                                         <label className={RegisterMemberCSS.uploadLabel}>
-                                        <span>사진 등록</span>
+                                        <span className='uploadPictureForRegistration'>사진 등록</span>
                                         <input
                                             accept='.jpg, .jpeg, .png, .gif'
                                             type="file"
+                                            // style={{ marginLeft: "20px"}}
                                             className={RegisterMemberCSS}
                                             onChange={handleFileUpload}
+                                            required={true}
                                         />
                                         </label>
                                     </div>
                                     <br />
                                     <br />
 
-                                    <div className="nameStyle">
+                                    <div className="nameStyleForRegisteration">
                                         <label htmlFor='name' className="name">이름</label>
                                         <input
                                             type='text'
@@ -417,58 +434,37 @@ function RegisterMember() {
                                             value={name}
                                             className="inputStyles"
                                             onChange={(e) => handleInputChange(e)}
+                                            required={true}
                                         />
                                     </div>
                                     <br />
-                                    <div className="birthdayStyle">
-                                        <label htmlFor="birthday" className="birthday">생년월일</label>
-                                        <div className="inputStyleForBirthday">
-                                            <div className='inputWrapper'>
-                                                <input
-                                                    type='text'
-                                                    id="birth-year"
-                                                    maxLength={4}
-                                                    pattern='^[0-9]{4}'
-                                                    required='required'
-                                                    onKeyUp={(e) => next(e, 4, 'birth-month')}
-                                                    className='inputStylesForYear'
-                                                    onChange={(e) => setMember(prevMember => ({ ...prevMember, birthday: { ...prevMember.birthday, year: e.target.value }}))}
-                                                />
-                                                    <span>년</span>
-                                                </div>
-                                            <div className='inputWrapper'>
-                                                <input
-                                                    type='text'
-                                                    id="birth-month"
-                                                    maxLength={2}
-                                                    pattern='^[0-9]{2}'
-                                                    required='required'
-                                                    onKeyUp={(e) => next(e, 2, 'birth-day')}
-                                                    className='inputStylesForMonth'
-                                                    onChange={(e) => setMember(prevMember => ({ ...prevMember, birthday: { ...prevMember.birthday, month: e.target.value }}))}
-                                                />
-                                            <span>월</span>
-                                            </div>
-                                            <div className='inputWrapper'>
-                                                <input
-                                                    type='text'
-                                                    id="birth-day"
-                                                    maxLength={2}
-                                                    pattern='^[0-9]{2}'
-                                                    required='required'
-                                                    className='inputStylesForDays'
-                                                    onChange={(e) => setMember(prevMember => ({ ...prevMember, birthday: { ...prevMember.birthday, day: e.target.value }}))}
-                                                />
-                                            <span>일</span>
-                                            </div>
-                                        </div>
+
+                                    <div className="birthdayStyle" id={RegisterMemberCSS.inputBox}>
+                                        <label htmlFor="inputText" className="birthday">생년월일</label>
+                                        <input
+                                            type='date'
+                                            max={today}
+                                            name='birthday'
+                                            value={birthday}
+                                            className="inputStyles"
+                                            onChange={(e) => handleInputChange(e)}
+                                            required={true}
+                                        />
                                     </div>
 
 
                                     <br />
                                     <div className="genderStyle">
                                         <label htmlFor="inputText" className="gender">성별</label>
-                                        <select style={{height: '52.22px' }} type='text' name='gender' value={gender} className="inputStyles" onChange={(e) => handleInputChange(e)}>
+                                        <select
+                                            style={{height: '52.22px' }}
+                                            type='text'
+                                            name='gender'
+                                            value={gender}
+                                            className="inputStyles"
+                                            onChange={(e) => handleInputChange(e)}
+                                            required={true}
+                                        >
                                             <option value="">성별</option>
                                             <option value="M">남자</option>
                                             <option value="F">여자</option>
@@ -479,7 +475,7 @@ function RegisterMember() {
                                         </select>
                                     </div>
                                     <br />
-                                    <div className="addressStyle">
+                                    <div className="addressStyleForRegistration">
                                         <label htmlFor="inputText" className="address">주소</label>
                                         {/* <input
                                             type='text'
@@ -503,7 +499,7 @@ function RegisterMember() {
                                         {popup && <Post company={enroll_company} setcompany={setEnroll_company} onClose={handleCloseModal} onAddData={handleAddData}/>}
                                     </div>
                                     <br />
-                                    <div className="emailStyle">
+                                    <div className="emailStyleForRegistration">
                                         <label htmlFor="inputText" className="email">상세 주소</label>
                                         <input
                                             type='text'
@@ -512,10 +508,11 @@ function RegisterMember() {
                                             defaultValue={address}
                                             className="inputStyles"
                                             onChange={(e) => handleInputChange(e)}
+                                            required={true}
                                         />
                                     </div>
                                     <br />
-                                    <div className="emailStyle">
+                                    <div className="emailStyleForRegistration">
                                         <label htmlFor="inputText" className="email">이메일</label>
                                         <input
                                             type='text'
@@ -523,11 +520,12 @@ function RegisterMember() {
                                             value={email}
                                             className="inputStyles"
                                             onChange={(e) => handleInputChange(e)}
+                                            required={true}
                                         />
                                     </div>
                                     <br />
 
-                                    <div className="phoneNoStyle">
+                                    <div className="phoneNoStyleForRegistration">
                                         <label htmlFor="inputText" className="phoneNo">전화번호</label>
                                         {/* <input type='text' name='phoneNo' value={phoneNo} className={`col-sm-10 ${RegisterMemberCSS.shortInput}`} onChange={(e) => handleInputChange(e)}></input> */}
                                         <input
@@ -538,7 +536,7 @@ function RegisterMember() {
                                             pattern="010-\d{4}-\d{4}" // 휴대폰 형식
                                             onChange={handlePhoneNoChange}
                                             placeholder='010-1234-5678'
-                                            required="required"
+                                            required={true}
                                         />
                                     </div>
                                     <br />
@@ -556,7 +554,7 @@ function RegisterMember() {
                                             name='memberId'
                                             value={generatedMemberId}
                                             className="inputStyles"
-                                            readOnly 
+                                            readOnly
                                         />
                                     </div>
                                     <br />
@@ -570,13 +568,20 @@ function RegisterMember() {
                                             value={employedDate}
                                             className="inputStyles"
                                             onChange={(e) => handleInputChange(e)}
+                                            required={true}
                                         />
                                     </div>
                                     <br />
 
                                     <div className="departStyle">
                                         <label htmlFor="inputText" className="employedDate">부서</label>
-                                        <select name='departDTO' value={departDTO.departNo} className="inputStyles" onChange={(e) => handleInputChange(e)}>
+                                        <select
+                                            name='departDTO'
+                                            value={departDTO.departNo}
+                                            className="inputStyles"
+                                            onChange={(e) => handleInputChange(e)}
+                                            required={true}
+                                        >
                                             <option value="">부서 선택</option>
                                             {departmentInformation.map((departments) => (
                                                 <option key={departments.departNo} value={departments.departNo}>{departments.departName}</option>
@@ -588,7 +593,13 @@ function RegisterMember() {
                                     <div className="positionStyle" id={RegisterMemberCSS.inputBox}>
                                         <label htmlFor="inputText" className="employedDate">직급</label>
                                         {/* <input type='text' name='departmentName' id='departmentName' required value={departmentName} className={`col-sm-10 ${RegisterMemberCSS.shortInput}`} onChange={(e) => handleInputChange(e)}></input> */}
-                                        <select name='positionDTO' value={positionDTO.positionLevel} className="inputStyles" onChange={(e) => handleInputChange(e)}>
+                                        <select
+                                            name='positionDTO'
+                                            value={positionDTO.positionLevel}
+                                            className="inputStyles"
+                                            onChange={(e) => handleInputChange(e)}
+                                            required={true}
+                                        >
                                             <option value="">직급 선택</option>
                                             {positionInformation.map((positions) => (
                                                 <option key={positions.positionName} value={positions.positionLevel}>{positions.positionName}</option>
@@ -599,15 +610,22 @@ function RegisterMember() {
 
                                     <div className="memberStatusStyle" id={RegisterMemberCSS.inputBox}>
                                         <label htmlFor="inputText" className="memberStatus">권한</label>
-                                        <select type='text' name='role' value={role} className="inputStyles" onChange={(e) => handleInputChange(e)}>
+                                        <select
+                                            type='text'
+                                            name='role'
+                                            value={role}
+                                            className="inputStyles"
+                                            onChange={(e) => handleInputChange(e)}
+                                            required={true}
+                                        >
                                             <option value="">권한 설정</option>
                                             <option value="ADMIN">관리자</option>
                                             <option value="MEMBER">구성원</option>
                                         </select>
                                     </div>
                             <div className={RegisterMemberCSS.buttonClass}>
-                                <button className={RegisterMemberCSS['notice-cancel-button']} type='button' onClick={() => navigate('/manageMember')}>취소하기</button>
-                                <button className={RegisterMemberCSS['notice-insert-button']}>등록하기</button>
+                                <button className={RegisterMemberCSS['notice-cancel-button']} type='button' onClick={returnPage}>취소</button>
+                                <button className={RegisterMemberCSS['notice-insert-button']}>등록</button>
                             </div>
                                 </div>
                             </div>

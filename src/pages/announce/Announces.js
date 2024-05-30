@@ -56,7 +56,7 @@ function Announces() {
                                 to="/insertAnnounce"
                                 style={{color: 'white'}}
                             >
-                                등록
+                                공지사항 등록
                             </Link>
                         )}
                     </ol>

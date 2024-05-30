@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { callUpdateCommuteAPI } from "../../apis/CommuteAPICalls";
 import dayjs from "dayjs";
 import '../../css/commute/commute.css';
+import '../../css/common.css';
 
 const ClockOutModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteList, onClockOutCompleted }) => {
     
@@ -96,32 +97,12 @@ const ClockOutModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteLi
                         </div>
                         <div className="modal-footer">
                             <button onClick={onClose} 
-                            className="cancel"
-                            //  style={{
-                            //     width: '50px',
-                            //     height: '40px',
-                            //     backgroundColor: '#ffffff',
-                            //     color: '#112D4E',
-                            //     border: '#112D4E 1px solid',
-                            //     borderRadius: '5px',
-                            //     padding: '1% 1.5%',
-                            //     cursor: 'pointer',
-                            //     textDecoration: 'none'
-                            // }}
+                            className="btn-negative "
                             >
                                 취소
                             </button>
-                            <button onClick={handleUpdateCommute} className="regist"
-                            // style={{
-                            //     width: '50px',
-                            //     height: '40px',
-                            //     backgroundColor: '#112D4E',
-                            //     color: 'white',
-                            //     borderRadius: '5px',
-                            //     padding: '1% 1.5%',
-                            //     cursor: 'pointer',
-                            //     textDecoration: 'none'
-                            // }}
+                            <button onClick={handleUpdateCommute} 
+                            className="btn-positive"
                             >
                                 퇴근
                             </button>

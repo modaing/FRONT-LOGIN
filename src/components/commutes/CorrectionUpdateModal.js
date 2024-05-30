@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import '../../css/commute/commute.css';
-import styled from "styled-components";
+import '../../css/common.css';
 import dayjs from "dayjs";
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -247,12 +247,12 @@ function CorrectionUpdateModal({ isOpen, onClose, onSave, correction, handleCorr
                             </div>
                         </div>
                         <div className="modal-footer" style={{ paddingBottom: '0px', paddingTop: '20px' }}>
-                            <button type="button" className="cancel" onClick={onClose} 
+                            <button type="button" className="btn-negative" onClick={onClose} 
                             >
                                 목록
                             </button>
                             {correction?.corrStatus === '대기' && (
-                                <button type="button" className="regist" onClick={handleSave} 
+                                <button type="button" className="btn-positive" onClick={handleSave} 
                                 >
                                     처리
                                 </button>

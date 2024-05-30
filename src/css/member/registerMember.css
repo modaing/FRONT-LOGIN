@@ -62,7 +62,7 @@
 }
 
 .main2Pages {
-    font-size: 20px;
+    /* font-size: 20px; */
     display: flex;
     /* width: 100%; */
     height: 90%;
@@ -124,7 +124,7 @@ form input, form button, form select, form textarea {
 
 .pageTitleStyle {
     margin: 20px 0px;
-    font-size: 20px;
+    /* font-size: 20px; */
 }
 
 .profilePic {
@@ -158,7 +158,7 @@ form input, form button, form select, form textarea {
 .nameBox {
     height: auto;
     width: auto;
-    font-size: 30px;
+    /* font-size: 30px; */
     text-align: center;
 }
 
@@ -167,7 +167,7 @@ form input, form button, form select, form textarea {
     height: 40px;
     width: 80px;
     border: none;
-    font-size: 24px;
+    /* font-size: 24px; */
     cursor: pointer;
     font-weight: 900;
 }
@@ -184,7 +184,7 @@ form input, form button, form select, form textarea {
     cursor: #112d4e;
 }
 
-.memberIdStyle, .emailStyle, .addressStyle, .phoneNoStyle, .employedDateStyle, .departStyle, .positionStyle, .memberStatusStyle, .nameStyle, .birthdayStyle, .genderStyle {
+.memberIdStyle, .emailStyleForRegistration, .addressStyleForRegistration, .phoneNoStyleForRegistration, .employedDateStyle, .departStyle, .positionStyle, .memberStatusStyle, .nameStyleForRegisteration, .birthdayStyle, .genderStyle {
     display: flex;
     align-items: center;
     /* justify-content: space-between; */
@@ -194,7 +194,7 @@ form input, form button, form select, form textarea {
 .birthdayStyle {
     /* display: flex; */
     width: 100%/3;
-    height: 52.22px;
+    height: 46.22px;
 }
 
 .memberId, .email, .address, .phoneNo, .employedDate, .depart, .position, .name, .memberStatus, .gender, .birthday {
@@ -231,7 +231,7 @@ form input, form button, form select, form textarea {
     background-color: #ffffff;
     color: black;
     border: 1px solid #D5D5D5;
-    border-radius: 15px;
+    border-radius: 10px;
     padding: 10px 20px;
     cursor: pointer;
     margin-right: 15px;
@@ -291,14 +291,47 @@ form input, form button, form select, form textarea {
     display: block; /* Show the modal when the "active" class is applied */
 }
 
-.notice-insert-button, .inputAddressButton {
+.notice-insert-button {
     background-color: #112D4E;
     color: white;
     border: 1px solid #D5D5D5;
-    border-radius: 15px;
+    border-radius: 10px;
     padding: 10px 20px;
     cursor: pointer;
     height: 50px;
     width: auto;
     margin-left: 15px;
+}
+
+.inputAddressButton {
+    background-color: #FFFFFF;
+    color: black;
+    border: 1px solid #3f72af;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    height: 46.22px;
+    width: auto;
+    margin-left: 15px;
+}
+
+label {
+    /* display: block; */
+    /* margin-top: 1em; */
+}
+
+.req {
+    color: red;
+}
+/* Light yellow background for required fields */
+
+/* Red border for invalid fields */
+input:required:invalid, select:required:invalid, textarea:required:invalid {
+    border: 2px solid red;
+}
+
+/* Green border for valid fields */
+input:required:valid, select:required:valid, textarea:required:valid {
+    /* border: 2px solid green; */
+    border: 1px solid #ccc;
 }

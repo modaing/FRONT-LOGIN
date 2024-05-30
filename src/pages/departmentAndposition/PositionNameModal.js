@@ -42,7 +42,8 @@ function PositionNameModal(props) {
 
     const handleClose = () => {
         onClose();
-        navigate('/departmentAndPosition'); // Replace the current URL with the desired one
+        // navigate(-1); // Replace the current URL with the desired one
+        navigate('/departmentAndPosition');
         // window.location.reload(); // Refresh the page
     }
 
@@ -53,11 +54,11 @@ function PositionNameModal(props) {
                 <form onSubmit={handleSubmit}>
                     <div className='content123'>
                         <div className='contentBox1'>
-                            <label className='pStyle'>직급명</label>
+                            <label className='departNameStyle1234'>직급명</label>
                             <input type="text" name="newPassword1" placeholder={positionInformation.positionName} className='inputStyle123' readOnly/>
                         </div>
                         <div className='contentBox2'>
-                            <label className='pStyle'>새직급명</label>
+                            <label className='departNameStyle1234'>새직급명</label>
                             <input type="text" name="newPassword2" value={positionName} placeholder="새직급명 입력" className='inputStyle123' onChange={(e) => setPositionName(e.target.value)}/>
                         </div>
                     </div>

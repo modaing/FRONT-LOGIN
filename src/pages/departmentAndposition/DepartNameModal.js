@@ -26,37 +26,39 @@ function DepartNameModal(props) {
             }
         } catch (error) {
             if(error.response.data === "Department name already exists") {
-                alert("부서명이 이미 존재합니다");
+                alert("부서가 이미 존재합니다");
             }
-            console.error('부서명 수정하는데 오류가 발생했습니다:', error);
+            console.error('부서명을 수정하는데 오류가 발생했습니다:', error);
         }
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         await changeDepartmentName();
+        onClose();
         navigate('/departmentAndPosition'); // Replace the current URL with the desired one
         window.location.reload();
     }
 
     const handleClose = () => {
         onClose();
-        navigate('/departmentAndPosition'); // Replace the current URL with the desired one
+        // navigate(-1); // Replace the current URL with the desired one
+        navigate('/departmentAndPosition');
         // window.location.reload(); // Refresh the page
     }
 
     return (
         <div className="modalStyle123">
             <div className="modalContentStyle">
-                <h2 className='changePasswordStyle'>부서명 변경</h2>
+                <h2 className='changePasswordStyle'>부서 변경</h2>
                 <form onSubmit={handleSubmit}> {/* Form format */}
                     <div className='content123'>
                         <div className='contentBox1'>
-                            <label className='pStyle'>현재 부서명</label>
+                            <label className='departNameStyleModal'>현재 부서</label>
                             <input type="text" name="newPassword1" placeholder={departmentInformation.departName} className='inputStyle123' readOnly />
                         </div>
                         <div className='contentBox2'>
-                            <label className='pStyle'>새부서명</label>
+                            <label className='departNameStyleModal'>새부서</label>
                             <input type="text" name="newPassword2" value={departName} placeholder="새부서명 입력" className='inputStyle123' onChange={(e) => setDepartName(e.target.value)}/>
                         </div>
                     </div>
