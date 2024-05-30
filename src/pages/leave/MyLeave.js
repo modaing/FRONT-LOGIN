@@ -128,7 +128,7 @@ function MyLeave() {
                         <span>소진 휴가 일수</span><span>{consumedDays}</span>
                         <span>잔여 휴가 일수</span><span>{remainingDays}</span>
                     </div>
-                    <span className="insertLeave" onClick={handleOpenModal} >휴가 신청</span>
+                    <span className="btn-contentHeader" onClick={handleOpenModal} >휴가 신청</span>
                 </div>
             </nav>
         </div>

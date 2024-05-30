@@ -34,6 +34,9 @@ import { useDispatch } from 'react-redux';
 import { decodeJwt } from './utils/tokenUtils';
 import ApprovalDetail from './pages/approval/ApprovalDetail';
 import ChangeMemberPage from './pages/member/ChangeMemberPage';
+import ProposalPage from './pages/proposal/ProposalPage';
+import AdminProposalPage from './pages/proposal/AdminProposalPage';
+import MemberProposalPage from './pages/proposal/MemberProposalPage';
 
 function App() {
   const isLoggedIn = !!window.localStorage.getItem("accessToken");
@@ -78,6 +81,8 @@ function App() {
             <Route path='/hierarchyTree' element={<HierarchyTree />} />
             <Route path='/approvals/:approvalNo' element={<ApprovalDetail />} />
             <Route path='/manageMember/:memberId/edit' element={<ChangeMemberPage />} />
+            <Route path="/proposal" element={<ProposalPage />} />
+            <Route path="/admin/proposal" element={<AdminProposalPage />} />
           </Route>
         ) : (
           <Route path="/" element={<Navigate to="/login" replace />} />

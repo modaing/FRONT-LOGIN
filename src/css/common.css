@@ -123,4 +123,18 @@
 .btn-blue:hover {
   background-color: #92B9E7;
   border-color: #92B9E7;
+
+.btn-contentHeader {
+    background-color: #112D4E;
+    color: #ffffff;
+    border-radius: 10px; 
+    padding: 0.7% 1%;
+    cursor: pointer;
+    text-decoration: none;
+    width: auto;
+}
+
+.btn-contentHeader:hover {
+    background-color: #465970; 
+    color: #ffffff;
 }
