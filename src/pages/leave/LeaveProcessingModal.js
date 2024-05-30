@@ -82,8 +82,8 @@ const LeaveProcessingModal = ({ isOpen, onClose, onUpdate, leaveSubNo, selectedT
                             </div>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
-                            <button type="button" className="btn btn-primary" onClick={handleValidation}>처리</button>
+                            <button type="button" className="btn btn-negative" onClick={onClose}>취소</button>
+                            <button type="button" className="btn btn-positive" onClick={handleValidation}>처리</button>
                         </div>
                     </div>
                 </div>

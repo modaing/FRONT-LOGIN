@@ -9,7 +9,7 @@
 }
 
 .firstBox {
-    font-size: 20px;
+    /* font-size: 20px; */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -24,18 +24,20 @@
     padding-left: 5px;
 }
 
-.searchButton {
-    background-color: #3F72AF;
-    color: white;
-    border: 1px solid #D5D5D5;
-    border-radius: 15px;
-    padding: 10px 20px;
+.searchButtonForManageMember {
+    background-color: #F9F7F7;
+    color: black;
+    border: 2px solid #3F72AF;
+    border-radius: 10px;
     cursor: pointer;
     margin-left: 10px;
+    margin-right: 20px;
+    height: 40px;
+    padding: 10px;
 }
 
 .flexedBox {
-    font-size: 20px;
+    /* font-size: 20px; */
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -56,13 +58,14 @@
 }
 
 .buttonClass {
-    font-size: 20px;
+    /* font-size: 20px; */
     justify-content: flex-end;
     margin: 20px 0;
 }
 
 .cancelButton, .insertButton {
-    border-radius: 15px;
+    background-color: #0A1A3B;
+    border-radius: 10px;
     padding: 10px 20px;
     cursor: pointer;
     margin-right: 15px;
@@ -87,13 +90,13 @@
 }
 
 .downloadButton {
-    /* background-color: #112D4E; */
+    background-color: #0A1A3B;
     /* color: white; */
     border: none;
     padding: 10px 20px;
     cursor: pointer;
     border-radius: 5px;
-    font-size: 16px;
+    /* font-size: 16px; */
     margin-bottom: 15px;
     display: inline-block;
     outline: none;
@@ -101,8 +104,8 @@
 }
 
 .downloadButton:hover {
-    background-color: #0A1A3B;
-    color: #FFD700;
+    background-color: #1f4068;
+    /* color: #FFD700; */
 }
 
 .memberTable {
@@ -124,7 +127,7 @@
 .memberTable th {
     background-color: #f2f2f2;
     font-weight: bold;
-    font-size: 20px;
+    /* font-size: 20px; */
     cursor: pointer;
 }
 
@@ -141,13 +144,13 @@
     margin: 0 60px;
     display: flex;
     flex-direction: column;
-    font-size: 20px;
+    /* font-size: 20px; */
 }
 
 .memberContentItem {
     display: flex;
     justify-content: space-between;
-    font-size: 20px;
+    /* font-size: 20px; */
     align-items: center;
     margin-bottom: 10px;
 }
@@ -176,7 +179,7 @@ th {
 }
 
 .tableDecoration th span,
-.tableDecoration th i,{
+.tableDecoration th i {
     cursor: pointer;
 }
 

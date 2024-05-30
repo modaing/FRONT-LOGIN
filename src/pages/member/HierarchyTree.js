@@ -1,13 +1,19 @@
 import '../../css/member/hierarchyTree.css';
 import { callShowAllMemberListAPI } from '../../apis/MemberAPICalls';
-import React, { useState, useEffect } from 'react';
+import { callPositionDetailListAPI } from '../../apis/PositionAPICalls';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../../css/common.css';
+import Tree from 'react-d3-tree';
+import { width } from '@mui/system';
 
 function HierarchyTree() {
-
     const [zoomLevel, setZoomLevel] = useState(1);
-    const [organizationalChart, setOrganizationalChart] = useState({ departments: {}, positions: {} });
-    const [expandedDepartments, setExpandedDepartments] = useState({});
+    const [organizationalChart, setOrganizationalChart] = useState(null);
+    const [position, setPosition] = useState([]);
+    const [memberLists, setMemberLists] = useState([]);
+    const treeContainerRef = useRef(null);
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
     const navigate = useNavigate();
 
     const handleZoomIn = () => {
@@ -26,248 +32,217 @@ function HierarchyTree() {
         navigate(`/ManageMember/${member.memberId}`);
     };
 
-    const handleDepartmentClick = (departName) => {
-        setExpandedDepartments(prevState => ({
-            ...prevState,
-            [departName]: !prevState[departName]
-        }));
+    const fetchPositionDetails = async () => {
+        try {
+            const positionDetailList = await callPositionDetailListAPI();
+            setPosition(positionDetailList);
+        } catch (error) {
+            console.error('Error fetching position details:', error);
+        }
+    };
+
+    const fetchMemberLists = async () => {
+        try {
+            const memberLists = await callShowAllMemberListAPI();
+            const formattedMembers = memberLists.map(member => ({
+                ...member,
+                employedDate: formatDate(member.employedDate)
+            }));
+            setMemberLists(formattedMembers);
+        } catch (error) {
+            console.error('Error fetching member list:', error);
+        }
     };
 
     useEffect(() => {
-        const fetchMemberLists = async () => {
-            try {
-                const memberLists = await callShowAllMemberListAPI();
-                if (Array.isArray(memberLists)) {
-                    const formattedMembers = memberLists.map(member => ({
-                        ...member,
-                        employedDate: formatDate(member.employedDate)
-                    }));
-                    const chartData = createOrganizationalChart(formattedMembers);
-                    
-                    const initialExpandedDepartments = Object.keys(chartData.departments).reduce((acc, dept) => {
-                        acc[dept] = true; // set all departments to be expanded by default
-                        return acc;
-                    }, {});
-    
-                    setOrganizationalChart(chartData);
-                    setExpandedDepartments(initialExpandedDepartments);
-                } else {
-                    console.error('Member list is not an array:', memberLists);
-                }
-            } catch (error) {
-                console.error('Error fetching member list:', error);
-            }
-        };
-    
+        fetchPositionDetails();
         fetchMemberLists();
     }, []);
-    
+
+    useEffect(() => {
+        if (position.length > 0 && memberLists.length > 0) {
+            const chartData = createOrganizationalChart();
+            setOrganizationalChart(chartData);
+        }
+    }, [position, memberLists]);
+
+    useEffect(() => {
+        const updateDimensions = () => {
+            if (treeContainerRef.current) {
+                setDimensions({
+                    width: treeContainerRef.current.offsetWidth,
+                    height: treeContainerRef.current.offsetHeight,
+                });
+            }
+        };
+
+        window.addEventListener('resize', updateDimensions);
+        updateDimensions();
+        return () => window.removeEventListener('resize', updateDimensions);
+    }, []);
 
     const formatDate = (dateArray) => {
         if (Array.isArray(dateArray) && dateArray.length === 3) {
             const [year, month, day] = dateArray;
             return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        } else {
-            return dateArray;
         }
+        return dateArray;
     };
 
-    const createOrganizationalChart = (memberLists) => {
-        const chart = { departments: {}, positions: {} };
+    const createOrganizationalChart = () => {
+        const positionLevel1 = position[0]?.positionLevel;
+        const memberWithPositionLevel1 = memberLists.find(member => member.positionDTO.positionLevel === positionLevel1);
+    
+        if (!memberWithPositionLevel1) {
+            console.error('No member found with positionLevel1:', positionLevel1);
+            return null;
+        }
+    
+        const chart = {
+            name: memberWithPositionLevel1.positionDTO.positionName,
+            attributes: [memberWithPositionLevel1.name],
+            memberId: memberWithPositionLevel1.memberId, // Add memberId
+            children: []
+        };
+    
+        const departments = {};
     
         memberLists.forEach(member => {
-            const { departmentDTO, positionDTO, name, memberId, employedDate } = member;
+            const { positionDTO, name, departmentDTO, memberId } = member;
+            const { positionLevel, positionName } = positionDTO;
             const { departName } = departmentDTO;
-            const { positionName, positionLevel } = positionDTO;
     
-            if (positionName === '대표이사') {
-                if (!chart.positions[positionName]) {
-                    chart.positions[positionName] = [];
-                }
-                chart.positions[positionName].push({ name, positionName, memberId, positionLevel, employedDate });
-            } else {
-                if (!chart.departments[departName]) {
-                    chart.departments[departName] = [];
-                }
-                if (!chart.positions[positionName]) {
-                    chart.positions[positionName] = [];
+            if (positionLevel !== positionLevel1 && positionName !== position[0].positionName) {
+                if (!departments[departName]) {
+                    departments[departName] = {
+                        name: departName,
+                        attributes: [],
+                        children: []
+                    };
                 }
     
-                chart.departments[departName].push({ name, positionName, memberId, positionLevel, employedDate });
-                chart.positions[positionName].push({ name, departName, positionName, memberId, positionLevel, employedDate });
+                departments[departName].children.push({
+                    name: name,
+                    attributes: [positionName],
+                    positionLevel: parseInt(positionLevel),
+                    memberId, // Add memberId
+                    children: []
+                });
             }
         });
     
-        // Sort the members within each department by positionLevel and then by employedDate
-        Object.values(chart.departments).forEach(members => {
-            members.sort((a, b) => {
-                // Sort by positionLevel
-                if (parseInt(a.positionLevel, 10) !== parseInt(b.positionLevel, 10)) {
-                    return parseInt(a.positionLevel, 10) - parseInt(b.positionLevel, 10);
-                }
-                // If positionLevel is the same, sort by employedDate
-                const dateA = new Date(a.employedDate);
-                const dateB = new Date(b.employedDate);
-                return dateA - dateB;
-            });
+        // Ensure the children under departments are sorted vertically
+        chart.children = Object.values(departments).map(department => {
+            department.children.sort((a, b) => a.positionLevel - b.positionLevel);
+            return department;
         });
     
-        // Sort the members within each position by positionLevel and then by employedDate
-        Object.values(chart.positions).forEach(members => {
-            members.sort((a, b) => {
-                // Sort by positionLevel
-                if (parseInt(a.positionLevel, 10) !== parseInt(b.positionLevel, 10)) {
-                    return parseInt(a.positionLevel, 10) - parseInt(b.positionLevel, 10);
-                }
-                // If positionLevel is the same, sort by employedDate
-                const dateA = new Date(a.employedDate);
-                const dateB = new Date(b.employedDate);
-                return dateA - dateB;
-            });
-        });
-    
+        console.log('Generated organizational chart:', chart);
         return chart;
     };
+    
 
-    const renderBranch = (members) => {
-        if (!Array.isArray(members)) return null;
-
-        return members.map((member, index) => (
-            <div key={index} className="branchItem">
-                <div className="box">
-                    <div className="box-content" onClick={() => handleNameClick(member)}>
-                        <span className={`positionTitle ${getPositionClass(member.positionName)}`}>{member.positionName}</span>
-                        <span className='memberName'>{member.name}</span>
-                    </div>
-                </div>
-            </div>
-        ));
-    };
-
-    const getPositionClass = (positionName) => {
-        // Define CSS classes based on position names
-        switch (positionName) {
-            case '대표이사':
-                return 'positionTitle--representative';
-            case '부장':
-                return 'positionTitle--head';
-            case '차장':
-                return 'positionTitle--viceHead';
-            case '과장':
-                return 'positionTitle--manager';
-            default:
-                return '';
+    const svgSquare = (width, height) => ({
+        shape: "rect",
+        shapeProps: {
+            width: "200%",
+            height: height,
+            x: -width / 2,
+            y: -height / 2,
+            color: "#ffffff"
         }
-    };
+    });
 
-    const renderPositions = () => {
-        const predefinedPositions = ['대표이사', '부장', '차장', '과장'];
+    const renderRectSvgNode = ({ nodeDatum, toggleNode, handleNameClick }) => {
+        const isMember = nodeDatum.attributes && nodeDatum.attributes.length > 0;
+        const isCEO = nodeDatum.name === "대표이사";
+    
+        const handleClick = () => {
+            if (nodeDatum.memberId) {
+                handleNameClick({ memberId: nodeDatum.memberId });
+            }
+        };
     
         return (
-            <div className="positionsContainer">
-                {predefinedPositions.map((position, index) => {
-                    const members = organizationalChart.positions[position];
-                    if (!members) return null;
+            <g>
+                <rect width="180" height={isMember && !isCEO ? 60 : 40} x="-90" y={isMember && !isCEO ? "-30" : "-20"} onClick={toggleNode} fill='white' stroke="#3f72af" strokeWidth="2" rx="5" ry="5" />
+                {isMember && !isCEO ? (
+                    <>
+                        <text x="0" y="-10" textAnchor="middle" fill="black" fontStyle="normal" fontSize="16" fontWeight="600" onClick={handleClick} style={{ cursor: 'pointer' }}>
+                            {nodeDatum.attributes[0]}
+                        </text>
+                        <text x="0" y="15" textAnchor="middle" fill="black" fontSize="14" fontWeight="400" fontStyle="normal" onClick={handleClick} style={{ cursor: 'pointer' }}>
+                            {nodeDatum.name}
+                        </text>
+                    </>
+                ) : (
+                    <text x="0" y="5" textAnchor="middle" fill="black" fontSize="16" fontWeight="600" fontStyle="normal" onClick={handleClick} style={{ cursor: 'pointer' }}>
+                        {isCEO ? nodeDatum.attributes[0] : nodeDatum.name}
+                    </text>
+                )}
+            </g>
+        );
+    };
+    
 
-                    if (position === '대표이사') {
-                        // Render 대표이사 in its current style
-                        return (
-                            <div key={index} className="positionWrapper">
-                                <div className="flexedMembers">{renderBranch(members)}</div>
-                            </div>
-                        );
-                    } else {
-                        // Render 부장, 차장, 과장 in the same style as departments
-                        const groupedByDepartment = members.reduce((acc, member) => {
-                        if (!acc[member.departName]) {
-                        acc[member.departName] = [];
-                        }
-                        acc[member.departName].push(member);
-                        return acc;
-                        }, {});
-                        return (
-                            <div key={index} className="positionWrapper horizontal">
-                                {Object.entries(groupedByDepartment).map(([departName, members], index) => (
-                                    <div key={index} className="department">
-                                        <div className="departBox">
-                                            <h2>{departName}</h2>
-                                        </div>
-                                        {expandedDepartments[departName] && <div className="branch">{renderBranch(members)}</div>}
-                                    </div>
-                                ))}
-                            </div>
-                        );
+    const renderTree = () => {
+        if (!organizationalChart) {
+            return null;
+        }
+    
+        return (
+            <div ref={treeContainerRef} className='treeWrapper card' >
+                <Tree
+                    style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'top center', transition: 'transform 0.3s' }}
+                    data={organizationalChart}
+                    orientation="vertical"
+                    rootNodeClassName="node__root"
+                    branchNodeClassName="node__branch"
+                    leafNodeClassName="node__leaf"
+                    pathFunc="step"
+                    collapsible={true}
+                    translate={{ x: dimensions.width / 2, y: dimensions.height / 2 }}
+                    nodeSvgShape={svgSquare}
+                    zoomable={true}
+                    allowForeignObjects={true}
+                    scaleExtent={{ min: 0.1, max: 2 }}
+                    renderCustomNodeElement={(rd3tProps) =>
+                        renderRectSvgNode({ ...rd3tProps, handleNameClick })
                     }
-                })}
+                    initialDepth={1}
+                    separation={{ siblings: 1.5, nonSiblings: 2 }}
+                    styles={{
+                        links: { stroke: '#ccc' },
+                        nodes: {
+                            node: { fill: 'red' },
+                            leafNode: { fill: 'green' }
+                        }
+                    }}
+                    zoom={zoomLevel}
+                />
             </div>
         );
     };
     
-    const renderDepartments = () => {
-        const totalWidth = window.innerWidth; // Get the total width of the viewport
-        const departmentCount = Object.keys(organizationalChart.departments).length;
-        const departmentWidth = 300; // Width of each department item
-        const departmentsPerRow = Math.floor(totalWidth / departmentWidth); // Calculate the number of departments per row
-    
-        const visibleDepartments = Object.entries(organizationalChart.departments).slice(0, departmentsPerRow); // Slice the departments based on the number of departments per row
-    
-        return (
-            <div className="departmentsContainer">
-                {visibleDepartments.map(([departName, members]) => (
-                    <div key={departName} className="department">
-                        <div className="departBox" onClick={() => handleDepartmentClick(departName)}>
-                            <h2>{departName}</h2>
-                        </div>
-                        {expandedDepartments[departName] && <div className="branch">{renderBranch(members)}</div>}
-                    </div>
-                ))}
-            </div>
-        );
-    };
-    
+
     return (
-        <main id="main" className="main2Pages">
-            <div className='firstPage'>
-                <div className="pagetitle">
-                    <h1>조직도</h1>
-                    <nav>
-                        <ol className="breadcrumb">
-                            <li className="breadcrumb-item"><a href="/">Home</a></li>
-                            <li className="breadcrumb-item">조직</li>
-                            <li className="breadcrumb-item active">조직도</li>
-                        </ol>
-                    </nav>
-                </div>
-                <div className="rowStyle card columnStyle">
-                    <div className="zoomControls">
-                        <i
-                            style={{ cursor: 'pointer' }}
-                            className="ri ri-zoom-in-line ri-2x p-2"
-                            onClick={handleZoomIn}
-                        ></i>
-                        <i
-                            style={{ cursor: 'pointer' }}
-                            className="ri ri-zoom-out-line ri-2x p-2"
-                            onClick={handleZoomOut}
-                        ></i>
-                        {zoomLevel !== 1 && (
-                            <i
-                                style={{ cursor: 'pointer' }}
-                                className="ri  ri-refresh-line ri-2x p-2"
-                                onClick={handleZoomReturn}
-                            ></i>
-                        )}
-                    </div>
-    
-                    <div className="chartContainer" style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'top center', transition: 'transform 0.3s' }}>
-                        {/* Render your organizational chart content here */}
-                        <div className="flexedUpperPositions">
-                            {renderPositions()}
-                        </div>
-                        <div className="departmentsContainer">
-                            {renderDepartments()}
-                        </div>
-                    </div>
+        <main id="main" className="main">
+            <div className="pagetitle">
+                <h1>조직도</h1>
+                <nav>
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item"><a href="/">Home</a></li>
+                        <li className="breadcrumb-item">조직</li>
+                        <li className="breadcrumb-item active">조직도</li>
+                    </ol>
+                </nav>
+            </div>
+            <div className="col-lg-12">
+                <div className="card">
+                    <i style={{ cursor: 'pointer' }} className="ri ri-zoom-in-line ri-2x p-2" onClick={handleZoomIn}></i>
+                    <i style={{ cursor: 'pointer' }} className="ri ri-zoom-out-line ri-2x p-2" onClick={handleZoomOut}></i>
+                    {zoomLevel !== 1 && <i style={{ cursor: 'pointer' }} className="ri ri-refresh-line ri-2x p-2" onClick={handleZoomReturn}></i>}
+                    {renderTree()}
                 </div>
             </div>
         </main>

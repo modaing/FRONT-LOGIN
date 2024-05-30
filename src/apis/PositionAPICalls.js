@@ -11,7 +11,7 @@ const headers = {
 export const callPositionDetailListAPI = async () => {
     try {
         const response = await axios.get(`${API_BASE_URL}/showAllPosition`, { headers });
-        console.log('response:', response);
+        // console.log('response:', response);
         return response.data;
     } catch (error) {
         console.error('Error fetching position details:', error);

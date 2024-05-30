@@ -18,8 +18,11 @@ function MyProfile() {
     const [transferredHistoryInformation, setTransferredHistoryInformation] = useState([]);
     const [departmentName, setDepartmentNames] = useState(null);
     const [changePasswordModalVisible, setChangePasswordModalVisible] = useState(false);
+
     const token = window.localStorage.getItem("accessToken");
     const memberInfos = decodeJwt(token);
+    console.log(memberInfos.role);
+    
     const image = memberInfos.imageUrl;
     const imageUrl = `/img/${image}`;
     const navigate = useNavigate();
@@ -139,14 +142,14 @@ function MyProfile() {
                         </ol>
                     </nav>
                 </div>
-                <div className="rowStyle card columnStyle">
+                <div className="card columnStyle1">
                     <div className="content1 contentStyle1">
                         <div className='imageBox'>
                             <img src={imageUrl} className='profilePic' alt="Profile" />
-                            <div className='nameBox '>{memberInfo.name}</div>
+                            {/* <div className='nameBox '>{memberInfo.name}</div> */}
                         </div>
                         <div className='topRightContainer'>
-                            <button className='changePassword' onClick={handleChangePassword}>비밀번호 변경</button>
+                            <button className='changePasswordButtonStyle' onClick={handleChangePassword}>비밀번호 수정</button>
                         </div>
                         {/* <h1>hi</h1> */}
                     </div>
@@ -155,7 +158,11 @@ function MyProfile() {
                             <h1>기본 정보</h1>
                         </div>
                     </div>
-                    <div className='content1 contentStyle3 titleStyle'>
+                    <div className='content1 titleStyle'>
+                    <div className='memberIdStyle'>
+                        <label className='name'>이름</label>
+                        <input className='inputStyleWidth' value={memberInfo.name} readOn/>
+                    </div>
                     <div className='memberIdStyle'>
                         <label className='memberId'>사번</label>
                         <input className='inputStyleWidth' value={memberInfo.memberId} />
@@ -192,20 +199,9 @@ function MyProfile() {
                 </div>
             </div>
 
-            <div className='secondPage'>
-                {/* <div className="pagetitle pageTitleStyle" >
-                    <h1>인사 정보</h1>
-                </div> */}
+            <div className='secondPage123'>
                 <div className="pagetitle">
                     <h1>인사 정보</h1>
-                    <nav>
-                        <ol className="breadcrumb">
-                            {/* <li className="breadcrumb-item"><a href="/">Home</a></li>
-                            <li className="breadcrumb-item">조직</li>
-                            <li className="breadcrumb-item">구성원 관리</li>
-                            <li className="breadcrumb-item active">{memberInfo.name}'s 프로필</li> */}
-                        </ol>
-                    </nav>
                 </div>
                 <div className="rowStyle columnStyle1">
                     <div className="card cardOuterLine2">
@@ -213,22 +209,25 @@ function MyProfile() {
                             <div className="pagetitle pageTitleStyle" >
                                 <h1>인사 발령 내역</h1>
                             </div>
-                            {/* Mapping through transferredHistoryInformation to display new_position_name and transferred_date */}
-                            {transferredHistoryInformation.map((history, index) => (
-                                <div key={index} className='transferredHistory'>
-                                    {/* <span className='transferredDate'>{history.transferredDate.join('.')}</span> */}
-                                    <span className='transferredDateStyle'>
-                                        {index === transferredHistoryInformation.length - 1 
-                                            ? `${history.transferredDate.join('.')} ~`
-                                            : history.transferredDate.join('.')}
-                                    </span>
-                                    <br/><br />
-                                    <span id="departName" className='departNameStyle'>{history.newDepartName}</span> {/* Render department name */}
-                                    <br /><br />
-                                    <span className='positionNameStyle'>{history.newPositionName}</span>
-                                    <br />
-                                </div>
-                            ))}
+                            {transferredHistoryInformation.map((history, index) => {
+                                const startDate = history.transferredDate.map(d => d.toString().padStart(2, '0')).join('.'); // Format start date
+                                const endDate = index === transferredHistoryInformation.length - 1 ? '현재' : history.transferredDate.map(d => d.toString().padStart(2, '0')).join('.');
+                                return (
+                                    <div key={index} className='contentStyle23'>
+                                        <div className="departNameStyleOuter">
+                                            <div className="departNameDiv">
+                                                <label className="departNameStyle">{history.newDepartName}</label>
+                                            </div>
+                                            <div className="positionNameDiv">
+                                                <label className="positionNameStyle">{history.newPositionName}</label>
+                                            </div>
+                                            <div className='transferredHistoryStyle'>
+                                                <label className='transferredDateStyle'>{startDate} ~ {endDate}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
