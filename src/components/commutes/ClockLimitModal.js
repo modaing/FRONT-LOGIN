@@ -16,17 +16,9 @@ const ClockLimitModal = ({ isOpen, onClose, parsingDateOffset }) => {
                             <h6 style={{ color: '#112D4E' }}>오늘은 이미 출근하셨습니다.</h6>
                         </div>
                         <div className="modal-footer">
-                            <button onClick={onClose} className='btn cancel' style={{
-                                width: '50px',
-                                height: '40px',
-                                backgroundColor: '#ffffff',
-                                color: '#000000',
-                                border: '2px solid #D9D9D9',
-                                borderRadius: '5px',
-                                padding: '2px',
-                                cursor: 'pointer',
-                                textDecoration: 'none'
-                            }}>
+                            <button onClick={onClose}
+                            className="cancel"
+                            >
                                 확인
                             </button>
                         </div>

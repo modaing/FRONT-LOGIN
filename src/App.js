@@ -35,9 +35,7 @@ import { decodeJwt } from './utils/tokenUtils';
 import ApprovalDetail from './pages/approval/ApprovalDetail';
 
 function App() {
-  // const dispatch = useDispatch();
   const isLoggedIn = !!window.localStorage.getItem("accessToken");
-  // const memberId = token ? decodeJwt(token).memberId : null;
 
   return (
     <BrowserRouter>
@@ -54,7 +52,6 @@ function App() {
             <Route path='myProfile' element={<MyProfile />} />
             <Route path="recordCommute" element={<RecordCommute />} />
             <Route path="recordCorrectionOfCommute" element={<RecordCorrectionOfCommute />} />
-
             <Route path="commuteManage" element={<CommuteManage />} />
             <Route path="commuteCorrectionManage" element={<CommuteCorrectionManage />} />
             <Route path="myLeave" element={<MyLeave />} />

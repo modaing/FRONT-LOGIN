@@ -247,11 +247,13 @@ function CorrectionUpdateModal({ isOpen, onClose, onSave, correction, handleCorr
                             </div>
                         </div>
                         <div className="modal-footer" style={{ paddingBottom: '0px', paddingTop: '20px' }}>
-                            <button type="button" className="btn btn-secondary" onClick={onClose} style={{ backgroundColor: '#FFFFFF', border: '2px solid #D5D5D5', color: '#000000' }}>
-                                닫기
+                            <button type="button" className="cancel" onClick={onClose} 
+                            >
+                                목록
                             </button>
                             {correction?.corrStatus === '대기' && (
-                                <button type="button" className="btn btn-secondary" onClick={handleSave} style={{ backgroundColor: '#112D4E', border: '1px solid #3F72AF' }}>
+                                <button type="button" className="regist" onClick={handleSave} 
+                                >
                                     처리
                                 </button>
                             )}
