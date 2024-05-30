@@ -243,7 +243,7 @@ function Insite() {
                 labels: labels,
                 datasets: [{
                     data: data,
-                    backgroundColor: ['rgb(173, 216, 230)', 'rgb(70, 130, 180)', 'rgb(119, 136, 153)', 'rgb(119, 136, 180)'],
+                    backgroundColor: ['rgb(173, 216, 230)', 'rgb(70, 130, 180)', 'rgb(119, 136, 153)', 'rgb(119, 136, 180)', 'rgb(255, 182, 193)', 'rgb(144, 238, 144)', 'rgb(255, 160, 122)', 'rgb(240, 230, 140)'],
                     labels: labels
                 }],
             },

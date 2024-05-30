@@ -17,7 +17,7 @@ const ClockLimitModal = ({ isOpen, onClose, parsingDateOffset }) => {
                         </div>
                         <div className="modal-footer">
                             <button onClick={onClose}
-                            className="cancel"
+                            className="btn-positive"
                             >
                                 확인
                             </button>

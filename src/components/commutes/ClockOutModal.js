@@ -96,7 +96,7 @@ const ClockOutModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteLi
                         </div>
                         <div className="modal-footer">
                             <button onClick={onClose} 
-                            className="cancel"
+                            className="btn-negative"
                             //  style={{
                             //     width: '50px',
                             //     height: '40px',
@@ -111,7 +111,7 @@ const ClockOutModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteLi
                             >
                                 취소
                             </button>
-                            <button onClick={handleUpdateCommute} className="regist"
+                            <button onClick={handleUpdateCommute} className="btn-positive"
                             // style={{
                             //     width: '50px',
                             //     height: '40px',

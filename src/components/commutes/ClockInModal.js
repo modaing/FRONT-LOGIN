@@ -61,13 +61,13 @@ const ClockInModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteLis
             </div>
             <div className="modal-footer">
               <button onClick={onClose}
-                className="cancel"
+                className="btn-negative"
                 type="button"
                 >
                 취소
               </button>
               <button onClick={handleInsertCommute}
-                className="regist"
+                className="btn-positive"
                 type="button"
                 >
                 출근
