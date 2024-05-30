@@ -201,7 +201,7 @@ function HierarchyTree() {
                     leafNodeClassName="node__leaf"
                     pathFunc="step"
                     collapsible={true}
-                    translate={{ x: dimensions.width / 2, y: dimensions.height / 2 }}
+                    translate={{ x: 900, y: 200 }}
                     nodeSvgShape={svgSquare}
                     zoomable={true}
                     allowForeignObjects={true}

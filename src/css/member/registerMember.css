@@ -316,23 +316,13 @@ form input, form button, form select, form textarea {
 }
 
 label {
-    display: block;
-    margin-top: 1em;
+    /* display: block; */
+    /* margin-top: 1em; */
 }
 
 .req {
     color: red;
 }
-
-*:required {
-    /* background-color: gold; */
-}
-
-/* label::after {
-    content: " *";
-    color: red;
-} */
-
 /* Light yellow background for required fields */
 
 /* Red border for invalid fields */

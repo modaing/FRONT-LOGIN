@@ -82,6 +82,7 @@ function RegisterMember() {
         try {
             const departmentList = await callGetDepartmentListAPI();
             setDepartmentInformation(departmentList);
+            console.log('departmentList:', departmentList);
         } catch (error) {
             console.error('부서 리스트 불러 오는데 오류 발생:', error); 
         }
@@ -415,6 +416,7 @@ function RegisterMember() {
                                         <input
                                             accept='.jpg, .jpeg, .png, .gif'
                                             type="file"
+                                            // style={{ marginLeft: "20px"}}
                                             className={RegisterMemberCSS}
                                             onChange={handleFileUpload}
                                             required={true}

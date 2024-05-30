@@ -49,10 +49,11 @@
     display: flex;
     align-items: center;
     justify-content: center; /* Center align the text horizontally */
-    padding: 10px;
+    padding: 10px 20px;
     align-self: center;
     border-radius: 10px;
     background-color: #3f72af;
+    color: white;
 }
 
 .rowStyle {
@@ -141,15 +142,19 @@
 }
 
 .notice-insert-button, .inputAddressButton1 {
-    background-color: #FFFFFF;
+    background-color: white;
     color: black;
     border: 1px solid #3f72af;
     border-radius: 10px;
-    padding: 10px;
+    padding: 10px 20px;
     cursor: pointer;
     height: 46.2px;
     width: auto;
     margin-left: 15px;
+}
+
+.inputAddressButton1 :hover {
+    background-color: #d5d5d5;
 }
 
 .inputStyle, .inputStyleConfirmed {
@@ -185,32 +190,32 @@
     margin: 20px 50px 50px 50px;
 }
 
+.notice-cancel-button1, .notice-confirm-button1 {
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 10px 20px;
+}
+
 .notice-cancel-button1 {
     background-color: #FFFFFF;
     color: black;
-    border: 1px solid #D9D9D9;
-    border-radius: 10px;
-    /* padding: 10px 20px; */
-    cursor: pointer;
     margin-right: 15px;
+    border: 1px solid #D9D9D9;
+}
+
+.notice-confirm-button1 {
+    background-color: #3f72af;
+    color: white;
+    border: 1px solid #3f72af;
 }
 
 .buttonClass {
     margin-top: 50px;
-    /* margin-bottom: 40px; */
-    /* margin-right: 100px; */
     text-align: right;
 }
 
 .transferredDateStyle, .positionNameStyle {
     color: #D5D5D5;
-}
-
-.notice-confirm-button1 {
-    background-color: #3f72af;
-    border-radius: 10px;
-    height: 46.23px;
-    width: 65.89px;
 }
 
 .uploadContainer {

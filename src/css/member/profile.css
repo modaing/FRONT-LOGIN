@@ -65,7 +65,11 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+    color: white;
+    border-radius: 10px;
     background-color: #3F72AF;
+    border: 1px solid #3F72AF;
+    padding: 3px 6px;
 }
 
 .nameBox {

@@ -44,7 +44,8 @@ function MemberPage() {
         try {
             const departmentList = await callGetDepartmentListAPI();
             setDepartmentInformation(departmentList);
-
+            console.log('departmentList:', departmentList);
+            console.log('인사팀', departmentInformation[0]);
         } catch (error) {
             console.error('부서 리스트 불러 오는데 오류 발생:', error); 
         }
