@@ -20,6 +20,7 @@ const ClockLimitModal = ({ isOpen, onClose, parsingDateOffset }) => {
                         </div>
                         <div className="modal-footer">
                             <button onClick={onClose}
+
                             className="btn-negative"
                             >
                                 확인

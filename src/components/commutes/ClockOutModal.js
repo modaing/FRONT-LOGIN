@@ -97,12 +97,41 @@ const ClockOutModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteLi
                         </div>
                         <div className="modal-footer">
                             <button onClick={onClose} 
+
+                            className="btn-negative"
+                            //  style={{
+                            //     width: '50px',
+                            //     height: '40px',
+                            //     backgroundColor: '#ffffff',
+                            //     color: '#112D4E',
+                            //     border: '#112D4E 1px solid',
+                            //     borderRadius: '5px',
+                            //     padding: '1% 1.5%',
+                            //     cursor: 'pointer',
+                            //     textDecoration: 'none'
+                            // }}
+                            >
+                                취소
+                            </button>
+                            <button onClick={handleUpdateCommute} className="btn-positive"
+                            // style={{
+                            //     width: '50px',
+                            //     height: '40px',
+                            //     backgroundColor: '#112D4E',
+                            //     color: 'white',
+                            //     borderRadius: '5px',
+                            //     padding: '1% 1.5%',
+                            //     cursor: 'pointer',
+                            //     textDecoration: 'none'
+                            // }}
+
                             className="btn-negative "
                             >
                                 취소
                             </button>
                             <button onClick={handleUpdateCommute} 
                             className="btn-positive"
+
                             >
                                 퇴근
                             </button>
