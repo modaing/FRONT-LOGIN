@@ -1,7 +1,7 @@
 .noResult {
     align-self: center;
     border: none;
-    /* font-size: 50px; */
+    font-size: 30px;
     margin: 15%;
     outline: none;
     text-align: center;
@@ -29,33 +29,20 @@
 } */
 .noResultText1, .noResultText2 {
     color: #D5D5D5;
-    font-size: 25px;
+    /* font-size: 25px; */
 }
 
 .firstBox {
-    font-size: 20px;
+    /* font-size: 20px; */
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 650px;
-    padding: 0px 20px;
+    padding: 0px 0px 0px 30px;
 }
-
-.inputStyle1 {
-    width: 30px;
-    height: 50px;
-}
-
-.inputStyle {
-    /* width: 70px; */
-}
-
-/* body {
-    overflow: hidden;
-} */
 
 .main2Pages {
-    font-size: 20px;
+    /* font-size: 20px; */
     display: flex;
     width: 85%;
     height: auto;
@@ -116,7 +103,7 @@
 
 .pageTitleStyle {
     margin: 20px 0px;
-    font-size: 20px;
+    /* font-size: 20px; */
 }
 
 .profilePic {
@@ -151,7 +138,7 @@
 .nameBox {
     height: auto;
     width: auto;
-    font-size: 30px;
+    /* font-size: 30px; */
     text-align: center;
     font-style: ;
 }
@@ -161,7 +148,7 @@
     height: 40px;
     width: 80px;
     border: none;
-    font-size: 24px;
+    /* font-size: 24px; */
     cursor: pointer;
     font-weight: 900;
 }
@@ -219,7 +206,7 @@
     background-color: #ffffff;
     color: black;
     border: 1px solid #D5D5D5;
-    border-radius: 15px;
+    border-radius: 10px;
     padding: 10px 20px;
     cursor: pointer;
     margin-right: 15px;
@@ -238,7 +225,7 @@
 
 .notice-confirm-button {
     background-color: #3f72af;
-    border-radius: 15px;
+    border-radius: 10px;
     height: 52.22px;
     width: 76.82px;
 }
@@ -319,11 +306,11 @@
 .inputStyle1 {
     width: 100px;
     height: 50px;
-    font-size: 20px;
+    /* font-size: 20px; */
 }
 
 .inputStyle2 {
     width: 100px;
     height: 50px;
-    font-size: 20px;
+    /* font-size: 20px; */
 }

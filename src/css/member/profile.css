@@ -1,5 +1,5 @@
 .main2Pages12 {
-    font-size: 20px;
+    /* font-size: 20px; */
     display: flex;
     width: 85%;
     height: auto;
@@ -59,11 +59,13 @@
     align-items: center;
 }
 
-.changePassword {
+.changePasswordButtonStyle {
+    width: auto;
     height: 40px;
     display: flex;
     align-items: center;
     cursor: pointer;
+    background-color: #3F72AF;
 }
 
 .nameBox {
@@ -120,7 +122,18 @@
     margin: 20px 50px 0px 50px;
 }
 
-.transferredDateStyle, .departNameStyle, .positionNameStyle {
+.transferredDateStyle, .positionNameStyle {
     margin:20px;
+    align-items: center;
 }
 
+.departNameStyle {
+    margin: 20px 20px 20px 0px;
+}
+
+.contentStyle23 {
+    /* text-align: center; */
+    display: flex;
+    justify-content: space-between;
+    margin: 50px 50px 0px 0px;
+}

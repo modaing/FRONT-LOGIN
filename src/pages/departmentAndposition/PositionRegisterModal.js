@@ -75,7 +75,7 @@ function PositionRegisterModal(props) {
                 if (response) {
                     alert('직급를 성공적으로 등록했습니다');
                     onClose();
-                    navigate('/departmentAndPosition');
+                    navigate(-1);
                     window.location.reload();
                 }
             } else {
@@ -88,7 +88,7 @@ function PositionRegisterModal(props) {
             } else if (error.response.data === 'Position level already exists') {
                 alert('직급 레벨이 이미 존재합니다')
             }
-            console.error("직급명 수정하는데 오류가 발생했습니다:", error);
+            console.error("직급명을 수정하는데 오류가 발생했습니다:", error);
         }
     };
 
@@ -118,7 +118,7 @@ function PositionRegisterModal(props) {
                 <form onSubmit={handleSubmit}> {/* Form format */}
                     <div className='content123'>
                         <div className='contentBox1'>
-                            <label className='pStyle'>직급명</label>
+                            <label className='positionRegisterModalStyle'>직급명</label>
                             <input
                                 type="text"
                                 name="newPassword1"
@@ -129,7 +129,7 @@ function PositionRegisterModal(props) {
                             />
                         </div>
                         <div className='contentBox2'>
-                            <label className='pStyle'>직급 레벨</label>
+                            <label className='positionRegisterModalStyle'>직급 레벨</label>
                             <input 
                                 type="number" 
                                 name="positionLevel" 

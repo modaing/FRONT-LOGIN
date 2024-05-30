@@ -45,7 +45,7 @@ function DepartRegistModal(props) {
 
     const handleClose = () => {
         onClose();
-        navigate('/departmentAndPosition');
+        navigate(-1);
         // window.location.reload();
     }
 
@@ -56,8 +56,16 @@ function DepartRegistModal(props) {
                 <form onSubmit={handleSubmit}> {/* Form format */}
                     <div className='content123'>
                         <div className='contentBox1'>
-                            <label className='pStyle'>부서명</label>
-                            <input type="text" name="newPassword1" value={newDepartName} placeholder="부서명 입력" className='inputStyle123' onChange={(e) => setNewDepartName(e.target.value)}/>
+                            <label className='departRegistModalStyle' htmlFor="departmentName">부서명</label>
+                            <input 
+                                type="text" 
+                                id="departmentName" 
+                                name="newPassword1" 
+                                value={newDepartName} 
+                                placeholder="부서명 입력" 
+                                className='inputStyle123' 
+                                onChange={(e) => setNewDepartName(e.target.value)}
+                            />
                         </div>
                     </div>
                     <br/>
@@ -69,6 +77,7 @@ function DepartRegistModal(props) {
             </div>
         </div>
     );
+    
 }
 
 export default DepartRegistModal;

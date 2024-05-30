@@ -203,10 +203,11 @@ const ManageMember = () => {
                                     className="inputStyle"
                                     placeholder="검색어를 입력해주세요"
                                     type="text" 
-                                    value={search} 
+                                    value={search}
+                                    style={{ height: '40px'}}
                                     onChange={(e) => setSearch(e.target.value)} 
                                 />
-                                <button className={manageMemberCSS.searchButton} onClick={handleSearch} ref={searchButtonRef}>검색</button>
+                                <button className={manageMemberCSS.searchButtonForManageMember} onClick={handleSearch} ref={searchButtonRef}>검색</button>
                             </div>
                         </div>
                     </div>
