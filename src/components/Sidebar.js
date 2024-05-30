@@ -20,9 +20,7 @@ function Sidebar() {
         return location.pathname === path ? 'active' : '';
     };
 
-    const token = window.localStorage.getItem("accessToken");
     const memberInfos = decodeJwt(token);
-    // console.log('role', memberInfos.role);
 
     return (
         <aside id="sidebar" className="sidebar">
