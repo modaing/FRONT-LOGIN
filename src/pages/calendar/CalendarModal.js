@@ -7,7 +7,7 @@ const CalendarModal = ({ isOpen, onClose, onSave }) => {
     const [title, setTitle] = useState('');
     const [start, setStart] = useState('');
     const [end, setEnd] = useState('');
-    const [color, setColor] = useState('red');
+    const [color, setColor] = useState('orange');
     const [detail, setDetail] = useState('');
     const minEndTime = start && end && start.toDateString() === end.toDateString() ? start : new Date(0, 0, 0, 0, 0);
     const maxEndTime = start ? new Date(start) : new Date(0, 0, 0, 23, 59); 
@@ -34,7 +34,7 @@ const CalendarModal = ({ isOpen, onClose, onSave }) => {
         setTitle('');
         setStart('');
         setEnd('');
-        setColor('red');
+        setColor('orange');
         setDetail('');
     };
 
@@ -64,7 +64,6 @@ const CalendarModal = ({ isOpen, onClose, onSave }) => {
                             <div className="form-group"><label>종료 일시</label> <DatePicker selected={end} onChange={e => setEnd(e)} showTimeSelect timeInputLabel="종료시간" dateFormat="yyyy-MM-dd h:mm aa" className="form-control" minDate={start} minTime={minEndTime} maxTime={maxEndTime}/></div>
                             <div className="calendar"><label>배경 색상</label>
                                 <select value={color} onChange={e => setColor(e.target.value)} className="form-select" >
-                                    <option value="red">빨강색</option>
                                     <option value="orange">주황색</option>
                                     <option value="yellow">노랑색</option>
                                     <option value="green">초록색</option>
@@ -77,8 +76,8 @@ const CalendarModal = ({ isOpen, onClose, onSave }) => {
                             <textarea type="text" value={detail} onChange={e => setDetail(e.target.value)} className="form-control" rows="3" />
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
-                            <button type="button" className="btn btn-primary" onClick={handleImport}>등록</button>
+                            <button type="button" className="btn btn-negative" onClick={onClose}>취소</button>
+                            <button type="button" className="btn btn-positive" onClick={handleImport}>등록</button>
                         </div>
                     </div>
                 </div>

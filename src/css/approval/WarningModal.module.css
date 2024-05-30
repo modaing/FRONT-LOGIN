@@ -8,6 +8,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1000;
 }
 
 .modalContent {
@@ -48,10 +49,11 @@
 }
 
 .modalActions button:last-of-type {
-    background-color: #3F72AF;
-    color: white;
+    background-color: white;
+    color: black;
+    border: 1px solid #D9D9D9;
+    border-radius: 10px;
 }
 .modalActions button:hover{
-    background-color: #E9ECEF;
-    color: black;
+    background-color: #EDEAEA;
 }

@@ -12,19 +12,16 @@
     margin-top: 1.6%;
 }
 
-.leaveAccrual input[type="text"],
-.leaveAccrual input[type="number"] {
+.leaveAccrual input[type="text"] {
     width: 202.4px;
     height: 37.65px;
-}
-
-.leaveAccrual input[type="text"] {
     margin-left: 32px;
-
 }
 
 .leaveAccrual input[type="number"] {
     margin-left: 11px;
+    width: 100px;
+    height: 37.65px;
 }
 
 .leaveAccrual select {

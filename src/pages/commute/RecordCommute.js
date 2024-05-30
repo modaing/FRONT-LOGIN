@@ -12,6 +12,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import ClockOutModal from '../../components/commutes/ClockOutModal';
 import ClockLimitModal from '../../components/commutes/ClockLimitModal';
 import NewCommuteAndCorrection from '../../components/commutes/NewCommuteAndCorrection';
+import { setExpectedTotalWorkingTime, setStartTime, setWorkingHoursStatus } from '../../modules/CommuteModule';
+import ClockOutWarningModalBy52 from '../../components/commutes/ClockOutWarningModalBy52';
 
 function RecordCommute() {
 
@@ -41,8 +43,12 @@ function RecordCommute() {
     const [showClockOutModal, setShowClockOutModal] = useState(false);
     const [showClockLimitModal, setShowClockLimitModal] = useState(false);
     const [showNewCommuteAndCorrModal, setShowNewCommuteAndCorrModal] = useState(false);
+    const [showClockOutWarningModalBy52, setShowClockOutWarningModalBy52] = useState(false);
 
     const dispatch = useDispatch();
+    const { startTime, expectedTotalWorkingTime, isWorkingHoursLimited, totalWorkingHours } = useSelector(
+        (state) => state.commuteReducer
+    );
 
     /* 출퇴근 내역 액션 */
     const result = useSelector(state => state.commuteReducer);
@@ -79,18 +85,124 @@ function RecordCommute() {
         (commute) => parseDate(commute.workingDate) === parsingDateOffset
     );
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const currentTime = new Date().getTime();
+            const timeDiff = currentTime - (startTime?.getTime() || 0);
+            const differenceInMinutes = Math.floor(timeDiff / (1000 * 60));
+
+            const remainingWorkingTimeInMinutes = expectedTotalWorkingTime - differenceInMinutes;
+            if (remainingWorkingTimeInMinutes <= 10) {
+                setShowClockOutWarningModalBy52(true);
+            } else {
+                setShowClockOutWarningModalBy52(false);
+            }
+        }, 60000); // 1분 간격으로 확인
+
+        return () => clearInterval(interval);
+    });
+
+
+    const calculateExpectedTotalWorkingTime = (clockInTime) => {
+        // 예상 총 근로 시간 계산 로직 구현
+        // 예를 들어, 현재 시간과의 차이를 계산하여 예상 근무 시간 도출
+        const currentTime = new Date();
+        const expectedWorkingMinutes = (currentTime.getTime() - clockInTime.getTime()) / (1000 * 60);
+        return expectedWorkingMinutes;
+    };
+
     const handleClockIn = () => {
         try {
+
+            // const koreaCurrentTimeMs = new Date(Date.now() + (9 * 60 * 60 * 1000)).getTime(); // UTC+9 (Korea)
+            // dispatch(setStartTime({ startTime: new Date(Date.now() + (9 * 60 * 60 * 1000)) }));
+
+            // // 예상 총 근로 시간 계산
+            // const expectedTotalWorkingTime = calculateExpectedTotalWorkingTime(
+            //     startTime?.getTime() || koreaCurrentTimeMs,
+            //     koreaCurrentTimeMs
+            // );
+            // dispatch(setExpectedTotalWorkingTime({ expectedTotalWorkingTime }));
+            // console.log('예상 총 근무시간 : ', expectedTotalWorkingTime);
+
+            // // 51시간 50분 초과 여부 확인 후 경고 모달 표시
+            // dispatch(
+            //     setWorkingHoursStatus({
+            //         isWorkingHoursLimited: expectedTotalWorkingTime > 51 * 60 + 50,
+            //         totalWorkingHours: expectedTotalWorkingTime,
+            //     })
+            // );
+
             if (todayCommute != null) {
                 if (todayCommute.endWork == null) {
                     setShowClockOutModal(true);
                     setTodaysCommute(todayCommute);
+                    setIsClocked(true); // 퇴근 버튼 보이도록 설정
+
+                    const koreaCurrentTimeMs = new Date(Date.now() + (9 * 60 * 60 * 1000)).getTime(); // UTC+9 (Korea)
+                    dispatch(setStartTime({ startTime: new Date(Date.now() + (9 * 60 * 60 * 1000)) }));
+
+                    // 예상 총 근로 시간 계산
+                    const expectedTotalWorkingTime = calculateExpectedTotalWorkingTime(
+                        startTime?.getTime() || koreaCurrentTimeMs,
+                        koreaCurrentTimeMs
+                    );
+                    dispatch(setExpectedTotalWorkingTime({ expectedTotalWorkingTime }));
+                    console.log('예상 총 근무시간 : ', expectedTotalWorkingTime);
+
+                    // 51시간 50분 초과 여부 확인 후 경고 모달 표시
+                    dispatch(
+                        setWorkingHoursStatus({
+                            isWorkingHoursLimited: expectedTotalWorkingTime > 51 * 60 + 50,
+                            totalWorkingHours: expectedTotalWorkingTime,
+                        })
+                    );
                 } else {
                     setShowClockLimitModal(true);
+                    setIsClocked(false); // 출근 버튼 보이도록 설정
+
+                    const koreaCurrentTimeMs = new Date(Date.now() + (9 * 60 * 60 * 1000)).getTime(); // UTC+9 (Korea)
+                    dispatch(setStartTime({ startTime: new Date(Date.now() + (9 * 60 * 60 * 1000)) }));
+
+                    // 예상 총 근로 시간 계산
+                    const expectedTotalWorkingTime = calculateExpectedTotalWorkingTime(
+                        startTime?.getTime() || koreaCurrentTimeMs,
+                        koreaCurrentTimeMs
+                    );
+                    dispatch(setExpectedTotalWorkingTime({ expectedTotalWorkingTime }));
+                    console.log('예상 총 근무시간 : ', expectedTotalWorkingTime);
+
+                    // 51시간 50분 초과 여부 확인 후 경고 모달 표시
+                    dispatch(
+                        setWorkingHoursStatus({
+                            isWorkingHoursLimited: expectedTotalWorkingTime > 51 * 60 + 50,
+                            totalWorkingHours: expectedTotalWorkingTime,
+                        })
+                    );
                 }
             } else {
                 setTodaysCommute(todayCommute);
                 setShowClockInModal(true);
+                setIsClocked(false); // 출근 버튼 보이도록 설정
+
+                const koreaCurrentTimeMs = new Date(Date.now() + (9 * 60 * 60 * 1000)).getTime(); // UTC+9 (Korea)
+                dispatch(setStartTime({ startTime: new Date(Date.now() + (9 * 60 * 60 * 1000)) }));
+
+                // 예상 총 근로 시간 계산
+                const expectedTotalWorkingTime = calculateExpectedTotalWorkingTime(
+                    startTime?.getTime() || koreaCurrentTimeMs,
+                    koreaCurrentTimeMs
+                );
+                dispatch(setExpectedTotalWorkingTime({ expectedTotalWorkingTime }));
+                console.log('예상 총 근무시간 : ', expectedTotalWorkingTime);
+
+                // 51시간 50분 초과 여부 확인 후 경고 모달 표시
+                dispatch(
+                    setWorkingHoursStatus({
+                        isWorkingHoursLimited: expectedTotalWorkingTime > 51 * 60 + 50,
+                        totalWorkingHours: expectedTotalWorkingTime,
+                    })
+                );
             }
         } catch (error) {
             console.error('Error checking commute:', error);
@@ -154,9 +266,10 @@ function RecordCommute() {
                         <li className="breadcrumb-item"><a href="/">Home</a></li>
                         <li className="breadcrumb-item">출퇴근</li>
                         <li className="breadcrumb-item active">출퇴근 내역</li>
+                        <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
                             <Link
                                 to="/recordCommute"
-                                className="notice-insert-button"
+                                className="notice-insert-button regist"
                                 style={
                                     !todayCommute
                                         ? insertButton
@@ -167,10 +280,10 @@ function RecordCommute() {
                                 onClick={handleClockIn}
                             >
                                 {!todayCommute
-                                    ? '출근하기'
+                                    ? '출근 시간 등록'
                                     : todayCommute
-                                        ? '퇴근하기'
-                                        : '출근하기'
+                                        ? '퇴근 시간 등록'
+                                        : '출근 시간 등록'
                                 }
                             </Link>
                             <Link
@@ -179,8 +292,9 @@ function RecordCommute() {
                                 style={insert2Button}
                                 onClick={handleNewCommuteAndCorrection}
                             >
-                                정정요청
+                                <span>미출근 정정 요청</span>
                             </Link>
+                        </div>
                         {showClockInModal && (
                             <ClockInModal
                                 isOpen={showClockInModal}
@@ -210,11 +324,18 @@ function RecordCommute() {
                         )}
                         {showNewCommuteAndCorrModal && (
                             <NewCommuteAndCorrection
-                            commuteList={commuteList}
-                            isOpen={showNewCommuteAndCorrModal}
-                            onClose={handleNewCommuteAndCorrModalClose}
-                            parsingDateOffset={parsingDateOffset}
-                            memberId={memberId}
+                                commuteList={commuteList}
+                                isOpen={showNewCommuteAndCorrModal}
+                                onClose={handleNewCommuteAndCorrModalClose}
+                                parsingDateOffset={parsingDateOffset}
+                                memberId={memberId}
+                            />
+                        )}
+                        {showClockOutWarningModalBy52 && (
+                            <ClockOutWarningModalBy52
+                                isOpen={showClockOutWarningModalBy52}
+                                onClose={() => setShowClockOutWarningModalBy52(false)}
+                                totalWorkingHours={totalWorkingHours}
                             />
                         )}
                     </ol>
@@ -250,24 +371,25 @@ function RecordCommute() {
 export default RecordCommute;
 
 const insertButton = {
-    width: '100px',
+    fontSize: '16px',
+    width: '150px',
     float: 'right',
     backgroundColor: '#112D4E',
     color: 'white',
     borderRadius: '5px',
     padding: '1% 1.5%',
     cursor: 'pointer',
-    marginLeft: '60%',
     height: '45px',
     textDecoration: 'none',
     textAlign: 'center',
-    display: 'inline-block',
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
 };
 
 const updateButton = {
-    width: '100px',
+    fontSize: '16px',
+    width: '150px',
     float: 'right',
     backgroundColor: '#ffffff',
     color: '#112D4E',
@@ -275,17 +397,17 @@ const updateButton = {
     borderRadius: '5px',
     padding: '1% 1.5%',
     cursor: 'pointer',
-    marginLeft: '60%',
     height: '45px',
     textDecoration: 'none',
     textAlign: 'center',
-    display: 'inline-block',
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
 };
 
 const insert2Button = {
-    width: '100px',
+    fontSize: '16px',
+    width: '150px',
     float: 'right',
     backgroundColor: '#3F72AF',
     color: 'white',
@@ -296,7 +418,7 @@ const insert2Button = {
     height: '45px',
     textDecoration: 'none',
     textAlign: 'center',
-    display: 'inline-block',
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
 };

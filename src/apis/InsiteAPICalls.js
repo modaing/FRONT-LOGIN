@@ -66,10 +66,10 @@ export const callApprovalCountsAPI = () => {
     }
 }
 
-export const callApproverCountsAPI = () => {
+export const callApproverCountsAPI = (memberId) => {
     return async (dispatch) => {
         try {
-            const approverCountsResponse = await axios.get(`${API_BASE_URL}/insites/approvers`, { headers });
+            const approverCountsResponse = await axios.get(`${API_BASE_URL}/insites/approvers/${memberId}`, { headers });
             dispatch({ type: GET_APPROVER_COUNTS, payload: approverCountsResponse.data });
             console.log('approverCountsResponse', approverCountsResponse);
             return approverCountsResponse;
@@ -84,7 +84,7 @@ export const callMyLeaveCountsAPI = (memberId) => {
         try {
             const myLeaveCountsResponse = await axios.get(`${API_BASE_URL}/insites/leaves/${memberId}`, { headers });
             dispatch({ type: GET_MY_LEAVES_COUNT, payload: myLeaveCountsResponse.data });
-            console.log('approverCountsResponse', myLeaveCountsResponse);
+            console.log('myLeaveCountsResponse', myLeaveCountsResponse);
             return myLeaveCountsResponse;
         } catch (error) {
             throw error;

@@ -6,15 +6,18 @@
 .tempSave{
     
     justify-content: flex-end;
-    margin-right: 50px;
     margin-top : 50px;
 }
 .tempSave button{
     background-color: #3F72AF;
+    border-radius: 10px;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    
 }
 .tempSave button:hover{
-    background-color: #E9ECEF;
-    color: black;
+    background-color: #92B9E7;
 }
 
 .bigContent{
@@ -61,6 +64,9 @@
 .ApproversBtn p {
     display: none;
 }
+.ApproversBtn:hover{
+    background-color: #EDEAEA;
+}
 .ApproversBtn:hover p {
     
     background-color: #F4F4F4;
@@ -77,6 +83,7 @@
     border-radius: 5px;
     font-size: 15px;
     font-weight: lighter;
+    border-radius: 10px;
 }
 
 
@@ -97,6 +104,7 @@
     padding: 5px;
     padding-left: 10px;
     position:relative;
+    border-radius: 10px;
 }
 .LineTitle{
     font-size: 20px;
@@ -192,43 +200,47 @@
 }
 .insertAppButtons button{
     padding: 10px 18px;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
-    margin-left: 10px;
+    
+    margin-left: 30px;
+    font-size: 16px;
     border:none;
 }
 .insertAppButtons button:first-of-type{
 
     background-color: white;
     color: black;
-    border: 1px solid #BBBBBB;
+    border: 1px solid #D9D9D9;
 }
 .insertAppButtons button:last-of-type{
    
-    background-color: #3F72AF;
+    background-color: #112D4E;
     color: white;
 }
-.insertAppButtons button:hover{
-    background-color: #E9ECEF;
-    color: black;
+.insertAppButtons button:first-of-type:hover{
+    background-color: #EDEAEA;
+}
+.insertAppButtons button:last-of-type:hover{
+    background-color: #465970;
 }
 .fileUpload {
     margin-top: 20px;
 }
 .fileUploadLabel {
     display: inline-block;
-    padding: 8px 16px;
+    padding: 8px 10px;
     background-color: white;
     color: black;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
-    border: 1px solid #D5D5D5;
-    width: 150px;
+    border: 1px solid #D9D9D9;
+    width: 90px;
     text-align: center;
+    font-weight: bold;
 }
 .fileUploadLabel:hover{
-    background-color: #005583;
-    color: #fff;
+    background-color: #EDEAEA;
 }
 
 .fileUploadInput {

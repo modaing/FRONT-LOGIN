@@ -6,9 +6,16 @@ import { useDispatch } from "react-redux";
 import { callInsertNewCorrectionAPI } from "../../apis/CommuteAPICalls";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Seoul");
 
 const NewCommuteAndCorrection = ({ commuteList, isOpen, onClose, parsingDateOffset, memberId }) => {
 
+    console.log('commuteList', commuteList);
     console.log('parsingDateOffset', parsingDateOffset);
 
     const dispatch = useDispatch();
@@ -60,7 +67,7 @@ const NewCommuteAndCorrection = ({ commuteList, isOpen, onClose, parsingDateOffs
 
             let newCorrection = {
                 memberId: memberId,
-                workingDate: workingDate,
+                workingDate: parseDate(workingDate),
                 reqStartWork: koreaStartTime,
                 reqEndWork: koreaEndTime,
                 corrRegistrationDate: parsingDateOffset,
@@ -69,6 +76,7 @@ const NewCommuteAndCorrection = ({ commuteList, isOpen, onClose, parsingDateOffs
             };
 
             console.log('workingDate', workingDate);
+            console.log('parseDate(workingDate)', parseDate(workingDate));
             console.log('koreaStartTime', koreaStartTime);
             console.log('koreaEndTime', koreaEndTime);
             console.log('parsingDateOffset', parsingDateOffset);
@@ -95,12 +103,18 @@ const NewCommuteAndCorrection = ({ commuteList, isOpen, onClose, parsingDateOffs
         }
     }, [isOpen]);
 
+    const shouldDisableDate = (date) => {
+        const formattedDate = dayjs(date).format('YYYY-MM-DD');
+        return commuteList.some((commute) => commute.workingDate === formattedDate);
+    };
+    
+
     /* 날짜 데이터 파싱 */
-    const parseDate = (dateData) => {
-        if (Array.isArray(dateData)) {
-            return dayjs(new Date(dateData[0], dateData[1] - 1, dateData[2])).format('YYYY-MM-DD');
+    const parseDate = (date) => {
+        if (date) {
+            return dayjs(date).tz('Asia/Seoul').format('YYYY-MM-DD');
         } else {
-            return dateData;
+            return null;
         }
     };
 
@@ -114,36 +128,39 @@ const NewCommuteAndCorrection = ({ commuteList, isOpen, onClose, parsingDateOffs
     };
 
     return (
-        <div className="modal fade show" style={{ display: 'block', zIndex: 1 }}>
+        <div className="modal fade show" style={{ display: 'block', zIndex: 999, color: '#000000' }}>
             <div className="modal-dialog" style={{ padding: '0px' }}>
                 <div className="modal-content" style={{ padding: '25px', width: '550px' }}>
                     <div className="modal-header" style={{ paddingBottom: '20px', paddingTop: '0px' }}>
                         <h5 className="modal-title">출퇴근 정정 등록</h5>
-                        <button type="button" onClick={resetModal} style={{ background: '#ffffff', color: '#000000', paddingLeft: '20px', cursor: 'pointer' }}><i className="bi bi-arrow-counterclockwise"></i></button>
-                        <button type="button" className="btn-close" onClick={onClose} style={{ backgroundColor: '#ffffff', cursor: 'pointer' }}></button>
+                        {/* <button type="button" onClick={resetModal} style={{ background: '#ffffff', color: '#000000', paddingLeft: '20px', cursor: 'pointer' }}><i className="bi bi-arrow-counterclockwise"></i></button> */}
                         {/* 시간 새로고침은 되는데 화면에 반영안됨!! */}
                     </div>
                     <div className="modal-body" style={{ paddingTop: '30px', paddingBottom: '20px' }}>
+                    <p style={{color: 'blue'}}>* 출퇴근 미입력 후 지나간 날짜만 등록해주세요.</p>
                         {showDateErrorMessage && (
-                            <h6 style={{ color: 'red', marginTop: '10px', fontSize: '15px', marginBottom: '14px', textAlign: 'left'}}>
+                            <h6 style={{ color: 'red', marginTop: '10px', fontSize: '15px', marginBottom: '14px', textAlign: 'left' }}>
                                 정정 요청 날짜를 입력해주세요!
                             </h6>
                         )}
                         <div style={{ display: 'flex' }}>
-                            <h6 style={{ fontWeight: 'bold', marginRight: '20px', marginBottom: '0px', width: '180px', textOverflow: 'ellipsis' }}>정정 대상 일자
+                            <h6 style={{ fontWeight: 'bold', marginRight: '20px', marginBottom: '0px', width: '180px', textOverflow: 'ellipsis' }}>정정 요청 대상 일자
                             </h6>
                             <div className="form-group" style={{ marginBottom: '0px' }}>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     {/* <DemoContainer components={['DatePicker']}> */}
                                     <DatePicker
-                                        label="정정 요청 대상 일시"
-                                        // selected={new Date(workingDate)}
+                                        label="정정 요청 대상 일자"
+                                        selected={parseDate(workingDate)}
+                                        format="YYYY-MM-DD"
                                         onChange={(e) => {
                                             setWorkingDate(e);
                                             setShowDateErrorMessage(false);
                                         }}
-                                        format="YYYY-MM-DD"
-                                        DatePicker={workingDate}
+                                        // ={}
+                                        // DatePicker={workingDate}
+                                        maxDate={dayjs().startOf('day')}
+                                        shouldDisableDate={shouldDisableDate}
                                     />
                                     {/* </DemoContainer> */}
                                 </LocalizationProvider>
@@ -214,10 +231,12 @@ const NewCommuteAndCorrection = ({ commuteList, isOpen, onClose, parsingDateOffs
                         </div>
                     </div>
                     <div className="modal-footer" style={{ paddingBottom: '0px', paddingTop: '20px' }}>
-                        <button type="button" className="btn btn-secondary" onClick={onClose} style={{ backgroundColor: '#FFFFFF', border: '1px solid #D5D5D5', color: '#000000' }}>
+                        <button type="button" className="cancel" onClick={onClose} 
+                        >
                             취소
                         </button>
-                        <button type="button" className="btn btn-secondary" onClick={handleSave} style={{ backgroundColor: '#3F72AF', border: '1px solid #3F72AF' }}>
+                        <button type="button" className="regist" onClick={handleSave} 
+                        >
                             등록
                         </button>
                     </div>

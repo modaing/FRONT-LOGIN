@@ -75,7 +75,7 @@ const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime, remai
     return <>
         {isOpen && (
             <>
-                <div className={isCheckOpen ? "none" : "modal-backdrop show"}></div>
+                <div className={isCheckOpen ? "none" : "leaveModal-backdrop show"}></div>
 
                 <div className={isCheckOpen ? "modal fade" : "modal fade show"} style={{ display: 'block' }}>
                     <div className="modal-dialog">
@@ -117,8 +117,8 @@ const MyLeaveModal = ({ isOpen, onClose, onSave, leaveSubNo, selectedTime, remai
                                 <textarea type="text" value={reason} onChange={e => setReason(e.target.value)} className="form-control" rows="3" />
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
-                                <button type="button" className="btn btn-primary" onClick={handleValidation}>등록</button>
+                                <button type="button" className="btn btn-negative" onClick={onClose}>취소</button>
+                                <button type="button" className="btn btn-positive" onClick={handleValidation}>등록</button>
                             </div>
                         </div>
                     </div>

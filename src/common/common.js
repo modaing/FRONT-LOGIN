@@ -48,7 +48,6 @@ import * as echarts from 'echarts';
     })
   }
 
-
   /**
    * Navbar links active state on scroll
    */

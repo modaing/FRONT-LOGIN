@@ -12,6 +12,7 @@ export const request = async (method, url, data) => {
             data,
             headers: {
                 Authorization: 'Bearer ' + window.localStorage.getItem('accessToken'),
+                // ContentType: 'application/json'
             },
         });
 

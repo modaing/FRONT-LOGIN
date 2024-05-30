@@ -59,7 +59,7 @@ function Room({ roomId, onLeaveRoom , senderDeleteYn, receiverDeleteYn}) {
             console.log('STOMP client connected to the server.');
             setStompClient(client);
 
-            sendMessageToEnteredRoom(client);
+            /* sendMessageToEnteredRoom(client);  입장 시 자동 메시지 제거 */
 
             const subscription = client.subscribe(`/sub/room/${roomId}`, message => {
                 console.log('Received message:', message.body);
@@ -97,7 +97,7 @@ function Room({ roomId, onLeaveRoom , senderDeleteYn, receiverDeleteYn}) {
             const message = {
                 senderId: memberId,
                 senderName: name,
-                message: `${name} 님이 입장하셨습니다.`
+                message: `${name} 님이 입장하셨습니다.`,
             };
             client.publish({
                 destination: `/pub/room/${roomId}/entered`,
@@ -170,7 +170,7 @@ function Room({ roomId, onLeaveRoom , senderDeleteYn, receiverDeleteYn}) {
             console.log(imageUrl);
             return imageUrl;
         } else {
-            return null; // 자동 메시지인 경우 이미지를 반환하지 않음
+            return '/img/gpt.jpg'; 
         }
     };
 
@@ -202,9 +202,9 @@ function Room({ roomId, onLeaveRoom , senderDeleteYn, receiverDeleteYn}) {
                             }
                         }}
                         disabled={isRoomDeleted}
-                        placeholder={isRoomDeleted ? "이 방은 삭제되었습니다." : "메시지를 입력해주세요"}
+                        placeholder={isRoomDeleted ? "상대방이 퇴장하였습니다." : "메시지를 입력해주세요"}
                     />
-                    <button onClick={sendMessage} >Send</button>
+                    <button className='button-post' onClick={sendMessage} >Send</button>
                     <button className='button-leave' onClick={handleLeaveRoom}>Leave Room</button>
                 </div>
             </div>

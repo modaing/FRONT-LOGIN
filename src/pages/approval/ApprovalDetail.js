@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import styles from "../../css/approval/ApprovalDetail.module.css";
 import { decodeJwt } from "../../utils/tokenUtils";
-import { getApprovalDetailAPI, updateApprovalStatusAPI, updateApproverStatusAPI } from "../../apis/ApprovalAPI";
+import { downloadFileAPI, getApprovalDetailAPI, updateApprovalStatusAPI, updateApproverStatusAPI } from "../../apis/ApprovalAPI";
 import UserInfoComponent from '../../components/approvals/UserInfoComponent';
 import ApproversInfo from "../../components/approvals/ApproversInfo";
 import ReferencerComponent from "../../components/approvals/ReferencerComponent";
@@ -11,6 +11,8 @@ import ReturnConfirmModal from "../../components/approvals/ReturnConfirmModal";
 import ApproverStatusConfirmModal from "../../components/approvals/ApproverStatusConfirmModal";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
+import ActionTypeModal from "../../components/approvals/ActionTypeModal";
 
 const ApprovalDetail = () => {
     const { approvalNo } = useParams();
@@ -22,6 +24,9 @@ const ApprovalDetail = () => {
 
     const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
     const [isApproverStatusConfirmModalOpen, setIsApproverStatusConfirmModalOpen] = useState(false);
+    const [isActionTypeModalOpen, setIsActionTypeModalOpen] = useState(false);
+
+    const [isDownloading, setIsDownloading] = useState(false);
 
     const [rejectReason, setRejectReason] = useState('');
     const [actionType, setActionType] = useState('');
@@ -47,7 +52,7 @@ const ApprovalDetail = () => {
         return <div>No detail available</div>
     }
 
-    const { memberId: approvalMemberId, approver, referencer, approvalTitle, approvalContent } = approvalDetail;
+    const { memberId: approvalMemberId, approver, referencer, approvalTitle, approvalContent, approvalStatus, attachment } = approvalDetail;
 
     const handleWithdrawClick = () => {
         setIsWithdrawModalOpen(true);
@@ -69,7 +74,7 @@ const ApprovalDetail = () => {
         const approverToUpdate = approver.find(a => a.memberId === memberId && a.approverStatus === '대기');
         if (approverToUpdate) {
             const updateData = {
-                approverNo : approverToUpdate.approverNo,
+                approverNo: approverToUpdate.approverNo,
                 approverStatus: actionType === 'approve' ? '승인' : '반려',
                 rejectReason: actionType === 'reject' ? rejectReason : ''
             };
@@ -101,16 +106,24 @@ const ApprovalDetail = () => {
     };
 
     const handleProcessClick = () => {
+        if(!actionType){
+            setIsActionTypeModalOpen(true);
+            return;
+        }
         handleModalConfirm();
-    }
+    };
+    
+    const handleActionTypeModalClose = () => {
+        setIsActionTypeModalOpen(false);
+    };
 
     //작성자가 0번째에 있고, 작성자 다음으로 결재처리를 한 사람이 없거나 첫번째 사람이 결재처리를 안했으면 회수 버튼을 보이도록 설정
     const isSender = approver[0]?.memberId === memberId;
-    console.log("0번째 결재자가 작성자가 맞는지: " + isSender)
+    // console.log("0번째 결재자가 작성자가 맞는지: " + isSender)
     const firstApproverHasNotApproved = approver[1]?.approverStatus !== '승인' && approver[1]?.approverStatus !== '반려';
-    console.log('첫번째 결재자가 결재를 했나 : ' + firstApproverHasNotApproved);
+    // console.log('첫번째 결재자가 결재를 했나 : ' + firstApproverHasNotApproved);
     const canWithdraw = isSender && firstApproverHasNotApproved && approvalDetail.approvalStatus !== '회수';
-    console.log('0번째 결재자가 작성자가 맞거나 승인 반려한사람이 없거나 회수상태가 아닌가' + canWithdraw);
+    // console.log('0번째 결재자가 작성자가 맞거나 승인 반려한사람이 없거나 회수상태가 아닌가' + canWithdraw);
 
     //접속자가 현재 approver 중에서 approverStatus 가 '대기'인 사람 중에 가장 먼저인가
     const currentApprover = approver.find(a => a.memberId === memberId && a.approverStatus === '대기');
@@ -125,7 +138,39 @@ const ApprovalDetail = () => {
     //목록 버튼 url 설정
     console.log('기안자 정보 : ' + approvalDetail.memberId);
     const listUrl = (approvalMemberId === memberId) ? '/approvals?fg=given&page=0&title=&direction=DESC' : '/approvals?fg=received&page=0&title=&direction=DESC';
-    console.log("😫😫😫😫😫😫내가 기안자니?" + approvalDetail.memberId === memberId);
+    console.log("내가 기안자니?" + (approvalDetail.memberId === memberId));
+    console.log(listUrl);
+
+    //반려 사유 확인
+    const rejectReasonFromApprover = approver.find(a => a.approverStatus === '반려')?.rejectReason;
+
+    //파일 다운로드
+    const downloadFile = async (fileSavepath, fileSavename, fileOriname) => {
+
+        setIsDownloading(true);
+
+        try {
+            const fileData = await downloadFileAPI(fileSavepath, fileSavename, fileOriname);
+            const url = window.URL.createObjectURL(new Blob([fileData]));
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileOriname;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            }, 0);
+
+        } catch (error) {
+            console.error('파일 다운로드 오류 : ', error);
+        } finally {
+            setIsDownloading(false);
+        }
+
+
+    };
+
 
     return (
         <main id="main" className="main">
@@ -153,25 +198,45 @@ const ApprovalDetail = () => {
                     <div dangerouslySetInnerHTML={{ __html: approvalDetail.approvalContent }}
                         className={styles.contentForm} />
 
-                    <div>
-                        첨부파일
+                    <div className={styles.attachmentsList}>
+                        <div className={styles.attachmentListLabel}>
+                            첨부파일
+                        </div>
+                        {attachment && attachment.length > 0 && (
+                            <ul className={styles.attachmentList}>
+                                {attachment.map((file, index) => (
+                                    <li key={index}>
+                                        {file.fileOriname}
+                                        <button className={styles.fileDownloadBtn} onClick={() => downloadFile(file.fileSavepath, file.fileSavename, file.fileOriname)}>
+                                            {isDownloading ? '다운로드 중...' : '다운로드'}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                        <div>
+
+                        </div>
                     </div>
                 </div>
                 {canApproveOrReject && (
                     <div class={styles.actionBox}>
+                        <div className={styles.actionTitle}>결재처리</div>
                         <div className={styles.actionButtons}>
-                            <label className={styles.approveRadios}>
-                                <input type="radio" name="action" value="approve" checked={actionType === 'approve'} onChange={handleApproveClick}/>
-                                <button onClick={handleApproveClick}>승인</button>
-                            </label>
-                            
-                            <label className={styles.rejectRadios}>
-                                <input type="radio" name="action" value="reject" checked={actionType === 'reject'} onChange={handleRejectClick}/>
-                                <button onClick={handleRejectClick}>반려</button>
-                            </label>
-                            
+                            <button
+                                className={`${styles.actionButton} ${actionType === 'approve' ? styles.selectedApprove : styles.unselected}`}
+                                onClick={handleApproveClick}
+                            >
+                                승인
+                            </button>
+                            <button
+                                className={`${styles.actionButton} ${actionType === 'reject' ? styles.selectedReject : styles.unselected}`}
+                                onClick={handleRejectClick}
+                            >
+                                반려
+                            </button>
                         </div>
-                        
+
                         {actionType === 'reject' && (
                             <div className={styles.rejectReasonContainer}>
                                 <div className={styles.rejectReasonLabel}>반려사유</div>
@@ -182,6 +247,13 @@ const ApprovalDetail = () => {
                                 />
                             </div>
                         )}
+
+                    </div>
+                )}
+                {rejectReasonFromApprover && (
+                    <div className={styles.rejectReasonDisplay}>
+                        <div className={styles.rejectReasonLabel}>반려 사유</div>
+                        <div className={styles.rejectReason}>{rejectReasonFromApprover}</div>
                     </div>
                 )}
 
@@ -201,6 +273,10 @@ const ApprovalDetail = () => {
             <ApproverStatusConfirmModal
                 isOpen={isApproverStatusConfirmModalOpen}
                 onClose={handleApproverStatusConfirmModalClose}
+            />
+            <ActionTypeModal
+                isOpen={isActionTypeModalOpen}
+                onClose={handleActionTypeModalClose}
             />
         </main>
     );

@@ -11,18 +11,19 @@ function ApproverCounts() {
 
     const memberInfo = decodeJwt(token);
     const memberId = memberInfo.memberId;
+    console.log(memberId)
 
     useEffect(() => {
         const fetchApproverCounts = async () => {
             try {
-                const response = await dispatch(callApproverCountsAPI());
+                const response = await dispatch(callApproverCountsAPI(memberId));
                 setApproverCounts(response.data);
             } catch (error) {
                 console.error('Error fetching approval counts:', error);
             }
         };
 
-        fetchApproverCounts();
+        fetchApproverCounts(memberId);
     }, [dispatch]);
 
 
@@ -31,7 +32,7 @@ function ApproverCounts() {
     return (
         <div className="approver-counts-container">
             <div className="approver-counts-body">
-                <h7 className="approver-counts-title">수신 미처리 전자결재</h7>
+                <h7 className="approver-counts-title">결재 대기 건수</h7>
 
                 <div className="approver-content-container">
                     <div className="approver-text-container">

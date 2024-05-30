@@ -77,7 +77,7 @@ export function renderLeaveSubmit(content, checkDelete, handleCancel, setSelecte
                                 setDetailInfo({ name: submit.applicantName, memberId: submit.leaveSubApplicant, type: submit.leaveSubType, reason: submit.leaveSubReason })
                                 handleOpenModal(submit.leaveSubNo)
                             }}>
-                                상세
+                                상세 조회
                             </span>
                         </td>
                     }

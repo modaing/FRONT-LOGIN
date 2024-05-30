@@ -69,7 +69,6 @@ const UpdateModal = ({ isOpen, onClose, onUpdate, onDelete, event }) => {
                             <div className="form-group"><label>종료 일시</label> <DatePicker selected={end} onChange={e => setEnd(e)} showTimeSelect timeInputLabel="종료시간" dateFormat="yyyy-MM-dd h:mm aa" className="form-control" minDate={start} minTime={minEndTime} maxTime={maxEndTime}/></div>
                             <div className="calendar"><label>배경 색상</label>
                                 <select value={color} onChange={(e) => setColor(e.target.value)} className="form-select" >
-                                    <option value="red">빨강색</option>
                                     <option value="orange">주황색</option>
                                     <option value="yellow">노랑색</option>
                                     <option value="green">초록색</option>
@@ -82,9 +81,9 @@ const UpdateModal = ({ isOpen, onClose, onUpdate, onDelete, event }) => {
                             <textarea type="text" value={detail} onChange={e => setDetail(e.target.value)} className="form-control" rows="3" />
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-danger" onClick={handleDelete} style={{ marginRight: 'auto'}}>삭제</button>
-                            <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
-                            <button type="button" className="btn btn-primary" onClick={handleUpdate}>수정</button>
+                            <button type="button" className="btn btn-delete" onClick={handleDelete} style={{ marginRight: 'auto'}}>삭제</button>
+                            <button type="button" className="btn btn-negative" onClick={onClose}>취소</button>
+                            <button type="button" className="btn btn-positive" onClick={handleUpdate}>수정</button>
                         </div>
                     </div>
                 </div>

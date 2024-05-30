@@ -167,6 +167,7 @@ export const updateApprovalAPI = async ( approvalNo, formData ) => {
         }
 };
 
+//전자결재 상세 조회
 export const getApprovalDetailAPI = (approvalNo) => {
     return async (dispatch) => {
         dispatch(setLoading(true));
@@ -187,6 +188,7 @@ export const getApprovalDetailAPI = (approvalNo) => {
     };
 };
 
+//전자결재 회수
 export const updateApprovalStatusAPI = (approvalNo, status) => {
     return async dispatch => {
         try{
@@ -200,6 +202,7 @@ export const updateApprovalStatusAPI = (approvalNo, status) => {
     };
 };
 
+//전자결재 결재 처리
 export const updateApproverStatusAPI = (approverNo, updateData) => {
     return async (dispatch) =>{
         try {
@@ -210,4 +213,26 @@ export const updateApproverStatusAPI = (approverNo, updateData) => {
             console.error('결재자 상태 업데이트 실패 : ', error);
         }
     };
+};
+
+
+export const downloadFileAPI = async (fileSavePath, fileSavename, fileOriname) => {
+    const headers = {
+        Authorization: 'Bearer ' + window.localStorage.getItem('accessToken')
+    };
+
+    const fileUrl = `${API_BASE_URL}/approvals/files?fileSavepath=${encodeURIComponent(fileSavePath)}&fileSavename=${encodeURIComponent(fileSavename)}&fileOriname=${encodeURIComponent(fileOriname)}`;
+
+    console.log('파일 경로 : ' + fileUrl);
+
+    try{
+        const response = await axios.get(fileUrl, { headers, responseType: 'blob' });
+        console.log ('파일 다운로드 요청 응답 : ' + response);
+        console.log('파일 다운로드 요청 응답 .data' + response.data);
+        return response.data;
+        
+    } catch(error) {
+        console.error('파일 다운로드 오류', error);
+        throw error;
+    }
 };

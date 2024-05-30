@@ -2,9 +2,11 @@ import { Link, useNavigate } from 'react-router-dom'; // react-router-dom에서 
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { decodeJwt } from '../utils/tokenUtils';
 import { useDispatch, useSelector } from 'react-redux';
-import { callLogoutAPI } from '../apis/MemberAPICalls';
-import { useEffect } from 'react';
-import { callSelectNoticeListAPI } from '../apis/NoticeAPICalls';
+import { callLogoutAPI, callGetProfilePictureAPI } from '../apis/MemberAPICalls';
+import { useEffect, useLayoutEffect, useState } from 'react';
+import { callDeleteNoticeListAPI, callSelectNoticeListAPI } from '../apis/NoticeAPICalls';
+import moment from 'moment/moment';
+import dayjs from 'dayjs';
 
 function Header() {
     const dispatch = useDispatch();
@@ -13,10 +15,15 @@ function Header() {
     const memberInfo = token ? decodeJwt(token) : null;
     const imageUrl = memberInfo ? `/img/${memberInfo.imageUrl}` : null;
 
-    const memberId = memberInfo ? memberInfo.memberId : null;
+    console.log(imageUrl)
+
+    const memberId = decodeJwt(token).memberId;
     const result = useSelector(state => state.noticeReducer);
     console.log('result', result);
     const noticeList = result?.noticeList?.response?.data?.results?.result || [];
+    const [unreadNoticeCount, setUnreadNoticeCount] = useState(0);
+    const [noticeCount, setNoticeCount] = useState(0);
+    // const [noticeList, setNoticeList] = useState([]);
 
     const onClickLogoutHandler = (event) => {
         event.preventDefault();
@@ -33,10 +40,37 @@ function Header() {
     };
 
     useEffect(() => {
-        if (memberId) {
-            dispatch(callSelectNoticeListAPI(memberId));
+        dispatch(callSelectNoticeListAPI(memberId));
+    }, [dispatch, memberId]);
+
+    useEffect(() => {
+        const newNoticeAddedListener = () => {
+            dispatch(callSelectNoticeListAPI(memberId)).then((response) => {
+                setUnreadNoticeCount(response.filter((notice) => !notice.isRead).length);
+                setNoticeCount(response.length);
+            });
+        };
+    
+        window.addEventListener('newNoticeAdded', newNoticeAddedListener);
+    
+        return () => {
+            window.removeEventListener('newNoticeAdded', newNoticeAddedListener);
+        };
+    }, [dispatch, memberId]);
+
+    const handleDeleteNotices = () => {
+        dispatch(callDeleteNoticeListAPI(memberId));
+        setUnreadNoticeCount(0);
+        dispatch(callSelectNoticeListAPI(memberId));
+    };
+
+    const parseDate = (dateData) => {
+        if (Array.isArray(dateData)) {
+            return dayjs(new Date(dateData[0], dateData[1] - 1, dateData[2], dateData[3], dateData[4])).format('YYYY-MM-DD hh:mm');
+        } else {
+            return dayjs(dateData).format('YYYY-MM-DD hh:mm');
         }
-    }, [memberId, dispatch]);
+    };
 
     return (
         <header id="header" className="header fixed-top d-flex align-items-center" >
@@ -60,14 +94,15 @@ function Header() {
                         {/* 알림 메뉴를 토글하는 링크 */}
                         <Link to="#" className="nav-link nav-icon" data-bs-toggle="dropdown">
                             <i className="bi bi-bell"></i>
-                            <span className="badge bg-primary badge-number">4</span>
+                            <span className="badge badge-number" style={{ backgroundColor: '#FA6060' }}>{unreadNoticeCount?.toString().padStart(1, '0')}</span>
                         </Link>
                         {/* 알림 메뉴 */}
-                        <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" style={{ width: '300px' }}>
+                        <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" style={{ width: '300px', height: '480px' }}>
                             <div >
-                                <li className="dropdown-header" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    새로운 알림
-                                    <Link to="#"><span className="badge rounded-pill bg-primary p-2 ms-2" style={{ marginLeft: '100px' }}>삭제</span></Link>
+                                <li className="dropdown-header" style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0px' }}>
+                                    <span style={{ marginLeft: '50px', fontSize: '15px' }}>새로운 알림</span>
+                                    {/* <Link to="#"><span style={{ border: '2px solid #FA6060', color: '#000000', backgroundColor: '#ffffff', borderRadius: '5px', padding: '3px' }} onClick={handleDeleteNotices}>삭제</span></Link> */}
+                                    <Link to="#" onclick={handleDeleteNotices}><i class="bi bi-trash-fill"></i></Link>
                                 </li>
                             </div>
                             <hr />
@@ -78,11 +113,12 @@ function Header() {
                                     <div>
                                         <h4>{notice.noticeType}</h4>
                                         <p>{notice.noticeContent}</p>
-                                        <p>{new Date(notice.createdAt).toLocaleString()}</p>
+                                        <p>{parseDate(notice.noticeDateTime)}</p>
                                     </div>
                                 </li>
                             ))}
                         </ul>
+
                     </li>
                     <li className="nav-item dropdown">
                         {/* 쪽지 메뉴를 토글하는 링크 */}

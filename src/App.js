@@ -34,25 +34,18 @@ import { useDispatch } from 'react-redux';
 import { decodeJwt } from './utils/tokenUtils';
 import ApprovalDetail from './pages/approval/ApprovalDetail';
 import ChangeMemberPage from './pages/member/ChangeMemberPage';
-import PrivateRoute from './components/PrivateRoute';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const accessToken = window.localStorage.getItem('accessToken');
-    if (accessToken) {
-      setIsLoggedIn(true);
-    }
-  }, []);
+  const isLoggedIn = !!window.localStorage.getItem("accessToken");
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login onLogin={() => setIsLoggedIn(true)} />} />
+        {/* Public routes */}
+        <Route path="/login" element={<Login />} />
 
-        {/* {isLoggedIn ? ( */}
-        <Route element={<PrivateRoute isAuthenticated={isLoggedIn} />}>
+        {/* Private routes */}
+        {isLoggedIn ? (
           <Route element={<Layout />}>
             <Route index element={<Main />} />
             <Route path="/" element={<Main />} />
@@ -82,12 +75,17 @@ function App() {
             <Route path="departmentAndPosition" element={<DepartmentAndPosition />} />
             <Route path="approvals" element={<ApprovalPage />} />
             <Route path="/manageMember/:memberId" element={<MemberPage />} />
-            <Route path="hierarchyTree" element={<HierarchyTree />} />
-            <Route path="approvals/:approvalNo" element={<ApprovalDetail />} />
+            <Route path='/hierarchyTree' element={<HierarchyTree />} />
+            <Route path='/approvals/:approvalNo' element={<ApprovalDetail />} />
             <Route path='/manageMember/:memberId/edit' element={<ChangeMemberPage />} />
-            </Route>
-        </Route>
-        <Route path="*" element={<Error />} />
+          </Route>
+        ) : (
+          <Route path="/" element={<Navigate to="/login" replace />} />
+        )}
+        {/* <Route path="*" element={<Navigate to={isLoggedIn ? "/" : "/login"} replace />} /> */}
+        <Route path="*" element={isLoggedIn ? <Error /> : <Navigate to="/login" replace />} />
+        {/* <Route path='*' element={<Error />} /> */}
+
       </Routes>
     </BrowserRouter>
   );

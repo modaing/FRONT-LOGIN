@@ -36,6 +36,15 @@ function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDat
         setShowBtn(false);
     }
 
+    useEffect(() => {
+        if (commute.correction?.corrRegistrationDate) {
+            setShowBtn(false);
+            dispatch(callSelectCommuteListAPI('member', memberId, parsingDateOffset));
+        } else {
+            setShowBtn(true);
+        }
+    }, [parsingDateOffset]);
+
     /* 근무 일자 형식 변경 */
     const formatWorkingDate = (workingDate) => {
         const date = new Date(workingDate);
@@ -190,23 +199,23 @@ function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDat
             </td>
             )}
         </tr> */}
-<tr style={evenRow ? tableStyles.evenRow : {}}>
-        <td style={tableStyles.tableCell1}>{formatWorkingDate(commute.workingDate || '')}</td>
-        <td style={tableStyles.tableCell2}>{formatTotalWorkingHours(commute.totalWorkingHours || 0)}</td>
-        <td style={tableStyles.tableCell3}>{formatWorkingTime(commute.startWork || [])}</td>
-        <td style={tableStyles.tableCell4}>{formatWorkingTime(commute.endWork || [])}</td>
-        <td style={tableStyles.tableCell5}><ProgressBar startTime={commute.startWork || []} endTime={commute.endWork || []} /></td>
-        <td style={tableStyles.tableCell6}>{commute.workingStatus || '미출근'}</td>
-        {(commute.correction?.corrRegistrationDate) ? (
-          <td></td>
-        ) : (
-          <td style={tableStyles.tableCell7}>
-            <button style={insertCorrection} onClick={handleOpenModal}>
-              정정
-            </button>
-          </td>
-        )}
-      </tr>
+        <tr style={evenRow ? tableStyles.evenRow : {}}>
+            <td style={tableStyles.tableCell1}>{formatWorkingDate(commute.workingDate || '')}</td>
+            <td style={tableStyles.tableCell2}>{formatTotalWorkingHours(commute.totalWorkingHours || 0)}</td>
+            <td style={tableStyles.tableCell3}>{formatWorkingTime(commute.startWork || [])}</td>
+            <td style={tableStyles.tableCell4}>{formatWorkingTime(commute.endWork || [])}</td>
+            <td style={tableStyles.tableCell5}><ProgressBar startTime={commute.startWork || []} endTime={commute.endWork || []} /></td>
+            <td style={tableStyles.tableCell6}>{commute.workingStatus || '미출근'}</td>
+            {(commute.correction?.corrRegistrationDate) ? (
+                <td></td>
+            ) : (
+                <td style={tableStyles.tableCell7}>
+                    <button className="insertCorrection" onClick={handleOpenModal}>
+                        정정
+                    </button>
+                </td>
+            )}
+        </tr>
         {showModal && (
             <InsertCorrectionModal
                 commute={commute}
@@ -226,17 +235,18 @@ function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDat
 
 export default CommuteItem;
 
-const insertCorrection = {
-    backgroundColor: '#3F72AF',
-    cursor: 'pointer',
-    color: '#FFFFFF',
-    borderRadius: '4px',
-    border: '1px solid #3F72AF',
-    '&:hover': {
-        cursor: '#112D4E',
-    },
-    paddingLeft: '5px',
-    paddingRight: '5px',
-    paddingTop: '1px',
-    paddingBottom: '1px'
-};
+// const insertCorrection = {
+//     fontSize: '16px',
+//     backgroundColor: '#3F72AF',
+//     cursor: 'pointer',
+//     color: '#FFFFFF',
+//     borderRadius: '5px',
+//     border: '1px solid #3F72AF',
+//     '&:hover': {
+//         cursor: '#112D4E',
+//     },
+//     paddingLeft: '10px',
+//     paddingRight: '10px',
+//     paddingTop: '5px',
+//     paddingBottom: '5px'
+// };

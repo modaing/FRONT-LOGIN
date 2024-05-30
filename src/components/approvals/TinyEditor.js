@@ -200,7 +200,29 @@ export default function TinyEditor(props) {
                 }
                 .mce-content-body{
                     scrollbar-color : rgb(241, 255, 190) black;
+                },
+                .tox-editor-container{
+                    z-index: 0;
                 }
+                .tox:not(.tox-tinymce-inline) .tox-editor-header:not(.tox-editor-dock-transition){
+                    z-index: 0;
+                }
+                .tox .tox-editor-header{
+                    z-index: 0;
+                }
+                .tox-tinymce-aux{
+                    z-index:0 !important;
+                }
+                textarea{
+                    width: 100%;
+                    resize: none;
+                    height: 100%;
+                    border: none;
+                    font-size: 15px;
+                    padding-left: 10px;
+                    outline: none;
+                }
+                
                 `
                 ].join('\n'),
                 plugins: [
@@ -212,7 +234,7 @@ export default function TinyEditor(props) {
                 toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
                 height: 1000,
                 menubar: false,
-                forced_root_block: 'div',     //기본 블록 요소 설정
+                // forced_root_block: 'div',     //기본 블록 요소 설정
                 branding: false,
                 elementpath: false,
                 statusbar: false,
