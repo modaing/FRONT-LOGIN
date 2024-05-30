@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ProposalApi from '../../apis/ProposalApi';
-import '../../css/proposal/ProposalPage.css';
+// import '../../css/proposal/ProposalPage.css';
 
 const AdminProposalPage = () => {
     const [adminProposals, setAdminProposals] = useState([]);
