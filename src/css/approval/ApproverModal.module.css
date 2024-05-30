@@ -49,6 +49,7 @@
     color: black;
     border-radius: 5px;
     padding: 2px;
+    border: none;
 }
 .ApproverDepartmentList{
     text-align: left;
@@ -177,10 +178,18 @@
     color: black;
     width: 30px;
     height: 30px;
-    border: 2px solid gray;
+    border: none;
     text-align: center;
     justify-items: center;
     padding: 3px;
+    border-radius: 10px;
+}
+.moveButton:first-of-type{
+    color: red;
+}
+.moveButton:last-of-type{
+    margin-left: 10px;
+    color: blue;
 }
 .moveButton:hover{
     background-color: #EDEAEA;
@@ -198,6 +207,9 @@
     justify-content: space-around; */
     align-self: end;
     justify-self: flex-end;
+    gap: 20px;
+    display: flex;
+    margin-right: 10px;
 }
 
 .modalActions button {
@@ -212,6 +224,7 @@
     background-color: white;
     color: black;
     border: 1px solid #BBBBBB;
+    border-radius: 10px;
 }
 .modalActions button:first-of-type:hover{
     background-color: #EDEAEA;
@@ -221,6 +234,7 @@
 .modalActions button:last-of-type {
     background-color: #112D4E;
     color: white;
+    border-radius: 10px;
 }
 .modalActions button:last-of-type:hover{
     background-color: #465970;

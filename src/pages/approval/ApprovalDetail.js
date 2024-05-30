@@ -12,6 +12,7 @@ import ApproverStatusConfirmModal from "../../components/approvals/ApproverStatu
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import ActionTypeModal from "../../components/approvals/ActionTypeModal";
 
 const ApprovalDetail = () => {
     const { approvalNo } = useParams();
@@ -23,6 +24,7 @@ const ApprovalDetail = () => {
 
     const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
     const [isApproverStatusConfirmModalOpen, setIsApproverStatusConfirmModalOpen] = useState(false);
+    const [isActionTypeModalOpen, setIsActionTypeModalOpen] = useState(false);
 
     const [isDownloading, setIsDownloading] = useState(false);
 
@@ -104,8 +106,16 @@ const ApprovalDetail = () => {
     };
 
     const handleProcessClick = () => {
+        if(!actionType){
+            setIsActionTypeModalOpen(true);
+            return;
+        }
         handleModalConfirm();
-    }
+    };
+    
+    const handleActionTypeModalClose = () => {
+        setIsActionTypeModalOpen(false);
+    };
 
     //작성자가 0번째에 있고, 작성자 다음으로 결재처리를 한 사람이 없거나 첫번째 사람이 결재처리를 안했으면 회수 버튼을 보이도록 설정
     const isSender = approver[0]?.memberId === memberId;
@@ -128,7 +138,8 @@ const ApprovalDetail = () => {
     //목록 버튼 url 설정
     console.log('기안자 정보 : ' + approvalDetail.memberId);
     const listUrl = (approvalMemberId === memberId) ? '/approvals?fg=given&page=0&title=&direction=DESC' : '/approvals?fg=received&page=0&title=&direction=DESC';
-    console.log("😫😫😫😫😫😫내가 기안자니?" + approvalDetail.memberId === memberId);
+    console.log("내가 기안자니?" + (approvalDetail.memberId === memberId));
+    console.log(listUrl);
 
     //반려 사유 확인
     const rejectReasonFromApprover = approver.find(a => a.approverStatus === '반려')?.rejectReason;
@@ -138,8 +149,8 @@ const ApprovalDetail = () => {
 
         setIsDownloading(true);
 
-        try{
-            const fileData = await downloadFileAPI (fileSavepath, fileSavename, fileOriname);
+        try {
+            const fileData = await downloadFileAPI(fileSavepath, fileSavename, fileOriname);
             const url = window.URL.createObjectURL(new Blob([fileData]));
             const a = document.createElement('a');
             a.href = url;
@@ -151,43 +162,13 @@ const ApprovalDetail = () => {
                 document.body.removeChild(a);
             }, 0);
 
-        } catch(error){
+        } catch (error) {
             console.error('파일 다운로드 오류 : ', error);
-        }finally {
+        } finally {
             setIsDownloading(false);
         }
 
-        // axios.get(fileUrl, { responseType: 'blob' })
-        //     .then((response) => {
-        //         const url = window.URL.createObjectURL(new Blob([response.data]));
-        //         const a = document.createElement('a');
-        //         a.href = url;
-        //         a.download = fileOriname;
-        //         document.body.appendChild(a);
-        //         a.click();
-        //         setTimeout(() => {
-        //             window.URL.revokeObjectURL(url);
-        //             document.body.removeChild(a);
-        //         }, 0);
-        //     }).catch((error) => {
-        //         console.error('파일 다운로드 오류', error);
-        //     }).finally(() => {
-        //         setIsDownloading(false);
-        //     });
-        //두번쨰방법 - 안됨
 
-
-        // const link = document.createElement('a');
-        // link.href = `/approvals/files?fileSavepath=${encodeURIComponent(fileSavepath)}&fileSavename=${encodeURIComponent(fileSavename)}&fileOriname=${encodeURIComponent(fileOriname)}`;
-        // // link.download  = fileOriname;
-        // // document.body.appendChild(link);
-        // // link.click();
-        // // document.body.removeChild(link);
-        // link.setAttribute('download', fileOriname);
-        // document.body.appendChild(link);
-        // link.click();
-        // document.body.removeChild(link);
-        //첫번째 방법 - 안됨
     };
 
 
@@ -240,17 +221,20 @@ const ApprovalDetail = () => {
                 </div>
                 {canApproveOrReject && (
                     <div class={styles.actionBox}>
+                        <div className={styles.actionTitle}>결재처리</div>
                         <div className={styles.actionButtons}>
-                            <label className={styles.approveRadios}>
-                                <input type="radio" name="action" value="approve" checked={actionType === 'approve'} onChange={handleApproveClick} />
-                                <button onClick={handleApproveClick}>승인</button>
-                            </label>
-
-                            <label className={styles.rejectRadios}>
-                                <input type="radio" name="action" value="reject" checked={actionType === 'reject'} onChange={handleRejectClick} />
-                                <button onClick={handleRejectClick}>반려</button>
-                            </label>
-
+                            <button
+                                className={`${styles.actionButton} ${actionType === 'approve' ? styles.selectedApprove : styles.unselected}`}
+                                onClick={handleApproveClick}
+                            >
+                                승인
+                            </button>
+                            <button
+                                className={`${styles.actionButton} ${actionType === 'reject' ? styles.selectedReject : styles.unselected}`}
+                                onClick={handleRejectClick}
+                            >
+                                반려
+                            </button>
                         </div>
 
                         {actionType === 'reject' && (
@@ -289,6 +273,10 @@ const ApprovalDetail = () => {
             <ApproverStatusConfirmModal
                 isOpen={isApproverStatusConfirmModalOpen}
                 onClose={handleApproverStatusConfirmModalClose}
+            />
+            <ActionTypeModal
+                isOpen={isActionTypeModalOpen}
+                onClose={handleActionTypeModalClose}
             />
         </main>
     );
