@@ -33,6 +33,7 @@ import HierarchyTree from './pages/member/HierarchyTree';
 import { useDispatch } from 'react-redux';
 import { decodeJwt } from './utils/tokenUtils';
 import ApprovalDetail from './pages/approval/ApprovalDetail';
+import ApprovalTempRewrite from './pages/approval/ApprovalTempRewrite';
 
 function App() {
   const isLoggedIn = !!window.localStorage.getItem("accessToken");
@@ -75,6 +76,7 @@ function App() {
             <Route path="/manageMember/:memberId" element={<MemberPage />} />
             <Route path='/hierarchyTree' element={<HierarchyTree />} />
             <Route path='/approvals/:approvalNo' element={<ApprovalDetail />} />
+            <Route path='/approvals/tempRewrite:approvalNo' element={<ApprovalTempRewrite />} />
           </Route>
         ) : (
           <Route path="/" element={<Navigate to="/login" replace />} />
