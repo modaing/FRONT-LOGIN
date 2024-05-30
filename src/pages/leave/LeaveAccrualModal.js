@@ -149,8 +149,8 @@ const LeaveAccrualModal = ({ isOpen, onClose, onSave }) => {
                                 }
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" onClick={onClose}>취소</button>
-                                <button type="button" className="btn btn-primary" onClick={handleValidation}>등록</button>
+                                <button type="button" className="btn btn-negative" onClick={onClose}>취소</button>
+                                <button type="button" className="btn btn-positive" onClick={handleValidation}>등록</button>
                             </div>
                         </div>
                     </div>
