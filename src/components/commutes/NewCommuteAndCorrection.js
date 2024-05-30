@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { callInsertNewCorrectionAPI } from "../../apis/CommuteAPICalls";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import '../../css/common.css';
+
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -183,6 +184,7 @@ const NewCommuteAndCorrection = ({ commuteList, isOpen, onClose, parsingDateOffs
                                         }}
                                         format="HH:mm"
                                         TimePicker={corrStartWork}
+                                        // style={{margin: '0px'}}
                                     />
                                 </LocalizationProvider>
                             </div>
@@ -231,11 +233,11 @@ const NewCommuteAndCorrection = ({ commuteList, isOpen, onClose, parsingDateOffs
                         </div>
                     </div>
                     <div className="modal-footer" style={{ paddingBottom: '0px', paddingTop: '20px' }}>
-                        <button type="button" className="cancel" onClick={onClose} 
+                        <button type="button" className="btn-negative" onClick={onClose} 
                         >
                             취소
                         </button>
-                        <button type="button" className="regist" onClick={handleSave} 
+                        <button type="button" className="btn-positive" onClick={handleSave} 
                         >
                             등록
                         </button>
