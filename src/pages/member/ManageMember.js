@@ -244,7 +244,7 @@ const ManageMember = () => {
                 <div>
                     <div className="card">
                         <div className={manageMemberCSS.contentStyle2}>
-                            <button className={manageMemberCSS.downloadButton} onClick={handleDownloadExcelFile}>전체 다운로드</button>
+                            <button className={manageMemberCSS.downloadButton} style={{color: 'white'}} onClick={handleDownloadExcelFile}>전체 다운로드</button>
                             {/* <hr className={manageMemberCSS.horizontalLine} /> */}
                         </div>
                         <div className={manageMemberCSS.tableDecoration}>
