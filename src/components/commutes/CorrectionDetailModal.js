@@ -35,7 +35,6 @@ function CorrectionDetailModal({ isOpen, onClose, correction }) {
                     <div className="modal-content" style={{ padding: '25px', width: '550px' }}>
                         <div className="modal-header" style={{ paddingBottom: '20px', paddingTop: '0px' }}>
                             <h5 className="modal-title">출퇴근 정정 등록 내역</h5>
-                            <button type="button" className="btn-close" onClick={onClose} style={{ backgroundColor: '#ffffff', cursor: 'pointer' }}></button>
                         </div>
                         <div className="modal-body" style={{ paddingTop: '30px', paddingBottom: '20px' }}>
                             <div style={{ display: 'flex' }}>
@@ -83,7 +82,9 @@ function CorrectionDetailModal({ isOpen, onClose, correction }) {
                             </div>
                         </div>
                         <div className="modal-footer" style={{ paddingBottom: '0px', paddingTop: '20px' }}>
-                            <button type="button" className="btn btn-secondary" onClick={onClose} style={{ backgroundColor: '#ffffff', border: '2px solid #D9D9D9', color: '#000000' }}>
+                            <button type="button" className="cancel" onClick={onClose} 
+                            // style={{ backgroundColor: '#ffffff', border: '2px solid #D9D9D9', color: '#000000' }}
+                            >
                                 확인
                             </button>
                         </div>

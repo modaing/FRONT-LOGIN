@@ -61,23 +61,14 @@ const ClockInModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteLis
             </div>
             <div className="modal-footer">
               <button onClick={onClose}
-                className="mini-btn cancel"
+                className="cancel"
                 type="button"
                 >
                 취소
               </button>
               <button onClick={handleInsertCommute}
-                className="mini-btn regist"
-                // style={{
-                //   width: '50px',
-                //   height: '40px',
-                //   backgroundColor: '#112D4E',
-                //   color: 'white',
-                //   borderRadius: '5px',
-                //   padding: '1% 1.5%',
-                //   cursor: 'pointer',
-                //   textDecoration: 'none'
-                // }}
+                className="regist"
+                type="button"
                 >
                 출근
               </button>

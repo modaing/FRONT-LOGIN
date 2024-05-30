@@ -20,6 +20,10 @@ function Sidebar() {
         return location.pathname === path ? 'active' : '';
     };
 
+    const token = window.localStorage.getItem("accessToken");
+    const memberInfos = decodeJwt(token);
+    // console.log('role', memberInfos.role);
+
     return (
         <aside id="sidebar" className="sidebar">
             <ul className="sidebar-nav" id="sidebar-nav">
@@ -44,16 +48,20 @@ function Sidebar() {
                                 <i className="bi bi-circle"></i><span>출퇴근 정정 내역</span>
                             </Link>
                         </li>
-                        <li>
-                            <Link to="/commuteManage" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>출퇴근 관리</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/commuteCorrectionManage" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>출퇴근 정정 관리</span>
-                            </Link>
-                        </li>
+                        { memberInfos.role === "ADMIN" && (
+                            <>
+                                <li>
+                                    <Link to="/commuteManage" style={underLineStyle}>
+                                        <i className="bi bi-circle"></i><span>출퇴근 관리</span>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to="/commuteCorrectionManage" style={underLineStyle}>
+                                        <i className="bi bi-circle"></i><span>출퇴근 정정 관리</span>
+                                    </Link>
+                                </li>
+                            </>
+                        )}
                     </ul>
                 </li>
                 <li className="nav-item">

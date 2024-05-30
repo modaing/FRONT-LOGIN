@@ -210,7 +210,7 @@ function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDat
                 <td></td>
             ) : (
                 <td style={tableStyles.tableCell7}>
-                    <button style={insertCorrection} onClick={handleOpenModal}>
+                    <button className="insertCorrection" onClick={handleOpenModal}>
                         정정
                     </button>
                 </td>
@@ -235,18 +235,18 @@ function CommuteItem({ commute, tableStyles, evenRow, date, memberId, parsingDat
 
 export default CommuteItem;
 
-const insertCorrection = {
-    fontSize: '16px',
-    backgroundColor: '#3F72AF',
-    cursor: 'pointer',
-    color: '#FFFFFF',
-    borderRadius: '5px',
-    border: '1px solid #3F72AF',
-    '&:hover': {
-        cursor: '#112D4E',
-    },
-    paddingLeft: '10px',
-    paddingRight: '10px',
-    paddingTop: '5px',
-    paddingBottom: '5px'
-};
+// const insertCorrection = {
+//     fontSize: '16px',
+//     backgroundColor: '#3F72AF',
+//     cursor: 'pointer',
+//     color: '#FFFFFF',
+//     borderRadius: '5px',
+//     border: '1px solid #3F72AF',
+//     '&:hover': {
+//         cursor: '#112D4E',
+//     },
+//     paddingLeft: '10px',
+//     paddingRight: '10px',
+//     paddingTop: '5px',
+//     paddingBottom: '5px'
+// };
