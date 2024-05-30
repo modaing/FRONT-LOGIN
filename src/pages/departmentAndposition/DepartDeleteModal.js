@@ -51,7 +51,7 @@ function DepartDeleteModal(props) {
             if (deleteResponse) {
                 alert('부서명이 성공적으로 삭제되었습니다.');
                 onClose();
-                navigate('/departmentAndPosition'); // Replace the current URL with the desired one
+                navigate(-1); // Replace the current URL with the desired one
                 window.location.reload();
             }
         } catch (error) {
@@ -86,7 +86,7 @@ function DepartDeleteModal(props) {
                 <form onSubmit={handleSubmit}> {/* Form format */}
                     <div className='content123'>
                         <div className='contentBox1'>
-                            <label className='pStyleDeleteDepart'>삭제할 부서명</label>
+                            <label className='departNameStyle123'>삭제할 부서명</label>
                             <input type="text" name="newPassword1" placeholder="삭제할 부서명" value={departName} className='inputStyle123' onChange={(e) => setDepartName(e.target.value)}/>
                         </div>
                     </div>

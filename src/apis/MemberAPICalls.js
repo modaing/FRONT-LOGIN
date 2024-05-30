@@ -106,7 +106,7 @@ export const callGetPositionListAPI = async () => {
 export const callShowAllMemberListAPI = async () => {
     try {
         const response = await axios.get(`${API_BASE_URL}/showAllMembersPage`, { headers });
-        console.log('response:',response);
+        // console.log('response:',response);
         return response.data;
     } catch (error) {
         console.error('Error fetching position list:', error);

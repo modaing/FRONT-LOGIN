@@ -28,8 +28,8 @@
     margin-left: 20px;
 }
 
-.inputStyle1::-webkit-inner-spin-button,
-.inputStyle1::-webkit-outer-spin-button {
+.inputStyle123::-webkit-inner-spin-button,
+.inputStyle123::-webkit-outer-spin-button {
   appearance: none;
   -webkit-appearance: none;
   margin: 0;
@@ -181,4 +181,21 @@
 
 .contentBox1 {
     margin-bottom: 20px;
+}
+
+.departNameStyle123 {
+    /* margin-right: 20px; */
+    width: 70px;
+    margin: auto;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.positionRegisterModalStyle {
+    width: 60px;
+    margin: auto;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
 }

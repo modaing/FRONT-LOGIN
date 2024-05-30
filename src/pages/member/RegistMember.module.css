@@ -16,7 +16,7 @@
 }
 
 .cardFontSize {
-    font-size: 20px;
+    /* font-size: 20px; */
 }
 
 .notice-cancel-button {
@@ -96,7 +96,7 @@
     padding: 7px 12px;
     border-radius: 5px;
     cursor: pointer;
-    background-color: #3F72AF; /* Background color */
+    background-color: #112D4E; /* Background color */
     border: 1px solid #D5D5D5; /* Border */
     color: white;
     margin-left: 75px;
