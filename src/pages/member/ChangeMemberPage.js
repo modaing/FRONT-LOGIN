@@ -371,6 +371,10 @@ function ChangeMemberPage() {
             alert('수정한 정보가 없습니다');
             return;
         }
+
+        if (e.target.name === 'memberStatus' && e.target.value === '퇴직') {
+            alert('해당 구성원의 정보는 3년뒤에 자동으로 삭제가 됩니다');
+        }
     
         try {
             formData.append('memberDTO', new Blob([JSON.stringify(changedValues)], { type: 'application/json' }));
@@ -655,7 +659,7 @@ function ChangeMemberPage() {
                                     type='text'
                                     name='inputtedAddress'
                                     defaultValue={inputtedAddress}
-                                    className='inputStyleForMember'
+                                    className={`inputStyleForMember ${member.address && member.address !== memberInfo.address ? 'changed': ''}`}
                                     onChange={(e) => handleInputChange(e)}
                                     onClick={handleComplete}
                                     onKeyPress={handleKeyPress}
@@ -665,7 +669,7 @@ function ChangeMemberPage() {
                                 {popup && <Post company={enroll_company} setcompany={setEnroll_company} onClose={handleCloseModal} onAddData={handleAddData} className="modal-backdrop"/>}
                             </div>
                             <div className="emailStyle">
-                                <label htmlFor="inputText" className="email">상세 주소</label>
+                                <label htmlFor="inputText" className="email">전체 주소</label>
                                 <input
                                     type='text'
                                     name='address'
@@ -690,12 +694,16 @@ function ChangeMemberPage() {
     
                             <div className='memberStatusStyle'>
                                 <label className='memberStatus'>상태</label>
-                                <input
+                                <select
                                     className={`inputStyleForMember ${member.memberStatus && member.memberStatus !== memberInfo.memberStatus ? 'changed' : ''}`}
                                     name="memberStatus"
                                     defaultValue={memberInfo.memberStatus}
                                     onChange={(e) => handleInputChange(e)}
-                                />
+                                >
+                                    <option value="재직">재직</option>
+                                    <option value="퇴직">퇴직</option>
+                                    <option value="육아">육아</option>
+                                </select>
                             </div>
                             <div className="memberStatusStyle">
                                 <label htmlFor="inputText" className="memberStatus">권한</label>

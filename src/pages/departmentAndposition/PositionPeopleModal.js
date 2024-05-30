@@ -30,7 +30,8 @@ function PositionPeopleModal(props) {
 
     const handleClose = () => {
         onClose();
-        navigate(-1);
+        // navigate(-1);
+        navigate('/departmentAndPosition');
         // window.location.reload();
     }
 

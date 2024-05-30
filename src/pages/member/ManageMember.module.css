@@ -25,15 +25,18 @@
 }
 
 .searchButtonForManageMember {
-    background-color: #F9F7F7;
-    color: black;
-    border: 2px solid #3F72AF;
     border-radius: 10px;
+    padding: 10px 15px;
+    height: 40px;
     cursor: pointer;
     margin-left: 10px;
     margin-right: 20px;
-    height: 40px;
-    padding: 10px;
+    border: 1px solid #3F72AF;
+    background-color: white;
+}
+
+.searchButtonForManageMember :hover{
+    background-color: #F9F7F7;
 }
 
 .flexedBox {
@@ -63,7 +66,7 @@
     margin: 20px 0;
 }
 
-.cancelButton, .insertButton {
+.cancelButton {
     background-color: #0A1A3B;
     border-radius: 10px;
     padding: 10px 20px;
@@ -91,7 +94,7 @@
 
 .downloadButton {
     background-color: #0A1A3B;
-    /* color: white; */
+    color: white;
     border: none;
     padding: 10px 20px;
     cursor: pointer;

@@ -60,7 +60,8 @@ function PositionDeleteModal(props) {
             if (deleteResponse) {
                 alert('부서명이 성공적으로 삭제되었습니다.');
                 onClose();
-                navigate(-1); // Replace the current URL with the desired one
+                // navigate(-1); // Replace the current URL with the desired one
+                navigate('/departmentAndPosition');
                 window.location.reload();
             }
         } catch (error) {

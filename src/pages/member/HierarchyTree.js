@@ -168,15 +168,45 @@ function HierarchyTree() {
                 <rect width="180" height={isMember && !isCEO ? 60 : 40} x="-90" y={isMember && !isCEO ? "-30" : "-20"} onClick={toggleNode} fill='white' stroke="#3f72af" strokeWidth="2" rx="5" ry="5" />
                 {isMember && !isCEO ? (
                     <>
-                        <text x="0" y="-10" textAnchor="middle" fill="black" fontStyle="normal" fontSize="16" fontWeight="600" onClick={handleClick} style={{ cursor: 'pointer' }}>
+                        <text
+                            x="0"
+                            y="-10"
+                            textAnchor="middle"
+                            fill="black" 
+                            ontStyle="normal"
+                            fontSize="16"
+                            fontWeight="600"
+                            onClick={handleClick}
+                            style={{ cursor: 'pointer' }}
+                        >
                             {nodeDatum.attributes[0]}
                         </text>
-                        <text x="0" y="15" textAnchor="middle" fill="black" fontSize="14" fontWeight="400" fontStyle="normal" onClick={handleClick} style={{ cursor: 'pointer' }}>
+                        <text
+                            x="0"
+                            y="15"
+                            textAnchor="middle"
+                            fill="black"
+                            fontSize="14"
+                            fontWeight="400"
+                            fontStyle="normal"
+                            onClick={handleClick}
+                            style={{ cursor: 'pointer' }}
+                        >
                             {nodeDatum.name}
                         </text>
                     </>
                 ) : (
-                    <text x="0" y="5" textAnchor="middle" fill="black" fontSize="16" fontWeight="600" fontStyle="normal" onClick={handleClick} style={{ cursor: 'pointer' }}>
+                    <text
+                        x="0"
+                        y="5"
+                        textAnchor="middle"
+                        fill="black"
+                        fontSize="16"
+                        fontWeight="600"
+                        fontStyle="normal"
+                        onClick={handleClick}
+                        style={{ cursor: 'pointer' }}
+                    >
                         {isCEO ? nodeDatum.attributes[0] : nodeDatum.name}
                     </text>
                 )}
@@ -201,7 +231,7 @@ function HierarchyTree() {
                     leafNodeClassName="node__leaf"
                     pathFunc="step"
                     collapsible={true}
-                    translate={{ x: dimensions.width / 2, y: dimensions.height / 2 }}
+                    translate={{ x: 900, y: 200 }}
                     nodeSvgShape={svgSquare}
                     zoomable={true}
                     allowForeignObjects={true}

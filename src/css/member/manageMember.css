@@ -212,6 +212,16 @@
     margin-right: 15px;
 }
 
+.registerMemberButton {
+    background-color: #0A1A3B;
+    color: white;
+    border: 1px solid #D5D5D5;
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
 .buttonClass {
     margin-top: 50px;
     /* margin-bottom: 40px; */
@@ -303,9 +313,13 @@
     margin-right: 20px;
 }
 
-.inputStyle1 {
+.inputstyleForSelectBox {
     width: 100px;
-    height: 50px;
+    height: 40px;
+    padding: 10px; /* Add padding for better visual appearance */
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 5px; /* Add rounded corners */
+    box-sizing: border-box; /* Ensure padding is included in the width */
     /* font-size: 20px; */
 }
 
