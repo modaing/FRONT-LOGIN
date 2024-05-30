@@ -95,8 +95,7 @@ const ClockOutModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteLi
                             <h6 style={{ color: '#000000' }}>오늘 퇴근하시겠습니까?</h6>
                         </div>
                         <div className="modal-footer">
-                            <button onClick={onClose} 
-                            className="cancel"
+                            <button onClick={onClose} className="cancel"
                             //  style={{
                             //     width: '50px',
                             //     height: '40px',
