@@ -95,29 +95,34 @@ const ClockOutModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteLi
                             <h6 style={{ color: '#000000' }}>오늘 퇴근하시겠습니까?</h6>
                         </div>
                         <div className="modal-footer">
-                            <button onClick={onClose} className='btn cancel' style={{
-                                width: '50px',
-                                height: '40px',
-                                backgroundColor: '#ffffff',
-                                color: '#112D4E',
-                                border: '#112D4E 1px solid',
-                                borderRadius: '5px',
-                                padding: '1% 1.5%',
-                                cursor: 'pointer',
-                                textDecoration: 'none'
-                            }}>
+                            <button onClick={onClose} 
+                            className="cancel"
+                            //  style={{
+                            //     width: '50px',
+                            //     height: '40px',
+                            //     backgroundColor: '#ffffff',
+                            //     color: '#112D4E',
+                            //     border: '#112D4E 1px solid',
+                            //     borderRadius: '5px',
+                            //     padding: '1% 1.5%',
+                            //     cursor: 'pointer',
+                            //     textDecoration: 'none'
+                            // }}
+                            >
                                 취소
                             </button>
-                            <button onClick={handleUpdateCommute} className='btn regist' style={{
-                                width: '50px',
-                                height: '40px',
-                                backgroundColor: '#112D4E',
-                                color: 'white',
-                                borderRadius: '5px',
-                                padding: '1% 1.5%',
-                                cursor: 'pointer',
-                                textDecoration: 'none'
-                            }}>
+                            <button onClick={handleUpdateCommute} className="regist"
+                            // style={{
+                            //     width: '50px',
+                            //     height: '40px',
+                            //     backgroundColor: '#112D4E',
+                            //     color: 'white',
+                            //     borderRadius: '5px',
+                            //     padding: '1% 1.5%',
+                            //     cursor: 'pointer',
+                            //     textDecoration: 'none'
+                            // }}
+                            >
                                 퇴근
                             </button>
                         </div>

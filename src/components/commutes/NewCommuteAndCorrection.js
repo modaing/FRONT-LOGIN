@@ -133,7 +133,7 @@ const NewCommuteAndCorrection = ({ commuteList, isOpen, onClose, parsingDateOffs
                 <div className="modal-content" style={{ padding: '25px', width: '550px' }}>
                     <div className="modal-header" style={{ paddingBottom: '20px', paddingTop: '0px' }}>
                         <h5 className="modal-title">출퇴근 정정 등록</h5>
-                        <button type="button" onClick={resetModal} style={{ background: '#ffffff', color: '#000000', paddingLeft: '20px', cursor: 'pointer' }}><i className="bi bi-arrow-counterclockwise"></i></button>
+                        {/* <button type="button" onClick={resetModal} style={{ background: '#ffffff', color: '#000000', paddingLeft: '20px', cursor: 'pointer' }}><i className="bi bi-arrow-counterclockwise"></i></button> */}
                         {/* 시간 새로고침은 되는데 화면에 반영안됨!! */}
                     </div>
                     <div className="modal-body" style={{ paddingTop: '30px', paddingBottom: '20px' }}>
@@ -231,10 +231,12 @@ const NewCommuteAndCorrection = ({ commuteList, isOpen, onClose, parsingDateOffs
                         </div>
                     </div>
                     <div className="modal-footer" style={{ paddingBottom: '0px', paddingTop: '20px' }}>
-                        <button type="button" className="btn btn-secondary" onClick={onClose} style={{ backgroundColor: '#FFFFFF', border: '1px solid #D5D5D5', color: '#000000' }}>
+                        <button type="button" className="cancel" onClick={onClose} 
+                        >
                             취소
                         </button>
-                        <button type="button" className="btn btn-secondary" onClick={handleSave} style={{ backgroundColor: '#3F72AF', border: '1px solid #3F72AF' }}>
+                        <button type="button" className="regist" onClick={handleSave} 
+                        >
                             등록
                         </button>
                     </div>

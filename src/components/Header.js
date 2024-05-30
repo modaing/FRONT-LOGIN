@@ -3,8 +3,10 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import { decodeJwt } from '../utils/tokenUtils';
 import { useDispatch, useSelector } from 'react-redux';
 import { callLogoutAPI, callGetProfilePictureAPI } from '../apis/MemberAPICalls';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { callDeleteNoticeListAPI, callSelectNoticeListAPI } from '../apis/NoticeAPICalls';
+import moment from 'moment/moment';
+import dayjs from 'dayjs';
 
 function Header() {
 
@@ -20,9 +22,10 @@ function Header() {
     const memberId = decodeJwt(token).memberId;
     const result = useSelector(state => state.noticeReducer);
     console.log('result', result);
-    // const noticeList = result?.noticeList?.response?.data?.results?.result || [];
+    const noticeList = result?.noticeList?.response?.data?.results?.result || [];
     const [unreadNoticeCount, setUnreadNoticeCount] = useState(0);
-    const [noticeList, setNoticeList] = useState([]);
+    const [noticeCount, setNoticeCount] = useState(0);
+    // const [noticeList, setNoticeList] = useState([]);
 
     if (token) {
         try {
@@ -54,24 +57,32 @@ function Header() {
     }, [dispatch, memberId]);
 
     useEffect(() => {
-        const unreadNotices = noticeList && noticeList.filter((notice) => !notice.isRead);
-        setUnreadNoticeCount(unreadNotices?.length);
-    }, [noticeList]);
-
-    // const handleDeleteNotices = () => {
-    //     dispatch(callDeleteNoticeListAPI(memberId));
-    //     setUnreadNoticeCount(0);
-    //     dispatch(callSelectNoticeListAPI(memberId));
-    //   };
+        const newNoticeAddedListener = () => {
+            dispatch(callSelectNoticeListAPI(memberId)).then((response) => {
+                setUnreadNoticeCount(response.filter((notice) => !notice.isRead).length);
+                setNoticeCount(response.length);
+            });
+        };
+    
+        window.addEventListener('newNoticeAdded', newNoticeAddedListener);
+    
+        return () => {
+            window.removeEventListener('newNoticeAdded', newNoticeAddedListener);
+        };
+    }, [dispatch, memberId]);
 
     const handleDeleteNotices = () => {
-        dispatch(callDeleteNoticeListAPI(memberId)).then(() => {
-            // 알림 삭제 후 목록 업데이트
-            dispatch(callSelectNoticeListAPI(memberId)).then((response) => {
-                setNoticeList(response);
-                setUnreadNoticeCount(0);
-            });
-        });
+        dispatch(callDeleteNoticeListAPI(memberId));
+        setUnreadNoticeCount(0);
+        dispatch(callSelectNoticeListAPI(memberId));
+    };
+
+    const parseDate = (dateData) => {
+        if (Array.isArray(dateData)) {
+            return dayjs(new Date(dateData[0], dateData[1] - 1, dateData[2], dateData[3], dateData[4])).format('YYYY-MM-DD hh:mm');
+        } else {
+            return dayjs(dateData).format('YYYY-MM-DD hh:mm');
+        }
     };
 
     return (
@@ -99,47 +110,28 @@ function Header() {
                             <span className="badge badge-number" style={{ backgroundColor: '#FA6060' }}>{unreadNoticeCount?.toString().padStart(1, '0')}</span>
                         </Link>
                         {/* 알림 메뉴 */}
-                        <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" style={{ width: '300px', height: '120px' }}>
+                        <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" style={{ width: '300px', height: '480px' }}>
                             <div >
                                 <li className="dropdown-header" style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0px' }}>
                                     <span style={{ marginLeft: '50px', fontSize: '15px' }}>새로운 알림</span>
                                     {/* <Link to="#"><span style={{ border: '2px solid #FA6060', color: '#000000', backgroundColor: '#ffffff', borderRadius: '5px', padding: '3px' }} onClick={handleDeleteNotices}>삭제</span></Link> */}
-                                    <Link to="#"><i class="bi bi-trash-fill" onclick={handleDeleteNotices}></i></Link>
+                                    <Link to="#" onclick={handleDeleteNotices}><i class="bi bi-trash-fill"></i></Link>
                                 </li>
                             </div>
                             <hr />
                             {/* 알림 목록 */}
-                            {noticeList.length > 0 ? (
-                                noticeList.slice(0, 4).map((notice, index) => (
-                                    <li key={index} className="notification-item">
-                                        <i className="bi bi-exclamation-circle text-warning"></i>
-                                        <div>
-                                            <h4>{notice.noticeType}</h4>
-                                            <p>{notice.noticeContent}</p>
-                                            <p>
-                                                {notice.createdAt
-                                                    ? new Date(
-                                                        notice.createdAt[0],
-                                                        notice.createdAt[1] - 1,
-                                                        notice.createdAt[2],
-                                                        notice.createdAt[3],
-                                                        notice.createdAt[4],
-                                                        notice.createdAt[5],
-                                                        notice.createdAt[6]
-                                                    ).toLocaleString()
-                                                    : ''}
-                                            </p>
-                                        </div>
-                                    </li>
-                                ))
-                            ) : (
-                                <li className="notification-item">
+                            {noticeList && noticeList.slice(0, 4).map((notice, index) => (
+                                <li key={index} className="notification-item">
+                                    <i className="bi bi-exclamation-circle text-warning"></i>
                                     <div>
-                                        <p>알림이 없습니다.</p>
+                                        <h4>{notice.noticeType}</h4>
+                                        <p>{notice.noticeContent}</p>
+                                        <p>{parseDate(notice.noticeDateTime)}</p>
                                     </div>
                                 </li>
-                            )}
+                            ))}
                         </ul>
+
                     </li>
                     <li className="nav-item dropdown">
                         {/* 쪽지 메뉴를 토글하는 링크 */}
