@@ -1,3 +1,5 @@
+import '../../css/commute/commute.css';
+
 const ClockLimitModal = ({ isOpen, onClose, parsingDateOffset }) => {
 
     console.log('parsingDateOffset : ',parsingDateOffset);
@@ -17,7 +19,7 @@ const ClockLimitModal = ({ isOpen, onClose, parsingDateOffset }) => {
                         </div>
                         <div className="modal-footer">
                             <button onClick={onClose}
-                            className="cancel"
+                            className="cancel" id="cancel"
                             >
                                 확인
                             </button>

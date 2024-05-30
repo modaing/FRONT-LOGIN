@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import InsertCorrectionModal from "./InsertCorrectionModal";
 import { useDispatch } from "react-redux";
 import { callInsertCorrectionAPI, callSelectCommuteListAPI } from "../../apis/CommuteAPICalls";

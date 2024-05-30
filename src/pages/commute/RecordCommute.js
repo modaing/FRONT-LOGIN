@@ -14,6 +14,7 @@ import ClockLimitModal from '../../components/commutes/ClockLimitModal';
 import NewCommuteAndCorrection from '../../components/commutes/NewCommuteAndCorrection';
 import { setExpectedTotalWorkingTime, setStartTime, setWorkingHoursStatus } from '../../modules/CommuteModule';
 import ClockOutWarningModalBy52 from '../../components/commutes/ClockOutWarningModalBy52';
+import LimitClockinModalBy52 from '../../components/commutes/LimitClockInModalBy52';
 
 function RecordCommute() {
 
@@ -44,6 +45,8 @@ function RecordCommute() {
     const [showClockLimitModal, setShowClockLimitModal] = useState(false);
     const [showNewCommuteAndCorrModal, setShowNewCommuteAndCorrModal] = useState(false);
     const [showClockOutWarningModalBy52, setShowClockOutWarningModalBy52] = useState(false);
+    const [showLimitClockInModalBy52, setShowLimitClockInModalBy52] = useState(false);
+    const [limitClockInButton, setLimitClockInButton] = useState(false);
 
     const dispatch = useDispatch();
     const { startTime, expectedTotalWorkingTime, isWorkingHoursLimited, totalWorkingHours } = useSelector(
@@ -257,6 +260,18 @@ function RecordCommute() {
         setShowNewCommuteAndCorrModal(false);
     }
 
+    const handleShowLimitClockInModalBy52 = () => {
+        setShowLimitClockInModalBy52(true);
+    }
+
+    const handleShowLimitClockInModalBy52Close = () => {
+        setShowLimitClockInModalBy52(false);
+    }
+
+    const handleShowLimitClockInButton = () => {
+        setLimitClockInButton(true);
+    }
+
     return <>
         <main id="main" className="main">
             <div className="pagetitle">
@@ -336,6 +351,15 @@ function RecordCommute() {
                                 isOpen={showClockOutWarningModalBy52}
                                 onClose={() => setShowClockOutWarningModalBy52(false)}
                                 totalWorkingHours={totalWorkingHours}
+
+                            />
+                        )}
+                        {showLimitClockInModalBy52 && (
+                            <LimitClockinModalBy52
+                                date={date}
+                                isOpen={showLimitClockInModalBy52}
+                                onClose={handleShowLimitClockInModalBy52Close}
+                                parsingDateOffset={parsingDateOffset}
                             />
                         )}
                     </ol>
@@ -348,7 +372,10 @@ function RecordCommute() {
                         commute={commuteList}
                         date={date}
                         handlePreviousClick={handlePreviousClick}
-                        handleNextClick={handleNextClick} />
+                        handleNextClick={handleNextClick}
+                        handleShowLimitClockInModalBy52={handleShowLimitClockInModalBy52}
+                        handleShowLimitClockInButton={handleShowLimitClockInButton}
+                    />
                 )}
             </div>
             <div>
@@ -360,7 +387,8 @@ function RecordCommute() {
                         parsingDateOffset={parsingDateOffset}
                         memberId={memberId}
                         handleCorrectionRegistered={handleCorrectionRegistered}
-                        onClose={handleCorrectionModalClose} />
+                        onClose={handleCorrectionModalClose}
+                    />
                 )}
             </div>
         </main>
