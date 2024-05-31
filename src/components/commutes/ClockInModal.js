@@ -1,7 +1,8 @@
 import React from 'react';
-import '../../css/commute/commute.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { callInsertCommuteAPI, callSelectCommuteListAPI, callUpdateCommuteAPI } from '../../apis/CommuteAPICalls';
+import '../../css/common.css';
+// import '../../css/commute/commute.css';
+import { useDispatch } from 'react-redux';
+import { callInsertCommuteAPI } from '../../apis/CommuteAPICalls';
 import styled from 'styled-components';
 
 const ModalContent = styled.div`
@@ -61,13 +62,13 @@ const ClockInModal = ({ isOpen, onClose, parsingDateOffset, memberId, commuteLis
             </div>
             <div className="modal-footer">
               <button onClick={onClose}
-                className="cancel"
+                className="btn-negative"
                 type="button"
                 >
                 취소
               </button>
               <button onClick={handleInsertCommute}
-                className="regist"
+                className="btn-positive"
                 type="button"
                 >
                 출근

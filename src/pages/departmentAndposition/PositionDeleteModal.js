@@ -60,7 +60,8 @@ function PositionDeleteModal(props) {
             if (deleteResponse) {
                 alert('부서명이 성공적으로 삭제되었습니다.');
                 onClose();
-                navigate('/departmentAndPosition'); // Replace the current URL with the desired one
+                // navigate(-1); // Replace the current URL with the desired one
+                navigate('/departmentAndPosition');
                 window.location.reload();
             }
         } catch (error) {
@@ -93,7 +94,7 @@ function PositionDeleteModal(props) {
                 <form onSubmit={handleSubmit}> {/* Form format */}
                     <div className='content123'>
                         <div className='contentBox1'>
-                            <label className='pStyleDeletePosition'>삭제할 직급</label>
+                            <label className='positionDeleteModalStyle'>삭제할 직급</label>
                             <input type="text" name="newPassword1" placeholder="삭제할 직급" value={positionName} className='inputStyle123' onChange={(e) => setPositionName(e.target.value)}/>
                         </div>
                     </div>

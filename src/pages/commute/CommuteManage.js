@@ -23,7 +23,7 @@ function CommuteManage() {
         border-color: #D5D5D5;
     `;
 
-    const [date, setDate] = useState("2024-05-01"); // 발표 전 6월로 바꾸기 
+    const [date, setDate] = useState("2024-06-01"); 
     const [depart, setDepart] = useState(1);
     const [showWorkingHours, setShowWorkingHours] = useState(false);
     const [showWorkingHoursComponent, setShowWorkingHoursComponent] = useState(false);
@@ -47,11 +47,6 @@ function CommuteManage() {
         // 선택한 부서 번호(departNo) 설정
         const selectedDepartNo = e.target.value;
         setDepart(selectedDepartNo);
-
-        // // 선택한 월에 따라 날짜 렌더링
-        // const selectedDate = date;
-        // setDate(selectedDate);
-        // dispatch(callSelectCommuteListAPI(target, selectedDepartNo, parsingDateOffset));
     };
 
     useEffect(() => {
@@ -109,11 +104,17 @@ function CommuteManage() {
     const DEPARTOPTIONS = [
         { value: 1, name: "인사팀" },
         { value: 2, name: "개발팀" },
-        { value: 3, name: "영업팀" }
+        { value: 3, name: "영업팀" },
+        { value: 4, name: "품질관리팀" },
+        { value: 16, name: "총무팀" },
+        { value: 17, name: "기획팀" },
+        { value: 18, name: "회계팀" },
+        { value: 19, name: "운영팀" },
+        { value: 20, name: "재무팀" },
     ];
 
     const DATEOPTIONS = [
-        // { value: "2024-06-01", name: "2024-06" },    // 발표 전 주석 해제하기 
+        { value: "2024-06-01", name: "2024-06" },
         { value: "2024-05-01", name: "2024-05" },
         { value: "2024-04-01", name: "2024-04" },
         { value: "2024-03-01", name: "2024-03" },
@@ -125,7 +126,7 @@ function CommuteManage() {
         { value: "2023-09-01", name: "2023-09" },
         { value: "2023-08-01", name: "2023-08" },
         { value: "2023-07-01", name: "2023-07" },
-        { value: "2023-06-01", name: "2023-06" }
+        // { value: "2023-06-01", name: "2023-06" }
     ];
 
     const isSameDate = (workingDateArray, selectedDateArray) => {
