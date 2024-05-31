@@ -175,8 +175,7 @@ function HierarchyTree() {
                             fill="black" 
                             ontStyle="normal"
                             fontSize="16"
-                            stroke='none'
-                            fontWeight="500"
+                            fontWeight="600"
                             onClick={handleClick}
                             style={{ cursor: 'pointer' }}
                         >
@@ -188,8 +187,7 @@ function HierarchyTree() {
                             textAnchor="middle"
                             fill="black"
                             fontSize="14"
-                            fontWeight="500"
-                            stroke='none'
+                            fontWeight="400"
                             fontStyle="normal"
                             onClick={handleClick}
                             style={{ cursor: 'pointer' }}
@@ -204,8 +202,7 @@ function HierarchyTree() {
                         textAnchor="middle"
                         fill="black"
                         fontSize="16"
-                        fontWeight="500"
-                        stroke='none'
+                        fontWeight="600"
                         fontStyle="normal"
                         onClick={handleClick}
                         style={{ cursor: 'pointer' }}

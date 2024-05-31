@@ -27,7 +27,7 @@ function Login({ onLogin }) {
 
     useEffect(() => {
         
-        if(loginMember.status === 200){
+        if(loginMember.status === 200 && !!window.localStorage.getItem('accessToken')){
             console.log("[Login] Login SUCCESS {}", loginMember);
             onLogin();
             navigate("/", { replace: true });
@@ -83,13 +83,12 @@ function Login({ onLogin }) {
 
         if (memberId.trim() === '' || password.trim() === '') {
             alert('아이디 또는 비밀번호를 입력하세요.');
-            // setForm({memberId: '', password: ''});
             return;
         }
 
         if (!isValidMemberId(memberId)) {
             alert('유효한 아이디를 입력하세요');
-            // setForm({memberId: '', password: ''});
+            setForm({memberId: '', password: ''});
             return;
         }
 
@@ -144,9 +143,25 @@ function Login({ onLogin }) {
             <img src="img/logo.png" className={LoginCSS.imageStyle} alt="Logo" />
             <div className='classifyStyle'>
                 {/* <form> */}
-                <input type="number" name="memberId" placeholder="아이디" autoComplete='off' onChange={onChangeHandler} className="inputStyleLogin inputBoxStyle" />
+                <input
+                    type="number"
+                    name="memberId"
+                    placeholder="아이디"
+                    autoComplete='off'
+                    value={form.memberId}
+                    onChange={onChangeHandler}
+                    className="inputStyleLogin inputBoxStyle"
+                />
                     <br /><br />
-                <input type="password" name="password" placeholder="비밀번호" autoComplete='off' onChange={onChangeHandler} className="inputStyleLogin inputBoxStyle" />
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="비밀번호"
+                    autoComplete='off'
+                    value={form.password}
+                    onChange={onChangeHandler}
+                    className="inputStyleLogin inputBoxStyle"
+                />
                 <div className={LoginCSS.linkContainerStyle}>
                     <p className="linkStyle" onClick={handleFindIDClick}>아이디 찾기</p>
                     <p className="linkStyle" onClick={handleFindPasswordClick}>비밀번호 찾기</p>

@@ -1,12 +1,13 @@
 import { decodeJwt } from "../../utils/tokenUtils";
 import manageMemberCSS from './ManageMember.module.css';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { callShowAllMemberListAPI, callDownloadExcelFileAPI } from "../../apis/MemberAPICalls";
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import '../../css/member/manageMember.css';
 
 const ManageMember = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [allMemberInfo, setAllMemberInfo] = useState([]);
     const [filteredMemberInfo, setFilteredMemberInfo] = useState([]);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
@@ -24,9 +25,7 @@ const ManageMember = () => {
                     employedDate: formatDate(member.employedDate)
                 }));
                 setAllMemberInfo(formattedMembers);
-                console.log('formatted members:', formattedMembers);
                 setFilteredMemberInfo(formattedMembers); // Initially show all members
-                console.log('filteredMemberInfo:',filteredMemberInfo);
             } else {
                 console.error('member list is not an array:', memberLists);
             }
@@ -118,6 +117,26 @@ const ManageMember = () => {
     }, [filteredMemberInfo, sortConfig]);
 
     useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const searchName = params.get('searchName') || '';
+        const searchId = params.get('searchId') || '';
+        
+        if (searchName) {
+            setSearchField('name');
+            setSearch(searchName);
+            handleSearch('name', searchName);
+        } else if (searchId) {
+            setSearchField('memberId');
+            setSearch(searchId);
+            handleSearch('memberId', searchId);
+        } else {
+            setSearchField('none');
+            setSearch('');
+            setFilteredMemberInfo(allMemberInfo);
+        }
+    }, [location.search, allMemberInfo]);
+
+    useEffect(() => {
         const fetchData = async () => {
             await fetchMemberLists();
         };
@@ -138,23 +157,26 @@ const ManageMember = () => {
         };
     }, []);
 
-    const handleSearch = () => {
-        if (searchField === 'none') {
+    const handleSearch = (field = searchField, query = search) => {
+        let results;
+        if (field === 'none') {
             setFilteredMemberInfo(allMemberInfo);
+            navigate('/manageMember', { replace: true });
             return;
         }
     
-        let results;
-        const lowerCaseSearch = search.toLowerCase();
+        const lowerCaseSearch = query.toLowerCase();
     
-        if (searchField === 'name') {
+        if (field === 'name') {
             results = allMemberInfo.filter(member => 
                 member.name.toLowerCase().includes(lowerCaseSearch)
             );
-        } else if (searchField === 'memberId') {
+            navigate(`/ManageMember?searchName=${query}`, { replace: true });
+        } else if (field === 'memberId') {
             results = allMemberInfo.filter(member =>
                 String(member.memberId).toLowerCase().includes(lowerCaseSearch)
             );
+            navigate(`/ManageMember?searchMemberId=${query}`, { replace: true });
         } else {
             results = [];
         }
@@ -191,7 +213,7 @@ const ManageMember = () => {
                             <div className="firstBox">
                                 <div>검색어</div>
                                 <select 
-                                    className="inputStyle inputStyle1" 
+                                    className="inputstyleForSelectBox" 
                                     value={searchField} 
                                     onChange={(e) => setSearchField(e.target.value)}
                                 >   
@@ -207,12 +229,12 @@ const ManageMember = () => {
                                     style={{ height: '40px'}}
                                     onChange={(e) => setSearch(e.target.value)} 
                                 />
-                                <button className={manageMemberCSS.searchButtonForManageMember} onClick={handleSearch} ref={searchButtonRef}>검색</button>
+                                <button className={manageMemberCSS.searchButtonForManageMember} onClick={() => handleSearch(searchField, search)} ref={searchButtonRef}>검색</button>
                             </div>
                         </div>
                     </div>
                     <div className={manageMemberCSS.buttonClass}>
-                        <button className={`notice-cancel-button ${manageMemberCSS.insertButton}`} type='button' onClick={() => navigate('/registerMember')}>구성원 등록</button>
+                        <button className={`registerMemberButton ${manageMemberCSS.insertButton}`} type='button' onClick={() => navigate('/registerMember')}>구성원 등록</button>
                         {/* <button className={`notice-insert-button ${manageMemberCSS.cancelButton}`}>삭제</button> */}
                     </div>
                 </div>

@@ -75,7 +75,7 @@ function PositionRegisterModal(props) {
                 if (response) {
                     alert('직급를 성공적으로 등록했습니다');
                     onClose();
-                    navigate(-1);
+                    navigate('/departmentAndPosition');
                     window.location.reload();
                 }
             } else {
