@@ -47,11 +47,6 @@ function CommuteManage() {
         // 선택한 부서 번호(departNo) 설정
         const selectedDepartNo = e.target.value;
         setDepart(selectedDepartNo);
-
-        // // 선택한 월에 따라 날짜 렌더링
-        // const selectedDate = date;
-        // setDate(selectedDate);
-        // dispatch(callSelectCommuteListAPI(target, selectedDepartNo, parsingDateOffset));
     };
 
     useEffect(() => {
@@ -109,7 +104,13 @@ function CommuteManage() {
     const DEPARTOPTIONS = [
         { value: 1, name: "인사팀" },
         { value: 2, name: "개발팀" },
-        { value: 3, name: "영업팀" }
+        { value: 3, name: "영업팀" },
+        { value: 4, name: "품질관리팀" },
+        { value: 16, name: "총무팀" },
+        { value: 17, name: "기획팀" },
+        { value: 18, name: "회계팀" },
+        { value: 19, name: "운영팀" },
+        { value: 20, name: "재무팀" },
     ];
 
     const DATEOPTIONS = [
