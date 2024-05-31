@@ -5,6 +5,7 @@ import { callInsertSurvey, callInsertSurveyResponse, callSelectSurveyListAPI } f
 import { SET_PAGENUMBER } from '../../modules/SurveyModule';
 import SurveyModal from './SurveyModal';
 import { decodeJwt } from '../../utils/tokenUtils';
+import { convertToUtc } from '../../utils/CommonUtil';
 import { renderSurveyList } from '../../utils/SurveyUtil';
 import '../../css/survey/SurveyList.css'
 import '../../css/common.css'
@@ -74,8 +75,8 @@ function SurveyList() {
         const requestData = {
             surveyDTO: {
                 surveyTitle: title,
-                surveyStartDate: start,
-                surveyEndDate: end,
+                surveyStartDate: convertToUtc(start),
+                surveyEndDate: convertToUtc(end),
                 memberId
             },
             answers: answerFilter
