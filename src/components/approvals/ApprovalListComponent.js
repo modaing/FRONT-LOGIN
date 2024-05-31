@@ -108,7 +108,7 @@ const ApprovalListComponent = ({ approvals, fg, handleDeleteClick, handleSortDir
                             const approverStatus = approver ? approver.approverStatus : '';
 
                             return (
-                                <tr key={approval.approvalNo} onClick={() => {fg === 'tempGiven' ? handleRowClick(approval.approvalNo) : navigate(`/approvals/tempRewrite/${approval.approvalNo}`); }}>
+                                <tr key={approval.approvalNo} onClick={() => handleRowClick(approval.approvalNo)}>
                                     {fg === 'given' || fg === 'tempGiven' ? (
                                         <>
                                             <td>{approval.approvalDate}</td>
