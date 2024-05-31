@@ -139,11 +139,6 @@ function Sidebar() {
                                 <i className="bi bi-circle"></i><span>부서 및 직급 관리</span>
                             </Link>
                         </li>
-                        <li>
-                            <Link to="/ProposalPage" style={underLineStyle}>
-                                <i className="bi bi-circle"></i><span>건의함</span>
-                            </Link>
-                        </li>
                     </ul>
                 </li>
                 <li className={`nav-item ${location.pathname === '/insite' ? 'active' : ''}`}>
